@@ -1,11 +1,144 @@
-/ (raíz del repositorio)
-│── index.html         ← página principal con listado de cursos y PDFs
-└── /cursos
-    ├── precalculo/
-    │   ├── clase1.pdf
-    │   └── clase2.pdf
-            clase3.pdf
-    ├── EDO/
-    │   ├── clase1.pdf
-    │   └── clase2.pdf
-    └── ... (más cursos)
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Clases de Matemáticas</title>
+  <style>
+    :root { --maxw: 980px; }
+    * { box-sizing: border-box; }
+    body { font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif; margin: 0; color: #111; background: #fff; }
+    header { padding: 2rem 1rem; background: #f6f7fb; border-bottom: 1px solid #e8e9ef; }
+    h1 { margin: 0 0 .5rem; font-size: clamp(1.6rem, 3vw, 2.2rem); }
+    .container { max-width: var(--maxw); margin: 0 auto; padding: 1rem; }
+    .toolbar { display: grid; gap: .75rem; grid-template-columns: 1fr 1fr; }
+    .toolbar input, .toolbar select { padding: .7rem .8rem; border: 1px solid #d7d8e0; border-radius: .6rem; }
+    @media (max-width: 700px) { .toolbar { grid-template-columns: 1fr; } }
+    .course { border: 1px solid #e8e9ef; border-radius: .9rem; padding: 1rem; margin: 1rem 0; background: #fff; }
+    .course h2 { margin: 0 0 .5rem; font-size: 1.2rem; }
+    .list { display: grid; gap: .5rem; }
+    .pdf { display: flex; align-items: center; justify-content: space-between; padding: .65rem .8rem; border: 1px solid #ececf3; border-radius: .6rem; }
+    .pdf a { text-decoration: none; color: #0b63c5; word-break: break-word; }
+    .badge { font-size: .75rem; padding: .2rem .5rem; border-radius: .5rem; background: #eef6ff; color: #0b63c5; }
+    footer { text-align: center; font-size: .85rem; color: #555; padding: 2rem 1rem; }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="container">
+      <h1>Clases de Matemáticas</h1>
+      <p>Material organizado por curso. Haz clic para abrir los PDFs.</p>
+      <div class="toolbar">
+        <input id="q" type="search" placeholder="Buscar clase (ej: derivadas, ecuaciones)…" />
+        <select id="courseFilter">
+          <option value="">Todos los cursos</option>
+        </select>
+      </div>
+    </div>
+  </header>
+
+  <main class="container">
+    <div id="root"></div>
+  </main>
+
+  <footer>
+    © <span id="year"></span> • Edita la lista en <code>DATA</code> dentro de <code>index.html</code>.
+  </footer>
+
+  <script>
+    // === EDITA AQUÍ: lista de cursos y PDFs ===========================
+    // Asegúrate de que la RUTA coincida exactamente con tus carpetas/archivos (respeta mayúsculas/minúsculas).
+    const DATA = {
+      "Precálculo": [
+        { titulo: "Clase 1", archivo: "cursos/precalculo/clase1.pdf" },
+        { titulo: "Clase 2", archivo: "cursos/precalculo/clase2.pdf" },
+        { titulo: "Clase 3", archivo: "cursos/precalculo/clase3.pdf" }
+      ],
+      "EDO": [
+        { titulo: "Clase 1", archivo: "cursos/EDO/clase1.pdf" },
+        { titulo: "Clase 2", archivo: "cursos/EDO/clase2.pdf" }
+      ]
+      // Agrega más cursos aquí…
+    };
+    // ==================================================================
+
+    const yearEl = document.getElementById("year");
+    yearEl.textContent = new Date().getFullYear();
+
+    const courseFilter = document.getElementById("courseFilter");
+    const qInput = document.getElementById("q");
+    const root = document.getElementById("root");
+
+    // Rellenar selector de cursos
+    Object.keys(DATA).sort().forEach(curso => {
+      const opt = document.createElement("option");
+      opt.value = curso;
+      opt.textContent = curso;
+      courseFilter.appendChild(opt);
+    });
+
+    function render() {
+      const q = qInput.value.trim().toLowerCase();
+      const only = courseFilter.value;
+      root.innerHTML = "";
+
+      const entries = Object.entries(DATA).filter(([curso]) => !only || curso === only);
+
+      if (entries.length === 0) {
+        root.innerHTML = "<p>No hay cursos para mostrar.</p>";
+        return;
+      }
+
+      for (const [curso, pdfs] of entries) {
+        const wrap = document.createElement("section");
+        wrap.className = "course";
+
+        const h2 = document.createElement("h2");
+        h2.textContent = curso;
+        wrap.appendChild(h2);
+
+        const list = document.createElement("div");
+        list.className = "list";
+
+        const filtered = pdfs.filter(i =>
+          !q ||
+          i.titulo.toLowerCase().includes(q) ||
+          i.archivo.toLowerCase().includes(q)
+        );
+
+        if (filtered.length === 0) {
+          const p = document.createElement("p");
+          p.textContent = "No hay resultados en este curso para tu búsqueda.";
+          list.appendChild(p);
+        } else {
+          for (const item of filtered) {
+            const row = document.createElement("div");
+            row.className = "pdf";
+
+            const link = document.createElement("a");
+            link.href = item.archivo;
+            link.target = "_blank";
+            link.rel = "noopener";
+            link.textContent = item.titulo;
+
+            const badge = document.createElement("span");
+            badge.className = "badge";
+            badge.textContent = "PDF";
+
+            row.appendChild(link);
+            row.appendChild(badge);
+            list.appendChild(row);
+          }
+        }
+
+        wrap.appendChild(list);
+        root.appendChild(wrap);
+      }
+    }
+
+    qInput.addEventListener("input", render);
+    courseFilter.addEventListener("change", render);
+    render();
+  </script>
+</body>
+</html>
