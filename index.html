@@ -22,6 +22,8 @@
     .pdf a { text-decoration: none; color: #0b63c5; word-break: break-word; }
     .badge { font-size: .75rem; padding: .2rem .5rem; border-radius: .5rem; background: #eef6ff; color: #0b63c5; }
     footer { text-align: center; font-size: .85rem; color: #555; padding: 2rem 1rem; }
+    .details { border: 1px solid #ececf3; border-radius: .6rem; padding: .6rem .8rem; background: #fcfcff; margin: .5rem 0; }
+    details > summary { cursor: pointer; font-weight: 600; color: #0b63c5; }
   </style>
 </head>
 <body>
@@ -47,64 +49,103 @@
   </footer>
 
   <script>
-    // === EDITA AQUÍ: lista de cursos y PDFs ===========================
-    // Asegúrate de que la RUTA coincida exactamente con tus carpetas/archivos (respeta mayúsculas/minúsculas).
-    const DATA = {
-      "Precálculo": [
-        { titulo: "Clase 1", archivo: "cursos/precalculo/clase1.pdf" },
-        { titulo: "Clase 2", archivo: "cursos/precalculo/clase2.pdf" },
-        { titulo: "Clase 3", archivo: "cursos/precalculo/clase3.pdf" }
-      ],
-      "EDO": [
-        { titulo: "Clase 1", archivo: "cursos/EDO/clase1.pdf" },
-        { titulo: "Clase 2", archivo: "cursos/EDO/clase2.pdf" }
-      ]
-      // Agrega más cursos aquí…
-    };
-    // ==================================================================
-
-    const yearEl = document.getElementById("year");
-    yearEl.textContent = new Date().getFullYear();
-
-    const courseFilter = document.getElementById("courseFilter");
-    const qInput = document.getElementById("q");
-    const root = document.getElementById("root");
-
-    // Rellenar selector de cursos
-    Object.keys(DATA).sort().forEach(curso => {
-      const opt = document.createElement("option");
-      opt.value = curso;
-      opt.textContent = curso;
-      courseFilter.appendChild(opt);
-    });
-
-    function render() {
-      const q = qInput.value.trim().toLowerCase();
-      const only = courseFilter.value;
-      root.innerHTML = "";
-
-      const entries = Object.entries(DATA).filter(([curso]) => !only || curso === only);
-
-      if (entries.length === 0) {
-        root.innerHTML = "<p>No hay cursos para mostrar.</p>";
-        return;
+  // === EDITA AQUÍ: lista de cursos y PDFs ===========================
+  // Ahora "Precálculo" es un grupo con secciones: "Clases" y "Ejercicios".
+  // El resto de cursos puede seguir siendo un simple array, como antes.
+  const DATA = {
+    "Precálculo": {
+      sections: {
+        "Clases": [
+          { titulo: "Clase 1", archivo: "cursos/precalculo/clase1.pdf" },
+          { titulo: "Clase 2", archivo: "cursos/precalculo/clase2.pdf" },
+          { titulo: "Clase 3", archivo: "cursos/precalculo/clase3.pdf" }
+        ],
+        "Ejercicios": [
+          { titulo: "Módulo 0: Simplificación (HTML)", archivo: "cursos/h2/modulo0.html" }
+          // Puedes agregar más, p. ej.:
+          // { titulo: "Módulo 1: Funciones y fundamentos (HTML)", archivo: "cursos/h2/modulo1.html" }
+        ]
       }
+    },
 
-      for (const [curso, pdfs] of entries) {
-        const wrap = document.createElement("section");
-        wrap.className = "course";
+    "EDO": [
+      { titulo: "Clase 1", archivo: "cursos/EDO/clase1.pdf" },
+      { titulo: "Clase 2", archivo: "cursos/EDO/clase2.pdf" }
+    ]
 
-        const h2 = document.createElement("h2");
-        h2.textContent = curso;
-        wrap.appendChild(h2);
+    // Agrega más cursos aquí…
+  };
+  // ==================================================================
 
+  const yearEl = document.getElementById("year");
+  yearEl.textContent = new Date().getFullYear();
+
+  const courseFilter = document.getElementById("courseFilter");
+  const qInput = document.getElementById("q");
+  const root = document.getElementById("root");
+
+  // Rellenar selector de cursos
+  Object.keys(DATA).sort().forEach(curso => {
+    const opt = document.createElement("option");
+    opt.value = curso;
+    opt.textContent = curso;
+    courseFilter.appendChild(opt);
+  });
+
+  // Detectar el tipo de recurso por extensión para el badge
+  function badgeFor(file) {
+    const ext = (file.split(".").pop() || "").toLowerCase();
+    if (ext === "pdf") return "PDF";
+    if (ext === "html" || ext === "htm") return "HTML";
+    return "Recurso";
+  }
+
+  function makeItemRow(item) {
+    const row = document.createElement("div");
+    row.className = "pdf";
+
+    const link = document.createElement("a");
+    link.href = item.archivo;
+    link.target = "_blank";
+    link.rel = "noopener";
+    link.textContent = item.titulo;
+
+    const badge = document.createElement("span");
+    badge.className = "badge";
+    badge.textContent = badgeFor(item.archivo);
+
+    row.appendChild(link);
+    row.appendChild(badge);
+    return row;
+  }
+
+  function render() {
+    const q = qInput.value.trim().toLowerCase();
+    const only = courseFilter.value;
+    root.innerHTML = "";
+
+    const entries = Object.entries(DATA).filter(([curso]) => !only || curso === only);
+
+    if (entries.length === 0) {
+      root.innerHTML = "<p>No hay cursos para mostrar.</p>";
+      return;
+    }
+
+    for (const [curso, contenido] of entries) {
+      const wrap = document.createElement("section");
+      wrap.className = "course";
+
+      const h2 = document.createElement("h2");
+      h2.textContent = curso;
+      wrap.appendChild(h2);
+
+      // Caso 1: curso “simple” (array como antes)
+      if (Array.isArray(contenido)) {
         const list = document.createElement("div");
         list.className = "list";
 
-        const filtered = pdfs.filter(i =>
-          !q ||
-          i.titulo.toLowerCase().includes(q) ||
-          i.archivo.toLowerCase().includes(q)
+        const filtered = contenido.filter(i =>
+          !q || i.titulo.toLowerCase().includes(q) || i.archivo.toLowerCase().includes(q)
         );
 
         if (filtered.length === 0) {
@@ -112,34 +153,67 @@
           p.textContent = "No hay resultados en este curso para tu búsqueda.";
           list.appendChild(p);
         } else {
-          for (const item of filtered) {
-            const row = document.createElement("div");
-            row.className = "pdf";
-
-            const link = document.createElement("a");
-            link.href = item.archivo;
-            link.target = "_blank";
-            link.rel = "noopener";
-            link.textContent = item.titulo;
-
-            const badge = document.createElement("span");
-            badge.className = "badge";
-            badge.textContent = "PDF";
-
-            row.appendChild(link);
-            row.appendChild(badge);
-            list.appendChild(row);
-          }
+          filtered.forEach(item => list.appendChild(makeItemRow(item)));
         }
 
         wrap.appendChild(list);
         root.appendChild(wrap);
+        continue;
+      }
+
+      // Caso 2: curso con secciones (objeto { sections: { ... } })
+      if (contenido && contenido.sections && typeof contenido.sections === "object") {
+        // Creamos un <details> por sección (p. ej., "Clases" y "Ejercicios")
+        const secciones = Object.keys(contenido.sections);
+        let hayAlgo = false;
+
+        secciones.forEach((nombreSeccion, idx) => {
+          const det = document.createElement("details");
+          det.className = "details";
+          if (idx === 0) det.open = true; // Abrir la primera por defecto
+
+          const sum = document.createElement("summary");
+          sum.textContent = nombreSeccion;
+          det.appendChild(sum);
+
+          const list = document.createElement("div");
+          list.className = "list";
+
+          const items = contenido.sections[nombreSeccion] || [];
+          const filtered = items.filter(i =>
+            !q || i.titulo.toLowerCase().includes(q) || i.archivo.toLowerCase().includes(q)
+          );
+
+          if (filtered.length === 0) {
+            const p = document.createElement("p");
+            p.textContent = "No hay resultados en esta sección para tu búsqueda.";
+            list.appendChild(p);
+          } else {
+            hayAlgo = true;
+            filtered.forEach(item => list.appendChild(makeItemRow(item)));
+          }
+
+          det.appendChild(list);
+          wrap.appendChild(det);
+        });
+
+        if (!hayAlgo && q) {
+          const p = document.createElement("p");
+          p.textContent = "No hay resultados en este curso para tu búsqueda.";
+          wrap.appendChild(p);
+        }
+
+        root.appendChild(wrap);
       }
     }
+  }
 
-    qInput.addEventListener("input", render);
-    courseFilter.addEventListener("change", render);
-    render();
-  </script>
+  qInput.addEventListener("input", render);
+  courseFilter.addEventListener("change", render);
+  render();
+</script>
+
+
+  
 </body>
 </html>
