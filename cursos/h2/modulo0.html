@@ -1,3 +1,4 @@
+
 <!doctype html>
 <html lang="es">
 <head>
@@ -24,7 +25,28 @@
     .grid{display:grid;gap:1rem}
     @media(min-width:800px){.grid{grid-template-columns:1fr 1fr}}
     .hint{font-size:.92rem;color:#333}
+    /* Mejorar la alineación vertical de fórmulas inline */
+    .mjx-chtml{line-height:1.2}
   </style>
+
+  <!-- Configuración de MathJax (v3) para LaTeX -->
+  <script>
+  window.MathJax = {
+    tex: {
+      inlineMath: [['\\\\(','\\\\)'], ['$', '$']],
+      displayMath: [['\\\\[','\\\\]'], ['$$','$$']],
+      processEscapes: true,
+      packages: {'[+]': ['physics']},
+      macros: {
+        dd: '{\\\\,\\\\mathrm{d}}',
+        vect: ['{\\\\mathbf{#1}}', 1]
+      }
+    },
+    options: { skipHtmlTags: ['script','noscript','style','textarea','pre','code'] },
+    svg: { fontCache: 'global' }
+  };
+  </script>
+  <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"></script>
 </head>
 <body>
   <header>
@@ -38,60 +60,60 @@
     <section class="card">
       <h2>A. Modelos reales que llevan a cocientes</h2>
       <ol>
-        <li class="q"><strong>Óptica (lente delgada).</strong> La ecuación <span class="badge">modelo</span> \(\frac{1}{f}=\frac{1}{d_o}+\frac{1}{d_i}\).
-          <br> (i) Exprese \(d_i\) en función de \(f\) y \(d_o\) como una única fracción simplificada. 
-          <br> (ii) Si \(f=12\text{ cm}\) y \(d_o=30\text{ cm}\), calcule \(d_i\).
+        <li class="q"><strong>Óptica (lente delgada).</strong> La ecuación <span class="badge">modelo</span> \\(\\frac{1}{f}=\\frac{1}{d_o}+\\frac{1}{d_i}\\).
+          <br> (i) Exprese \\(d_i\\) en función de \\(f\\) y \\(d_o\\) como una única fracción simplificada. 
+          <br> (ii) Si \\(f=12\\,\\text{cm}\\) y \\(d_o=30\\,\\text{cm}\\), calcule \\(d_i\\).
           <details><summary>Solución</summary>
-            <p>(i) \(\dfrac{1}{d_i}=\dfrac{1}{f}-\dfrac{1}{d_o}=\dfrac{d_o-f}{fd_o}\Rightarrow d_i=\dfrac{f d_o}{\,d_o-f\,}\).</p>
-            <p>(ii) \(d_i=\dfrac{12\cdot 30}{30-12}=\dfrac{360}{18}=20\text{ cm}\).</p>
+            <p>(i) \\(\\dfrac{1}{d_i}=\\dfrac{1}{f}-\\dfrac{1}{d_o}=\\dfrac{d_o-f}{fd_o}\\Rightarrow d_i=\\dfrac{f d_o}{\\,d_o-f\\,}.\\)</p>
+            <p>(ii) \\(d_i=\\dfrac{12\\cdot 30}{30-12}=\\dfrac{360}{18}=20\\,\\text{cm}.\\)</p>
           </details>
         </li>
 
-        <li class="q"><strong>Resistencias en paralelo.</strong> \(\frac{1}{R_p}=\frac{1}{R_1}+\frac{1}{R_2}\). Si \(R_1=3x\) y \(R_2=2x\), halle \(R_p\) y simplifique.
+        <li class="q"><strong>Resistencias en paralelo.</strong> \\(\\dfrac{1}{R_p}=\\dfrac{1}{R_1}+\\dfrac{1}{R_2}\\). Si \\(R_1=3x\\) y \\(R_2=2x\\), halle \\(R_p\\) y simplifique.
           <details><summary>Solución</summary>
-            <p>\(\dfrac{1}{R_p}=\dfrac{1}{3x}+\dfrac{1}{2x}=\dfrac{5}{6x}\Rightarrow R_p=\dfrac{6x}{5}\).</p>
+            <p>\\(\\dfrac{1}{R_p}=\\dfrac{1}{3x}+\\dfrac{1}{2x}=\\dfrac{5}{6x}\\Rightarrow R_p=\\dfrac{6x}{5}.\\)</p>
           </details>
         </li>
 
-        <li class="q"><strong>Continuidad de flujo (tubería).</strong> \(A_1v_1=A_2v_2\) y \(A=\frac{\pi d^2}{4}\).
-          <br>(i) Demuestre que \(\dfrac{v_2}{v_1}=\Big(\dfrac{d_1}{d_2}\Big)^2\).
-          <br>(ii) Si \(d_1=8\text{ cm}\) y \(d_2=4\text{ cm}\), ¿cuánto se multiplica la velocidad?
+        <li class="q"><strong>Continuidad de flujo (tubería).</strong> \\(A_1v_1=A_2v_2\\) y \\(A=\\frac{\\pi d^2}{4}\\).
+          <br>(i) Demuestre que \\(\\dfrac{v_2}{v_1}=\\Big(\\dfrac{d_1}{d_2}\\Big)^2\\).
+          <br>(ii) Si \\(d_1=8\\,\\text{cm}\\) y \\(d_2=4\\,\\text{cm}\\), ¿cuánto se multiplica la velocidad?
           <details><summary>Solución</summary>
-            <p>(i) \(\dfrac{v_2}{v_1}=\dfrac{A_1}{A_2}=\dfrac{\pi d_1^2/4}{\pi d_2^2/4}=(d_1/d_2)^2\).</p>
-            <p>(ii) \((8/4)^2=4\). Se cuadruplica.</p>
+            <p>(i) \\(\\dfrac{v_2}{v_1}=\\dfrac{A_1}{A_2}=\\dfrac{\\pi d_1^2/4}{\\pi d_2^2/4}=(d_1/d_2)^2.\\)</p>
+            <p>(ii) \\((8/4)^2=4\\). Se cuadruplica.</p>
           </details>
         </li>
 
-        <li class="q"><strong>Diluciones en química.</strong> \(M_1V_1=M_2V_2\).
-          <br>(i) Exprese \(M_2\) como cociente en términos de \(M_1,V_1,V_2\).
-          <br>(ii) Partiendo de \(M_1=2.5\,\text{M}\), haga una dilución en dos pasos: primero a \(V'=5V_1\) y luego a \(V''=2V'\). Dé el factor total de dilución y \(M_2\) final.
+        <li class="q"><strong>Diluciones en química.</strong> \\(M_1V_1=M_2V_2\\).
+          <br>(i) Exprese \\(M_2\\) como cociente en términos de \\(M_1,V_1,V_2\\).
+          <br>(ii) Partiendo de \\(M_1=2.5\\,\\text{M}\\), haga una dilución en dos pasos: primero a \\(V'=5V_1\\) y luego a \\(V''=2V'\\). Dé el factor total de dilución y \\(M_2\\) final.
           <details><summary>Solución</summary>
-            <p>(i) \(M_2=\dfrac{M_1V_1}{V_2}\).</p>
-            <p>(ii) Factor total \(=\dfrac{V''}{V_1}=\dfrac{10V_1}{V_1}=10\Rightarrow M_2=\dfrac{2.5}{10}=0.25\text{ M}\).</p>
+            <p>(i) \\(M_2=\\dfrac{M_1V_1}{V_2}.\\)</p>
+            <p>(ii) Factor total \\(=\\dfrac{V''}{V_1}=\\dfrac{10V_1}{V_1}=10\\Rightarrow M_2=\\dfrac{2.5}{10}=0.25\\,\\text{M}.\\)</p>
           </details>
         </li>
 
-        <li class="q"><strong>Tasa de trabajo conjunta.</strong> \(\frac{1}{T}=\frac{1}{a}+\frac{1}{b}\).
-          <br>(i) Aísle \(T\) como fracción simplificada en términos de \(a,b\).
-          <br>(ii) Evalúe con \(a=12\text{ h}\), \(b=18\text{ h}\).
+        <li class="q"><strong>Tasa de trabajo conjunta.</strong> \\(\\dfrac{1}{T}=\\dfrac{1}{a}+\\dfrac{1}{b}\\).
+          <br>(i) Aísle \\(T\\) como fracción simplificada en términos de \\(a,b\\).
+          <br>(ii) Evalúe con \\(a=12\\,\\text{h}\\), \\(b=18\\,\\text{h}\\).
           <details><summary>Solución</summary>
-            <p>(i) \(\dfrac{1}{T}=\dfrac{a+b}{ab}\Rightarrow T=\dfrac{ab}{a+b}\).</p>
-            <p>(ii) \(T=\dfrac{12\cdot 18}{30}=\dfrac{216}{30}=7.2\text{ h}\).</p>
+            <p>(i) \\(\\dfrac{1}{T}=\\dfrac{a+b}{ab}\\Rightarrow T=\\dfrac{ab}{a+b}.\\)</p>
+            <p>(ii) \\(T=\\dfrac{12\\cdot 18}{30}=\\dfrac{216}{30}=7.2\\,\\text{h}.\\)</p>
           </details>
         </li>
 
-        <li class="q"><strong>Resistencia de un alambre.</strong> \(R=\dfrac{\rho L}{A}\) con \(A=\pi r^2\).
-          <br>(i) Escriba \(R\) en función de \(L\) y \(r\). 
-          <br>(ii) ¿Cómo cambia \(R\) si duplico el radio manteniendo \(L\) y \(\rho\) constantes?
+        <li class="q"><strong>Resistencia de un alambre.</strong> \\(R=\\dfrac{\\rho L}{A}\\) con \\(A=\\pi r^2\\).
+          <br>(i) Escriba \\(R\\) en función de \\(L\\) y \\(r\\). 
+          <br>(ii) ¿Cómo cambia \\(R\\) si duplico el radio manteniendo \\(L\\) y \\(\\rho\\) constantes?
           <details><summary>Solución</summary>
-            <p>(i) \(R=\dfrac{\rho L}{\pi r^2}\).</p>
-            <p>(ii) Si \(r\mapsto 2r\), entonces \(R\mapsto \dfrac{\rho L}{\pi (2r)^2}=\dfrac{1}{4}\,R\).</p>
+            <p>(i) \\(R=\\dfrac{\\rho L}{\\pi r^2}.\\)</p>
+            <p>(ii) Si \\(r\\mapsto 2r\\), entonces \\(R\\mapsto \\dfrac{\\rho L}{\\pi (2r)^2}=\\dfrac{1}{4}\\,R.\\)</p>
           </details>
         </li>
 
-        <li class="q"><strong>Triángulos semejantes.</strong> En un poste y su sombra, \(\dfrac{h}{s}=\dfrac{H}{S}\). Despeje \(h\) y simplifique la expresión si \(S=ks\).
+        <li class="q"><strong>Triángulos semejantes.</strong> En un poste y su sombra, \\(\\dfrac{h}{s}=\\dfrac{H}{S}\\). Despeje \\(h\\) y simplifique la expresión si \\(S=ks\\).
           <details><summary>Solución</summary>
-            <p>\(h=\dfrac{Hs}{S}=\dfrac{H}{k}\) (independiente de \(s\)).</p>
+            <p>\\(h=\\dfrac{Hs}{S}=\\dfrac{H}{k}\\) (independiente de \\(s\\)).</p>
           </details>
         </li>
       </ol>
@@ -100,20 +122,20 @@
     <section class="card">
       <h2>B. Notación científica (cocientes con potencias de 10)</h2>
       <ol>
-        <li class="q"><strong>Química (moles y partículas).</strong> Exprese en notación científica y simplifique el cociente \(\dfrac{2.5\times 10^{22}}{6.022\times 10^{23}}\) (moles de partículas).
+        <li class="q"><strong>Química (moles y partículas).</strong> Exprese en notación científica y simplifique el cociente \\(\\dfrac{2.5\\times 10^{22}}{6.022\\times 10^{23}}\\) (moles de partículas).
           <details><summary>Respuesta</summary>
-            <p>\(\approx 4.15\times 10^{-2}\) moles.</p>
+            <p>\\(\\approx 4.15\\times 10^{-2}\\) moles.</p>
           </details>
         </li>
-        <li class="q"><strong>Densidad celular.</strong> Una muestra tiene \(3.6\times 10^8\) células/mL y se diluye 1 : 250.
-          <br>(i) Exprese \(250\) como \(2.5\times 10^2\) y calcule la nueva concentración.
+        <li class="q"><strong>Densidad celular.</strong> Una muestra tiene \\(3.6\\times 10^8\\) células/mL y se diluye 1 : 250.
+          <br>(i) Exprese \\(250\\) como \\(2.5\\times 10^2\\) y calcule la nueva concentración.
           <details><summary>Respuesta</summary>
-            <p>\(\dfrac{3.6\times 10^8}{2.5\times 10^2}=1.44\times 10^6\) células/mL.</p>
+            <p>\\(\\dfrac{3.6\\times 10^8}{2.5\\times 10^2}=1.44\\times 10^6\\) células/mL.</p>
           </details>
         </li>
-        <li class="q"><strong>Astronomía (escala).</strong> El radio del Sol es \(6.96\times10^8\) m y el de la Tierra \(6.37\times10^6\) m. Simplifique \(\dfrac{R_\odot}{R_{\oplus}}\) en notación científica.
+        <li class="q"><strong>Astronomía (escala).</strong> El radio del Sol es \\(6.96\\times10^8\\,\\text{m}\\) y el de la Tierra \\(6.37\\times10^6\\,\\text{m}\\). Simplifique \\(\\dfrac{R_\\odot}{R_{\\oplus}}\\) en notación científica.
           <details><summary>Respuesta</summary>
-            <p>\(\dfrac{6.96}{6.37}\times 10^{2}\approx 1.09\times 10^{2}\) (≈ 109 veces).</p>
+            <p>\\(\\dfrac{6.96}{6.37}\\times 10^{2}\\approx 1.09\\times 10^{2}\\) (≈ 109 veces).</p>
           </details>
         </li>
       </ol>
@@ -125,19 +147,19 @@
       <div class="grid">
         <div>
           <ol>
-            <li class="q">Simplifique: \(\dfrac{x^2-9}{x^2-3x}\).</li>
-            <li class="q">Simplifique: \(\dfrac{2}{x}+\dfrac{3}{x+1}\).</li>
-            <li class="q">Divida: \(\dfrac{4x^2-1}{2x^2+x}\div\dfrac{2x-1}{x}\).</li>
-            <li class="q">Racionalice: \(\dfrac{1}{\sqrt{x}+1}\).</li>
+            <li class="q">Simplifique: \\(\\dfrac{x^2-9}{x^2-3x}\\).</li>
+            <li class="q">Simplifique: \\(\\dfrac{2}{x}+\\dfrac{3}{x+1}\\).</li>
+            <li class="q">Divida: \\(\\dfrac{4x^2-1}{2x^2+x}\\div\\dfrac{2x-1}{x}\\).</li>
+            <li class="q">Racionalice: \\(\\dfrac{1}{\\sqrt{x}+1}\\).</li>
           </ol>
         </div>
         <div>
           <details><summary>Respuestas</summary>
             <ol>
-              <li>\(\dfrac{(x-3)(x+3)}{x(x-3)}=\dfrac{x+3}{x}\), \(x\ne 0,3\).</li>
-              <li>\(\dfrac{2(x+1)+3x}{x(x+1)}=\dfrac{5x+2}{x(x+1)}\).</li>
-              <li>\(\dfrac{4x^2-1}{2x^2+x}\cdot\dfrac{x}{2x-1}=\dfrac{(2x-1)(2x+1)}{x(2x+1)}\cdot\dfrac{x}{2x-1}=1\).</li>
-              <li>\(\dfrac{\sqrt{x}-1}{x-1}\).</li>
+              <li>\\(\\dfrac{(x-3)(x+3)}{x(x-3)}=\\dfrac{x+3}{x}\\), \\(x\\ne 0,3\\).</li>
+              <li>\\(\\dfrac{2(x+1)+3x}{x(x+1)}=\\dfrac{5x+2}{x(x+1)}\\).</li>
+              <li>\\(\\dfrac{4x^2-1}{2x^2+x}\\cdot\\dfrac{x}{2x-1}=\\dfrac{(2x-1)(2x+1)}{x(2x+1)}\\cdot\\dfrac{x}{2x-1}=1\\).</li>
+              <li>\\(\\dfrac{\\sqrt{x}-1}{x-1}\\).</li>
             </ol>
           </details>
         </div>
@@ -147,7 +169,7 @@
     <section class="card">
       <h2>D. Retos tipo “olimpiada suave”</h2>
       <ol>
-        <li class="q"><strong>Armónicos.</strong> Para \(a,b,c>0\), demuestre que \(\dfrac{1}{\frac{1}{a}+\frac{1}{b}}<\dfrac{1}{\frac{1}{a}+\frac{1}{b}+\frac{1}{c}}<\min\{a,b,c\}\).</li>
+        <li class="q"><strong>Armónicos.</strong> Para \\(a,b,c>0\\), demuestre que \\(\\dfrac{1}{\\frac{1}{a}+\\frac{1}{b}}<\\dfrac{1}{\\frac{1}{a}+\\frac{1}{b}+\\frac{1}{c}}<\\min\\{a,b,c\\}\\).</li>
         <li class="q"><strong>Geometría.</strong> En dos triángulos semejantes, muestre que la razón de áreas es el cuadrado de la razón de semejanza; use una fracción para justificarlo.</li>
       </ol>
     </section>
