@@ -1,38 +1,48 @@
 <!doctype html>
 <html lang="es">
 <head>
+  <!-- [1] Metadatos generales + anti-caché del HTML base -->
   <meta name="google-site-verification" content="BLKs_-ciNXuEIIuRlkfnAwS2pvIhlNUR5qeVY9FW7Oc" />
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>Clases de Matemáticas</title>
-
-  <!-- Anti-caché del HTML base (opcional) -->
+  <!-- Anti-caché (solo del HTML): -->
   <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
   <meta http-equiv="Pragma" content="no-cache" />
   <meta http-equiv="Expires" content="0" />
 
+  <!-- [2] Estilos globales (ajusta colores/espaciados aquí) -->
   <style>
     :root { --maxw: 980px; --line:#e8e9ef; --ink:#111; --muted:#555; --accent:#0b63c5; }
     * { box-sizing: border-box; }
     body { font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif; margin: 0; color: var(--ink); background: #fff; }
-    header { padding: 2rem 1rem; background: #f6f7fb; border-bottom: 1px solid var(--line); }
-    h1 { margin: 0 0 .5rem; font-size: clamp(1.6rem, 3vw, 2.2rem); }
+    header { padding: 1.25rem 1rem 0; background: #f6f7fb; border-bottom: 1px solid var(--line); }
     .container { max-width: var(--maxw); margin: 0 auto; padding: 1rem; }
-    .toolbar { display: grid; gap: .75rem; grid-template-columns: 1fr 1fr; align-items: center; }
-    .toolbar input, .toolbar select { padding: .7rem .8rem; border: 1px solid #d7d8e0; border-radius: .6rem; }
-    .toolbar .btn { justify-self: end; padding: .6rem .8rem; border: 1px solid #d7d8e0; border-radius: .6rem; background:#fff; cursor:pointer; }
-    @media (max-width: 700px) { .toolbar { grid-template-columns: 1fr; } .toolbar .btn { justify-self: start; } }
+
+    /* [2a] Frases motivadoras */
+    .quoteWrap { text-align: center; padding: .5rem 1rem 0; }
+    .quoteWrap em { display: block; font-style: italic; font-size: clamp(1rem, 2.4vw, 1.25rem); }
+    .quoteWrap .author { color: var(--muted); margin-top: .3rem; }
+
+    /* [2b] Barra superior con el botón para cambiar clave */
+    .toolbar { display: grid; grid-template-columns: 1fr auto; align-items: center; gap: .75rem; padding: .5rem 0 1rem; }
+    .btn { padding: .6rem .8rem; border: 1px solid #d7d8e0; border-radius: .6rem; background:#fff; cursor:pointer; }
+    .btn:hover { background:#fff; box-shadow: 0 1px 0 rgba(0,0,0,.04); }
+    @media (max-width:700px) { .toolbar { grid-template-columns: 1fr; } }
+
+    /* [2c] Tarjetas de cursos/secciones */
     .course { border: 1px solid var(--line); border-radius: .9rem; padding: 1rem; margin: 1rem 0; background: #fff; }
     .course h2 { margin: 0 0 .5rem; font-size: 1.2rem; }
+    .details { border: 1px solid #ececf3; border-radius: .6rem; padding: .6rem .8rem; background: #fcfcff; margin: .5rem 0; }
+    details > summary { cursor: pointer; font-weight: 600; color: #0b63c5; }
     .list { display: grid; gap: .5rem; }
     .pdf { display: flex; align-items: center; justify-content: space-between; padding: .65rem .8rem; border: 1px solid #ececf3; border-radius: .6rem; }
     .pdf a { text-decoration: none; color: #0b63c5; word-break: break-word; }
     .badge { font-size: .75rem; padding: .2rem .5rem; border-radius: .5rem; background: #eef6ff; color: #0b63c5; }
-    footer { text-align: center; font-size: .85rem; color: #555; padding: 2rem 1rem; }
-    .details { border: 1px solid #ececf3; border-radius: .6rem; padding: .6rem .8rem; background: #fcfcff; margin: .5rem 0; }
-    details > summary { cursor: pointer; font-weight: 600; color: #0b63c5; }
 
-    /* Puerta de acceso */
+    footer { text-align: center; font-size: .85rem; color: #555; padding: 2rem 1rem; }
+
+    /* [2d] Puerta de acceso (overlay) */
     .gate { position: fixed; inset: 0; z-index: 9999; background: rgba(255,255,255,0.96); display: none; align-items: center; justify-content: center; }
     .gate.show { display: flex; }
     .gate .panel { width: min(420px, 92vw); background: #fff; border: 1px solid var(--line); border-radius: .9rem; padding: 1rem; box-shadow: 0 10px 30px rgba(0,0,0,.06); }
@@ -44,7 +54,7 @@
     .gate .err { color: #b00020; font-size: .9rem; margin-top: .5rem; min-height: 1.2em; }
   </style>
 
-  <!-- MathJax -->
+  <!-- [3] MathJax (para LaTeX si lo necesitas en los módulos) -->
   <script>
     window.MathJax = {
       tex: { inlineMath: [['\\(','\\)'], ['$', '$']], displayMath: [['\\[','\\]'], ['$$','$$']], processEscapes: true },
@@ -54,27 +64,31 @@
   <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"></script>
 </head>
 <body>
+  <!-- [4] Zona superior: frase motivadora y botón para cambiar clave -->
   <header>
     <div class="container">
-      <h1>Clases de Matemáticas</h1>
-      <p>Material organizado por curso. Haz clic para abrir los recursos.</p>
+      <div class="quoteWrap">
+        <em id="quoteText">“…”</em>
+        <div class="author" id="quoteAuthor">—</div>
+      </div>
       <div class="toolbar">
-        <input id="q" type="search" placeholder="Buscar (ej: derivadas, ecuaciones)…" />
-        <select id="courseFilter"><option value="">Todos los cursos</option></select>
+        <span></span>
         <button id="changeKey" class="btn" type="button">Cambiar clave</button>
       </div>
     </div>
   </header>
 
+  <!-- [5] Contenido -->
   <main class="container">
     <div id="root"></div>
   </main>
 
+  <!-- [6] Pie -->
   <footer>
     © <span id="year"></span> • Edita la lista en <code>DATA</code> dentro de <code>index.html</code>.
   </footer>
 
-  <!-- Puerta de acceso -->
+  <!-- [7] Puerta de acceso (pide la clave) -->
   <div id="gate" class="gate" aria-hidden="true">
     <div class="panel">
       <h2>Ingresa la clave del curso</h2>
@@ -87,17 +101,39 @@
     </div>
   </div>
 
+  <!-- [8] App JS -->
   <script>
-  // ===== Versionado automático para romper caché en recursos =====
+  // [8.1] Versionado automático para romper caché de PDFs/HTML enlazados
   const SITE_VERSION = new Date(document.lastModified).getTime().toString(36);
 
-  // ====== Claves -> nombres exactos de curso en DATA ======
+  // [8.2] Mapeo de claves -> nombre exacto del curso en DATA
   const CODES = {
     "precalculo": "Precálculo",
     "teoriadenumeros": "Teoría de números"
   };
 
-  // === EDITA AQUÍ: lista de cursos y PDFs ===========================
+  // [8.3] Frases motivadoras (puedes editar o añadir más)
+  const QUOTES = [
+    { text: "Somos lo que hacemos repetidamente. La excelencia, entonces, no es un acto, sino un hábito.", author: "Aristóteles" },
+    { text: "Aprender sin reflexionar es malgastar la energía. Reflexionar sin aprender es peligroso.", author: "Confucio" },
+    { text: "Las neuronas que se activan juntas, se conectan juntas.", author: "Donald Hebb" },
+    { text: "Un hombre que ha cometido un error y no lo corrige, comete otro error.", author: "Confucio" },
+    { text: "Caer siete veces y levantarse ocho.", author: "Proverbio chino" },
+    { text: "Para resolver un problema, hay que aprender a plantearlo.", author: "George Pólya" },
+    { text: "Las matemáticas son la reina de las ciencias.", author: "Carl Friedrich Gauss" }
+  ];
+  // [8.3a] Intervalo de rotación (por defecto 1 minuto). **Para cambiar a diario** pon 86400000.
+  const ROTATE_MS = 60_000;  // <-- cambia a 86_400_000 para “una por día”
+  function updateQuote() {
+    const i = Math.floor(Date.now() / ROTATE_MS) % QUOTES.length;
+    const q = QUOTES[i];
+    document.getElementById("quoteText").textContent = `“${q.text}”`;
+    document.getElementById("quoteAuthor").textContent = `— ${q.author}`;
+  }
+  setInterval(updateQuote, ROTATE_MS);
+  updateQuote();
+
+  // [8.4] DATA: cursos y recursos (edita rutas/títulos aquí)
   const DATA = {
     "Precálculo": {
       sections: {
@@ -125,51 +161,33 @@
       }
     }
   };
-  // ==================================================================
 
+  // [8.5] Referencias al DOM
   const yearEl = document.getElementById("year");
-  yearEl.textContent = new Date().getFullYear();
-
-  const courseFilter = document.getElementById("courseFilter");
-  const qInput = document.getElementById("q");
   const root = document.getElementById("root");
   const gate = document.getElementById("gate");
   const gateInput = document.getElementById("gateInput");
   const gateBtn = document.getElementById("gateBtn");
   const gateErr = document.getElementById("gateErr");
   const changeKeyBtn = document.getElementById("changeKey");
+  yearEl.textContent = new Date().getFullYear();
 
-  // Estado: curso permitido por clave (o null = todos)
+  // [8.6] Estado “curso permitido” (clave en sesión) + ?clave= en URL
   let ALLOWED = sessionStorage.getItem("allowedCourse") || null;
-
-  // Parámetro URL ?clave=precalculo
   const urlKey = new URL(location.href).searchParams.get("clave");
   if (urlKey && CODES[urlKey.toLowerCase()]) {
     ALLOWED = CODES[urlKey.toLowerCase()];
     sessionStorage.setItem("allowedCourse", ALLOWED);
   }
 
-  // Construir opciones del selector según ALLOWED
-  function buildCourseOptions() {
-    courseFilter.innerHTML = '<option value="">Todos los cursos</option>';
-    const keys = Object.keys(DATA).sort().filter(k => !ALLOWED || k === ALLOWED);
-    keys.forEach(curso => {
-      const opt = document.createElement("option");
-      opt.value = curso;
-      opt.textContent = curso;
-      courseFilter.appendChild(opt);
-    });
-  }
-
-  // Badge por extensión
+  // [8.7] Utilidades UI
   function badgeFor(file) {
     const ext = (file.split(".").pop() || "").toLowerCase();
     if (ext === "pdf") return "PDF";
     if (ext === "html" || ext === "htm") return "HTML";
     return "Recurso";
   }
-
-  // Fila de recurso con cache-busting (?v=SITE_VERSION)
+  // Enlaces con cache-busting (?v=SITE_VERSION)
   function makeItemRow(item) {
     const row = document.createElement("div");
     row.className = "pdf";
@@ -191,13 +209,12 @@
     return row;
   }
 
+  // [8.8] Render del contenido (sin buscador ni selector)
   function render() {
-    const q = qInput.value.trim().toLowerCase();
-    const only = courseFilter.value;
     root.innerHTML = "";
 
     const entries = Object.entries(DATA)
-      .filter(([curso]) => (!only || curso === only) && (!ALLOWED || curso === ALLOWED));
+      .filter(([curso]) => (!ALLOWED || curso === ALLOWED));
 
     if (entries.length === 0) {
       root.innerHTML = "<p>No hay cursos para mostrar.</p>";
@@ -212,37 +229,21 @@
       h2.textContent = curso;
       wrap.appendChild(h2);
 
-      // Caso array simple (por si agregas cursos sin secciones)
       if (Array.isArray(contenido)) {
         const list = document.createElement("div");
         list.className = "list";
-
-        const filtered = contenido.filter(i =>
-          !q || i.titulo.toLowerCase().includes(q) || i.archivo.toLowerCase().includes(q)
-        );
-
-        if (filtered.length === 0) {
-          const p = document.createElement("p");
-          p.textContent = "No hay resultados en este curso para tu búsqueda.";
-          list.appendChild(p);
-        } else {
-          filtered.forEach(item => list.appendChild(makeItemRow(item)));
-        }
-
+        contenido.forEach(item => list.appendChild(makeItemRow(item)));
         wrap.appendChild(list);
         root.appendChild(wrap);
         continue;
       }
 
-      // Caso objeto con secciones
       if (contenido && contenido.sections && typeof contenido.sections === "object") {
         const secciones = Object.keys(contenido.sections);
-        let hayAlgo = false;
-
         secciones.forEach((nombreSeccion, idx) => {
           const det = document.createElement("details");
           det.className = "details";
-          if (idx === 0) det.open = true;
+          if (idx === 0) det.open = true; // abre la primera sección
 
           const sum = document.createElement("summary");
           sum.textContent = nombreSeccion;
@@ -250,37 +251,19 @@
 
           const list = document.createElement("div");
           list.className = "list";
-
-          const items = contenido.sections[nombreSeccion] || [];
-          const filtered = items.filter(i =>
-            !q || i.titulo.toLowerCase().includes(q) || i.archivo.toLowerCase().includes(q)
-          );
-
-          if (filtered.length === 0) {
-            const p = document.createElement("p");
-            p.textContent = "No hay resultados en esta sección para tu búsqueda.";
-            list.appendChild(p);
-          } else {
-            hayAlgo = true;
-            filtered.forEach(item => list.appendChild(makeItemRow(item)));
-          }
-
+          (contenido.sections[nombreSeccion] || [])
+            .forEach(item => list.appendChild(makeItemRow(item)));
           det.appendChild(list);
+
           wrap.appendChild(det);
         });
-
-        if (!hayAlgo && q) {
-          const p = document.createElement("p");
-          p.textContent = "No hay resultados en este curso para tu búsqueda.";
-          wrap.appendChild(p);
-        }
 
         root.appendChild(wrap);
       }
     }
   }
 
-  // Puerta de acceso
+  // [8.9] Lógica de la puerta (clave)
   function openGate() {
     gate.classList.add("show");
     gate.setAttribute("aria-hidden", "false");
@@ -302,28 +285,23 @@
     ALLOWED = course;
     sessionStorage.setItem("allowedCourse", ALLOWED);
     closeGate();
-    buildCourseOptions();
     render();
   }
-
   gateBtn.addEventListener("click", submitGate);
   gateInput.addEventListener("keydown", e => { if (e.key === "Enter") submitGate(); });
   changeKeyBtn.addEventListener("click", () => {
     ALLOWED = null;
     sessionStorage.removeItem("allowedCourse");
-    buildCourseOptions();
-    render();
     openGate();
   });
 
-  // Inicializar
-  buildCourseOptions();
-  if (!ALLOWED) openGate();   // Mostrar puerta si no hay clave aún
-  qInput.addEventListener("input", render);
-  courseFilter.addEventListener("change", render);
-  render();
+  // [8.10] Inicialización
+  if (!ALLOWED) openGate();    // muestra la puerta si no hay clave
+  render();                    // dibuja el contenido según la clave (o todos si quitas la puerta)
   </script>
 </body>
+</html>
+
 </html>
 
 
