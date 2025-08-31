@@ -5,6 +5,12 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>Clases de Matemáticas</title>
+
+  <!-- Opcional: ayudas anti-caché para el HTML base -->
+  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
+  <meta http-equiv="Pragma" content="no-cache" />
+  <meta http-equiv="Expires" content="0" />
+
   <style>
     :root { --maxw: 980px; }
     * { box-sizing: border-box; }
@@ -26,18 +32,19 @@
     details > summary { cursor: pointer; font-weight: 600; color: #0b63c5; }
   </style>
 
+  <!-- MathJax (render LaTeX) -->
   <script>
-window.MathJax = {
-  tex: {
-    inlineMath: [['\\(','\\)'], ['$', '$']],
-    displayMath: [['\\[','\\]'], ['$$','$$']],
-    processEscapes: true
-  },
-  svg: { fontCache: 'global' }
-};
-</script>
-<script id="MathJax-script" async
-        src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"></script>
+    window.MathJax = {
+      tex: {
+        inlineMath: [['\\(','\\)'], ['$', '$']],
+        displayMath: [['\\[','\\]'], ['$$','$$']],
+        processEscapes: true
+      },
+      svg: { fontCache: 'global' }
+    };
+  </script>
+  <script id="MathJax-script" async
+          src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"></script>
 </head>
 <body>
   <header>
@@ -62,37 +69,40 @@ window.MathJax = {
   </footer>
 
   <script>
+  // ===== Versionado automático para romper caché en recursos =====
+  // Cambia cada vez que este index.html se modifica (según el navegador/CDN).
+  const SITE_VERSION = new Date(document.lastModified).getTime().toString(36);
+
   // === EDITA AQUÍ: lista de cursos y PDFs ===========================
-  // Ahora "Precálculo" es un grupo con secciones: "Clases" y "Ejercicios".
-  // El resto de cursos puede seguir siendo un simple array, como antes.
+  // "Precálculo" con secciones: "Clases" y "Ejercicios".
   const DATA = {
-  "Precálculo": {
-    sections: {
-      "Clases": [
-        { titulo: "Clase 1", archivo: "cursos/precalculo/clase1.pdf" },
-        { titulo: "Clase 2", archivo: "cursos/precalculo/clase2.pdf" },
-        { titulo: "Clase 3", archivo: "cursos/precalculo/clase3.pdf" }
-      ],
-      "Ejercicios": [
-        { titulo: "Operaciones básicas y simplificación", archivo: "cursos/h2/modulo0.html" }
-      ]
-    }
-  },
+    "Precálculo": {
+      sections: {
+        "Clases": [
+          { titulo: "Clase 1", archivo: "cursos/precalculo/clase1.pdf" },
+          { titulo: "Clase 2", archivo: "cursos/precalculo/clase2.pdf" },
+          { titulo: "Clase 3", archivo: "cursos/precalculo/clase3.pdf" }
+        ],
+        "Ejercicios": [
+          { titulo: "Operaciones básicas y simplificación", archivo: "cursos/h2/modulo0.html" }
+          // Si lo mueves: "cursos/precalculo/ejercicios/modulo0.html"
+        ]
+      }
+    },
 
-  // Si quieres mostrar también esta carpeta que ya subiste:
-  "Teoría de números": {
-    sections: {
-      "Clases": [
-        { titulo: "Motivación", archivo: "cursos/teoria de numeros/motivacion.pdf" },
-        { titulo: "Principio de inducción", archivo: "cursos/teoria de numeros/Principio_induccion.pdf" }
-      ],
-      "Ejercicios": [
-        { titulo: "Principio de Inducción Matemática", archivo: "cursos/teoria de numeros/PIM.pdf" }
-      ]
+    // Ejemplo con secciones (ajusta si no existe PIM.pdf)
+    "Teoría de números": {
+      sections: {
+        "Clases": [
+          { titulo: "Motivación", archivo: "cursos/teoria de numeros/motivacion.pdf" },
+          { titulo: "Principio de inducción", archivo: "cursos/teoria de numeros/Principio_induccion.pdf" }
+        ],
+        "Ejercicios": [
+          { titulo: "Principio de Inducción Matemática", archivo: "cursos/teoria de numeros/PIM.pdf" }
+        ]
+      }
     }
-  }
-};
-
+  };
   // ==================================================================
 
   const yearEl = document.getElementById("year");
@@ -118,12 +128,15 @@ window.MathJax = {
     return "Recurso";
   }
 
+  // Fila de recurso con cache-busting automático (?v=SITE_VERSION)
   function makeItemRow(item) {
     const row = document.createElement("div");
     row.className = "pdf";
 
     const link = document.createElement("a");
-    link.href = item.archivo;
+    const url = new URL(item.archivo, location.href);
+    url.searchParams.set("v", SITE_VERSION); // cache-busting automático
+    link.href = url.toString();
     link.target = "_blank";
     link.rel = "noopener";
     link.textContent = item.titulo;
@@ -157,7 +170,7 @@ window.MathJax = {
       h2.textContent = curso;
       wrap.appendChild(h2);
 
-      // Caso 1: curso “simple” (array como antes)
+      // Caso 1: curso “simple” (array)
       if (Array.isArray(contenido)) {
         const list = document.createElement("div");
         list.className = "list";
@@ -181,7 +194,6 @@ window.MathJax = {
 
       // Caso 2: curso con secciones (objeto { sections: { ... } })
       if (contenido && contenido.sections && typeof contenido.sections === "object") {
-        // Creamos un <details> por sección (p. ej., "Clases" y "Ejercicios")
         const secciones = Object.keys(contenido.sections);
         let hayAlgo = false;
 
@@ -229,9 +241,7 @@ window.MathJax = {
   qInput.addEventListener("input", render);
   courseFilter.addEventListener("change", render);
   render();
-</script>
-
-
-  
+  </script>
 </body>
 </html>
+
