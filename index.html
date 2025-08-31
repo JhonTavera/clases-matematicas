@@ -66,28 +66,26 @@ window.MathJax = {
   // Ahora "Precálculo" es un grupo con secciones: "Clases" y "Ejercicios".
   // El resto de cursos puede seguir siendo un simple array, como antes.
   const DATA = {
-    "Precálculo": {
-      sections: {
-        "Clases": [
-          { titulo: "Clase 1", archivo: "cursos/precalculo/clase1.pdf" },
-          { titulo: "Clase 2", archivo: "cursos/precalculo/clase2.pdf" },
-          { titulo: "Clase 3", archivo: "cursos/precalculo/clase3.pdf" }
-        ],
-        "Ejercicios": [
-          { titulo: "Módulo 0: Simplificación (HTML)", archivo: "cursos/h2/modulo0.html" }
-          // Puedes agregar más, p. ej.:
-          // { titulo: "Módulo 1: Funciones y fundamentos (HTML)", archivo: "cursos/h2/modulo1.html" }
-        ]
-      }
-    },
+  "Precálculo": {
+    sections: {
+      "Clases": [
+        { titulo: "Clase 1", archivo: "cursos/precalculo/clase1.pdf" },
+        { titulo: "Clase 2", archivo: "cursos/precalculo/clase2.pdf" },
+        { titulo: "Clase 3", archivo: "cursos/precalculo/clase3.pdf" }
+      ],
+      "Ejercicios": [
+        { titulo: "Módulo 0: Simplificación (HTML)", archivo: "cursos/h2/modulo0.html" }
+      ]
+    }
+  },
 
-    "EDO": [
-      { titulo: "Clase 1", archivo: "cursos/EDO/clase1.pdf" },
-      { titulo: "Clase 2", archivo: "cursos/EDO/clase2.pdf" }
-    ]
+  // Si quieres mostrar también esta carpeta que ya subiste:
+  "Teoría de números": [
+    { titulo: "Motivación", archivo: "cursos/teoria de numeros/motivacion.pdf" },
+    { titulo: "Principio de inducción", archivo: "cursos/teoria de numeros/Principio_induccion.pdf" }
+  ]
+};
 
-    // Agrega más cursos aquí…
-  };
   // ==================================================================
 
   const yearEl = document.getElementById("year");
