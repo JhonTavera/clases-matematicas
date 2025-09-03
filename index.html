@@ -108,7 +108,8 @@
   // [8.2] Mapeo de claves -> nombre exacto del curso en DATA
   const CODES = {
     "precalculo": "Precálculo",
-    "teoriadenumeros": "Teoría de números"
+    "teoriadenumeros": "Teoría de números",
+    "geometriavectorial": "Geometría Vectorial"
   };
 
   // [8.3] Frases motivadoras (puedes editar o añadir más)
@@ -122,7 +123,7 @@
     { text: "Las matemáticas son la reina de las ciencias.", author: "Carl Friedrich Gauss" }
   ];
   // [8.3a] Intervalo de rotación (por defecto 1 minuto). **Para cambiar a diario** pon 86400000.
-  const ROTATE_MS = 60_000;  // <-- cambia a 86_400_000 para “una por día”
+  const ROTATE_MS = 86400000;  // <-- cambia a 86_400_000 para “una por día”
   function updateQuote() {
     const i = Math.floor(Date.now() / ROTATE_MS) % QUOTES.length;
     const q = QUOTES[i];
@@ -138,6 +139,20 @@
       sections: {
         "Clases": [
           { titulo: "Clase 1", archivo: "cursos/precalculo/clase1.pdf" },
+          { titulo: "Clase 2", archivo: "cursos/precalculo/clase2.pdf" },
+          { titulo: "Clase 3", archivo: "cursos/precalculo/clase3.pdf" }
+        ],
+        "Ejercicios": [
+          { titulo: "Operaciones básicas y simplificación", archivo: "cursos/h2/modulo0.html" }
+          // Si lo mueves: "cursos/precalculo/ejercicios/modulo0.html"
+        ]
+      }
+    },
+
+    "Geometría Vectorial": {
+      sections: {
+        "Clases": [
+          { titulo: "Clase 1", archivo: "cursos/geometriavectorial/preambulo.pdf" },
           { titulo: "Clase 2", archivo: "cursos/precalculo/clase2.pdf" },
           { titulo: "Clase 3", archivo: "cursos/precalculo/clase3.pdf" }
         ],
