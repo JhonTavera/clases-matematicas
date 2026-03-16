@@ -5,47 +5,31 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Funciones reales de variable real</title>
 
-  <!-- =========================================================
-       ARCHIVO INDEPENDIENTE
-       - Guarda este archivo como: funciones_reales_variable_real.html
-       - Abre el archivo directamente en el navegador.
-       - Para cambiar las gráficas de Desmos:
-         busca RF_CONFIG.desmosDefault o RF_CONFIG.desmosById
-       ========================================================= -->
-
   <style>
     /* =========================================================
        1) VARIABLES DE COLOR Y ESTILO GENERAL
-       - Aquí puedes cambiar rápidamente colores globales
+       - Edita aquí fondo, colores, radios y sombras
        ========================================================= */
     :root{
-      /* ---------- Fondo general ---------- */
       --rf-page-bg: #ffffff;
-
-      /* ---------- Paneles ---------- */
       --rf-panel: #ffffff;
       --rf-panel-2: #f5f9ff;
       --rf-border: #d7e3f4;
 
-      /* ---------- Texto ---------- */
       --rf-text: #111111;
       --rf-muted: #425466;
 
-      /* ---------- Acentos azules ---------- */
       --rf-blue: #1f5fbf;
       --rf-blue-soft: #eaf3ff;
       --rf-blue-soft-2: #dcecff;
       --rf-blue-border: #b8d0f3;
 
-      /* ---------- Grupo algebraicas ---------- */
       --rf-alg-1: #eaf3ff;
       --rf-alg-2: #f4f9ff;
 
-      /* ---------- Grupo trascendentes ---------- */
       --rf-tr-1: #eef6ff;
       --rf-tr-2: #f7fbff;
 
-      /* ---------- Sombra y radios ---------- */
       --rf-shadow: 0 10px 24px rgba(25, 50, 90, 0.08);
       --rf-radius: 18px;
     }
@@ -64,8 +48,8 @@
 
     /* =========================================================
        3) CONTENEDOR PRINCIPAL
-       - Cambia max-width si quieres la página más ancha/angosta
-       - Cambia padding si quieres más o menos margen interno
+       - max-width: ancho máximo total
+       - padding: margen interno general
        ========================================================= */
     .rf-wrap{
       max-width: 1200px;
@@ -86,8 +70,6 @@
       border-bottom: 1px solid var(--rf-border);
     }
 
-    /* ---------- Título principal ----------
-       Cambia font-size para hacerlo más grande o pequeño */
     .rf-title{
       margin:0;
       font-size: clamp(20px, 2.5vw, 30px);
@@ -96,8 +78,6 @@
       letter-spacing: .2px;
     }
 
-    /* ---------- Subtítulo ----------
-       Cambia font-size y max-width si quieres que ocupe más o menos */
     .rf-subtitle{
       margin: 8px 0 0 0;
       color: var(--rf-muted);
@@ -115,13 +95,14 @@
 
     /* =========================================================
        5) BOTONES
-       - Aquí puedes editar tamaños, colores y bordes
+       - padding: tamaño del botón
+       - font-size: tamaño del texto
        ========================================================= */
     .rf-btn{
       border: 1px solid var(--rf-blue-border);
       background: #ffffff;
       color: var(--rf-blue);
-      padding: 10px 14px;       /* espacio interno del botón */
+      padding: 10px 14px;
       border-radius: 12px;
       cursor:pointer;
       font-size: 13px;
@@ -172,7 +153,7 @@
     .rf-grid{
       display:grid;
       grid-template-columns: 1fr 1fr;
-      gap: 16px; /* separación entre tarjetas */
+      gap: 16px;
     }
 
     @media (max-width: 860px){
@@ -232,7 +213,7 @@
     }
 
     /* =========================================================
-       10) BOTONES-CHIP DE LISTAS
+       10) BOTONES DE LISTAS
        ========================================================= */
     .rf-chip-grid{
       display:grid;
@@ -273,7 +254,6 @@
       font-size: 12px;
     }
 
-    /* ---------- Grupo algebraicas ---------- */
     .rf-chip.rf-alg{
       border-color: var(--rf-blue-border);
       background: var(--rf-alg-2);
@@ -283,7 +263,6 @@
       background: var(--rf-alg-1);
     }
 
-    /* ---------- Grupo trascendentes ---------- */
     .rf-chip.rf-tr{
       border-color: var(--rf-blue-border);
       background: var(--rf-tr-2);
@@ -294,8 +273,8 @@
     }
 
     /* =========================================================
-       11) VISTA DE DETALLE
-       - Izquierda: propiedades
+       11) VISTA DETALLE
+       - Izquierda: texto y propiedades
        - Derecha: gráfica
        ========================================================= */
     .rf-detail{
@@ -319,7 +298,6 @@
 
     /* =========================================================
        12) TABLA DE PROPIEDADES
-       - Cambia la primera columna si quieres más espacio
        ========================================================= */
     .rf-kv{
       display:grid;
@@ -356,8 +334,7 @@
     }
 
     /* =========================================================
-       13) BLOQUES CON FÓRMULAS
-       - Cambia font-size si quieres LaTeX más grande
+       13) BLOQUES DE TEXTO MATEMÁTICO
        ========================================================= */
     .rf-math{
       font-size: clamp(14px, 3.8vw, 18px);
@@ -367,7 +344,7 @@
     }
 
     /* =========================================================
-       14) TÉRMINOS CLICABLES (m, b, x0, y0...)
+       14) TÉRMINOS CLICABLES
        ========================================================= */
     .rf-term{
       display:inline-block;
@@ -387,7 +364,7 @@
     }
 
     /* =========================================================
-       15) POPOVER DE AYUDA
+       15) POPOVER
        ========================================================= */
     .rf-popover{
       position: fixed;
@@ -405,9 +382,8 @@
     }
 
     /* =========================================================
-       16) BLOQUE DESMOS
-       - AQUÍ está el aumento de altura
-       - Si lo quieres aún más alto, cambia los min-height
+       16) PANEL DESMOS
+       - Ajusta aquí la altura de la gráfica
        ========================================================= */
     .rf-desmos{
       border: 1px solid var(--rf-border);
@@ -419,18 +395,17 @@
 
     .rf-desmos .rf-aspect{
       width: 100%;
-      min-height: 720px; /* altura grande en escritorio */
+      min-height: 720px;
     }
 
     .rf-desmos iframe{
       width: 100%;
-      height: 720px;     /* altura del iframe */
+      height: 720px;
       border: 0;
       display:block;
       background:#ffffff;
     }
 
-    /* ---------- Tablet ---------- */
     @media (max-width: 980px){
       .rf-desmos .rf-aspect{
         min-height: 620px;
@@ -440,8 +415,6 @@
       }
     }
 
-    /* ---------- Celular ----------
-       Se deja alta, pero menos que en escritorio para no exagerar */
     @media (max-width: 600px){
       .rf-desmos .rf-aspect{
         min-height: 500px;
@@ -452,7 +425,7 @@
     }
 
     /* =========================================================
-       17) ACCIONES SECUNDARIAS
+       17) BOTONES BAJO LA DEFINICIÓN
        ========================================================= */
     .rf-mini-actions{
       display:flex;
@@ -479,12 +452,11 @@
       <div>
         <h1 class="rf-title">Funciones reales de variable real</h1>
         <p class="rf-subtitle">
-          Funciones \(\mathbb{R}\to\mathbb{R}\) con codominio tomado como el rango para simplificar el estudio de la sobreyectividad.
+          Una función es real de variable real, cuando su codominio y dominio son subconjuntos de números reales respectivamente.
         </p>
       </div>
 
       <div class="rf-top-actions">
-        <!-- Botón volver: solo navega dentro de este archivo -->
         <button class="rf-btn rf-ghost" id="rfBackBtn" style="display:none;">Volver</button>
       </div>
     </div>
@@ -504,14 +476,10 @@
           <p>Algebraicas y trascendentes. Cada función incluye definición, propiedades y gráfica.</p>
         </div>
       </div>
-
-      <p class="rf-home-note">
-        Una función es real de variable real, cuando su codominio y dominio son subconjuntos de números reales respectivamente.
-      </p>
     </div>
 
     <!-- =======================================================
-         PANTALLA DE CARACTERÍSTICAS
+         PANTALLA CARACTERÍSTICAS
          ======================================================= -->
     <div class="rf-screen" id="rfScreenCharacteristics">
       <div class="rf-box">
@@ -521,7 +489,7 @@
     </div>
 
     <!-- =======================================================
-         PANTALLA DE FUNCIONES ELEMENTALES
+         PANTALLA FUNCIONES ELEMENTALES
          ======================================================= -->
     <div class="rf-screen" id="rfScreenElementary">
       <div class="rf-box">
@@ -540,7 +508,7 @@
     </div>
 
     <!-- =======================================================
-         MENÚ DE TRIGONOMÉTRICAS
+         MENÚ TRIGONOMÉTRICAS
          ======================================================= -->
     <div class="rf-screen" id="rfScreenTrigMenu">
       <div class="rf-box">
@@ -550,28 +518,17 @@
     </div>
 
     <!-- =======================================================
-         PANTALLA DE DETALLE
-         - Izquierda: información
-         - Derecha: gráfica
+         PANTALLA DETALLE
          ======================================================= -->
     <div class="rf-screen" id="rfScreenDetail">
       <div class="rf-detail">
-
-        <!-- Columna izquierda -->
         <div class="rf-box">
           <h2 id="rfDetailTitle"></h2>
-
-          <!-- Definición y texto principal -->
           <div id="rfDetailBody" class="rf-v"></div>
-
-          <!-- Propiedades -->
           <div class="rf-kv" id="rfDetailKV"></div>
-
-          <!-- Acciones -->
           <div class="rf-mini-actions" id="rfDetailActions"></div>
         </div>
 
-        <!-- Columna derecha: Desmos embebido -->
         <div class="rf-desmos">
           <div class="rf-aspect">
             <iframe
@@ -587,14 +544,12 @@
   </div>
 
   <!-- =========================================================
-       POPOVER DE TÉRMINOS CLICABLES
+       POPOVER
        ========================================================= -->
   <div class="rf-popover" id="rfPopover"></div>
 
   <!-- =========================================================
-       CONFIGURACIÓN DE MATHJAX
-       - Se desactiva el typeset automático y se hace manual
-       - Esto mejora el render cuando el contenido se inserta con JS
+       MATHJAX
        ========================================================= -->
   <script>
     window.MathJax = {
@@ -606,39 +561,59 @@
       }
     };
   </script>
-
-  <!-- Librería MathJax -->
   <script async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
 
   <script>
     /* ============================================================
-       1) CONFIGURACIÓN RÁPIDA
-       - desmosDefault: enlace común para todas las gráficas
-       - desmosById: si luego quieres una distinta por función,
-         agrega pares id -> url
+       1) CONFIGURACIÓN DE DESMOS
+       - Aquí se organiza un link por cada gráfica
+       - Si una función no está aquí, usa desmosDefault
        ============================================================ */
     const RF_CONFIG = {
+      /* Link por defecto:
+         se usa en funciones donde todavía no se ha asignado uno propio */
       desmosDefault: "https://www.desmos.com/calculator/jqlepkaqqz",
 
-      /* Ejemplo de uso futuro:
+      /* Un link por función */
       desmosById: {
-        lineal: "https://www.desmos.com/calculator/xxxxx",
-        parabola: "https://www.desmos.com/calculator/yyyyy"
-      }
-      */
-      desmosById: {},
+        lineal: "https://www.desmos.com/calculator/jqlepkaqqz",
+        polinomica: "https://www.desmos.com/calculator/tiiivtqgzd",
+        racional: "https://www.desmos.com/calculator/sryjkib3om",
+        exponencial: "https://www.desmos.com/calculator/lhgminhcii",
+        logaritmica: "https://www.desmos.com/calculator/zmm45juahk",
+        sin: "https://www.desmos.com/calculator/db8lcyhyr3",
+        cos: "https://www.desmos.com/calculator/dlue492btp",
+        tan: "https://www.desmos.com/calculator/b7vvshbwiz",
+        sec: "https://www.desmos.com/calculator/vawknu1pji",
+        csc: "https://www.desmos.com/calculator/vawknu1pji",
+        cot: "https://www.desmos.com/calculator/vawknu1pji",
 
+        /* Inversas trigonométricas:
+           se deja el mismo link que la función base */
+        arcsin: "https://www.desmos.com/calculator/db8lcyhyr3",
+        arccos: "https://www.desmos.com/calculator/dlue492btp",
+        arctan: "https://www.desmos.com/calculator/b7vvshbwiz",
+        arcsec: "https://www.desmos.com/calculator/vawknu1pji",
+        arccsc: "https://www.desmos.com/calculator/vawknu1pji",
+        arccot: "https://www.desmos.com/calculator/vawknu1pji"
+
+        /* Si luego agregas:
+           constante: "https://..."
+           parabola: "https://..."
+        */
+      },
+
+      /* Sufijo para embeber */
       desmosEmbedSuffix: "?embed"
     };
 
     /* ============================================================
-       2) ATAJO PARA ESCRIBIR TEXTO MATEMÁTICO SIN PERDER BARRAS
-       - String.raw permite escribir LaTeX más fácilmente
+       2) ATAJO PARA TEXTO RAW CON LATEX
        ============================================================ */
     const L = String.raw;
 
     /* ============================================================
-       3) DEFINICIONES DE CARACTERÍSTICAS
+       3) CARACTERÍSTICAS
        ============================================================ */
     const RF_CHARACTERISTICS = [
       {
@@ -649,10 +624,10 @@
             Sea \(f:A\subseteq\mathbb{R}\to\mathbb{R}\).
           </div>
           <ul>
-        <li>\(f\) es <b>creciente</b> (no estricta) en \(I\subseteq A\) si \(x_1<x_2 \Rightarrow f(x_1)\le f(x_2)\).</li>
-        <li>Es <b>decreciente</b> (no estricta) en \(I\) si \(x_1<x_2 \Rightarrow f(x_1)\ge f(x_2)\).</li>
-        <li>Es <b>estrictamente creciente</b> en \(I\) si \(x_1<x_2 \Rightarrow f(x_1)<f(x_2)\).</li>
-        <li>Es <b>estrictamente decreciente</b> en \(I\) si \(x_1<x_2 \Rightarrow f(x_1)>f(x_2)\).</li>
+            <li>\(f\) es <b>creciente</b> (no estricta) en \(I\subseteq A\) si \(x_1<x_2 \Rightarrow f(x_1)\le f(x_2)\).</li>
+            <li>Es <b>decreciente</b> (no estricta) en \(I\) si \(x_1<x_2 \Rightarrow f(x_1)\ge f(x_2)\).</li>
+            <li>Es <b>estrictamente creciente</b> en \(I\) si \(x_1<x_2 \Rightarrow f(x_1)<f(x_2)\).</li>
+            <li>Es <b>estrictamente decreciente</b> en \(I\) si \(x_1<x_2 \Rightarrow f(x_1)>f(x_2)\).</li>
           </ul>
         `,
         kv: []
@@ -717,8 +692,7 @@
     ];
 
     /* ============================================================
-       4) DEFINICIONES DE FUNCIONES
-       - Ahora todas incluyen: acotación, periodicidad y simetría
+       4) FUNCIONES
        ============================================================ */
     const RF_FUNCTIONS = [
       {
@@ -1016,7 +990,7 @@
           ["Rango", L`\((-\infty,-1]\cup[1,\infty)\)`],
           ["Asíntotas verticales", L`\(x=\tfrac{\pi}{2}+k\pi\)`],
           ["Monotonicidad", "Se estudia por ramas entre asíntotas."],
-          ["Acotación", L`Acotada inferiormente por \(1\) en una rama y superiormente por \(-1\) en otra; no acotada globalmente.`],
+          ["Acotación", L`No es acotada globalmente.`],
           ["Periódica", L`Sí, de período \(2\pi\).`],
           ["Simetría", "Par; simetría respecto al eje \(y\)."]
         ],
@@ -1180,7 +1154,7 @@
     }
 
     /* ============================================================
-       6) POPOVER DE TÉRMINOS CLICABLES
+       6) POPOVER
        ============================================================ */
     const rfPopover = document.getElementById('rfPopover');
 
@@ -1224,8 +1198,7 @@
     });
 
     /* ============================================================
-       7) FUNCIÓN AUXILIAR PARA RENDERIZAR LATEX
-       - Se usa cada vez que cambia el contenido
+       7) RENDER LATEX
        ============================================================ */
     function rfTypeset(elements){
       if (window.MathJax && window.MathJax.typesetPromise){
@@ -1237,7 +1210,7 @@
     }
 
     /* ============================================================
-       8) NAVEGACIÓN ENTRE PANTALLAS
+       8) NAVEGACIÓN
        ============================================================ */
     const rfBackBtn = document.getElementById('rfBackBtn');
 
@@ -1276,7 +1249,7 @@
     rfBackBtn.addEventListener('click', rfPopScreen);
 
     /* ============================================================
-       9) LISTAS
+       9) RENDER DE LISTAS
        ============================================================ */
     const rfCharacteristicList = document.getElementById('rfCharacteristicList');
     const rfAlgList = document.getElementById('rfAlgList');
@@ -1284,7 +1257,6 @@
     const rfTrigList = document.getElementById('rfTrigList');
 
     function rfRenderLists(){
-      /* ---------- Características ---------- */
       rfCharacteristicList.innerHTML = "";
       RF_CHARACTERISTICS.forEach(ch => {
         const btn = document.createElement('div');
@@ -1294,7 +1266,6 @@
         rfCharacteristicList.appendChild(btn);
       });
 
-      /* ---------- Algebraicas ---------- */
       rfAlgList.innerHTML = "";
       RF_FUNCTIONS.filter(f => f.group === "alg").forEach(fn => {
         const btn = document.createElement('div');
@@ -1304,13 +1275,11 @@
         rfAlgList.appendChild(btn);
       });
 
-      /* ---------- Trascendentes ---------- */
       rfTrList.innerHTML = "";
       RF_FUNCTIONS.filter(f => f.group === "tr").forEach(fn => {
         const btn = document.createElement('div');
         btn.className = "rf-chip rf-tr";
         btn.innerHTML = `<strong>${fn.title}</strong><span>Definición</span>`;
-
         btn.addEventListener('click', ()=>{
           if (fn.id === "trig"){
             rfPushScreen("trigMenu");
@@ -1318,11 +1287,9 @@
             rfOpenDetail(fn.id);
           }
         });
-
         rfTrList.appendChild(btn);
       });
 
-      /* ---------- Menú trigonométricas ---------- */
       rfTrigList.innerHTML = "";
       RF_FUNCTIONS.filter(f => f.group === "trig").forEach(fn => {
         const btn = document.createElement('div');
@@ -1334,7 +1301,7 @@
     }
 
     /* ============================================================
-       10) PANEL DE DETALLE
+       10) DETALLE
        ============================================================ */
     const rfDetailTitle = document.getElementById('rfDetailTitle');
     const rfDetailBody = document.getElementById('rfDetailBody');
@@ -1342,24 +1309,18 @@
     const rfDetailActions = document.getElementById('rfDetailActions');
     const rfDesmosFrame = document.getElementById('rfDesmosFrame');
 
-    /* ---------- Construye el enlace embebido de Desmos ---------- */
     function rfDesmosSrcFor(id){
       const url = RF_CONFIG.desmosById[id] || RF_CONFIG.desmosDefault;
       return url.includes("?") ? url + "&embed" : url + RF_CONFIG.desmosEmbedSuffix;
     }
 
-    /* ---------- Abre detalle ---------- */
     function rfOpenDetail(id){
       const item = rfFindById(id);
       if (!item) return;
 
-      /* Título */
       rfDetailTitle.textContent = item.title;
-
-      /* Texto principal */
       rfDetailBody.innerHTML = item.bodyHTML || "";
 
-      /* Propiedades */
       rfDetailKV.innerHTML = "";
       (item.kv || []).forEach(([k,v]) => {
         const keyEl = document.createElement('div');
@@ -1374,11 +1335,8 @@
         rfDetailKV.appendChild(valEl);
       });
 
-      /* Botones de acción */
       rfDetailActions.innerHTML = "";
       (item.actions || []).forEach(action => {
-
-        /* ----- Botón inversa ----- */
         if (action.type === "inverse" || action.type === "inverseTrig"){
           const btn = document.createElement('button');
           btn.className = "rf-btn rf-primary";
@@ -1387,7 +1345,6 @@
           rfDetailActions.appendChild(btn);
         }
 
-        /* ----- Abrir menú trig ----- */
         if (action.type === "openTrigMenu"){
           const btn = document.createElement('button');
           btn.className = "rf-btn rf-primary";
@@ -1396,7 +1353,6 @@
           rfDetailActions.appendChild(btn);
         }
 
-        /* ----- Abrir enlace Desmos ----- */
         if (action.type === "desmosLink"){
           const link = document.createElement('a');
           link.className = "rf-btn";
@@ -1408,23 +1364,17 @@
         }
       });
 
-      /* Gráfica embebida */
       rfDesmosFrame.src = rfDesmosSrcFor(id);
-
-      /* Cambiar a pantalla detalle */
       rfPushScreen("detail");
-
-      /* Volver a procesar LaTeX */
       rfTypeset([rfScreens.detail]);
     }
 
     /* ============================================================
-       11) EVENTOS DE LA PANTALLA PRINCIPAL
+       11) EVENTOS DE INICIO
        ============================================================ */
     document.querySelectorAll('[data-rf-nav]').forEach(el => {
       el.addEventListener('click', ()=>{
         const nav = el.getAttribute('data-rf-nav');
-
         if (nav === "characteristics") rfPushScreen("characteristics");
         if (nav === "elementary") rfPushScreen("elementary");
       });
@@ -1436,7 +1386,6 @@
     rfRenderLists();
     rfSetActiveScreen("home");
 
-    /* Cuando MathJax termine de cargar, procesa una vez toda la página */
     window.addEventListener("load", function(){
       rfTypeset([document.body]);
     });
