@@ -1,0 +1,778 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Funciones</title>
+
+  <style>
+    :root{
+      --bg1:#f5f7fb;
+      --bg2:#ffffff;
+      --ink:#111827;
+      --muted:#5b6472;
+      --line:#e6eaf0;
+      --line-strong:#d9e0ea;
+      --accent:#0b63c5;
+      --accent-soft:#eef5ff;
+      --accent-soft-2:#f6faff;
+      --accent-border:#bfd8ff;
+      --shadow:0 18px 40px rgba(15, 23, 42, .08);
+      --shadow-soft:0 8px 22px rgba(15, 23, 42, .05);
+      --radius-xl:24px;
+      --radius-lg:18px;
+      --radius-md:14px;
+    }
+
+    *{ box-sizing:border-box; }
+
+    html, body{
+      margin:0;
+      padding:0;
+      background:
+        radial-gradient(circle at top left, #eef5ff 0%, #f7f9fc 28%, #ffffff 62%),
+        linear-gradient(180deg, var(--bg1), var(--bg2));
+      color:var(--ink);
+      font-family: system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
+    }
+
+    body{
+      min-height:100vh;
+    }
+
+    .container{
+      width:min(1180px, calc(100vw - 2rem));
+      margin:0 auto;
+    }
+
+    header{
+      padding:1.1rem 0 0;
+    }
+
+    .header-shell{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:1rem;
+      padding:1rem 1.15rem;
+      border:1px solid rgba(255,255,255,.75);
+      background:rgba(255,255,255,.7);
+      backdrop-filter: blur(10px);
+      border-radius:20px;
+      box-shadow: var(--shadow-soft);
+    }
+
+    .page-title{
+      margin:0;
+      font-size:clamp(1.45rem, 2.5vw, 2rem);
+      font-weight:750;
+      letter-spacing:-.02em;
+    }
+
+    .back{
+      text-decoration:none;
+      color:#fff;
+      background:linear-gradient(180deg, #1570d8, #0b63c5);
+      border:1px solid #0b63c5;
+      padding:.78rem 1.08rem;
+      border-radius:14px;
+      font-weight:700;
+      box-shadow:0 10px 24px rgba(11,99,197,.18);
+      transition:transform .16s ease, box-shadow .16s ease;
+      white-space:nowrap;
+    }
+
+    .back:hover{
+      transform:translateY(-1px);
+      box-shadow:0 14px 28px rgba(11,99,197,.22);
+    }
+
+    main{
+      padding:1.1rem 0 2rem;
+    }
+
+    .hero{
+      position:relative;
+      overflow:hidden;
+      border:1px solid rgba(255,255,255,.9);
+      background:linear-gradient(180deg, rgba(255,255,255,.86), rgba(255,255,255,.96));
+      backdrop-filter: blur(10px);
+      border-radius:var(--radius-xl);
+      box-shadow: var(--shadow);
+      padding:1.45rem;
+    }
+
+    .hero::before{
+      content:"";
+      position:absolute;
+      right:-120px;
+      top:-140px;
+      width:320px;
+      height:320px;
+      background:radial-gradient(circle, rgba(11,99,197,.07), transparent 70%);
+      pointer-events:none;
+    }
+
+    .hero::after{
+      content:"";
+      position:absolute;
+      left:-110px;
+      bottom:-140px;
+      width:300px;
+      height:300px;
+      background:radial-gradient(circle, rgba(99,102,241,.05), transparent 70%);
+      pointer-events:none;
+    }
+
+    .definition-block{
+      position:relative;
+      z-index:1;
+      max-width:930px;
+      margin:0 auto;
+      text-align:center;
+      font-size:clamp(1.03rem, 1.55vw, 1.16rem);
+      line-height:1.85;
+      color:#1f2937;
+    }
+
+    .notation-shell{
+      position:relative;
+      z-index:1;
+      width:min(980px, 100%);
+      margin:1.25rem auto 0;
+      padding:1.45rem 1rem 1.15rem;
+      border:1px solid var(--line);
+      border-radius:22px;
+      background:
+        linear-gradient(180deg, rgba(255,255,255,.92), rgba(251,253,255,.96));
+      box-shadow: inset 0 1px 0 rgba(255,255,255,.75);
+    }
+
+    .notation-area{
+      display:flex;
+      flex-direction:column;
+      align-items:center;
+      gap:1rem;
+    }
+
+    .formula-row{
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      flex-wrap:wrap;
+      gap:.4rem;
+      line-height:1.2;
+    }
+
+    .formula-row.top{
+      font-size:clamp(2.65rem, 6vw, 4.3rem);
+      min-height:4.8rem;
+    }
+
+    .formula-row.bottom{
+      font-size:clamp(2.2rem, 5vw, 3.25rem);
+      min-height:4rem;
+    }
+
+    .math-static,
+    .math-token{
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      border-radius:16px;
+      min-height:1.3em;
+      transition:all .16s ease;
+    }
+
+    .math-static{
+      padding:.08em .08em;
+    }
+
+    .math-token{
+      appearance:none;
+      border:1px solid transparent;
+      background:transparent;
+      cursor:pointer;
+      padding:.08em .22em;
+      position:relative;
+      color:inherit;
+    }
+
+    .math-token:hover{
+      background:var(--accent-soft-2);
+      border-color:#dbeafe;
+    }
+
+    .math-token.active{
+      background:var(--accent-soft);
+      border-color:var(--accent-border);
+      box-shadow:0 0 0 4px rgba(11,99,197,.08);
+    }
+
+    .math-static mjx-container,
+    .math-token mjx-container{
+      margin:0 !important;
+      font-size:1em !important;
+    }
+
+    .math-static mjx-container[jax="CHTML"],
+    .math-token mjx-container[jax="CHTML"]{
+      line-height:1 !important;
+    }
+
+    .popover{
+      position:absolute;
+      z-index:20;
+      width:min(390px, calc(100vw - 3.2rem));
+      border:1px solid var(--accent-border);
+      border-radius:18px;
+      background:rgba(255,255,255,.98);
+      box-shadow:0 20px 44px rgba(15,23,42,.14);
+      padding:1rem 1.05rem;
+      display:none;
+      transform:translateY(4px);
+      opacity:0;
+      transition:opacity .16s ease, transform .16s ease;
+    }
+
+    .popover.show{
+      display:block;
+      opacity:1;
+      transform:translateY(0);
+    }
+
+    .popover h3{
+      margin:.05rem 0 .55rem;
+      font-size:1.02rem;
+      color:var(--accent);
+      letter-spacing:-.01em;
+    }
+
+    .popover p{
+      margin:.45rem 0;
+      line-height:1.65;
+      color:#1f2937;
+    }
+
+    .formula-box{
+      margin:.7rem 0;
+      padding:.72rem .82rem;
+      border:1px solid #ebeff5;
+      border-radius:14px;
+      background:#fafcff;
+      overflow-x:auto;
+    }
+
+    .formula-box mjx-container{
+      margin:0 !important;
+    }
+
+    .lower-zone{
+      position:relative;
+      z-index:1;
+      width:min(980px, 100%);
+      margin:1.4rem auto 0;
+      display:grid;
+      gap:1rem;
+    }
+
+    .control-bar{
+      display:grid;
+      grid-template-columns:repeat(3, minmax(0, 1fr));
+      gap:.8rem;
+    }
+
+    .control-btn,
+    .sub-btn{
+      appearance:none;
+      border:1px solid var(--line-strong);
+      background:rgba(255,255,255,.9);
+      color:var(--ink);
+      border-radius:16px;
+      font-weight:740;
+      cursor:pointer;
+      transition:transform .16s ease, box-shadow .16s ease, border-color .16s ease, background .16s ease;
+      box-shadow:var(--shadow-soft);
+    }
+
+    .control-btn{
+      padding:.95rem 1rem;
+      font-size:1rem;
+    }
+
+    .sub-btn{
+      padding:.78rem .92rem;
+      font-size:.97rem;
+      box-shadow:none;
+      background:#fff;
+    }
+
+    .control-btn:hover,
+    .sub-btn:hover{
+      transform:translateY(-1px);
+      border-color:#cfe0ff;
+    }
+
+    .control-btn.active{
+      background:linear-gradient(180deg, #1570d8, #0b63c5);
+      color:#fff;
+      border-color:#0b63c5;
+      box-shadow:0 12px 28px rgba(11,99,197,.16);
+    }
+
+    .subpanel{
+      display:none;
+      padding:.95rem;
+      border:1px solid var(--line);
+      border-radius:18px;
+      background:rgba(255,255,255,.92);
+    }
+
+    .subpanel.show{
+      display:block;
+    }
+
+    .subbuttons{
+      display:grid;
+      grid-template-columns:repeat(3, minmax(0, 1fr));
+      gap:.7rem;
+    }
+
+    .sub-btn.active{
+      color:var(--accent);
+      background:var(--accent-soft);
+      border-color:var(--accent-border);
+    }
+
+    .content-box{
+      padding:1.2rem 1.15rem;
+      border:1px solid var(--line);
+      border-radius:20px;
+      background:
+        linear-gradient(180deg, rgba(255,255,255,.94), rgba(251,253,255,.98));
+      min-height:250px;
+      box-shadow:var(--shadow-soft);
+    }
+
+    .content-box h2{
+      margin:.05rem 0 .75rem;
+      color:var(--accent);
+      font-size:1.18rem;
+      letter-spacing:-.01em;
+    }
+
+    .content-box p{
+      margin:.55rem 0;
+      line-height:1.72;
+      color:#1f2937;
+    }
+
+    .content-box ul{
+      margin:.55rem 0 .55rem 1.25rem;
+      line-height:1.72;
+      color:#1f2937;
+    }
+
+    footer{
+      padding:1rem 0 2.1rem;
+      color:var(--muted);
+      text-align:center;
+      font-size:.92rem;
+    }
+
+    @media (max-width: 900px){
+      .control-bar,
+      .subbuttons{
+        grid-template-columns:1fr;
+      }
+
+      .hero{
+        padding:1rem;
+      }
+
+      .notation-shell,
+      .content-box{
+        border-radius:18px;
+      }
+
+      .formula-row.top{
+        font-size:clamp(2.1rem, 9vw, 3rem);
+      }
+
+      .formula-row.bottom{
+        font-size:clamp(1.85rem, 8vw, 2.55rem);
+      }
+    }
+  </style>
+
+  <script>
+    window.MathJax = {
+      tex: {
+        inlineMath: [['\\(','\\)'], ['$', '$']],
+        displayMath: [['\\[','\\]'], ['$$','$$']],
+        processEscapes: true
+      },
+      chtml: {
+        scale: 1
+      }
+    };
+  </script>
+  <script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"></script>
+</head>
+<body>
+  <header>
+    <div class="container">
+      <div class="header-shell">
+        <h1 class="page-title">Funciones</h1>
+        <a class="back" href="../../index.html">Volver</a>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <div class="container">
+      <section class="hero">
+        <div class="definition-block">
+          Dados dos conjuntos diferentes del vacío \(A\) y \(B\), una función \(f\) es una relación
+          o una regla que asigna a cada elemento \(x\) que pertenece a \(A\) un único elemento
+          \(y\) que pertenece a \(B\).
+        </div>
+
+        <div class="notation-shell" id="notationShell">
+          <div class="notation-area">
+            <div class="formula-row top">
+              <span class="math-static">\(\displaystyle f:\)</span>
+              <button class="math-token" id="btnA" type="button" aria-label="Dominio">
+                \(\displaystyle A\)
+              </button>
+              <span class="math-static">\(\displaystyle \to\)</span>
+              <button class="math-token" id="btnB" type="button" aria-label="Codominio">
+                \(\displaystyle B\)
+              </button>
+            </div>
+
+            <div class="formula-row bottom">
+              <button class="math-token" id="btnFx" type="button" aria-label="Imagen y preimagen">
+                \(\displaystyle f(x)=y\)
+              </button>
+            </div>
+          </div>
+
+          <div class="popover" id="popover"></div>
+        </div>
+
+        <div class="lower-zone">
+          <div class="control-bar">
+            <button class="control-btn active" id="btnRango" type="button">Rango</button>
+            <button class="control-btn" id="btnTipos" type="button">Tipos</button>
+            <button class="control-btn" id="btnInversa" type="button">Inversa</button>
+          </div>
+
+          <div class="subpanel" id="tiposPanel">
+            <div class="subbuttons">
+              <button class="sub-btn" type="button" data-topic="inyectiva">Inyectiva</button>
+              <button class="sub-btn" type="button" data-topic="sobreyectiva">Sobreyectiva</button>
+              <button class="sub-btn" type="button" data-topic="biyectiva">Biyectiva</button>
+            </div>
+          </div>
+
+          <div class="content-box" id="contentBox"></div>
+        </div>
+      </section>
+    </div>
+  </main>
+
+  <footer>
+    © <span id="year"></span> • Funciones
+  </footer>
+
+  <script>
+    const yearEl = document.getElementById("year");
+    const notationShell = document.getElementById("notationShell");
+    const popover = document.getElementById("popover");
+
+    const btnA = document.getElementById("btnA");
+    const btnB = document.getElementById("btnB");
+    const btnFx = document.getElementById("btnFx");
+
+    const btnRango = document.getElementById("btnRango");
+    const btnTipos = document.getElementById("btnTipos");
+    const btnInversa = document.getElementById("btnInversa");
+
+    const tiposPanel = document.getElementById("tiposPanel");
+    const contentBox = document.getElementById("contentBox");
+
+    yearEl.textContent = new Date().getFullYear();
+
+    const popoverData = {
+      dominio: String.raw`
+        <h3>Dominio</h3>
+        <p>
+          El <strong>dominio</strong> de una función es el conjunto de partida:
+          el conjunto de todos los valores de \(x\) para los cuales la función está definida.
+        </p>
+        <div class="formula-box">
+          \[
+          \operatorname{Dom}(f)=A
+          \]
+        </div>
+      `,
+      codominio: String.raw`
+        <h3>Codominio o conjunto de llegada</h3>
+        <p>
+          El <strong>codominio</strong>, o <strong>conjunto de llegada</strong>, es el conjunto
+          al cual pertenecen las posibles salidas de la función.
+        </p>
+        <div class="formula-box">
+          \[
+          f:A\to B
+          \qquad\Longrightarrow\qquad
+          B \text{ es el codominio.}
+          \]
+        </div>
+      `,
+      imagenpreimagen: String.raw`
+        <h3>Imagen y preimagen</h3>
+        <p>
+          En la expresión \(f(x)=y\), el valor \(y\) es la <strong>imagen</strong> de \(x\).
+        </p>
+        <div class="formula-box">
+          \[
+          y=f(x)
+          \]
+        </div>
+        <p>
+          También se dice que \(x\) es una <strong>preimagen</strong> de \(y\).
+        </p>
+      `
+    };
+
+    const contentData = {
+      rango: String.raw`
+        <h2>Rango</h2>
+        <p>
+          El <strong>rango</strong> de una función es el conjunto de todas las imágenes que
+          efectivamente se obtienen al evaluar la función en los elementos del dominio.
+        </p>
+        <div class="formula-box">
+          \[
+          \operatorname{Ran}(f)=\{f(x):x\in A\}.
+          \]
+        </div>
+        <p>
+          El rango está contenido en el codominio, pero no necesariamente coincide con él.
+        </p>
+      `,
+      inyectiva: String.raw`
+        <h2>Función inyectiva</h2>
+        <p>
+          Una función \(f:A\to B\) es <strong>inyectiva</strong> si elementos distintos del dominio
+          tienen imágenes distintas.
+        </p>
+        <div class="formula-box">
+          \[
+          f(x_1)=f(x_2)\Rightarrow x_1=x_2.
+          \]
+        </div>
+        <p>
+          Equivalentemente, si \(x_1\neq x_2\), entonces \(f(x_1)\neq f(x_2)\).
+        </p>
+      `,
+      sobreyectiva: String.raw`
+        <h2>Función sobreyectiva</h2>
+        <p>
+          Una función \(f:A\to B\) es <strong>sobreyectiva</strong> si todo elemento del codominio
+          es imagen de algún elemento del dominio.
+        </p>
+        <div class="formula-box">
+          \[
+          \forall y\in B,\ \exists x\in A \text{ tal que } f(x)=y.
+          \]
+        </div>
+        <p>
+          En ese caso, el rango coincide con el codominio.
+        </p>
+      `,
+      biyectiva: String.raw`
+        <h2>Función biyectiva</h2>
+        <p>
+          Una función es <strong>biyectiva</strong> cuando es simultáneamente inyectiva y sobreyectiva.
+        </p>
+        <div class="formula-box">
+          \[
+          \text{biyectiva} \iff \text{inyectiva y sobreyectiva}.
+          \]
+        </div>
+        <p>
+          Las funciones biyectivas son las que admiten función inversa.
+        </p>
+      `,
+      inversa: String.raw`
+        <h2>Función como conjunto de pares ordenados</h2>
+        <p>
+          Una función \(f\) puede interpretarse como un conjunto de pares ordenados:
+        </p>
+        <div class="formula-box">
+          \[
+          f\subseteq A\times B.
+          \]
+        </div>
+        <p>
+          Además, si \((x,y_1)\in f\) y \((x,y_2)\in f\), entonces necesariamente \(y_1=y_2\).
+        </p>
+
+        <h2>Relación inversa</h2>
+        <p>
+          A partir de esos pares ordenados, la <strong>relación inversa</strong> se obtiene
+          intercambiando en cada pareja la primera componente por la segunda.
+        </p>
+        <div class="formula-box">
+          \[
+          f^{-1}=\{(y,x):(x,y)\in f\}.
+          \]
+        </div>
+        <p>
+          Si esa relación inversa también cumple la condición de unicidad propia de una función,
+          entonces se llama <strong>función inversa</strong> de \(f\).
+        </p>
+      `
+    };
+
+    function renderMath(nodes){
+      if (window.MathJax && window.MathJax.typesetPromise) {
+        MathJax.typesetPromise(nodes).catch(() => {});
+      }
+    }
+
+    function clearMathActive(){
+      [btnA, btnB, btnFx].forEach(btn => btn.classList.remove("active"));
+    }
+
+    function clearMainActive(){
+      [btnRango, btnTipos, btnInversa].forEach(btn => btn.classList.remove("active"));
+    }
+
+    function clearSubActive(){
+      document.querySelectorAll(".sub-btn").forEach(btn => btn.classList.remove("active"));
+    }
+
+    function hidePopover(){
+      popover.classList.remove("show");
+      popover.innerHTML = "";
+      clearMathActive();
+    }
+
+    function showPopover(targetBtn, html){
+      popover.innerHTML = html;
+      popover.classList.add("show");
+
+      clearMathActive();
+      targetBtn.classList.add("active");
+
+      const shellRect = notationShell.getBoundingClientRect();
+      const btnRect = targetBtn.getBoundingClientRect();
+
+      let left = (btnRect.left - shellRect.left) + (btnRect.width / 2) - 180;
+      let top = (btnRect.bottom - shellRect.top) + 14;
+
+      const popWidth = Math.min(390, window.innerWidth - 52);
+      const maxLeft = shellRect.width - popWidth - 10;
+
+      if (left < 10) left = 10;
+      if (left > maxLeft) left = Math.max(10, maxLeft);
+
+      popover.style.left = `${left}px`;
+      popover.style.top = `${top}px`;
+
+      renderMath([popover]);
+    }
+
+    btnA.addEventListener("click", (e) => {
+      e.stopPropagation();
+      const openHere = popover.classList.contains("show") && btnA.classList.contains("active");
+      if (openHere) {
+        hidePopover();
+      } else {
+        showPopover(btnA, popoverData.dominio);
+      }
+    });
+
+    btnB.addEventListener("click", (e) => {
+      e.stopPropagation();
+      const openHere = popover.classList.contains("show") && btnB.classList.contains("active");
+      if (openHere) {
+        hidePopover();
+      } else {
+        showPopover(btnB, popoverData.codominio);
+      }
+    });
+
+    btnFx.addEventListener("click", (e) => {
+      e.stopPropagation();
+      const openHere = popover.classList.contains("show") && btnFx.classList.contains("active");
+      if (openHere) {
+        hidePopover();
+      } else {
+        showPopover(btnFx, popoverData.imagenpreimagen);
+      }
+    });
+
+    document.addEventListener("click", (e) => {
+      if (
+        !popover.contains(e.target) &&
+        !btnA.contains(e.target) &&
+        !btnB.contains(e.target) &&
+        !btnFx.contains(e.target)
+      ) {
+        hidePopover();
+      }
+    });
+
+    window.addEventListener("resize", hidePopover);
+
+    function setContent(key){
+      contentBox.innerHTML = contentData[key];
+      renderMath([contentBox]);
+    }
+
+    btnRango.addEventListener("click", () => {
+      hidePopover();
+      clearMainActive();
+      clearSubActive();
+      tiposPanel.classList.remove("show");
+      btnRango.classList.add("active");
+      setContent("rango");
+    });
+
+    btnTipos.addEventListener("click", () => {
+      hidePopover();
+      clearMainActive();
+      btnTipos.classList.add("active");
+      tiposPanel.classList.add("show");
+      contentBox.innerHTML = "";
+    });
+
+    btnInversa.addEventListener("click", () => {
+      hidePopover();
+      clearMainActive();
+      clearSubActive();
+      tiposPanel.classList.remove("show");
+      btnInversa.classList.add("active");
+      setContent("inversa");
+    });
+
+    document.querySelectorAll(".sub-btn").forEach(btn => {
+      btn.addEventListener("click", () => {
+        clearSubActive();
+        btn.classList.add("active");
+        setContent(btn.dataset.topic);
+      });
+    });
+
+    window.addEventListener("load", () => {
+      setContent("rango");
+      renderMath([document.body]);
+    });
+  </script>
+</body>
+</html>
