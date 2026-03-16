@@ -6,7 +6,13 @@
   <title>Funciones</title>
 
   <style>
+    /* =========================================================
+       VARIABLES GLOBALES EDITABLES
+       Aquí puedes modificar tamaños, colores y proporciones
+       sin tener que buscar en todo el documento.
+       ========================================================= */
     :root{
+      /* ----- Colores generales ----- */
       --bg1:#f5f7fb;
       --bg2:#ffffff;
       --ink:#111827;
@@ -17,13 +23,60 @@
       --accent-soft:#eef5ff;
       --accent-soft-2:#f6faff;
       --accent-border:#bfd8ff;
+
+      /* ----- Sombras y radios ----- */
       --shadow:0 18px 40px rgba(15, 23, 42, .08);
       --shadow-soft:0 8px 22px rgba(15, 23, 42, .05);
       --radius-xl:24px;
       --radius-lg:18px;
       --radius-md:14px;
+
+      /* =====================================================
+         TAMAÑOS PRINCIPALES EDITABLES
+         Cambia estos valores para ajustar visualmente.
+         ===================================================== */
+
+      /* Tamaño del texto explicativo inicial */
+      --size-definition-text: 1.12rem;
+
+      /* Tamaño del título principal "Funciones" */
+      --size-page-title: 2rem;
+
+      /* Tamaño base de la fila superior: f: A -> B */
+      --size-top-row: 4rem;
+
+      /* Tamaño específico de f: */
+      --size-f-colon: 4rem;
+
+      /* Tamaño específico de A */
+      --size-A: 4.3rem;
+
+      /* Tamaño específico de B */
+      --size-B: 4.3rem;
+
+      /* Tamaño base de la fila inferior: f(x)=y */
+      --size-bottom-row: 3.2rem;
+
+      /* Tamaño específico de f(x)=y */
+      --size-fxy: 3.4rem;
+
+      /* Tamaño de botones inferiores: Rango, Tipos, Inversa */
+      --size-main-button: 1rem;
+
+      /* Tamaño de subbotones: inyectiva, sobreyectiva, biyectiva */
+      --size-sub-button: .97rem;
+
+      /* Tamaño del texto dentro del contenido inferior */
+      --size-content-text: 1rem;
+
+      /* Tamaño del texto dentro del cuadro emergente */
+      --size-popover-text: .98rem;
+
+      /* Tamaño del título dentro del cuadro emergente */
+      --size-popover-title: 1.04rem;
     }
 
+    /* Reset básico */
     *{ box-sizing:border-box; }
 
     html, body{
@@ -40,11 +93,13 @@
       min-height:100vh;
     }
 
+    /* Contenedor principal centrado */
     .container{
       width:min(1180px, calc(100vw - 2rem));
       margin:0 auto;
     }
 
+    /* Encabezado */
     header{
       padding:1.1rem 0 0;
     }
@@ -64,11 +119,12 @@
 
     .page-title{
       margin:0;
-      font-size:clamp(1.45rem, 2.5vw, 2rem);
+      font-size:var(--size-page-title); /* EDITABLE */
       font-weight:750;
       letter-spacing:-.02em;
     }
 
+    /* Botón volver */
     .back{
       text-decoration:none;
       color:#fff;
@@ -91,6 +147,7 @@
       padding:1.1rem 0 2rem;
     }
 
+    /* Tarjeta principal */
     .hero{
       position:relative;
       overflow:hidden;
@@ -102,6 +159,7 @@
       padding:1.45rem;
     }
 
+    /* Efectos decorativos suaves */
     .hero::before{
       content:"";
       position:absolute;
@@ -124,20 +182,22 @@
       pointer-events:none;
     }
 
+    /* Texto de definición */
     .definition-block{
       position:relative;
       z-index:1;
       max-width:930px;
       margin:0 auto;
       text-align:center;
-      font-size:clamp(1.03rem, 1.55vw, 1.16rem);
+      font-size:var(--size-definition-text); /* EDITABLE */
       line-height:1.85;
       color:#1f2937;
     }
 
+    /* Zona que contiene la notación central */
     .notation-shell{
       position:relative;
-      z-index:1;
+      z-index:10;
       width:min(980px, 100%);
       margin:1.25rem auto 0;
       padding:1.45rem 1rem 1.15rem;
@@ -155,6 +215,7 @@
       gap:1rem;
     }
 
+    /* Fila de notación */
     .formula-row{
       display:flex;
       align-items:center;
@@ -164,16 +225,19 @@
       line-height:1.2;
     }
 
+    /* Fila superior: f: A -> B */
     .formula-row.top{
-      font-size:clamp(2.65rem, 6vw, 4.3rem);
+      font-size:var(--size-top-row); /* EDITABLE */
       min-height:4.8rem;
     }
 
+    /* Fila inferior: f(x)=y */
     .formula-row.bottom{
-      font-size:clamp(2.2rem, 5vw, 3.25rem);
+      font-size:var(--size-bottom-row); /* EDITABLE */
       min-height:4rem;
     }
 
+    /* Elementos matemáticos estáticos */
     .math-static,
     .math-token{
       display:inline-flex;
@@ -188,6 +252,7 @@
       padding:.08em .08em;
     }
 
+    /* Tokens clicables */
     .math-token{
       appearance:none;
       border:1px solid transparent;
@@ -209,6 +274,33 @@
       box-shadow:0 0 0 4px rgba(11,99,197,.08);
     }
 
+    /* =========================================================
+       TAMAÑOS ESPECÍFICOS DE CADA OBJETO MATEMÁTICO
+       AQUÍ ES DONDE MÁS TE INTERESA EDITAR
+       ========================================================= */
+
+    /* f: */
+    #fColon{
+      font-size:var(--size-f-colon); /* EDITABLE */
+    }
+
+    /* A */
+    #btnA{
+      font-size:var(--size-A); /* EDITABLE */
+    }
+
+    /* B */
+    #btnB{
+      font-size:var(--size-B); /* EDITABLE */
+    }
+
+    /* f(x)=y */
+    #btnFx{
+      font-size:var(--size-fxy); /* EDITABLE */
+      padding:.14em .34em;
+    }
+
+    /* Ajuste de MathJax para que respete tamaño heredado */
     .math-static mjx-container,
     .math-token mjx-container{
       margin:0 !important;
@@ -220,9 +312,10 @@
       line-height:1 !important;
     }
 
+    /* Ventana emergente */
     .popover{
       position:absolute;
-      z-index:20;
+      z-index:50;
       width:min(390px, calc(100vw - 3.2rem));
       border:1px solid var(--accent-border);
       border-radius:18px;
@@ -243,7 +336,7 @@
 
     .popover h3{
       margin:.05rem 0 .55rem;
-      font-size:1.02rem;
+      font-size:var(--size-popover-title); /* EDITABLE */
       color:var(--accent);
       letter-spacing:-.01em;
     }
@@ -252,8 +345,10 @@
       margin:.45rem 0;
       line-height:1.65;
       color:#1f2937;
+      font-size:var(--size-popover-text); /* EDITABLE */
     }
 
+    /* Cajas de fórmula */
     .formula-box{
       margin:.7rem 0;
       padding:.72rem .82rem;
@@ -267,6 +362,7 @@
       margin:0 !important;
     }
 
+    /* Zona inferior */
     .lower-zone{
       position:relative;
       z-index:1;
@@ -276,6 +372,7 @@
       gap:1rem;
     }
 
+    /* Barra principal */
     .control-bar{
       display:grid;
       grid-template-columns:repeat(3, minmax(0, 1fr));
@@ -297,12 +394,12 @@
 
     .control-btn{
       padding:.95rem 1rem;
-      font-size:1rem;
+      font-size:var(--size-main-button); /* EDITABLE */
     }
 
     .sub-btn{
       padding:.78rem .92rem;
-      font-size:.97rem;
+      font-size:var(--size-sub-button); /* EDITABLE */
       box-shadow:none;
       background:#fff;
     }
@@ -320,6 +417,7 @@
       box-shadow:0 12px 28px rgba(11,99,197,.16);
     }
 
+    /* Panel de subbotones */
     .subpanel{
       display:none;
       padding:.95rem;
@@ -344,6 +442,7 @@
       border-color:var(--accent-border);
     }
 
+    /* Caja de contenido inferior */
     .content-box{
       padding:1.2rem 1.15rem;
       border:1px solid var(--line);
@@ -352,6 +451,7 @@
         linear-gradient(180deg, rgba(255,255,255,.94), rgba(251,253,255,.98));
       min-height:250px;
       box-shadow:var(--shadow-soft);
+      font-size:var(--size-content-text); /* EDITABLE */
     }
 
     .content-box h2{
@@ -380,6 +480,7 @@
       font-size:.92rem;
     }
 
+    /* Responsive */
     @media (max-width: 900px){
       .control-bar,
       .subbuttons{
@@ -406,6 +507,10 @@
   </style>
 
   <script>
+    /* =========================================================
+       CONFIGURACIÓN DE MATHJAX
+       Se usa CHTML para mejor integración con tamaños CSS.
+       ========================================================= */
     window.MathJax = {
       tex: {
         inlineMath: [['\\(','\\)'], ['$', '$']],
@@ -420,6 +525,8 @@
   <script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"></script>
 </head>
 <body>
+
+  <!-- Encabezado -->
   <header>
     <div class="container">
       <div class="header-shell">
@@ -429,28 +536,38 @@
     </div>
   </header>
 
+  <!-- Contenido principal -->
   <main>
     <div class="container">
       <section class="hero">
+
+        <!-- Definición textual -->
         <div class="definition-block">
           Dados dos conjuntos diferentes del vacío \(A\) y \(B\), una función \(f\) es una relación
           o una regla que asigna a cada elemento \(x\) que pertenece a \(A\) un único elemento
           \(y\) que pertenece a \(B\).
         </div>
 
+        <!-- Zona central de notación -->
         <div class="notation-shell" id="notationShell">
           <div class="notation-area">
+
+            <!-- Primera fila: f: A -> B -->
             <div class="formula-row top">
-              <span class="math-static">\(\displaystyle f:\)</span>
+              <span class="math-static" id="fColon">\(\displaystyle f:\)</span>
+
               <button class="math-token" id="btnA" type="button" aria-label="Dominio">
                 \(\displaystyle A\)
               </button>
+
               <span class="math-static">\(\displaystyle \to\)</span>
+
               <button class="math-token" id="btnB" type="button" aria-label="Codominio">
                 \(\displaystyle B\)
               </button>
             </div>
 
+            <!-- Segunda fila: f(x)=y -->
             <div class="formula-row bottom">
               <button class="math-token" id="btnFx" type="button" aria-label="Imagen y preimagen">
                 \(\displaystyle f(x)=y\)
@@ -458,9 +575,11 @@
             </div>
           </div>
 
+          <!-- Cuadro emergente -->
           <div class="popover" id="popover"></div>
         </div>
 
+        <!-- Zona inferior -->
         <div class="lower-zone">
           <div class="control-bar">
             <button class="control-btn active" id="btnRango" type="button">Rango</button>
@@ -482,11 +601,15 @@
     </div>
   </main>
 
+  <!-- Pie -->
   <footer>
     © <span id="year"></span> • Funciones
   </footer>
 
   <script>
+    /* =========================================================
+       REFERENCIAS A ELEMENTOS DEL DOM
+       ========================================================= */
     const yearEl = document.getElementById("year");
     const notationShell = document.getElementById("notationShell");
     const popover = document.getElementById("popover");
@@ -504,6 +627,9 @@
 
     yearEl.textContent = new Date().getFullYear();
 
+    /* =========================================================
+       CONTENIDO DE LOS CUADROS EMERGENTES
+       ========================================================= */
     const popoverData = {
       dominio: String.raw`
         <h3>Dominio</h3>
@@ -547,6 +673,9 @@
       `
     };
 
+    /* =========================================================
+       CONTENIDO DEL PANEL INFERIOR
+       ========================================================= */
     const contentData = {
       rango: String.raw`
         <h2>Rango</h2>
@@ -574,9 +703,6 @@
           f(x_1)=f(x_2)\Rightarrow x_1=x_2.
           \]
         </div>
-        <p>
-          Equivalentemente, si \(x_1\neq x_2\), entonces \(f(x_1)\neq f(x_2)\).
-        </p>
       `,
       sobreyectiva: String.raw`
         <h2>Función sobreyectiva</h2>
@@ -589,9 +715,6 @@
           \forall y\in B,\ \exists x\in A \text{ tal que } f(x)=y.
           \]
         </div>
-        <p>
-          En ese caso, el rango coincide con el codominio.
-        </p>
       `,
       biyectiva: String.raw`
         <h2>Función biyectiva</h2>
@@ -603,65 +726,65 @@
           \text{biyectiva} \iff \text{inyectiva y sobreyectiva}.
           \]
         </div>
-        <p>
-          Las funciones biyectivas son las que admiten función inversa.
-        </p>
       `,
       inversa: String.raw`
         <h2>Función como conjunto de pares ordenados</h2>
         <p>
-          Una función \(f\) puede interpretarse como un conjunto de pares ordenados:
+          Una función \(f\) puede interpretarse como un conjunto de pares ordenados.
         </p>
         <div class="formula-box">
           \[
           f\subseteq A\times B.
           \]
         </div>
-        <p>
-          Además, si \((x,y_1)\in f\) y \((x,y_2)\in f\), entonces necesariamente \(y_1=y_2\).
-        </p>
 
         <h2>Relación inversa</h2>
         <p>
-          A partir de esos pares ordenados, la <strong>relación inversa</strong> se obtiene
-          intercambiando en cada pareja la primera componente por la segunda.
+          La relación inversa se obtiene intercambiando la primera componente por la segunda
+          en cada par ordenado.
         </p>
         <div class="formula-box">
           \[
           f^{-1}=\{(y,x):(x,y)\in f\}.
           \]
         </div>
-        <p>
-          Si esa relación inversa también cumple la condición de unicidad propia de una función,
-          entonces se llama <strong>función inversa</strong> de \(f\).
-        </p>
       `
     };
 
+    /* =========================================================
+       FUNCIONES AUXILIARES
+       ========================================================= */
+
+    /* Renderiza MathJax en nodos nuevos */
     function renderMath(nodes){
       if (window.MathJax && window.MathJax.typesetPromise) {
         MathJax.typesetPromise(nodes).catch(() => {});
       }
     }
 
+    /* Quita estado activo de A, B y f(x)=y */
     function clearMathActive(){
       [btnA, btnB, btnFx].forEach(btn => btn.classList.remove("active"));
     }
 
+    /* Quita estado activo de Rango, Tipos, Inversa */
     function clearMainActive(){
       [btnRango, btnTipos, btnInversa].forEach(btn => btn.classList.remove("active"));
     }
 
+    /* Quita activo de subbotones */
     function clearSubActive(){
       document.querySelectorAll(".sub-btn").forEach(btn => btn.classList.remove("active"));
     }
 
+    /* Oculta el cuadro emergente */
     function hidePopover(){
       popover.classList.remove("show");
       popover.innerHTML = "";
       clearMathActive();
     }
 
+    /* Muestra el cuadro emergente debajo del botón clicado */
     function showPopover(targetBtn, html){
       popover.innerHTML = html;
       popover.classList.add("show");
@@ -669,11 +792,20 @@
       clearMathActive();
       targetBtn.classList.add("active");
 
+      /* Medidas para posicionar el cuadro */
       const shellRect = notationShell.getBoundingClientRect();
       const btnRect = targetBtn.getBoundingClientRect();
 
-      let left = (btnRect.left - shellRect.left) + (btnRect.width / 2) - 180;
-      let top = (btnRect.bottom - shellRect.top) + 14;
+      /* Si el clic es en f(x)=y, centramos mejor el cuadro */
+      let left;
+      if (targetBtn === btnFx) {
+        left = (shellRect.width / 2) - 195;
+      } else {
+        left = (btnRect.left - shellRect.left) + (btnRect.width / 2) - 180;
+      }
+
+      /* Altura del cuadro: lo ponemos debajo del elemento */
+      let top = (btnRect.bottom - shellRect.top) + 16;
 
       const popWidth = Math.min(390, window.innerWidth - 52);
       const maxLeft = shellRect.width - popWidth - 10;
@@ -686,6 +818,10 @@
 
       renderMath([popover]);
     }
+
+    /* =========================================================
+       EVENTOS DE A, B, f(x)=y
+       ========================================================= */
 
     btnA.addEventListener("click", (e) => {
       e.stopPropagation();
@@ -717,6 +853,7 @@
       }
     });
 
+    /* Cerrar popover si se hace clic fuera */
     document.addEventListener("click", (e) => {
       if (
         !popover.contains(e.target) &&
@@ -728,7 +865,12 @@
       }
     });
 
+    /* Si la pantalla cambia de tamaño, se oculta el popover */
     window.addEventListener("resize", hidePopover);
+
+    /* =========================================================
+       CONTENIDO INFERIOR
+       ========================================================= */
 
     function setContent(key){
       contentBox.innerHTML = contentData[key];
@@ -761,6 +903,7 @@
       setContent("inversa");
     });
 
+    /* Subbotones de tipos */
     document.querySelectorAll(".sub-btn").forEach(btn => {
       btn.addEventListener("click", () => {
         clearSubActive();
@@ -769,6 +912,9 @@
       });
     });
 
+    /* =========================================================
+       INICIALIZACIÓN
+       ========================================================= */
     window.addEventListener("load", () => {
       setContent("rango");
       renderMath([document.body]);
