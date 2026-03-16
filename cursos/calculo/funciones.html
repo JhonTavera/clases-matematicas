@@ -1,0 +1,589 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Funciones</title>
+
+  <style>
+    :root{
+      --maxw: 1180px;
+      --line:#e8e9ef;
+      --ink:#111;
+      --muted:#555;
+      --accent:#0b63c5;
+      --bg:#ffffff;
+      --soft:#f6f7fb;
+    }
+
+    *{ box-sizing:border-box; }
+
+    body{
+      margin:0;
+      font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
+      color:var(--ink);
+      background:var(--bg);
+    }
+
+    header{
+      background:var(--soft);
+      border-bottom:1px solid var(--line);
+    }
+
+    .container{
+      max-width:var(--maxw);
+      margin:0 auto;
+      padding:1rem;
+    }
+
+    .topbar{
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      gap:1rem;
+      flex-wrap:wrap;
+    }
+
+    .title{
+      margin:0;
+      font-size:clamp(1.5rem, 3vw, 2rem);
+    }
+
+    .subtitle{
+      margin:.25rem 0 0;
+      color:var(--muted);
+    }
+
+    .back{
+      display:inline-block;
+      text-decoration:none;
+      color:#fff;
+      background:var(--accent);
+      border:1px solid var(--accent);
+      padding:.7rem 1rem;
+      border-radius:.7rem;
+      font-weight:600;
+    }
+
+    main{
+      padding:1rem 0 2rem;
+    }
+
+    .layout{
+      display:grid;
+      grid-template-columns:1.15fr .85fr;
+      gap:1rem;
+      align-items:start;
+    }
+
+    .card{
+      border:1px solid var(--line);
+      border-radius:1rem;
+      background:#fff;
+      padding:1rem;
+      box-shadow:0 6px 20px rgba(0,0,0,.03);
+    }
+
+    .card h2{
+      margin:.1rem 0 .75rem;
+      font-size:1.2rem;
+    }
+
+    .card h3{
+      margin:1rem 0 .5rem;
+      font-size:1.05rem;
+    }
+
+    .card p{
+      margin:.55rem 0;
+      line-height:1.6;
+    }
+
+    .formula{
+      background:#fafbff;
+      border:1px solid #ececf3;
+      border-radius:.75rem;
+      padding:.85rem 1rem;
+      margin:.75rem 0;
+      overflow-x:auto;
+    }
+
+    .mainButtons{
+      display:grid;
+      grid-template-columns:1fr;
+      gap:.75rem;
+      margin-bottom:1rem;
+    }
+
+    .mainBtn, .subBtn{
+      width:100%;
+      text-align:left;
+      border-radius:.8rem;
+      cursor:pointer;
+      transition:.15s ease;
+    }
+
+    .mainBtn{
+      border:1px solid #d7d8e0;
+      background:#fff;
+      padding:.9rem 1rem;
+      font-size:1rem;
+      font-weight:700;
+    }
+
+    .mainBtn:hover,
+    .subBtn:hover{
+      transform:translateY(-1px);
+      box-shadow:0 4px 12px rgba(0,0,0,.05);
+    }
+
+    .mainBtn.active{
+      background:var(--accent);
+      color:#fff;
+      border-color:var(--accent);
+    }
+
+    .subPanel{
+      display:none;
+      margin-bottom:1rem;
+      border:1px solid #ececf3;
+      border-radius:.9rem;
+      padding:.8rem;
+      background:#fcfcff;
+    }
+
+    .subPanel.show{
+      display:block;
+    }
+
+    .subTitle{
+      margin:0 0 .6rem;
+      font-size:.98rem;
+      color:var(--muted);
+      font-weight:600;
+    }
+
+    .subButtons{
+      display:grid;
+      gap:.55rem;
+    }
+
+    .subBtn{
+      border:1px solid #d7d8e0;
+      background:#fff;
+      padding:.75rem .9rem;
+      font-size:.96rem;
+      font-weight:600;
+    }
+
+    .subBtn.active{
+      background:#eef6ff;
+      color:var(--accent);
+      border-color:#b6d6ff;
+    }
+
+    .contentBox{
+      min-height:260px;
+      border:1px solid #ececf3;
+      border-radius:1rem;
+      padding:1rem;
+      background:#fff;
+    }
+
+    .contentBox h3{
+      margin-top:0;
+      font-size:1.1rem;
+      color:var(--accent);
+    }
+
+    .contentBox ul{
+      margin:.5rem 0 .5rem 1.2rem;
+      line-height:1.6;
+    }
+
+    .note{
+      color:var(--muted);
+      font-size:.95rem;
+    }
+
+    footer{
+      text-align:center;
+      color:var(--muted);
+      font-size:.9rem;
+      padding:1.5rem 1rem 2rem;
+    }
+
+    @media (max-width: 900px){
+      .layout{
+        grid-template-columns:1fr;
+      }
+    }
+  </style>
+
+  <script>
+    window.MathJax = {
+      tex: {
+        inlineMath: [['\\(','\\)'], ['$', '$']],
+        displayMath: [['\\[','\\]'], ['$$','$$']],
+        processEscapes: true
+      },
+      svg: { fontCache: 'global' }
+    };
+  </script>
+  <script async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"></script>
+</head>
+<body>
+  <header>
+    <div class="container">
+      <div class="topbar">
+        <div>
+          <h1 class="title">Funciones</h1>
+          <p class="subtitle">Definiciones básicas, partes, tipos y función inversa.</p>
+        </div>
+        <a class="back" href="../../index.html">Volver</a>
+      </div>
+    </div>
+  </header>
+
+  <main class="container">
+    <div class="layout">
+      <!-- PANEL IZQUIERDO: concepto de función -->
+      <section class="card">
+        <h2>Concepto de función</h2>
+
+        <p>
+          Sean \(A\) y \(B\) dos conjuntos. Una <strong>función</strong> \(f\) de \(A\) en \(B\),
+          denotada por
+        </p>
+
+        <div class="formula">
+          \[
+          f\colon A \to B
+          \]
+        </div>
+
+        <p>
+          es una regla que asigna a <strong>cada</strong> elemento \(x\in A\) un
+          <strong>único</strong> elemento \(f(x)\in B\).
+        </p>
+
+        <h3>Ideas clave</h3>
+        <ul>
+          <li>\(A\) es el conjunto de partida.</li>
+          <li>\(B\) es el conjunto de llegada.</li>
+          <li>A cada \(x\in A\) le corresponde exactamente una imagen \(f(x)\in B\).</li>
+        </ul>
+
+        <div class="formula">
+          \[
+          x \in A \quad \Longrightarrow \quad f(x) \in B
+          \]
+        </div>
+
+        <p class="note">
+          En el panel derecho puedes desplegar las partes de una función, sus tipos y la noción de inversa.
+        </p>
+      </section>
+
+      <!-- PANEL DERECHO -->
+      <section class="card">
+        <h2>Explorar</h2>
+
+        <div class="mainButtons">
+          <button class="mainBtn" id="btnPartes" type="button">Partes</button>
+          <button class="mainBtn" id="btnTipos" type="button">Tipos</button>
+          <button class="mainBtn" id="btnInversa" type="button">Inversa</button>
+        </div>
+
+        <div class="subPanel" id="panelPartes">
+          <p class="subTitle">Selecciona una parte de la función</p>
+          <div class="subButtons">
+            <button class="subBtn" type="button" data-topic="dominio">Dominio</button>
+            <button class="subBtn" type="button" data-topic="llegada">Conjunto de llegada</button>
+            <button class="subBtn" type="button" data-topic="imagen">Imagen</button>
+            <button class="subBtn" type="button" data-topic="preimagen">Preimagen</button>
+            <button class="subBtn" type="button" data-topic="rango">Rango</button>
+          </div>
+        </div>
+
+        <div class="subPanel" id="panelTipos">
+          <p class="subTitle">Selecciona un tipo de función</p>
+          <div class="subButtons">
+            <button class="subBtn" type="button" data-topic="inyectiva">Inyectiva</button>
+            <button class="subBtn" type="button" data-topic="sobreyectiva">Sobreyectiva</button>
+            <button class="subBtn" type="button" data-topic="biyectiva">Biyectiva</button>
+          </div>
+        </div>
+
+        <div class="contentBox" id="contentBox">
+          <h3>Bienvenido</h3>
+          <p>
+            Haz clic en <strong>Partes</strong>, <strong>Tipos</strong> o <strong>Inversa</strong>
+            para desplegar el contenido correspondiente.
+          </p>
+        </div>
+      </section>
+    </div>
+  </main>
+
+  <footer>
+    © <span id="year"></span> • Funciones
+  </footer>
+
+  <script>
+    document.getElementById("year").textContent = new Date().getFullYear();
+
+    const btnPartes = document.getElementById("btnPartes");
+    const btnTipos = document.getElementById("btnTipos");
+    const btnInversa = document.getElementById("btnInversa");
+
+    const panelPartes = document.getElementById("panelPartes");
+    const panelTipos = document.getElementById("panelTipos");
+    const contentBox = document.getElementById("contentBox");
+
+    const topics = {
+      dominio: `
+        <h3>Dominio</h3>
+        <p>
+          El <strong>dominio</strong> de una función \(f\\colon A \\to B\) es el conjunto de
+          todos los elementos de partida para los cuales la función está definida.
+        </p>
+        <div class="formula">
+          \\[
+          \\operatorname{Dom}(f)=A
+          \\]
+        </div>
+        <p>
+          Cada elemento del dominio debe tener una única imagen.
+        </p>
+      `,
+
+      llegada: `
+        <h3>Conjunto de llegada</h3>
+        <p>
+          El <strong>conjunto de llegada</strong> es el conjunto \(B\) en una función
+          \(f\\colon A \\to B\).
+        </p>
+        <div class="formula">
+          \\[
+          f\\colon A \\to B
+          \\]
+        </div>
+        <p>
+          Allí viven las posibles salidas de la función, aunque no necesariamente todas sean alcanzadas.
+        </p>
+      `,
+
+      imagen: `
+        <h3>Imagen</h3>
+        <p>
+          Si \(x \\in A\), entonces su <strong>imagen</strong> por la función \(f\) es el valor \(f(x)\).
+        </p>
+        <div class="formula">
+          \\[
+          x \\mapsto f(x)
+          \\]
+        </div>
+        <p>
+          Más generalmente, si \(C \\subseteq A\), la imagen de \(C\) es
+        </p>
+        <div class="formula">
+          \\[
+          f(C)=\\{f(x): x\\in C\\}.
+          \\]
+        </div>
+      `,
+
+      preimagen: `
+        <h3>Preimagen</h3>
+        <p>
+          Si \(D \\subseteq B\), la <strong>preimagen</strong> de \(D\) es el conjunto de todos
+          los elementos del dominio cuya imagen pertenece a \(D\).
+        </p>
+        <div class="formula">
+          \\[
+          f^{-1}(D)=\\{x\\in A: f(x)\\in D\\}.
+          \\]
+        </div>
+        <p>
+          La preimagen no significa todavía función inversa; simplemente describe qué elementos del dominio llegan a un subconjunto dado.
+        </p>
+      `,
+
+      rango: `
+        <h3>Rango</h3>
+        <p>
+          El <strong>rango</strong> es el conjunto de todos los valores que la función efectivamente toma.
+        </p>
+        <div class="formula">
+          \\[
+          \\operatorname{Ran}(f)=\\{f(x): x\\in A\\}.
+          \\]
+        </div>
+        <p>
+          El rango siempre está contenido en el conjunto de llegada.
+        </p>
+      `,
+
+      inyectiva: `
+        <h3>Función inyectiva</h3>
+        <p>
+          Una función \(f\\colon A \\to B\) es <strong>inyectiva</strong> si elementos distintos
+          del dominio tienen imágenes distintas.
+        </p>
+        <div class="formula">
+          \\[
+          f(x_1)=f(x_2) \\Rightarrow x_1=x_2.
+          \\]
+        </div>
+        <p>
+          Equivalentemente, si \(x_1\\neq x_2\), entonces \(f(x_1)\\neq f(x_2)\).
+        </p>
+      `,
+
+      sobreyectiva: `
+        <h3>Función sobreyectiva</h3>
+        <p>
+          Una función \(f\\colon A \\to B\) es <strong>sobreyectiva</strong> si todo elemento del
+          conjunto de llegada es imagen de al menos un elemento del dominio.
+        </p>
+        <div class="formula">
+          \\[
+          \\forall y\\in B,\\ \\exists x\\in A \\text{ tal que } f(x)=y.
+          \\]
+        </div>
+        <p>
+          En este caso, el rango coincide con el conjunto de llegada.
+        </p>
+      `,
+
+      biyectiva: `
+        <h3>Función biyectiva</h3>
+        <p>
+          Una función es <strong>biyectiva</strong> si es simultáneamente inyectiva y sobreyectiva.
+        </p>
+        <div class="formula">
+          \\[
+          \\text{biyectiva} \\iff \\text{inyectiva y sobreyectiva}.
+          \\]
+        </div>
+        <p>
+          Las funciones biyectivas son precisamente las que admiten función inversa.
+        </p>
+      `,
+
+      inversa: `
+        <h3>Función como conjunto de pares ordenados</h3>
+        <p>
+          Una función también puede entenderse como un conjunto de pares ordenados
+          \((x,y)\), donde a cada \(x\) del dominio le corresponde un único \(y\) del conjunto de llegada.
+        </p>
+        <div class="formula">
+          \\[
+          f \\subseteq A\\times B
+          \\]
+        </div>
+        <p>
+          y si \((x,y_1)\\in f\) y \((x,y_2)\\in f\), entonces necesariamente
+        </p>
+        <div class="formula">
+          \\[
+          y_1=y_2.
+          \\]
+        </div>
+
+        <h3>Definición de función inversa</h3>
+        <p>
+          Si \(f\\colon A\\to B\) es biyectiva, su <strong>función inversa</strong> es la función
+          \(f^{-1}\\colon B\\to A\) que deshace la acción de \(f\).
+        </p>
+        <div class="formula">
+          \\[
+          f^{-1}(y)=x \\iff f(x)=y.
+          \\]
+        </div>
+        <p>
+          Además, se cumple
+        </p>
+        <div class="formula">
+          \\[
+          f^{-1}(f(x))=x,
+          \\qquad
+          f(f^{-1}(y))=y.
+          \\]
+        </div>
+      `
+    };
+
+    function clearMainActive() {
+      [btnPartes, btnTipos, btnInversa].forEach(btn => btn.classList.remove("active"));
+    }
+
+    function clearSubActive() {
+      document.querySelectorAll(".subBtn").forEach(btn => btn.classList.remove("active"));
+    }
+
+    function hidePanels() {
+      panelPartes.classList.remove("show");
+      panelTipos.classList.remove("show");
+    }
+
+    function renderMath() {
+      if (window.MathJax && window.MathJax.typesetPromise) {
+        MathJax.typesetPromise([contentBox]).catch(() => {});
+      }
+    }
+
+    btnPartes.addEventListener("click", () => {
+      clearMainActive();
+      clearSubActive();
+      hidePanels();
+      btnPartes.classList.add("active");
+      panelPartes.classList.add("show");
+      contentBox.innerHTML = `
+        <h3>Partes de una función</h3>
+        <p>
+          Selecciona uno de los botones para ver la definición correspondiente:
+          dominio, conjunto de llegada, imagen, preimagen o rango.
+        </p>
+      `;
+      renderMath();
+    });
+
+    btnTipos.addEventListener("click", () => {
+      clearMainActive();
+      clearSubActive();
+      hidePanels();
+      btnTipos.classList.add("active");
+      panelTipos.classList.add("show");
+      contentBox.innerHTML = `
+        <h3>Tipos de funciones</h3>
+        <p>
+          Selecciona uno de los botones para ver la definición correspondiente:
+          inyectiva, sobreyectiva o biyectiva.
+        </p>
+      `;
+      renderMath();
+    });
+
+    btnInversa.addEventListener("click", () => {
+      clearMainActive();
+      clearSubActive();
+      hidePanels();
+      btnInversa.classList.add("active");
+      contentBox.innerHTML = topics.inversa;
+      renderMath();
+    });
+
+    document.querySelectorAll(".subBtn").forEach(btn => {
+      btn.addEventListener("click", () => {
+        clearSubActive();
+        btn.classList.add("active");
+        const key = btn.dataset.topic;
+        contentBox.innerHTML = topics[key] || "<p>No hay contenido.</p>";
+        renderMath();
+      });
+    });
+  </script>
+</body>
+</html>
