@@ -707,13 +707,7 @@
       sobreyectiva: String.raw`
         <h2>Función sobreyectiva</h2>
         <p>
-          Una función \(f:A\to B\) es <strong>sobreyectiva</strong> si todo elemento del codominio
-          es imagen de algún elemento del dominio.
-        </p>
-        <div class="formula-box">
-          \[
-          \forall y\in B,\ \exists x\in A \text{ tal que } f(x)=y.
-          \]
+          Una función \(f:A\to B\) es <strong>sobreyectiva</strong> si el rango de la función es igual a su conjunto de llegada.
         </div>
       `,
       biyectiva: String.raw`
@@ -734,7 +728,7 @@
         </p>
         <div class="formula-box">
           \[
-          f\subseteq A\times B.
+          f=\{(x,y): x \in A, y \in B, f(x)=y \} \subseteq A\times B.
           \]
         </div>
 
