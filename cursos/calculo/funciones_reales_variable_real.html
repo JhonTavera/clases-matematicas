@@ -3,390 +3,754 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Funciones reales de variable real</title>
+
+  <title>Funciones - Definiciones y gráficas</title>
+
+  <!-- =========================================================
+       DESMOS API
+       ========================================================= -->
+  <script src="https://www.desmos.com/api/v1.11/calculator.js?apiKey=desmos"></script>
+
+  <!-- =========================================================
+       MATHJAX
+       Se usa para que el contenido matemático en notación LaTeX
+       sí se visualice correctamente en el HTML.
+       ========================================================= -->
+  <script>
+    window.MathJax = {
+      tex: {
+        inlineMath: [['\\(', '\\)'], ['$', '$']],
+        displayMath: [['\\[', '\\]'], ['$$', '$$']]
+      },
+      svg: {
+        fontCache: 'global'
+      }
+    };
+  </script>
+  <script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"></script>
+
   <style>
-    :root{
-      --rf-panel: rgba(255,255,255,0.06);
-      --rf-panel-2: rgba(255,255,255,0.08);
-      --rf-border: rgba(255,255,255,0.12);
-      --rf-text: rgba(255,255,255,0.92);
-      --rf-muted: rgba(255,255,255,0.72);
-      --rf-alg-1: rgba(120,170,255,0.22);
-      --rf-alg-2: rgba(120,170,255,0.10);
-      --rf-tr-1: rgba(170,255,220,0.18);
-      --rf-tr-2: rgba(170,255,220,0.10);
-      --rf-shadow: 0 14px 40px rgba(0,0,0,.35);
-      --rf-radius: 18px;
+    /* =========================================================
+       VARIABLES DE COLOR
+       Puedes cambiar aquí la estética general del sitio
+       ========================================================= */
+    :root {
+      --color-fondo: #ffffff;          /* fondo principal */
+      --color-texto: #111111;          /* texto principal */
+      --color-azul: #1d4ed8;           /* azul principal */
+      --color-azul-suave: #dbeafe;     /* azul muy suave para fondos */
+      --color-borde: #93c5fd;          /* borde azul claro */
+      --color-sombra: rgba(0, 0, 0, 0.08);
+      --color-tarjeta: #ffffff;        /* color de tarjetas */
+      --color-subtexto: #374151;       /* gris oscuro suave */
     }
-    *{box-sizing:border-box}
-    body{
-      margin:0;
-      font-family:Arial,Helvetica,sans-serif;
-      background:linear-gradient(180deg, rgba(14,18,36,1) 0%, rgba(7,10,20,1) 100%);
-      color:var(--rf-text);
+
+    /* =========================================================
+       ESTILO GENERAL
+       ========================================================= */
+    * {
+      box-sizing: border-box;
     }
-    .rf-wrap{max-width:1150px;margin:0 auto;padding:18px}
-    .rf-header{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;margin-bottom:14px}
-    .rf-title{margin:0;font-size:clamp(20px,2.4vw,28px)}
-    .rf-subtitle{margin:8px 0 0 0;color:var(--rf-muted);font-size:13px;line-height:1.38;max-width:72ch}
-    .rf-top-actions{display:flex;gap:10px;flex-wrap:wrap;justify-content:flex-end}
-    .rf-btn{
-      border:1px solid var(--rf-border);background:rgba(255,255,255,0.06);color:var(--rf-text);
-      padding:10px 12px;border-radius:12px;cursor:pointer;font-size:13px;line-height:1;text-decoration:none;
-      transition:transform .08s ease, background .2s ease, border-color .2s ease;user-select:none;
+
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: "Segoe UI", Arial, Helvetica, sans-serif;
+      background: var(--color-fondo);
+      color: var(--color-texto);
+      line-height: 1.55;
     }
-    .rf-btn:hover{background:rgba(255,255,255,0.10)}
-    .rf-btn:active{transform:translateY(1px)}
-    .rf-btn.rf-primary{border-color:rgba(120,170,255,0.45);background:rgba(120,170,255,0.16)}
-    .rf-btn.rf-ghost{background:transparent}
-    .rf-screen{display:none;margin-top:14px}
-    .rf-screen.rf-active{display:block}
-    .rf-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}
-    @media (max-width:860px){.rf-grid{grid-template-columns:1fr}}
-    .rf-card,.rf-box{
-      border:1px solid var(--rf-border);border-radius:var(--rf-radius);padding:16px;background:var(--rf-panel);box-shadow:var(--rf-shadow);
+
+    /* =========================================================
+       CONTENEDOR PRINCIPAL
+       ========================================================= */
+    .contenedor {
+      width: 100%;
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 20px;
     }
-    .rf-card h3{margin:0 0 6px 0;font-size:16px}
-    .rf-card p{margin:0;color:var(--rf-muted);font-size:13px;line-height:1.45}
-    .rf-card.rf-clickable{cursor:pointer;transition:transform .08s ease, background .2s ease, border-color .2s ease}
-    .rf-card.rf-clickable:hover{background:var(--rf-panel-2);border-color:rgba(255,255,255,0.18)}
-    .rf-card.rf-clickable:active{transform:translateY(1px)}
-    .rf-section-title{margin:0 0 10px 0;font-size:14px;color:var(--rf-muted)}
-    .rf-chip-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
-    @media (max-width:720px){.rf-chip-grid{grid-template-columns:1fr}}
-    .rf-chip{
-      display:flex;align-items:center;justify-content:space-between;gap:10px;padding:12px;border-radius:14px;
-      border:1px solid var(--rf-border);background:rgba(255,255,255,0.06);cursor:pointer;user-select:none;
+
+    /* =========================================================
+       ENCABEZADO
+       ========================================================= */
+    .encabezado {
+      background: linear-gradient(180deg, #ffffff 0%, #eff6ff 100%);
+      border: 1px solid var(--color-borde);
+      border-radius: 18px;
+      padding: 22px 18px;
+      box-shadow: 0 8px 25px var(--color-sombra);
+      margin-bottom: 20px;
     }
-    .rf-chip:hover{background:rgba(255,255,255,0.10)}
-    .rf-chip strong{font-size:14px}
-    .rf-chip span{color:var(--rf-muted);font-size:12px}
-    .rf-chip.rf-alg{border-color:rgba(120,170,255,0.22);background:var(--rf-alg-2)}
-    .rf-chip.rf-alg:hover{background:var(--rf-alg-1)}
-    .rf-chip.rf-tr{border-color:rgba(170,255,220,0.20);background:var(--rf-tr-2)}
-    .rf-chip.rf-tr:hover{background:var(--rf-tr-1)}
-    .rf-detail{display:grid;grid-template-columns:1fr minmax(320px,430px);gap:14px;align-items:start}
-    @media (max-width:980px){.rf-detail{grid-template-columns:1fr}}
-    .rf-detail h2{margin:0 0 8px 0;font-size:clamp(18px,2.2vw,22px)}
-    .rf-kv{display:grid;grid-template-columns:170px 1fr;gap:8px 12px;margin-top:10px}
-    @media (max-width:520px){.rf-kv{grid-template-columns:1fr}}
-    .rf-k{color:var(--rf-muted);font-size:12.5px}
-    .rf-v{font-size:13.5px;line-height:1.45}
-    .rf-v ul{margin:8px 0 0 18px;padding:0}
-    .rf-v li{margin:6px 0}
-    .rf-math{font-size:clamp(14px,3.8vw,18px);line-height:1.4;overflow-wrap:anywhere;hyphens:auto}
-    .rf-term{
-      display:inline-block;padding:1px 6px;border-radius:10px;border:1px solid rgba(255,255,255,0.18);
-      background:rgba(255,255,255,0.06);cursor:pointer;user-select:none;margin:0 2px;
+
+    .encabezado h1 {
+      margin: 0 0 8px 0;
+      color: var(--color-azul);
+      font-size: clamp(1.7rem, 3vw, 2.6rem);
     }
-    .rf-term:hover{background:rgba(255,255,255,0.10)}
-    .rf-popover{
-      position:fixed;z-index:9999;max-width:330px;background:rgba(12,16,30,0.96);border:1px solid rgba(255,255,255,0.16);
-      border-radius:14px;padding:10px 12px;box-shadow:var(--rf-shadow);color:var(--rf-text);font-size:13px;line-height:1.35;display:none;
+
+    .encabezado p {
+      margin: 0;
+      color: var(--color-subtexto);
+      font-size: 1rem;
     }
-    .rf-desmos{border:1px solid var(--rf-border);border-radius:var(--rf-radius);background:rgba(255,255,255,0.04);overflow:hidden;box-shadow:var(--rf-shadow)}
-    .rf-desmos .rf-aspect{aspect-ratio:16 / 10;width:100%}
-    .rf-desmos iframe{width:100%;height:100%;border:0;display:block}
-    .rf-mini-actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:12px}
-    .rf-home-note{margin-top:10px;color:var(--rf-muted);font-size:12.5px;line-height:1.45}
+
+    /* =========================================================
+       MENÚ DE BOTONES
+       ========================================================= */
+    .menu-funciones {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
+      gap: 12px;
+      margin-bottom: 20px;
+    }
+
+    .boton-funcion {
+      border: 1px solid var(--color-borde);
+      background: #ffffff;
+      color: var(--color-azul);
+      border-radius: 14px;
+      padding: 12px 14px;
+      cursor: pointer;
+      font-size: 0.98rem;
+      font-weight: 600;
+      transition: all 0.25s ease;
+      box-shadow: 0 4px 12px var(--color-sombra);
+    }
+
+    .boton-funcion:hover {
+      background: var(--color-azul);
+      color: white;
+      transform: translateY(-2px);
+    }
+
+    .boton-funcion.activo {
+      background: var(--color-azul);
+      color: white;
+      border-color: var(--color-azul);
+    }
+
+    /* =========================================================
+       ZONA DE CONTENIDO
+       Dos columnas:
+       izquierda = información
+       derecha   = gráfica
+       ========================================================= */
+    .panel-principal {
+      display: grid;
+      grid-template-columns: 1.05fr 1.45fr;
+      gap: 18px;
+      align-items: start;
+    }
+
+    /* =========================================================
+       TARJETAS
+       ========================================================= */
+    .tarjeta {
+      background: var(--color-tarjeta);
+      border: 1px solid var(--color-borde);
+      border-radius: 18px;
+      box-shadow: 0 8px 25px var(--color-sombra);
+      overflow: hidden;
+    }
+
+    .tarjeta-contenido {
+      padding: 18px;
+    }
+
+    /* =========================================================
+       COLUMNA IZQUIERDA: INFORMACIÓN
+       ========================================================= */
+    .titulo-funcion {
+      color: var(--color-azul);
+      margin-top: 0;
+      margin-bottom: 8px;
+      font-size: clamp(1.3rem, 2vw, 1.8rem);
+    }
+
+    .subtitulo {
+      font-size: 0.98rem;
+      color: var(--color-subtexto);
+      margin-bottom: 14px;
+    }
+
+    .bloque {
+      margin-bottom: 16px;
+      padding: 14px;
+      border-radius: 14px;
+      background: #f8fbff;
+      border: 1px solid #dbeafe;
+    }
+
+    .bloque h3 {
+      margin-top: 0;
+      margin-bottom: 8px;
+      color: var(--color-azul);
+      font-size: 1rem;
+    }
+
+    .bloque p,
+    .bloque li {
+      margin-top: 6px;
+      margin-bottom: 6px;
+      color: var(--color-texto);
+    }
+
+    .lista-propiedades {
+      margin: 0;
+      padding-left: 18px;
+    }
+
+    .formula-destacada {
+      background: white;
+      border: 1px solid var(--color-borde);
+      border-radius: 12px;
+      padding: 12px;
+      margin-top: 10px;
+      overflow-x: auto;
+    }
+
+    /* =========================================================
+       COLUMNA DERECHA: DESMOS
+       IMPORTANTE:
+       - Se aumenta bastante la altura.
+       - En celular no conviene aumentar tanto el ancho;
+         el ancho ya se adapta al 100%.
+       - Para mejorar visualización en móvil, se aumenta
+         principalmente la ALTURA, no el ancho fijo.
+       ========================================================= */
+    .contenedor-grafica {
+      padding: 18px;
+    }
+
+    .encabezado-grafica {
+      margin-bottom: 12px;
+    }
+
+    .encabezado-grafica h3 {
+      margin: 0;
+      color: var(--color-azul);
+      font-size: 1.1rem;
+    }
+
+    .encabezado-grafica p {
+      margin: 6px 0 0 0;
+      color: var(--color-subtexto);
+      font-size: 0.95rem;
+    }
+
+    #desmos-calculadora {
+      width: 100%;
+      height: 780px; /* altura aumentada notablemente */
+      border: 1px solid var(--color-borde);
+      border-radius: 16px;
+      overflow: hidden;
+      background: white;
+    }
+
+    /* =========================================================
+       PIE O NOTA
+       ========================================================= */
+    .nota {
+      margin-top: 18px;
+      font-size: 0.92rem;
+      color: var(--color-subtexto);
+      background: #f8fbff;
+      border: 1px solid #dbeafe;
+      padding: 12px 14px;
+      border-radius: 12px;
+    }
+
+    /* =========================================================
+       AJUSTES PARA PANTALLAS PEQUEÑAS
+       ========================================================= */
+    @media (max-width: 1000px) {
+      .panel-principal {
+        grid-template-columns: 1fr;
+      }
+
+      #desmos-calculadora {
+        height: 760px; /* alto grande también en tablet */
+      }
+    }
+
+    @media (max-width: 700px) {
+      .contenedor {
+        padding: 12px;
+      }
+
+      .tarjeta-contenido,
+      .contenedor-grafica {
+        padding: 14px;
+      }
+
+      #desmos-calculadora {
+        height: 720px; /* alto aún grande para celular */
+      }
+
+      .boton-funcion {
+        font-size: 0.95rem;
+      }
+    }
+
+    @media (max-width: 480px) {
+      #desmos-calculadora {
+        height: 680px;
+      }
+    }
   </style>
 </head>
 <body>
-  <div class="rf-wrap">
-    <div class="rf-header">
-      <div>
-        <h1 class="rf-title">Funciones reales de variable real</h1>
-        <p class="rf-subtitle">
-          Funciones \(\mathbb{R}\to\mathbb{R}\) con codominio tomado como el rango para simplificar el estudio de la sobreyectividad.
-        </p>
-      </div>
-      <div class="rf-top-actions">
-        <button class="rf-btn rf-ghost" id="rfBackBtn" style="display:none;">Volver</button>
-      </div>
-    </div>
+  <div class="contenedor">
 
-    <div class="rf-screen rf-active" id="rfScreenHome">
-      <div class="rf-grid">
-        <div class="rf-card rf-clickable" data-rf-nav="characteristics">
-          <h3>Características</h3>
-          <p>Monotonicidad, simetría, acotación, continuidad y asíntotas.</p>
-        </div>
-        <div class="rf-card rf-clickable" data-rf-nav="elementary">
-          <h3>Funciones elementales</h3>
-          <p>Algebraicas y trascendentes. Cada función incluye definición, propiedades y gráfica.</p>
-        </div>
-      </div>
-      <p class="rf-home-note">
-        Todas las gráficas usan por ahora el mismo enlace de Desmos. Puedes cambiarlo globalmente o asignar uno distinto a cada función en <b>RF_CONFIG</b>.
+    <!-- =========================================================
+         ENCABEZADO PRINCIPAL
+         ========================================================= -->
+    <section class="encabezado">
+      <h1>Funciones: definiciones, propiedades y gráficas</h1>
+      <p>
+        Selecciona una función para ver su expresión, dominio, rango,
+        propiedades y su representación gráfica interactiva.
       </p>
-    </div>
+    </section>
 
-    <div class="rf-screen" id="rfScreenCharacteristics">
-      <div class="rf-box">
-        <div class="rf-section-title">Características</div>
-        <div class="rf-chip-grid" id="rfCharacteristicList"></div>
-      </div>
-    </div>
+    <!-- =========================================================
+         BOTONES DE NAVEGACIÓN
+         Puedes agregar aquí más funciones si deseas
+         ========================================================= -->
+    <section class="menu-funciones" id="menu-funciones"></section>
 
-    <div class="rf-screen" id="rfScreenElementary">
-      <div class="rf-box">
-        <div class="rf-section-title">Funciones elementales</div>
-        <div style="margin-top:10px;">
-          <div class="rf-section-title">Algebraicas</div>
-          <div class="rf-chip-grid" id="rfAlgList"></div>
+    <!-- =========================================================
+         PANEL PRINCIPAL
+         IZQUIERDA: información
+         DERECHA: gráfica Desmos
+         ========================================================= -->
+    <section class="panel-principal">
+
+      <!-- =====================================================
+           COLUMNA IZQUIERDA
+           ===================================================== -->
+      <article class="tarjeta">
+        <div class="tarjeta-contenido" id="panel-informacion">
+          <!-- Se llena dinámicamente con JavaScript -->
         </div>
-        <div style="margin-top:14px;">
-          <div class="rf-section-title">Trascendentes</div>
-          <div class="rf-chip-grid" id="rfTrList"></div>
-        </div>
-      </div>
-    </div>
+      </article>
 
-    <div class="rf-screen" id="rfScreenTrigMenu">
-      <div class="rf-box">
-        <div class="rf-section-title">Funciones trigonométricas</div>
-        <div class="rf-chip-grid" id="rfTrigList"></div>
-      </div>
-    </div>
-
-    <div class="rf-screen" id="rfScreenDetail">
-      <div class="rf-detail">
-        <div class="rf-box">
-          <h2 id="rfDetailTitle"></h2>
-          <div id="rfDetailBody" class="rf-v"></div>
-          <div class="rf-kv" id="rfDetailKV"></div>
-          <div class="rf-mini-actions" id="rfDetailActions"></div>
-        </div>
-        <div class="rf-desmos">
-          <div class="rf-aspect">
-            <iframe id="rfDesmosFrame" title="Gráfica (Desmos)" loading="lazy" referrerpolicy="no-referrer-when-downgrade" allow="fullscreen"></iframe>
+      <!-- =====================================================
+           COLUMNA DERECHA
+           ===================================================== -->
+      <article class="tarjeta">
+        <div class="contenedor-grafica">
+          <div class="encabezado-grafica">
+            <h3>Gráfica interactiva</h3>
+            <p>
+              Puedes acercar, alejar y explorar la función en el plano cartesiano.
+            </p>
+          </div>
+          <div id="desmos-calculadora"></div>
+          <div class="nota">
+            Si alguna etiqueta matemática no aparece de inmediato, espera un momento:
+            MathJax la vuelve a procesar automáticamente.
           </div>
         </div>
-      </div>
-    </div>
+      </article>
+
+    </section>
   </div>
 
-  <div class="rf-popover" id="rfPopover"></div>
-
   <script>
-    window.MathJax = { tex: { inlineMath: [['\\(','\\)'],['$','$']] } };
-  </script>
-  <script async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
-
-  <script>
-    const RF_CONFIG = {
-      desmosDefault: "https://www.desmos.com/calculator/jqlepkaqqz",
-      desmosById: {},
-      desmosEmbedSuffix: "?embed"
-    };
-
-    const RF_CHARACTERISTICS = [
-      { id:"monotonicidad", title:"Monotonicidad", bodyHTML:`<div class="rf-math">Sea \\(f:A\\subseteq\\mathbb{R}\\to\\mathbb{R}\\).</div><ul><li>\\(f\\) es <b>creciente</b> en \\(I\\subseteq A\\) si \\(x_1<x_2\\Rightarrow f(x_1)\\le f(x_2)\\).</li><li>Es <b>decreciente</b> en \\(I\\) si \\(x_1<x_2\\Rightarrow f(x_1)\\ge f(x_2)\\).</li><li>Es <b>estrictamente creciente</b> si \\(x_1<x_2\\Rightarrow f(x_1)<f(x_2)\\).</li><li>Es <b>estrictamente decreciente</b> si \\(x_1<x_2\\Rightarrow f(x_1)>f(x_2)\\).</li></ul>`, kv:[] },
-      { id:"simetria", title:"Simetría (par e impar)", bodyHTML:`<div class="rf-math">Sea \\(f:A\\subseteq\\mathbb{R}\\to\\mathbb{R}\\), con dominio simétrico.</div><ul><li><b>Par</b>: \\(f(-x)=f(x)\\). Simetría respecto al eje \\(y\\).</li><li><b>Impar</b>: \\(f(-x)=-f(x)\\). Simetría respecto al origen.</li></ul>`, kv:[] },
-      { id:"acotacion", title:"Acotación", bodyHTML:`<div class="rf-math">Sea \\(f:A\\subseteq\\mathbb{R}\\to\\mathbb{R}\\).</div><ul><li><b>Acotada superiormente</b> si existe \\(M\\in\\mathbb{R}\\) tal que \\(f(x)\\le M\\).</li><li><b>Acotada inferiormente</b> si existe \\(m\\in\\mathbb{R}\\) tal que \\(m\\le f(x)\\).</li><li><b>Acotada</b> si es acotada superior e inferiormente; equivalentemente existe \\(K>0\\) con \\(|f(x)|\\le K\\).</li></ul>`, kv:[] },
-      { id:"continuidad", title:"Continuidad", bodyHTML:`<div class="rf-math">Sea \\(f:A\\subseteq\\mathbb{R}\\to\\mathbb{R}\\) y \\(a\\in A\\).</div><ul><li><b>Continuidad en \\(a\\)</b>: \\(\\lim_{x\\to a}f(x)=f(a)\\).</li><li>Forma \\(\\varepsilon\\)-\\(\\delta\\): para todo \\(\\varepsilon>0\\) existe \\(\\delta>0\\) tal que si \\(|x-a|<\\delta\\), entonces \\(|f(x)-f(a)|<\\varepsilon\\).</li></ul>`, kv:[] },
-      { id:"asintotas", title:"Asíntotas (vertical y horizontal)", bodyHTML:`<div class="rf-math">Sea \\(f:A\\subseteq\\mathbb{R}\\to\\mathbb{R}\\).</div><ul><li><b>Asíntota vertical</b> en \\(x=a\\): si \\(\\lim_{x\\to a^-}f(x)=\\pm\\infty\\) o \\(\\lim_{x\\to a^+}f(x)=\\pm\\infty\\).</li><li><b>Asíntota horizontal</b> \\(y=L\\): si \\(\\lim_{x\\to\\infty}f(x)=L\\) o \\(\\lim_{x\\to-\\infty}f(x)=L\\).</li></ul>`, kv:[] }
-    ];
-
-    const RF_FUNCTIONS = [
-      { id:"constante", group:"alg", title:"Función constante", bodyHTML:`<div class="rf-math">Definición: \\(f:\\mathbb{R}\\to\\{c\\}\\subseteq\\mathbb{R}\\), \\(f(x)=c\\), con \\(c\\in\\mathbb{R}\\).</div>`, kv:[["Dominio","\\(\\mathbb{R}\\)"],["Codominio","Rango \\(=\\{c\\}\\)"],["Inyectiva","No, salvo restricción del dominio a un solo punto."],["Sobreyectiva","Sí (por convención)."],["Monotonicidad","Creciente y decreciente en sentido no estricto."]], actions:[{type:"desmosLink", label:"Abrir en Desmos"}] },
-      { id:"lineal", group:"alg", title:"Función lineal", bodyHTML:`<div class="rf-math">Definición: \\(f(x)=\\)<span class="rf-term" data-note="\\(m\\) es la pendiente de la recta.">\\(m\\)</span>\\(x+\\)<span class="rf-term" data-note="\\(b\\) es el corte con el eje \\(y\\): \\(f(0)=b\\).">\\(b\\)</span>\\(\\).</div><div style="height:10px"></div><div class="rf-math">Forma punto-pendiente: \\[ y=<span class="rf-term" data-note="\\(m\\) es la pendiente.">m</span>(x-<span class="rf-term" data-note="\\(x_0\\) es la coordenada horizontal de un punto de la recta.">x_0</span>)+<span class="rf-term" data-note="\\(y_0\\) es la coordenada vertical del mismo punto.">y_0</span>. \\]</div>`, kv:[["Dominio","\\(\\mathbb{R}\\)"],["Codominio","Rango \\(=\\{mx+b:x\\in\\mathbb{R}\\}\\)"],["Inyectiva","Sí si \\(m\\ne 0\\)."],["Sobreyectiva","Sí (por convención)."],["Monotonicidad","Si \\(m>0\\), creciente; si \\(m<0\\), decreciente; si \\(m=0\\), constante."]], actions:[{type:"desmosLink", label:"Abrir en Desmos"}] },
-      { id:"parabola", group:"alg", title:"Parábola", bodyHTML:`<div class="rf-math">Definición: \\(f:\\mathbb{R}\\to[0,\\infty)\\), \\(f(x)=x^2\\).</div><div style="height:10px"></div><div class="rf-math">Transformación: \\[ y=(x-x_0)^2+y_0. \\]</div>`, kv:[["Dominio","\\(\\mathbb{R}\\)"],["Codominio","Rango \\([0,\\infty)\\)."],["Inyectiva","No en \\(\\mathbb{R}\\); sí con restricción de dominio."],["Sobreyectiva","Sí (por convención)."],["Monotonicidad","Decreciente en \\(( -\\infty,0]\\) y creciente en \\([0,\\infty)\\)."]], actions:[{type:"desmosLink", label:"Abrir en Desmos"}] },
-      { id:"polinomica", group:"alg", title:"Función polinómica", bodyHTML:`<div class="rf-math">Definición: \\(p(x)=a_nx^n+a_{n-1}x^{n-1}+\\cdots+a_1x+a_0\\), con \\(a_n\\ne 0\\).</div>`, kv:[["Dominio","\\(\\mathbb{R}\\)"],["Codominio","Rango \\(=\\{p(x):x\\in\\mathbb{R}\\}\\)"],["Inyectiva","Depende; basta que sea estrictamente monótona en \\(\\mathbb{R}\\)."],["Sobreyectiva","Si el grado es impar, el rango es \\(\\mathbb{R}\\)."],["Monotonicidad","Depende de la función; se estudia por intervalos."]], actions:[{type:"desmosLink", label:"Abrir en Desmos"}] },
-      { id:"racional", group:"alg", title:"Función racional", bodyHTML:`<div class="rf-math">Definición: \\(r(x)=\\dfrac{p(x)}{q(x)}\\), con \\(q(x)\\ne 0\\).</div>`, kv:[["Dominio","\\(\\mathbb{R}\\setminus\\{x:q(x)=0\\}\\)"],["Codominio","Rango \\(=\\{r(x):x\\in\\mathrm{Dom}(r)\\}\\)"],["Inyectiva","Depende; suele analizarse por intervalos."],["Continuidad","Continua en cada intervalo donde \\(q(x)\\ne 0\\)."],["Asíntotas","Verticales en ceros del denominador sin cancelación; horizontales u oblicuas según grados."]], actions:[{type:"desmosLink", label:"Abrir en Desmos"}] },
-      { id:"exponencial", group:"tr", title:"Función exponencial", bodyHTML:`<div class="rf-math">Definición: \\(f(x)=a^x\\), con \\(a>0\\) y \\(a\\ne 1\\).</div><ul><li class="rf-math">\\(a^{x+y}=a^x a^y\\)</li><li class="rf-math">\\(a^{x-y}=\\dfrac{a^x}{a^y}\\)</li><li class="rf-math">\\((a^x)^y=a^{xy}\\)</li></ul>`, kv:[["Dominio","\\(\\mathbb{R}\\)"],["Codominio","Rango \\((0,\\infty)\\)"],["Inyectiva","Sí."],["Monotonicidad","Si \\(a>1\\), creciente; si \\(0<a<1\\), decreciente."],["Asíntota horizontal","\\(y=0\\)."]], actions:[{type:"inverse", label:"Inversa", target:"logaritmica"},{type:"desmosLink", label:"Abrir en Desmos"}] },
-      { id:"logaritmica", group:"tr", title:"Función logarítmica", bodyHTML:`<div class="rf-math">Definición: \\(f(x)=\\log_a(x)\\), con \\(a>0\\), \\(a\\ne 1\\), y \\(x>0\\).</div><ul><li class="rf-math">\\(\\log_a(xy)=\\log_a(x)+\\log_a(y)\\)</li><li class="rf-math">\\(\\log_a(x/y)=\\log_a(x)-\\log_a(y)\\)</li><li class="rf-math">\\(\\log_a(x^k)=k\\log_a(x)\\)</li><li class="rf-math">\\(\\log_a(x)=\\dfrac{\\ln(x)}{\\ln(a)}\\)</li></ul>`, kv:[["Dominio","\\((0,\\infty)\\)"],["Codominio","Rango \\(\\mathbb{R}\\)"],["Inyectiva","Sí."],["Monotonicidad","Si \\(a>1\\), creciente; si \\(0<a<1\\), decreciente."],["Asíntota vertical","\\(x=0\\)."]], actions:[{type:"inverse", label:"Inversa", target:"exponencial"},{type:"desmosLink", label:"Abrir en Desmos"}] },
-      { id:"trig", group:"tr", title:"Funciones trigonométricas", bodyHTML:`<div class="rf-math">Conjunto de funciones periódicas definidas a partir del círculo unitario.</div>`, kv:[], actions:[{type:"openTrigMenu", label:"Abrir"}] },
-      { id:"sin", group:"trig", title:"Seno", bodyHTML:`<div class="rf-math">\\(\\sin:\\mathbb{R}\\to[-1,1]\\).</div><ul><li class="rf-math">\\(\\sin(x+y)=\\sin x\\cos y+\\sin y\\cos x\\)</li><li class="rf-math">\\(\\sin(-x)=-\\sin x\\)</li></ul>`, kv:[["Periodo","\\(2\\pi\\)"],["Monotonicidad","Creciente en \\([ -\\tfrac{\\pi}{2},\\tfrac{\\pi}{2}]\\)."],["Inyectiva","No en \\(\\mathbb{R}\\); sí con restricción."]], actions:[{type:"inverseTrig", label:"Inversa", target:"arcsin"},{type:"desmosLink", label:"Abrir en Desmos"}] },
-      { id:"cos", group:"trig", title:"Coseno", bodyHTML:`<div class="rf-math">\\(\\cos:\\mathbb{R}\\to[-1,1]\\).</div><ul><li class="rf-math">\\(\\cos(x+y)=\\cos x\\cos y-\\sin x\\sin y\\)</li><li class="rf-math">\\(\\cos(-x)=\\cos x\\)</li></ul>`, kv:[["Periodo","\\(2\\pi\\)"],["Monotonicidad","Decreciente en \\([0,\\pi]\\)."],["Inyectiva","No en \\(\\mathbb{R}\\); sí con restricción."]], actions:[{type:"inverseTrig", label:"Inversa", target:"arccos"},{type:"desmosLink", label:"Abrir en Desmos"}] },
-      { id:"tan", group:"trig", title:"Tangente", bodyHTML:`<div class="rf-math">\\(\\tan x=\\dfrac{\\sin x}{\\cos x}\\), dominio: \\(\\mathbb{R}\\setminus\\{\\tfrac{\\pi}{2}+k\\pi\\}\\).</div><ul><li class="rf-math">\\(\\tan(x+y)=\\dfrac{\\tan x+\\tan y}{1-\\tan x\\tan y}\\)</li><li class="rf-math">\\(\\tan(-x)=-\\tan x\\)</li></ul>`, kv:[["Periodo","\\(\\pi\\)"],["Asíntotas verticales","\\(x=\\tfrac{\\pi}{2}+k\\pi\\)"],["Monotonicidad","Creciente en cada intervalo entre asíntotas."]], actions:[{type:"inverseTrig", label:"Inversa", target:"arctan"},{type:"desmosLink", label:"Abrir en Desmos"}] },
-      { id:"sec", group:"trig", title:"Secante", bodyHTML:`<div class="rf-math">\\(\\sec x=\\dfrac{1}{\\cos x}\\), dominio: \\(\\mathbb{R}\\setminus\\{\\tfrac{\\pi}{2}+k\\pi\\}\\).</div>`, kv:[["Rango","\\(( -\\infty,-1]\\cup[1,\\infty)\\)"],["Asíntotas verticales","\\(x=\\tfrac{\\pi}{2}+k\\pi\\)"],["Monotonicidad","Se estudia por ramas."]], actions:[{type:"inverseTrig", label:"Inversa", target:"arcsec"},{type:"desmosLink", label:"Abrir en Desmos"}] },
-      { id:"csc", group:"trig", title:"Cosecante", bodyHTML:`<div class="rf-math">\\(\\csc x=\\dfrac{1}{\\sin x}\\), dominio: \\(\\mathbb{R}\\setminus\\{k\\pi\\}\\).</div>`, kv:[["Rango","\\(( -\\infty,-1]\\cup[1,\\infty)\\)"],["Asíntotas verticales","\\(x=k\\pi\\)"],["Monotonicidad","Se estudia por ramas."]], actions:[{type:"inverseTrig", label:"Inversa", target:"arccsc"},{type:"desmosLink", label:"Abrir en Desmos"}] },
-      { id:"cot", group:"trig", title:"Cotangente", bodyHTML:`<div class="rf-math">\\(\\cot x=\\dfrac{\\cos x}{\\sin x}\\), dominio: \\(\\mathbb{R}\\setminus\\{k\\pi\\}\\).</div><ul><li class="rf-math">\\(\\cot(x+y)=\\dfrac{\\cot x\\cot y-1}{\\cot x+\\cot y}\\)</li></ul>`, kv:[["Periodo","\\(\\pi\\)"],["Asíntotas verticales","\\(x=k\\pi\\)"],["Monotonicidad","Decreciente en cada intervalo \\((k\\pi,(k+1)\\pi)\\)."]], actions:[{type:"inverseTrig", label:"Inversa", target:"arccot"},{type:"desmosLink", label:"Abrir en Desmos"}] },
-      { id:"arcsin", group:"invtrig", title:"Arcoseno", bodyHTML:`<div class="rf-math">\\(\\arcsin:[-1,1]\\to\\left[-\\tfrac{\\pi}{2},\\tfrac{\\pi}{2}\\right]\\).</div>`, kv:[["Monotonicidad","Creciente en \\([-1,1]\\)."],["Inyectiva","Sí."]], actions:[{type:"desmosLink", label:"Abrir en Desmos"}] },
-      { id:"arccos", group:"invtrig", title:"Arcocoseno", bodyHTML:`<div class="rf-math">\\(\\arccos:[-1,1]\\to[0,\\pi]\\).</div>`, kv:[["Monotonicidad","Decreciente en \\([-1,1]\\)."],["Inyectiva","Sí."]], actions:[{type:"desmosLink", label:"Abrir en Desmos"}] },
-      { id:"arctan", group:"invtrig", title:"Arcotangente", bodyHTML:`<div class="rf-math">\\(\\arctan:\\mathbb{R}\\to\\left(-\\tfrac{\\pi}{2},\\tfrac{\\pi}{2}\\right)\\).</div>`, kv:[["Monotonicidad","Creciente en \\(\\mathbb{R}\\)."],["Asíntotas horizontales","\\(y=\\pm\\tfrac{\\pi}{2}\\)."]], actions:[{type:"desmosLink", label:"Abrir en Desmos"}] },
-      { id:"arcsec", group:"invtrig", title:"Arcosecante (principal)", bodyHTML:`<div class="rf-math">\\(\\operatorname{arcsec}:(-\\infty,-1]\\cup[1,\\infty)\\to[0,\\pi]\\setminus\\{\\tfrac{\\pi}{2}\\}\\).</div>`, kv:[["Nota","Se fija una convención de rango."]], actions:[{type:"desmosLink", label:"Abrir en Desmos"}] },
-      { id:"arccsc", group:"invtrig", title:"Arcocosecante (principal)", bodyHTML:`<div class="rf-math">\\(\\operatorname{arccsc}:(-\\infty,-1]\\cup[1,\\infty)\\to\\left[-\\tfrac{\\pi}{2},\\tfrac{\\pi}{2}\\right]\\setminus\\{0\\}\\).</div>`, kv:[["Nota","Se fija una convención de rango."]], actions:[{type:"desmosLink", label:"Abrir en Desmos"}] },
-      { id:"arccot", group:"invtrig", title:"Arcocotangente (principal)", bodyHTML:`<div class="rf-math">\\(\\operatorname{arccot}:\\mathbb{R}\\to(0,\\pi)\\).</div>`, kv:[["Monotonicidad","Decreciente en \\(\\mathbb{R}\\)."]], actions:[{type:"desmosLink", label:"Abrir en Desmos"}] }
-    ];
-
-    function rfFindById(id){
-      return RF_CHARACTERISTICS.find(x=>x.id===id) || RF_FUNCTIONS.find(x=>x.id===id);
-    }
-
-    const rfPopover = document.getElementById('rfPopover');
-    function rfHidePopover(){ rfPopover.style.display = 'none'; }
-    function rfShowPopover(anchorEl, text){
-      const rect = anchorEl.getBoundingClientRect();
-      rfPopover.innerHTML = text;
-      rfPopover.style.display = 'block';
-      const pad = 10, popW = 330, popH = 120;
-      let left = Math.min(rect.left, window.innerWidth - popW - pad);
-      left = Math.max(pad, left);
-      let top = rect.bottom + 8;
-      if (top + popH > window.innerHeight - pad) top = rect.top - popH - 8;
-      top = Math.max(pad, top);
-      rfPopover.style.left = left + "px";
-      rfPopover.style.top = top + "px";
-      if (window.MathJax && window.MathJax.typesetPromise) window.MathJax.typesetPromise([rfPopover]).catch(()=>{});
-    }
-    document.addEventListener('click', (e)=>{
-      const t = e.target;
-      if (t.classList && t.classList.contains('rf-term')){
-        rfShowPopover(t, t.getAttribute('data-note') || '');
-      } else if (!rfPopover.contains(t)) {
-        rfHidePopover();
+    /* =========================================================
+       DATOS DE LAS FUNCIONES
+       ---------------------------------------------------------
+       Cada objeto define:
+       - nombre
+       - expresión en texto
+       - expresión para Desmos
+       - descripción
+       - dominio
+       - rango
+       - propiedades
+       - observaciones
+       ========================================================= */
+    const funciones = [
+      {
+        id: "lineal",
+        boton: "Función lineal",
+        nombre: "Función lineal",
+        expresionLatex: "f(x)=2x+1",
+        expresionDesmos: "y=2x+1",
+        descripcion: "Asigna a cada número real un valor obtenido mediante una expresión de la forma \\(mx+b\\).",
+        dominio: "\\(\\mathbb{R}\\)",
+        rango: "\\(\\mathbb{R}\\)",
+        imagen: "Si \\(A=[0,2]\\), entonces \\(f(A)=[1,5]\\).",
+        preimagen: "La preimagen de \\([3,7]\\) es \\([1,3]\\).",
+        acotada: "No es acotada.",
+        periodica: "No es periódica.",
+        simetria: "No es par ni impar.",
+        observaciones: [
+          "Es una función polinómica de grado 1.",
+          "Su gráfica es una recta.",
+          "Es continua en todo \\(\\mathbb{R}\\)."
+        ]
+      },
+      {
+        id: "cuadratica",
+        boton: "Función cuadrática",
+        nombre: "Función cuadrática",
+        expresionLatex: "f(x)=x^2",
+        expresionDesmos: "y=x^2",
+        descripcion: "Asigna a cada número real su cuadrado.",
+        dominio: "\\(\\mathbb{R}\\)",
+        rango: "\\([0,\\infty)\\)",
+        imagen: "Si \\(A=[-2,1]\\), entonces \\(f(A)=[0,4]\\).",
+        preimagen: "La preimagen de \\([1,9]\\) es \\([-3,-1]\\cup[1,3]\\).",
+        acotada: "Está acotada inferiormente por \\(0\\), pero no superiormente.",
+        periodica: "No es periódica.",
+        simetria: "Es una función par, pues \\(f(-x)=f(x)\\).",
+        observaciones: [
+          "Su gráfica es una parábola que abre hacia arriba.",
+          "Tiene mínimo absoluto en \\((0,0)\\).",
+          "Es continua en todo \\(\\mathbb{R}\\)."
+        ]
+      },
+      {
+        id: "cubica",
+        boton: "Función cúbica",
+        nombre: "Función cúbica",
+        expresionLatex: "f(x)=x^3",
+        expresionDesmos: "y=x^3",
+        descripcion: "Asigna a cada número real su cubo.",
+        dominio: "\\(\\mathbb{R}\\)",
+        rango: "\\(\\mathbb{R}\\)",
+        imagen: "Si \\(A=[-2,2]\\), entonces \\(f(A)=[-8,8]\\).",
+        preimagen: "La preimagen de \\([-1,8]\\) es \\([-1,2]\\).",
+        acotada: "No es acotada.",
+        periodica: "No es periódica.",
+        simetria: "Es una función impar, pues \\(f(-x)=-f(x)\\).",
+        observaciones: [
+          "Es estrictamente creciente en todo \\(\\mathbb{R}\\).",
+          "Pasa por el origen.",
+          "Es continua en todo \\(\\mathbb{R}\\)."
+        ]
+      },
+      {
+        id: "valorabsoluto",
+        boton: "Valor absoluto",
+        nombre: "Función valor absoluto",
+        expresionLatex: "f(x)=|x|",
+        expresionDesmos: "y=abs(x)",
+        descripcion: "Asigna a cada real su distancia al cero en la recta numérica.",
+        dominio: "\\(\\mathbb{R}\\)",
+        rango: "\\([0,\\infty)\\)",
+        imagen: "Si \\(A=[-3,1]\\), entonces \\(f(A)=[0,3]\\).",
+        preimagen: "La preimagen de \\([1,2]\\) es \\([-2,-1]\\cup[1,2]\\).",
+        acotada: "Está acotada inferiormente por \\(0\\), pero no superiormente.",
+        periodica: "No es periódica.",
+        simetria: "Es una función par.",
+        observaciones: [
+          "Su gráfica tiene forma de V.",
+          "Tiene mínimo absoluto en \\((0,0)\\).",
+          "Es continua en todo \\(\\mathbb{R}\\)."
+        ]
+      },
+      {
+        id: "raiz",
+        boton: "Función raíz",
+        nombre: "Función raíz cuadrada",
+        expresionLatex: "f(x)=\\sqrt{x}",
+        expresionDesmos: "y=sqrt(x)",
+        descripcion: "Asigna a cada número real no negativo su raíz cuadrada principal.",
+        dominio: "\\([0,\\infty)\\)",
+        rango: "\\([0,\\infty)\\)",
+        imagen: "Si \\(A=[1,9]\\), entonces \\(f(A)=[1,3]\\).",
+        preimagen: "La preimagen de \\([2,4]\\) es \\([4,16]\\).",
+        acotada: "Está acotada inferiormente por \\(0\\), pero no superiormente.",
+        periodica: "No es periódica.",
+        simetria: "No presenta simetría par ni impar, pues su dominio no es simétrico respecto de 0.",
+        observaciones: [
+          "Es creciente en su dominio.",
+          "Comienza en el punto \\((0,0)\\).",
+          "Es continua en \\([0,\\infty)\\)."
+        ]
+      },
+      {
+        id: "racional",
+        boton: "Función racional",
+        nombre: "Función racional",
+        expresionLatex: "f(x)=\\frac{1}{x}",
+        expresionDesmos: "y=1/x",
+        descripcion: "Asigna a cada real distinto de cero su inverso multiplicativo.",
+        dominio: "\\(\\mathbb{R}\\setminus\\{0\\}\\)",
+        rango: "\\(\\mathbb{R}\\setminus\\{0\\}\\)",
+        imagen: "Si \\(A=[1,2]\\), entonces \\(f(A)=[1/2,1]\\).",
+        preimagen: "La preimagen de \\((0,1]\\) es \\([1,\\infty)\\).",
+        acotada: "No es acotada en su dominio completo.",
+        periodica: "No es periódica.",
+        simetria: "Es impar, pues \\(f(-x)=-f(x)\\).",
+        observaciones: [
+          "Tiene asíntota vertical en \\(x=0\\).",
+          "Tiene asíntota horizontal en \\(y=0\\).",
+          "No es continua en \\(x=0\\), pero sí en cada intervalo de su dominio."
+        ]
+      },
+      {
+        id: "seno",
+        boton: "Función seno",
+        nombre: "Función seno",
+        expresionLatex: "f(x)=\\sin(x)",
+        expresionDesmos: "y=sin(x)",
+        descripcion: "Función trigonométrica asociada a la coordenada vertical en la circunferencia unitaria.",
+        dominio: "\\(\\mathbb{R}\\)",
+        rango: "\\([-1,1]\\)",
+        imagen: "Si \\(A=[0,\\pi]\\), entonces \\(f(A)=[0,1]\\).",
+        preimagen: "La preimagen de \\(\\{0\\}\\) es \\(\\{k\\pi:k\\in\\mathbb{Z}\\}\\).",
+        acotada: "Sí, está acotada entre \\(-1\\) y \\(1\\).",
+        periodica: "Sí, es periódica de período \\(2\\pi\\).",
+        simetria: "Es impar.",
+        observaciones: [
+          "Oscila entre \\(-1\\) y \\(1\\).",
+          "Es continua en todo \\(\\mathbb{R}\\).",
+          "Aparece en fenómenos ondulatorios y periódicos."
+        ]
+      },
+      {
+        id: "coseno",
+        boton: "Función coseno",
+        nombre: "Función coseno",
+        expresionLatex: "f(x)=\\cos(x)",
+        expresionDesmos: "y=cos(x)",
+        descripcion: "Función trigonométrica asociada a la coordenada horizontal en la circunferencia unitaria.",
+        dominio: "\\(\\mathbb{R}\\)",
+        rango: "\\([-1,1]\\)",
+        imagen: "Si \\(A=[0,\\pi]\\), entonces \\(f(A)=[-1,1]\\).",
+        preimagen: "La preimagen de \\(\\{1\\}\\) es \\(\\{2k\\pi:k\\in\\mathbb{Z}\\}\\).",
+        acotada: "Sí, está acotada entre \\(-1\\) y \\(1\\).",
+        periodica: "Sí, es periódica de período \\(2\\pi\\).",
+        simetria: "Es par.",
+        observaciones: [
+          "Empieza en \\((0,1)\\).",
+          "Es continua en todo \\(\\mathbb{R}\\).",
+          "Modela movimientos oscilatorios."
+        ]
       }
+    ];
+
+    /* =========================================================
+       REFERENCIAS A ELEMENTOS DEL DOM
+       ========================================================= */
+    const menuFunciones = document.getElementById("menu-funciones");
+    const panelInformacion = document.getElementById("panel-informacion");
+
+    /* =========================================================
+       CREACIÓN DE LA CALCULADORA DESMOS
+       ---------------------------------------------------------
+       Ajustes:
+       - expressions: false   -> oculta el panel lateral
+       - settingsMenu: false  -> oculta menú
+       - zoomButtons: true    -> deja botones de zoom
+       - keypad: false        -> oculta teclado
+       ---------------------------------------------------------
+       Si quieres más espacio visible, lo importante es modificar
+       la altura del contenedor CSS:
+         #desmos-calculadora { height: ... }
+       ========================================================= */
+    const elt = document.getElementById("desmos-calculadora");
+    const calculadora = Desmos.GraphingCalculator(elt, {
+      expressions: false,
+      settingsMenu: false,
+      zoomButtons: true,
+      expressionsTopbar: false,
+      keypad: false,
+      lockViewport: false,
+      border: false
     });
 
-    const rfBackBtn = document.getElementById('rfBackBtn');
-    const rfScreens = {
-      home: document.getElementById('rfScreenHome'),
-      characteristics: document.getElementById('rfScreenCharacteristics'),
-      elementary: document.getElementById('rfScreenElementary'),
-      trigMenu: document.getElementById('rfScreenTrigMenu'),
-      detail: document.getElementById('rfScreenDetail')
-    };
+    /* =========================================================
+       FUNCIÓN PARA CONSTRUIR EL PANEL DE INFORMACIÓN
+       ========================================================= */
+    function construirInformacion(funcion) {
+      panelInformacion.innerHTML = `
+        <h2 class="titulo-funcion">${funcion.nombre}</h2>
+        <div class="subtitulo">
+          Expresión: <strong>\\(${funcion.expresionLatex}\\)</strong>
+        </div>
 
-    let rfStack = ["home"];
-    function rfSetActiveScreen(key){
-      Object.values(rfScreens).forEach(s => s.classList.remove('rf-active'));
-      rfScreens[key].classList.add('rf-active');
-      rfBackBtn.style.display = (key === "home") ? "none" : "inline-flex";
-      if (window.MathJax && window.MathJax.typesetPromise) window.MathJax.typesetPromise([document.body]).catch(()=>{});
-    }
-    function rfPushScreen(key){
-      rfStack.push(key);
-      rfSetActiveScreen(key);
-      window.scrollTo({top:0, behavior:'smooth'});
-    }
-    function rfPopScreen(){
-      if (rfStack.length <= 1) return;
-      rfStack.pop();
-      rfSetActiveScreen(rfStack[rfStack.length - 1]);
-      window.scrollTo({top:0, behavior:'smooth'});
-    }
-    rfBackBtn.addEventListener('click', rfPopScreen);
+        <div class="bloque">
+          <h3>Definición</h3>
+          <p>${funcion.descripcion}</p>
+          <div class="formula-destacada">
+            \\[
+              ${funcion.expresionLatex}
+            \\]
+          </div>
+        </div>
 
-    const rfCharacteristicList = document.getElementById('rfCharacteristicList');
-    const rfAlgList = document.getElementById('rfAlgList');
-    const rfTrList = document.getElementById('rfTrList');
-    const rfTrigList = document.getElementById('rfTrigList');
+        <div class="bloque">
+          <h3>Dominio y rango</h3>
+          <p><strong>Dominio:</strong> ${funcion.dominio}</p>
+          <p><strong>Rango:</strong> ${funcion.rango}</p>
+        </div>
 
-    function rfRenderLists(){
-      rfCharacteristicList.innerHTML = "";
-      RF_CHARACTERISTICS.forEach(ch => {
-        const btn = document.createElement('div');
-        btn.className = "rf-chip";
-        btn.innerHTML = `<strong>${ch.title}</strong><span>Definición</span>`;
-        btn.addEventListener('click', ()=> rfOpenDetail(ch.id));
-        rfCharacteristicList.appendChild(btn);
-      });
+        <div class="bloque">
+          <h3>Imagen y preimagen</h3>
+          <p><strong>Imagen:</strong> ${funcion.imagen}</p>
+          <p><strong>Preimagen:</strong> ${funcion.preimagen}</p>
+        </div>
 
-      rfAlgList.innerHTML = "";
-      RF_FUNCTIONS.filter(f=>f.group==="alg").forEach(fn => {
-        const btn = document.createElement('div');
-        btn.className = "rf-chip rf-alg";
-        btn.innerHTML = `<strong>${fn.title}</strong><span>Definición</span>`;
-        btn.addEventListener('click', ()=> rfOpenDetail(fn.id));
-        rfAlgList.appendChild(btn);
-      });
+        <div class="bloque">
+          <h3>Propiedades</h3>
+          <ul class="lista-propiedades">
+            <li><strong>Acotación:</strong> ${funcion.acotada}</li>
+            <li><strong>Periodicidad:</strong> ${funcion.periodica}</li>
+            <li><strong>Simetría:</strong> ${funcion.simetria}</li>
+          </ul>
+        </div>
 
-      rfTrList.innerHTML = "";
-      RF_FUNCTIONS.filter(f=>f.group==="tr").forEach(fn => {
-        const btn = document.createElement('div');
-        btn.className = "rf-chip rf-tr";
-        btn.innerHTML = `<strong>${fn.title}</strong><span>Definición</span>`;
-        btn.addEventListener('click', ()=> {
-          if (fn.id === "trig") rfPushScreen("trigMenu");
-          else rfOpenDetail(fn.id);
+        <div class="bloque">
+          <h3>Observaciones</h3>
+          <ul class="lista-propiedades">
+            ${funcion.observaciones.map(obs => `<li>${obs}</li>`).join("")}
+          </ul>
+        </div>
+      `;
+
+      /* ---------------------------------------------------------
+         Reprocesa MathJax para que sí renderice la notación LaTeX
+         recién insertada dinámicamente en el HTML.
+         --------------------------------------------------------- */
+      if (window.MathJax && MathJax.typesetPromise) {
+        MathJax.typesetPromise([panelInformacion]).catch(function (err) {
+          console.error("Error en MathJax:", err);
         });
-        rfTrList.appendChild(btn);
+      }
+    }
+
+    /* =========================================================
+       FUNCIÓN PARA ACTUALIZAR LA GRÁFICA EN DESMOS
+       ---------------------------------------------------------
+       También ajusta la ventana visible según el tipo de función
+       para que se vea mejor desde celular o escritorio.
+       ========================================================= */
+    function actualizarGrafica(funcion) {
+      calculadora.setBlank();
+
+      calculadora.setExpression({
+        id: "grafica-principal",
+        latex: funcion.expresionDesmos,
+        color: Desmos.Colors.BLUE
       });
 
-      rfTrigList.innerHTML = "";
-      RF_FUNCTIONS.filter(f=>f.group==="trig").forEach(fn => {
-        const btn = document.createElement('div');
-        btn.className = "rf-chip rf-tr";
-        btn.innerHTML = `<strong>${fn.title}</strong><span>Definición</span>`;
-        btn.addEventListener('click', ()=> rfOpenDetail(fn.id));
-        rfTrigList.appendChild(btn);
+      /* ---------------------------------------------------------
+         Ajustes de ventana según cada función
+         --------------------------------------------------------- */
+      switch (funcion.id) {
+        case "lineal":
+          calculadora.setMathBounds({
+            left: -10,
+            right: 10,
+            bottom: -10,
+            top: 10
+          });
+          break;
+
+        case "cuadratica":
+          calculadora.setMathBounds({
+            left: -6,
+            right: 6,
+            bottom: -2,
+            top: 18
+          });
+          break;
+
+        case "cubica":
+          calculadora.setMathBounds({
+            left: -4,
+            right: 4,
+            bottom: -20,
+            top: 20
+          });
+          break;
+
+        case "valorabsoluto":
+          calculadora.setMathBounds({
+            left: -8,
+            right: 8,
+            bottom: -2,
+            top: 10
+          });
+          break;
+
+        case "raiz":
+          calculadora.setMathBounds({
+            left: -1,
+            right: 16,
+            bottom: -1,
+            top: 5
+          });
+          break;
+
+        case "racional":
+          calculadora.setMathBounds({
+            left: -10,
+            right: 10,
+            bottom: -10,
+            top: 10
+          });
+          break;
+
+        case "seno":
+        case "coseno":
+          calculadora.setMathBounds({
+            left: -8,
+            right: 8,
+            bottom: -2,
+            top: 2
+          });
+          break;
+
+        default:
+          calculadora.setMathBounds({
+            left: -10,
+            right: 10,
+            bottom: -10,
+            top: 10
+          });
+      }
+    }
+
+    /* =========================================================
+       FUNCIÓN PARA RENDERIZAR BOTONES DEL MENÚ
+       ========================================================= */
+    function crearBotones() {
+      funciones.forEach((funcion, indice) => {
+        const boton = document.createElement("button");
+        boton.className = "boton-funcion";
+        boton.textContent = funcion.boton;
+
+        boton.addEventListener("click", () => {
+          document.querySelectorAll(".boton-funcion").forEach(b => b.classList.remove("activo"));
+          boton.classList.add("activo");
+          construirInformacion(funcion);
+          actualizarGrafica(funcion);
+        });
+
+        menuFunciones.appendChild(boton);
+
+        /* -------------------------------------------------------
+           Dejar activa la primera función al cargar
+           ------------------------------------------------------- */
+        if (indice === 0) {
+          boton.classList.add("activo");
+          construirInformacion(funcion);
+          actualizarGrafica(funcion);
+        }
       });
     }
 
-    const rfDetailTitle = document.getElementById('rfDetailTitle');
-    const rfDetailBody = document.getElementById('rfDetailBody');
-    const rfDetailKV = document.getElementById('rfDetailKV');
-    const rfDetailActions = document.getElementById('rfDetailActions');
-    const rfDesmosFrame = document.getElementById('rfDesmosFrame');
-
-    function rfDesmosSrcFor(id){
-      const url = RF_CONFIG.desmosById[id] || RF_CONFIG.desmosDefault;
-      return url.includes("?") ? url + "&embed" : url + RF_CONFIG.desmosEmbedSuffix;
-    }
-
-    function rfOpenDetail(id){
-      const item = rfFindById(id);
-      if (!item) return;
-
-      rfDetailTitle.textContent = item.title;
-      rfDetailBody.innerHTML = item.bodyHTML || "";
-
-      rfDetailKV.innerHTML = "";
-      (item.kv || []).forEach(([k,v])=>{
-        const kEl = document.createElement('div');
-        kEl.className = "rf-k";
-        kEl.textContent = k;
-        const vEl = document.createElement('div');
-        vEl.className = "rf-v";
-        vEl.innerHTML = v;
-        rfDetailKV.appendChild(kEl);
-        rfDetailKV.appendChild(vEl);
-      });
-
-      rfDetailActions.innerHTML = "";
-      (item.actions || []).forEach(a=>{
-        if (a.type === "inverse" || a.type === "inverseTrig"){
-          const btn = document.createElement('button');
-          btn.className = "rf-btn rf-primary";
-          btn.textContent = a.label;
-          btn.addEventListener('click', ()=> rfOpenDetail(a.target));
-          rfDetailActions.appendChild(btn);
-        }
-        if (a.type === "openTrigMenu"){
-          const btn = document.createElement('button');
-          btn.className = "rf-btn rf-primary";
-          btn.textContent = a.label;
-          btn.addEventListener('click', ()=> rfPushScreen("trigMenu"));
-          rfDetailActions.appendChild(btn);
-        }
-        if (a.type === "desmosLink"){
-          const link = document.createElement('a');
-          link.className = "rf-btn";
-          link.textContent = a.label;
-          link.href = RF_CONFIG.desmosById[id] || RF_CONFIG.desmosDefault;
-          link.target = "_blank";
-          link.rel = "noopener noreferrer";
-          rfDetailActions.appendChild(link);
-        }
-      });
-
-      rfDesmosFrame.src = rfDesmosSrcFor(id);
-      rfPushScreen("detail");
-      if (window.MathJax && window.MathJax.typesetPromise) window.MathJax.typesetPromise([rfScreens.detail]).catch(()=>{});
-    }
-
-    document.querySelectorAll('[data-rf-nav]').forEach(el=>{
-      el.addEventListener('click', ()=>{
-        const nav = el.getAttribute('data-rf-nav');
-        if (nav === "characteristics") rfPushScreen("characteristics");
-        if (nav === "elementary") rfPushScreen("elementary");
-      });
-    });
-
-    rfRenderLists();
-    rfSetActiveScreen("home");
+    /* =========================================================
+       INICIALIZACIÓN
+       ========================================================= */
+    crearBotones();
   </script>
 </body>
 </html>
