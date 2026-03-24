@@ -1,0 +1,2364 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Aplicaciones de Ecuaciones Diferenciales Ordinarias de Primer Orden</title>
+
+  <!--
+    ======================================================================
+    ARCHIVO HTML AUTOCONTENIDO EN UNA SOLA PIEZA
+    Tema general: Aplicaciones de Ecuaciones Diferenciales Ordinarias de Primer Orden
+    Módulo desarrollado: Desagüe / vaciado de un tanque
+
+    DECISIONES DE DISEÑO:
+    - Una sola página, estable y fácil de ampliar.
+    - Catálogo inicial de aplicaciones.
+    - Módulos desplegables por aplicación.
+    - Visualización 2.5D en SVG para mayor estabilidad.
+    - Contenido teórico cargado desde objetos JavaScript.
+    - CSS con variables sencillas de editar.
+    - Código abundantemente comentado para facilitar mantenimiento.
+    ======================================================================
+  -->
+
+  <style>
+    /* ====================================================================
+       VARIABLES CSS
+       Edita aquí colores, radios, tamaños y espacios.
+       ==================================================================== */
+    :root{
+      /* Paleta principal: sobria, profesional, más rica que solo azul/blanco */
+      --bg: #f6f3ed;              /* fondo cálido muy suave */
+      --surface: #ffffff;         /* tarjetas */
+      --surface-2: #fbfcfe;       /* segunda capa */
+      --surface-3: #f1f5f8;       /* capa suave */
+      --ink: #11161c;             /* texto principal */
+      --muted: #5b6673;           /* texto secundario */
+      --line: #d6dee5;            /* bordes */
+      --line-strong: #b7c5d1;     /* bordes fuertes */
+
+      /* Acentos */
+      --accent: #1f4e79;          /* azul profundo */
+      --accent-2: #2a7f9e;        /* azul verdoso */
+      --accent-3: #dbeaf2;        /* fondo celeste */
+      --accent-4: #eef6fa;        /* fondo celeste claro */
+      --gold: #b27a2b;            /* resaltes puntuales */
+      --gold-soft: #f7efe3;       /* fondo dorado claro */
+      --ok: #2f7d63;              /* estados activos */
+
+      /* Colores de la simulación */
+      --liquid: #72b7cf;
+      --liquid-deep: #3b88a6;
+      --liquid-soft: rgba(114,183,207,0.26);
+      --jet: #1d4ed8;
+      --jet-soft: rgba(29,78,216,0.22);
+
+      /* Rodajas visibles: deliberadamente distintas del azul del líquido */
+      --slice-coral: rgba(212, 98, 83, 0.46);
+      --slice-coral-top: rgba(242, 180, 170, 0.92);
+      --slice-coral-stroke: rgba(141, 56, 46, 0.92);
+      --slice-gold: rgba(198, 151, 57, 0.42);
+      --slice-gold-top: rgba(243, 221, 157, 0.94);
+      --slice-gold-stroke: rgba(130, 94, 16, 0.92);
+      --slice-violet: rgba(135, 103, 177, 0.40);
+      --slice-violet-top: rgba(213, 193, 239, 0.94);
+      --slice-violet-stroke: rgba(82, 57, 118, 0.90);
+      --slice-sage: rgba(104, 146, 107, 0.40);
+      --slice-sage-top: rgba(197, 226, 197, 0.94);
+      --slice-sage-stroke: rgba(54, 94, 58, 0.90);
+      --tank-glass: rgba(255,255,255,0.44);
+      --tank-stroke: rgba(31,78,121,0.55);
+
+      /* Escala */
+      --page-max: 1520px;
+      --radius-xl: 26px;
+      --radius-lg: 18px;
+      --radius-md: 14px;
+      --radius-sm: 10px;
+      --shadow: 0 12px 34px rgba(20, 30, 48, 0.08);
+
+      /* Espaciados */
+      --gap-1: 8px;
+      --gap-2: 12px;
+      --gap-3: 16px;
+      --gap-4: 20px;
+      --gap-5: 26px;
+      --gap-6: 34px;
+
+      /* Controles */
+      --btn-h: 44px;
+      --graphic-h: 620px;
+      --graphic-h-mobile: 460px;
+
+      /* Transiciones */
+      --transition: 220ms ease;
+
+      /* Tipografía */
+      --font-main: "Segoe UI", Inter, Roboto, Arial, sans-serif;
+    }
+
+    *{ box-sizing:border-box; }
+    html, body{ margin:0; padding:0; }
+    body{
+      font-family: var(--font-main);
+      background:
+        radial-gradient(circle at top right, rgba(42,127,158,0.08), transparent 18%),
+        radial-gradient(circle at top left, rgba(178,122,43,0.05), transparent 16%),
+        var(--bg);
+      color: var(--ink);
+      line-height: 1.58;
+    }
+
+    .page{
+      max-width: var(--page-max);
+      margin: 0 auto;
+      padding: 24px 18px 42px;
+    }
+
+    /* ====================================================================
+       HERO / PORTADA
+       ==================================================================== */
+    .hero{
+      border: 1px solid var(--line);
+      border-radius: var(--radius-xl);
+      box-shadow: var(--shadow);
+      background:
+        linear-gradient(180deg, rgba(255,255,255,0.98), rgba(251,252,254,0.98)),
+        radial-gradient(circle at top right, rgba(31,78,121,0.08), transparent 28%);
+      padding: 28px 26px 22px;
+      overflow: hidden;
+      position: relative;
+    }
+
+    .hero::after{
+      content:"";
+      position:absolute;
+      right:-60px;
+      top:-60px;
+      width:220px;
+      height:220px;
+      border-radius:50%;
+      background: radial-gradient(circle, rgba(42,127,158,0.10), transparent 66%);
+      pointer-events:none;
+    }
+
+    .eyebrow{
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      padding: 7px 13px;
+      border-radius:999px;
+      background: var(--accent-4);
+      color: var(--accent);
+      border:1px solid #d2e5ef;
+      font-weight:700;
+      font-size:0.95rem;
+      margin-bottom: 14px;
+    }
+
+    .hero h1{
+      margin:0 0 8px;
+      font-size: clamp(1.9rem, 2.6vw, 2.9rem);
+      line-height: 1.14;
+      letter-spacing: -0.02em;
+      max-width: 960px;
+    }
+
+    .hero p{
+      margin:0;
+      max-width: 980px;
+      color: var(--muted);
+      font-size: 1.02rem;
+    }
+
+    .hero-badges{
+      display:flex;
+      gap:10px;
+      flex-wrap:wrap;
+      margin-top: 18px;
+    }
+
+    .badge{
+      border:1px solid var(--line);
+      background:#fff;
+      color: var(--muted);
+      border-radius:999px;
+      padding: 8px 12px;
+      font-size: 0.92rem;
+    }
+
+    .badge strong{ color: var(--accent); }
+
+    /* ====================================================================
+       CATÁLOGO DE APLICACIONES
+       ==================================================================== */
+    .section-title{
+      margin: 26px 0 14px;
+      font-size: 1.28rem;
+      letter-spacing:-0.01em;
+    }
+
+    .catalog-grid{
+      display:grid;
+      grid-template-columns: repeat(3, minmax(0,1fr));
+      gap: 16px;
+    }
+
+    .catalog-card{
+      border:1px solid var(--line);
+      background: linear-gradient(180deg, rgba(255,255,255,0.98), rgba(250,252,253,0.98));
+      box-shadow: var(--shadow);
+      border-radius: var(--radius-xl);
+      padding: 18px 18px 16px;
+      display:flex;
+      flex-direction:column;
+      gap: 12px;
+      min-height: 222px;
+      transition: transform var(--transition), box-shadow var(--transition), border-color var(--transition);
+    }
+
+    .catalog-card:hover{
+      transform: translateY(-2px);
+      border-color: var(--line-strong);
+      box-shadow: 0 16px 36px rgba(20, 30, 48, 0.10);
+    }
+
+    .catalog-top{
+      display:flex;
+      align-items:flex-start;
+      justify-content:space-between;
+      gap:12px;
+    }
+
+    .catalog-card h3{
+      margin:0;
+      font-size:1.16rem;
+      line-height:1.25;
+    }
+
+    .catalog-card p{
+      margin:0;
+      color:var(--muted);
+      font-size:0.965rem;
+    }
+
+    .status-pill{
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      white-space:nowrap;
+      border-radius:999px;
+      padding: 6px 10px;
+      font-size:0.84rem;
+      font-weight:700;
+      border:1px solid transparent;
+    }
+
+    .status-ready{
+      color:#1f5f46;
+      background: #edf8f3;
+      border-color:#cde8db;
+    }
+
+    .status-soon{
+      color:#8b5d17;
+      background: #fbf2e4;
+      border-color:#ecd6ae;
+    }
+
+    .catalog-actions{
+      margin-top:auto;
+      display:flex;
+      gap:10px;
+      flex-wrap:wrap;
+    }
+
+    .action-btn,
+    .ghost-btn,
+    .tab-btn,
+    .toolbar-btn,
+    .small-btn,
+    .back-btn{
+      height: var(--btn-h);
+      border-radius:999px;
+      border:1px solid var(--line);
+      background:#fff;
+      color: var(--ink);
+      padding: 0 16px;
+      cursor:pointer;
+      font-weight:700;
+      font-size:0.95rem;
+      transition: transform var(--transition), box-shadow var(--transition), border-color var(--transition), background var(--transition), color var(--transition);
+    }
+
+    .action-btn:hover,
+    .ghost-btn:hover,
+    .tab-btn:hover,
+    .toolbar-btn:hover,
+    .small-btn:hover,
+    .back-btn:hover{
+      transform: translateY(-1px);
+      box-shadow: 0 8px 18px rgba(20,30,48,0.08);
+      border-color: var(--line-strong);
+    }
+
+    .action-btn.primary,
+    .tab-btn.active,
+    .toolbar-btn.primary,
+    .small-btn.primary{
+      background: linear-gradient(180deg, var(--accent) 0%, #173b5b 100%);
+      color:#fff;
+      border-color: transparent;
+      box-shadow: 0 12px 24px rgba(31,78,121,0.22);
+    }
+
+    .ghost-btn{
+      background: var(--surface-3);
+      color: var(--accent);
+    }
+
+    /* ====================================================================
+       SECCIONES DE APLICACIONES
+       ==================================================================== */
+    .app-section{
+      display:none;
+      margin-top: 22px;
+      border:1px solid var(--line);
+      border-radius: var(--radius-xl);
+      background: linear-gradient(180deg, rgba(255,255,255,0.98), rgba(251,252,254,0.98));
+      box-shadow: var(--shadow);
+      overflow:hidden;
+    }
+
+    .app-section.active{ display:block; }
+
+    .section-head{
+      padding: 20px 22px 16px;
+      border-bottom:1px solid var(--line);
+      background:
+        linear-gradient(180deg, rgba(255,255,255,0.98), rgba(248,251,253,0.98)),
+        radial-gradient(circle at top right, rgba(31,78,121,0.08), transparent 26%);
+    }
+
+    .section-head-top{
+      display:flex;
+      justify-content:space-between;
+      align-items:flex-start;
+      gap:16px;
+      flex-wrap:wrap;
+    }
+
+    .section-head h2{
+      margin:0 0 6px;
+      font-size:1.55rem;
+      line-height:1.18;
+    }
+
+    .section-head p{
+      margin:0;
+      color:var(--muted);
+      max-width: 980px;
+    }
+
+    .head-actions{
+      display:flex;
+      gap:10px;
+      flex-wrap:wrap;
+    }
+
+    .tabbar{
+      display:flex;
+      gap:10px;
+      flex-wrap:wrap;
+      padding: 16px 22px 0;
+    }
+
+    .workspace{
+      display:grid;
+      grid-template-columns: minmax(430px, 1.05fr) minmax(430px, 1fr);
+      gap: 18px;
+      padding: 18px 22px 24px;
+      align-items:start;
+    }
+
+    .column{
+      display:flex;
+      flex-direction:column;
+      gap:18px;
+      min-width: 0;
+    }
+
+    .card{
+      background: var(--surface);
+      border:1px solid var(--line);
+      border-radius: var(--radius-xl);
+      box-shadow: var(--shadow);
+      overflow:hidden;
+    }
+
+    .card-head{
+      padding: 18px 20px 0;
+      display:flex;
+      justify-content:space-between;
+      gap:12px;
+      align-items:flex-start;
+      flex-wrap:wrap;
+    }
+
+    .card-head h3,
+    .card-head h4{
+      margin:0;
+      line-height:1.22;
+    }
+
+    .card-head p{
+      margin:6px 0 0;
+      color:var(--muted);
+    }
+
+    .card-body{
+      padding: 16px 20px 20px;
+    }
+
+    /* ====================================================================
+       PANEL VISUAL Y CONTROLES
+       ==================================================================== */
+    .toolbar{
+      display:flex;
+      justify-content:space-between;
+      gap:12px;
+      flex-wrap:wrap;
+      border:1px solid var(--line);
+      background: linear-gradient(180deg, #ffffff, #f9fbfc);
+      border-radius: var(--radius-lg);
+      padding: 10px 12px;
+    }
+
+    .toolbar-group{
+      display:flex;
+      gap:8px;
+      flex-wrap:wrap;
+      align-items:center;
+    }
+
+    .toolbar select,
+    .toolbar input{
+      height: var(--btn-h);
+      border-radius: 12px;
+      border:1px solid var(--line);
+      background:#fff;
+      padding: 0 12px;
+      color: var(--ink);
+      font: inherit;
+    }
+
+    .meta-row{
+      display:grid;
+      grid-template-columns: repeat(4, minmax(0,1fr));
+      gap:10px;
+      margin-top: 12px;
+    }
+
+    .metric{
+      border:1px solid var(--line);
+      background: linear-gradient(180deg, #ffffff, #fbfcfd);
+      border-radius: 16px;
+      padding: 10px 12px;
+    }
+
+    .metric-label{
+      font-size:0.82rem;
+      color:var(--muted);
+      margin-bottom:3px;
+    }
+
+    .metric-value{
+      font-size:1.05rem;
+      font-weight:800;
+      color:var(--accent);
+    }
+
+    .visual-stage-wrap{
+      position:relative;
+      border:1px solid var(--line);
+      background:
+        radial-gradient(circle at 14% 14%, rgba(42,127,158,0.10), transparent 18%),
+        linear-gradient(180deg, #ffffff, #f6fafc);
+      border-radius: 22px;
+      min-height: var(--graphic-h);
+      overflow:hidden;
+    }
+
+    .visual-stage{
+      width:100%;
+      height:100%;
+      min-height: var(--graphic-h);
+      display:block;
+      cursor:default;
+      user-select:none;
+    }
+
+    .visual-caption{
+      position:absolute;
+      right:14px;
+      top:14px;
+      background: rgba(255,255,255,0.9);
+      border:1px solid var(--line);
+      border-radius: 14px;
+      padding: 8px 10px;
+      font-size:0.88rem;
+      color:var(--muted);
+      backdrop-filter: blur(8px);
+    }
+
+    .var-card{
+      border:1px solid var(--line);
+      background: linear-gradient(180deg, #ffffff, #fbfcfd);
+      border-radius: var(--radius-lg);
+      padding: 16px 16px 14px;
+    }
+
+    .var-card h4{
+      margin:0 0 8px;
+      color:var(--accent);
+      font-size:1.05rem;
+    }
+
+    .var-card .formula{
+      padding: 10px 12px;
+      border-radius: 14px;
+      background: var(--accent-4);
+      border:1px solid #d7e9f0;
+      margin: 10px 0 8px;
+      overflow-x:auto;
+    }
+
+    .legend-row{
+      display:flex;
+      gap:10px;
+      flex-wrap:wrap;
+      margin-top: 12px;
+    }
+
+    .legend-chip{
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      padding: 8px 10px;
+      border-radius:999px;
+      border:1px solid var(--line);
+      background:#fff;
+      color:var(--muted);
+      font-size:0.88rem;
+    }
+
+    .swatch{
+      width:16px;
+      height:16px;
+      border-radius:50%;
+      border:1px solid rgba(0,0,0,0.08);
+      display:inline-block;
+      flex:0 0 auto;
+    }
+
+    /* ====================================================================
+       CONTENIDO TEÓRICO
+       ==================================================================== */
+    .content-stack{
+      display:flex;
+      flex-direction:column;
+      gap: 16px;
+    }
+
+    .theory-card{
+      border:1px solid var(--line);
+      border-radius: 20px;
+      background: linear-gradient(180deg, #ffffff, #fbfcfd);
+      overflow:hidden;
+    }
+
+    .theory-head{
+      padding: 16px 18px 0;
+    }
+
+    .theory-head h4{
+      margin:0;
+      font-size:1.08rem;
+      line-height:1.22;
+    }
+
+    .theory-body{
+      padding: 12px 18px 18px;
+    }
+
+    .theory-body p{
+      margin: 0 0 10px;
+    }
+
+    .theory-body ul,
+    .theory-body ol{
+      margin: 10px 0 0 20px;
+      padding:0;
+    }
+
+    .theory-body li{ margin: 6px 0; }
+
+    .math-box{
+      margin: 12px 0;
+      padding: 12px 14px;
+      border-radius: 16px;
+      background: linear-gradient(180deg, var(--accent-4), #ffffff);
+      border:1px solid #d5e7ee;
+      overflow-x:auto;
+    }
+
+    .note-box{
+      margin-top: 12px;
+      padding: 12px 14px;
+      border-radius: 16px;
+      background: var(--gold-soft);
+      border:1px solid #ead6b3;
+    }
+
+    .table-wrap{
+      overflow:auto;
+      border:1px solid var(--line);
+      border-radius: 16px;
+      background:#fff;
+    }
+
+    table{
+      width:100%;
+      border-collapse: collapse;
+      min-width: 620px;
+    }
+
+    th, td{
+      padding: 12px 12px;
+      border-bottom: 1px solid var(--line);
+      text-align:left;
+      vertical-align:top;
+    }
+
+    th{
+      background: var(--surface-3);
+      color: var(--accent);
+      font-size:0.94rem;
+    }
+
+    /* ====================================================================
+       PLACEHOLDERS DE APLICACIONES FUTURAS
+       ==================================================================== */
+    .placeholder-grid{
+      display:grid;
+      grid-template-columns: repeat(2, minmax(0,1fr));
+      gap:16px;
+      padding: 18px 22px 24px;
+    }
+
+    .placeholder-card{
+      border:1px solid var(--line);
+      background: linear-gradient(180deg, #ffffff, #fbfcfd);
+      border-radius: var(--radius-xl);
+      box-shadow: var(--shadow);
+      padding: 18px;
+    }
+
+    .placeholder-card h3{ margin:0 0 8px; }
+    .placeholder-card p{ margin:0 0 12px; color:var(--muted); }
+    .placeholder-card ul{ margin:0 0 0 20px; }
+
+    /* ====================================================================
+       HOTSPOTS SVG
+       ==================================================================== */
+    .hotspot-shape{
+      cursor:pointer;
+      transition: opacity var(--transition), transform var(--transition);
+    }
+
+    .hotspot-text{
+      cursor:pointer;
+      fill: var(--accent);
+      font-size: 18px;
+      font-weight: 700;
+      user-select:none;
+    }
+
+    .hotspot-shape:hover,
+    .hotspot-text:hover{
+      opacity: 0.86;
+    }
+
+    .dim-label{
+      fill: var(--accent);
+      font-size: 16px;
+      font-weight: 700;
+    }
+
+    .small-svg-text{
+      fill: #415061;
+      font-size: 14px;
+      font-weight: 600;
+    }
+
+    /* ====================================================================
+       MENÚ CONTEXTUAL / PANEL DE PARÁMETROS
+       ==================================================================== */
+    .context-panel{
+      position:absolute;
+      z-index: 20;
+      width: min(330px, calc(100% - 20px));
+      border:1px solid var(--line);
+      border-radius: 18px;
+      background: rgba(255,255,255,0.98);
+      backdrop-filter: blur(10px);
+      box-shadow: 0 20px 44px rgba(20,30,48,0.16);
+      padding: 16px;
+      display:none;
+    }
+
+    .context-panel.active{ display:block; }
+
+    .context-panel h4{
+      margin:0 0 10px;
+      color:var(--accent);
+      font-size:1.05rem;
+    }
+
+    .param-grid{
+      display:grid;
+      grid-template-columns: repeat(2, minmax(0,1fr));
+      gap: 10px;
+    }
+
+    .param-field{
+      display:flex;
+      flex-direction:column;
+      gap:6px;
+    }
+
+    .param-field label{
+      font-size:0.85rem;
+      color:var(--muted);
+      font-weight:700;
+    }
+
+    .param-field input{
+      height: 42px;
+      border-radius: 12px;
+      border:1px solid var(--line);
+      padding: 0 10px;
+      font: inherit;
+      color: var(--ink);
+      background:#fff;
+    }
+
+    .context-actions{
+      display:flex;
+      gap:8px;
+      flex-wrap:wrap;
+      margin-top: 12px;
+    }
+
+    .mini-help{
+      margin-top: 10px;
+      color:var(--muted);
+      font-size:0.84rem;
+    }
+
+    /* ====================================================================
+       UTILIDADES
+       ==================================================================== */
+    .hidden{ display:none !important; }
+    .muted{ color:var(--muted); }
+
+    /* ====================================================================
+       RESPONSIVE
+       ==================================================================== */
+    @media (max-width: 1160px){
+      .catalog-grid{ grid-template-columns: 1fr; }
+      .workspace{ grid-template-columns: 1fr; }
+      .placeholder-grid{ grid-template-columns: 1fr; }
+    }
+
+    @media (max-width: 760px){
+      .page{ padding: 16px 12px 30px; }
+      .hero{ padding: 22px 18px 18px; }
+      .section-head,
+      .tabbar,
+      .workspace,
+      .placeholder-grid{ padding-left: 14px; padding-right: 14px; }
+      .visual-stage-wrap,
+      .visual-stage{
+        min-height: var(--graphic-h-mobile);
+      }
+      .meta-row{ grid-template-columns: repeat(2, minmax(0,1fr)); }
+      .param-grid{ grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+  <div class="page">
+    <header class="hero">
+      <div class="eyebrow">EDO de primer orden</div>
+      <h1>Aplicaciones de Ecuaciones Diferenciales Ordinarias de Primer Orden</h1>
+    </header>
+
+    <h2 class="section-title">Aplicaciones</h2>
+    <div id="catalogGrid" class="catalog-grid"></div>
+
+    <!-- ================================================================
+         SECCIÓN 1: DESAGÜE DE UN TANQUE
+         ================================================================ -->
+    <section id="section-drain" class="app-section" aria-live="polite">
+      <div class="section-head">
+        <div class="section-head-top">
+          <div>
+            <h2>Desagüe de un tanque</h2>
+          </div>
+          <div class="head-actions">
+            <button class="back-btn" data-back="true">Volver al catálogo</button>
+          </div>
+        </div>
+      </div>
+
+      <div id="drainTabbar" class="tabbar"></div>
+
+      <div class="workspace">
+        <div class="column">
+          <section class="card">
+            <div class="card-head">
+              <div>
+                <h3>Animación del tanque</h3>
+              </div>
+            </div>
+            <div class="card-body">
+              <div class="toolbar">
+                <div class="toolbar-group">
+                  <button id="playBtn" class="toolbar-btn primary">Iniciar</button>
+                  <button id="stepBtn" class="toolbar-btn">Paso</button>
+                  <button id="resetBtn" class="toolbar-btn">Reiniciar</button>
+                </div>
+                <div class="toolbar-group">
+                  <label for="dtSelect" class="muted"><strong>\(\Delta t\)</strong></label>
+                  <select id="dtSelect">
+                    <option value="0.1">0.1 s</option>
+                    <option value="1">1 s</option>
+                    <option value="5">5 s</option>
+                    <option value="15">15 s</option>
+                  </select>
+                  <button id="settingsBtn" class="toolbar-btn">Parámetros</button>
+                </div>
+              </div>
+
+              <div class="meta-row" id="metricsRow"></div>
+
+              <div id="visualWrap" class="visual-stage-wrap">
+                <svg id="visualStage" class="visual-stage" viewBox="0 0 920 620" preserveAspectRatio="xMidYMid meet" aria-label="Tanque 2.5D interactivo"></svg>
+
+                <div id="contextPanel" class="context-panel" role="dialog" aria-modal="false" aria-label="Editar parámetros del tanque">
+                  <h4>Parámetros geométricos</h4>
+                  <div class="param-grid">
+                    <div class="param-field">
+                      <label for="paramRTop">Radio superior (cm)</label>
+                      <input id="paramRTop" type="number" step="0.1" />
+                    </div>
+                    <div class="param-field">
+                      <label for="paramRBottom">Radio inferior (cm)</label>
+                      <input id="paramRBottom" type="number" step="0.1" />
+                    </div>
+                    <div class="param-field">
+                      <label for="paramHeight">Altura total (cm)</label>
+                      <input id="paramHeight" type="number" step="0.1" />
+                    </div>
+                    <div class="param-field">
+                      <label for="paramOrificeHeight">Altura del orificio (cm)</label>
+                      <input id="paramOrificeHeight" type="number" step="0.1" />
+                    </div>
+                    <div class="param-field">
+                      <label for="paramArea">Área del orificio \(a\) (cm²)</label>
+                      <input id="paramArea" type="number" step="0.01" />
+                    </div>
+                    <div class="param-field">
+                      <label for="paramHead0">Carga inicial \(h_0\) (cm)</label>
+                      <input id="paramHead0" type="number" step="0.1" />
+                    </div>
+                  </div>
+                  <div class="context-actions">
+                    <button id="applyParamsBtn" class="small-btn primary">Aplicar</button>
+                    <button id="closeParamsBtn" class="small-btn">Cerrar</button>
+                  </div>
+                </div>
+              </div>
+
+              <div id="variableCard" class="var-card"></div>
+              <div class="legend-row">
+                <span class="legend-chip"><span class="swatch" style="background: var(--liquid);"></span>Líquido remanente</span>
+                <span class="legend-chip"><span class="swatch" style="background: var(--slice-coral);"></span>Capas extraídas \(A(h)\,|\Delta h|\)</span>
+                <span class="legend-chip"><span class="swatch" style="background: var(--jet);"></span>Segmentos del chorro \(a\,v_o\,\Delta t\)</span>
+              </div>
+            </div>
+          </section>
+        </div>
+
+        <div class="column">
+          <section class="card">
+            <div class="card-head">
+              <div>
+                <h3 id="theoryPanelTitle">Modelo ideal con Bernoulli</h3>
+              </div>
+            </div>
+            <div class="card-body">
+              <div id="theoryPanel" class="content-stack"></div>
+            </div>
+          </section>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================================================================
+         SECCIÓN 2: MEZCLAS (PREPARADA PARA FUTURO)
+         ================================================================ -->
+    <section id="section-mixing" class="app-section">
+      <div class="section-head">
+        <div class="section-head-top">
+          <div>
+            <h2>Mezclas</h2>
+                      </div>
+          <div class="head-actions">
+            <button class="back-btn" data-back="true">Volver al catálogo</button>
+          </div>
+        </div>
+      </div>
+      <div class="placeholder-grid">
+        <article class="placeholder-card">
+          <h3>Lo que quedará preparado aquí</h3>
+                    <ul>
+            <li>Balance de masa del soluto.</li>
+            <li>Ecuación diferencial para la concentración \(c(t)\).</li>
+            <li>Casos con volumen constante y volumen variable.</li>
+            <li>Visualización del tanque, entrada, salida y concentración.</li>
+          </ul>
+        </article>
+        <article class="placeholder-card">
+          <h3>Estructura prevista</h3>
+                    <ul>
+            <li>Definiciones y unidades.</li>
+            <li>Hipótesis físicas del modelo.</li>
+            <li>Derivación paso a paso.</li>
+            <li>Errores frecuentes y lectura geométrica.</li>
+          </ul>
+        </article>
+      </div>
+    </section>
+
+    <!-- ================================================================
+         SECCIÓN 3: REACCIONES QUÍMICAS (PREPARADA PARA FUTURO)
+         ================================================================ -->
+    <section id="section-reactions" class="app-section">
+      <div class="section-head">
+        <div class="section-head-top">
+          <div>
+            <h2>Reacciones químicas</h2>
+                      </div>
+          <div class="head-actions">
+            <button class="back-btn" data-back="true">Volver al catálogo</button>
+          </div>
+        </div>
+      </div>
+      <div class="placeholder-grid">
+        <article class="placeholder-card">
+          <h3>Posibles subtemas</h3>
+                    <ul>
+            <li>Decaimiento y crecimiento exponencial.</li>
+            <li>Leyes de velocidad y órdenes parciales.</li>
+            <li>Modelos con temperatura y coeficientes efectivos.</li>
+            <li>Comparación entre datos experimentales y modelo.</li>
+          </ul>
+        </article>
+        <article class="placeholder-card">
+          <h3>Formato previsto</h3>
+                    <ul>
+            <li>Tarjetas teóricas con MathJax.</li>
+            <li>Gráficas dinámicas y controles.</li>
+            <li>Casos modelo y comentarios didácticos.</li>
+            <li>Visualización interactiva de parámetros.</li>
+          </ul>
+        </article>
+      </div>
+    </section>
+  </div>
+
+  <!-- ====================================================================
+       MATHJAX
+       ==================================================================== -->
+  <script>
+    window.MathJax = {
+      tex: {
+        inlineMath: [['\\(','\\)'], ['$', '$']],
+        displayMath: [['\\[','\\]'], ['$$','$$']]
+      },
+      svg: { fontCache: 'global' }
+    };
+  </script>
+  <script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"></script>
+
+  <script>
+    /* ====================================================================
+       DATOS PRINCIPALES DEL CATÁLOGO
+       ==================================================================== */
+    const appCatalog = [
+      {
+        id: 'drain',
+        title: 'Desagüe de un tanque',
+        description: 'Se analiza la dinámica de vaciado de un tanque mediante la apertura de un orificio lateral, estableciendo la relación entre la carga hidráulica (altura del fluido sobre el orificio) y el tiempo transcurrido',
+        status: 'ready',
+        button: 'Abrir'
+      },
+      {
+        id: 'mixing',
+        title: 'Mezclas',
+        description: 'Problemas de entrada y salida para concentración, masa de soluto y volumen variable.',
+        status: 'soon',
+        button: 'Abrir'
+      },
+      {
+        id: 'reactions',
+        title: 'Reacciones químicas',
+        description: 'Crecimiento, decaimiento, leyes de velocidad y conexión con cinética química.',
+        status: 'soon',
+        button: 'Abrir'
+      }
+    ];
+
+    /* ====================================================================
+       PESTAÑAS INTERNAS DEL MÓDULO DE DESAGÜE
+       ==================================================================== */
+    const drainTabs = [
+      { id: 'model', label: 'Modelo ideal' },
+      { id: 'geometries', label: 'Geometrías del tanque' },
+      { id: 'extensions', label: 'Extensiones' }
+    ];
+
+    /* ====================================================================
+       CONTENIDO TEÓRICO DEL MODELO IDEAL
+       Cada bloque se renderiza dinámicamente.
+       ==================================================================== */
+    const modelSections = [
+      {
+        title: 'Planteamiento y variables',
+        html: String.raw`
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr><th>Símbolo</th><th>Significado</th></tr>
+              </thead>
+              <tbody>
+                <tr><td>\(t\)</td><td>Tiempo.</td></tr>
+                <tr><td>\(h(t)\)</td><td>Altura de la superficie libre sobre el orificio.</td></tr>
+                <tr><td>\(A_s(h)\)</td><td>Área horizontal del tanque en la cota actual de la superficie libre.</td></tr>
+                <tr><td>\(a\)</td><td>Área del orificio de salida.</td></tr>
+                <tr><td>\(v_s(t)\)</td><td>Velocidad con que desciende la superficie libre.</td></tr>
+                <tr><td>\(v_o(t)\)</td><td>Velocidad del chorro al atravesar el orificio.</td></tr>
+                <tr><td>\(Q(t)\)</td><td>Caudal volumétrico instantáneo.</td></tr>
+                <tr><td>\(g\)</td><td>Aceleración de la gravedad.</td></tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="note-box">
+            Tanque abierto a la atmósfera, líquido incompresible y flujo ideal en el modelo principal.
+          </div>
+        `
+      },
+              {
+      title: 'Ideas clave que sostienen el modelo',
+      html: String.raw`
+        <ol>
+          <li>
+            <strong>Hipótesis del modelo.</strong>
+            El líquido se supone <em>homogéneo</em> e <em>incompresible</em>, con densidad constante \(\rho\). Además, se idealiza el flujo como estacionario a lo largo de una línea de corriente entre la superficie libre y el orificio, y se desprecia la viscosidad. Bajo estas hipótesis, en el caso ideal,
+            <div class="math-box">\[
+              p_s = p_o = p_{\mathrm{atm}}.
+            \]</div>
+          </li>
+
+          <li>
+            <strong>Balance de volumen.</strong>
+            La forma general del balance volumétrico es
+            <div class="math-box">\[
+              \frac{dV}{dt}=Q_{\mathrm{entrada}}-Q_{\mathrm{salida}}.
+            \]</div>
+            En el problema de vaciado no entra líquido, de modo que
+            <div class="math-box">\[
+              Q_{\mathrm{entrada}}=0.
+            \]</div>
+            Por tanto,
+            <div class="math-box">\[
+              \frac{dV}{dt}=-\,Q_{\mathrm{salida}}.
+            \]</div>
+            Si \(a\) es el área del orificio y \(v_o(t)\) la rapidez de salida del chorro, entonces
+            <div class="math-box">\[
+              Q_{\mathrm{salida}}(t)=a\,v_o(t),
+            \]</div>
+            y así
+            <div class="math-box">\[
+              \frac{dV}{dt}=-\,a\,v_o(t).
+            \]</div>
+          </li>
+
+          <li>
+            <strong>Relación geométrica entre volumen y altura.</strong>
+            Si \(h(t)\) es la altura del líquido medida desde el nivel del orificio hasta la superficie libre, y \(A_s(y)\) es el área de la sección horizontal del tanque a la altura \(y\), entonces el volumen contenido hasta la altura \(h\) se expresa como
+            <div class="math-box">\[
+              V(h)=\int_{0}^{h} A_s(y)\,dy.
+            \]</div>
+            Por el teorema fundamental del cálculo,
+            <div class="math-box">\[
+              \frac{dV}{dh}=A_s(h).
+            \]</div>
+            Ahora, como \(h=h(t)\), al aplicar la regla de la cadena se obtiene
+            <div class="math-box">\[
+              \frac{dV}{dt}=\frac{dV}{dh}\frac{dh}{dt}=A_s(h)\,\frac{dh}{dt}.
+            \]</div>
+          </li>
+
+          <li>
+            <strong>Igualdad de caudales.</strong>
+            Para un fluido incompresible, el caudal que atraviesa la sección horizontal asociada al descenso de la superficie libre coincide con el caudal que atraviesa el orificio:
+            <div class="math-box">\[
+              Q(t)=A_s(h)\,v_s(t)=a\,v_o(t).
+            \]</div>
+            Como complemento aquí \(v_s(t)\) es la <em>rapidez</em> de descenso de la superficie libre, es decir, una magnitud positiva. Como la variable \(h(t)\) se mide hacia arriba, al vaciarse el tanque se cumple
+            <div class="math-box">\[
+              \frac{dh}{dt}<0.
+            \]</div>
+            Por ello, la rapidez de descenso no es \(\dfrac{dh}{dt}\), sino
+            <div class="math-box">\[
+              v_s(t)=-\,\frac{dh}{dt}.
+            \]</div>
+          </li>
+
+          <li>
+            <strong>Ecuación de Bernoulli entre la superficie libre y el orificio.</strong>
+            Se consideran dos puntos:
+            <ul>
+              <li>superficie libre: presión \(p_s\), rapidez \(v_s\), altura \(z_s=h\),</li>
+              <li>orificio: presión \(p_o\), rapidez \(v_o\), altura \(z_o=0\).</li>
+            </ul>
+            Entonces Bernoulli toma la forma
+            <div class="math-box">\[
+              \frac{p_s}{\rho}+\frac{v_s^2}{2}+g z_s
+              =
+              \frac{p_o}{\rho}+\frac{v_o^2}{2}+g z_o.
+            \]</div>
+            Bajo la hipótesis ideal \(p_s=p_o=p_{\mathrm{atm}}\), y usando \(z_s=h\), \(z_o=0\), resulta
+            <div class="math-box">\[
+              \frac{1}{2}v_s^2+gh=\frac{1}{2}v_o^2.
+            \]</div>
+          </li>
+        </ol>
+
+        <div class="note-box">
+          La aproximación clásica de Torricelli aparece cuando la rapidez de descenso de la superficie libre es despreciable frente a la rapidez de salida, es decir, cuando \(A_s(h)\gg a\).
+        </div>
+      `
+    },
+                {
+      title: 'Deducción diferencial con Bernoulli y continuidad',
+      html: String.raw`
+        <p>Primero escribimos la continuidad en términos de caudales:</p>
+        <div class="math-box">\[
+          A_s(h)\,v_s = a\,v_o.
+        \]</div>
+
+        <p>Despejando la rapidez de descenso de la superficie libre,</p>
+        <div class="math-box">\[
+          v_s=\frac{a}{A_s(h)}\,v_o.
+        \]</div>
+
+        <p>Ahora aplicamos Bernoulli entre la superficie libre y el orificio:</p>
+        <div class="math-box">\[
+          \frac{p_s}{\rho}+\frac{v_s^2}{2}+gz_s
+          =
+          \frac{p_o}{\rho}+\frac{v_o^2}{2}+gz_o.
+        \]</div>
+
+        <p>Bajo las hipótesis del modelo ideal,</p>
+        <div class="math-box">\[
+          p_s=p_o=p_{\mathrm{atm}},\qquad z_s=h,\qquad z_o=0.
+        \]</div>
+
+        <p>Por tanto, la ecuación de Bernoulli se reduce a</p>
+        <div class="math-box">\[
+          \frac{1}{2}v_s^2+gh=\frac{1}{2}v_o^2.
+        \]</div>
+
+        <p>Sustituyendo \(\,v_s=\dfrac{a}{A_s(h)}\,v_o\), obtenemos una ecuación completamente en términos de \(v_o\):</p>
+        <div class="math-box">\[
+          \frac{1}{2}\left(\frac{a}{A_s(h)}\,v_o\right)^2+gh
+          =
+          \frac{1}{2}v_o^2.
+        \]</div>
+
+        <p>Multiplicando por \(2\) y reorganizando,</p>
+        <div class="math-box">\[
+          \left(\frac{a}{A_s(h)}\right)^2v_o^2+2gh=v_o^2,
+        \]</div>
+        <div class="math-box">\[
+          v_o^2\left(1-\left(\frac{a}{A_s(h)}\right)^2\right)=2gh.
+        \]</div>
+
+        <p>En consecuencia, la rapidez de salida queda dada por</p>
+        <div class="math-box">\[
+          v_o(h)=
+          \sqrt{
+            \frac{2gh}{
+              1-\left(\frac{a}{A_s(h)}\right)^2
+            }
+          }.
+        \]</div>
+
+        <p>Pasamos ahora al balance de volumen. Como no entra fluido al tanque,</p>
+        <div class="math-box">\[
+          \frac{dV}{dt}=Q_{\mathrm{entrada}}-Q_{\mathrm{salida}}
+          =-\,a\,v_o.
+        \]</div>
+
+        <p>Por la relación geométrica entre volumen y altura,</p>
+        <div class="math-box">\[
+          V(h)=\int_0^h A_s(y)\,dy,
+        \]</div>
+        <p>de donde</p>
+        <div class="math-box">\[
+          \frac{dV}{dh}=A_s(h).
+        \]</div>
+
+        <p>Aplicando la regla de la cadena,</p>
+        <div class="math-box">\[
+          \frac{dV}{dt}=\frac{dV}{dh}\frac{dh}{dt}=A_s(h)\,\frac{dh}{dt}.
+        \]</div>
+
+        <p>Al igualar ambas expresiones de \(\dfrac{dV}{dt}\), se obtiene</p>
+        <div class="math-box">\[
+          A_s(h)\,\frac{dh}{dt}=-\,a\,v_o.
+        \]</div>
+
+        <p>Ahora despejamos \(v_o\) en términos de \(\dfrac{dh}{dt}\):</p>
+        <div class="math-box">\[
+          v_o=-\,\frac{A_s(h)}{a}\,\frac{dh}{dt}.
+        \]</div>
+
+      
+        <p>Sustituyendo y  despejando </p>
+        <div class="math-box">\[
+          \boxed{
+            \frac{dh}{dt}
+            =
+            -\,\frac{a}{A_s(h)}
+            \sqrt{
+              \frac{2gh}{
+                1-\left(\frac{a}{A_s(h)}\right)^2
+              }
+            }
+          }.
+        \]</div>
+      `
+    },
+      {
+        title: 'Forma clásica como aproximación',
+        html: String.raw`
+          <p>Si \(a\ll A_s(h)\), entonces \(\left(\tfrac{a}{A_s(h)}\right)^2\approx 0\) y resulta</p>
+          <div class="math-box">\[
+            \frac{dh}{dt}\approx -\frac{a}{A_s(h)}\sqrt{2gh}.
+          \]</div>
+        `
+      },
+      {
+        title: 'Lectura geométrica de la animación',
+        html: String.raw`
+          <ol>
+            <li>La capa dibujada dentro del tanque usa el área del círculo superior del paso y una altura \(|\Delta h|\).</li>
+            <li>El segmento del chorro usa la sección \(a\) y una longitud proporcional a \(v_o\,\Delta t\).</li>
+          </ol>
+          <div class="math-box">\[
+            A_s(h)\,|\Delta h| \approx a\,v_o\,\Delta t.
+          \]</div>
+        `
+      },
+      {
+        title: 'Errores frecuentes',
+        html: String.raw`
+          <ul>
+            <li>Medir \(h\) desde el fondo cuando aquí se mide desde el orificio lateral.</li>
+            <li>Usar un área constante en un tanque cuya sección cambia con la altura.</li>
+            <li>Olvidar que \(v_s\) y \(v_o\) están ligadas por continuidad.</li>
+            <li>Confundir el volumen exacto del paso con la aproximación cilíndrica usada para visualizarlo.</li>
+          </ul>
+        `
+      }
+    ];
+
+    /* ====================================================================
+       GEOMETRÍAS DEL TANQUE
+       No se resuelve la EDO; solo se organiza el área transversal requerida.
+       ==================================================================== */
+    const geometrySections = [
+      {
+        title: 'Tanque cono truncado vertical',
+        html: String.raw`
+          <p>Si la altura total es \(H\), el radio inferior es \(R_i\) y el radio superior es \(R_s\), entonces</p>
+          <div class="math-box">\[
+            r(y)=R_i+\frac{R_s-R_i}{H}\,y.
+          \]</div>
+          <p>El área horizontal a la cota \(y\) es</p>
+          <div class="math-box">\[
+            A(y)=\pi\,r(y)^2=\pi\left(R_i+\frac{R_s-R_i}{H}y\right)^2.
+          \]</div>
+          <p>Si el orificio está a altura \(z_o\), entonces para la carga \(h\) se evalúa en \(y=z_o+h\).</p>
+        `
+      },
+      {
+        title: 'Esfera',
+        html: String.raw`
+          <p>Para una esfera de radio \(R\), si \(h\) se mide desde el punto más bajo,</p>
+          <div class="math-box">\[
+            r(h)^2 = R^2-(R-h)^2 = 2Rh-h^2.
+          \]</div>
+          <p>Luego,</p>
+          <div class="math-box">\[
+            A(h)=\pi(2Rh-h^2), \qquad 0\le h\le 2R.
+          \]</div>
+        `
+      },
+      {
+        title: 'Tanque tipo cápsula: rectángulo con dos semicircunferencias',
+        html: String.raw`
+          <p>Sea \(B\) la longitud del tanque perpendicular al dibujo y \(H=L+2R\).</p>
+          <div class="math-box">\[
+            w(h)=
+            \begin{cases}
+              2\sqrt{2Rh-h^2}, & 0\le h\le R,\\[6pt]
+              2R, & R\le h\le R+L,\\[6pt]
+              2\sqrt{2R(H-h)-(H-h)^2}, & R+L\le h\le H,
+            \end{cases}
+          \]</div>
+          <p>El área transversal necesaria para el modelo es</p>
+          <div class="math-box">\[
+            A(h)=B\,w(h).
+          \]</div>
+        `
+      },
+      {
+        title: 'Cilindro vertical recto',
+        html: String.raw`
+          <div class="math-box">\[
+            A(h)=\pi R^2.
+          \]</div>
+        `
+      }
+    ];
+
+    /* ====================================================================
+       EXTENSIONES DEL MODELO
+       ==================================================================== */
+    const extensionSections = [
+      {
+        title: 'Pérdidas viscosas y coeficiente de descarga',
+        html: String.raw`
+          <div class="math-box">\[
+            Q_{\text{real}} = C_d\,a\,v_o^{\text{ideal}}.
+          \]</div>
+          <div class="math-box">\[
+            \frac{dh}{dt}=-C_d\,\frac{a}{A_s(h)}
+            \sqrt{\frac{2gh}{1-\left(\frac{a}{A_s(h)}\right)^2}}.
+          \]</div>
+          <div class="note-box">
+            Sigue siendo una EDO de primer orden para \(h(t)\).
+          </div>
+        `
+      },
+      {
+        title: 'Pérdidas por turbulencia o pérdida de carga local',
+        html: String.raw`
+          <div class="math-box">\[
+            \frac{1}{2}v_s^2 + gh = \frac{1}{2}v_o^2 + \frac{K}{2}v_o^2.
+          \]</div>
+          <div class="math-box">\[
+            \frac{dh}{dt}=-\frac{a}{A_s(h)}
+            \sqrt{\frac{2gh}{1-\left(\frac{a}{A_s(h)}\right)^2 + K}}.
+          \]</div>
+        `
+      },
+      {
+        title: 'Distintas presiones: tanque presurizado o semipresurizado',
+        html: String.raw`
+          <p>Si la presión sobre la superficie libre es \(p_1\) y la presión a la salida es \(p_2\), Bernoulli toma la forma</p>
+          <div class="math-box">\[
+            \frac{p_1}{\rho}+\frac{v_s^2}{2}+g(z_o+h)
+            =
+            \frac{p_2}{\rho}+\frac{v_o^2}{2}+g z_o.
+          \]</div>
+          <p>Por tanto,</p>
+          <div class="math-box">\[
+            v_o^2-v_s^2 = 2gh + \frac{2(p_1-p_2)}{\rho}.
+          \]</div>
+          <p>Usando continuidad \(a v_o = A_s(h) v_s\), se obtiene</p>
+          <div class="math-box">\[
+            \frac{dh}{dt}=-\frac{a}{A_s(h)}
+            \sqrt{
+              \frac{2gh+\frac{2(p_1-p_2)}{\rho}}
+              {1-\left(\frac{a}{A_s(h)}\right)^2}
+            }.
+          \]</div>
+          <div class="note-box">
+            Si \(p_1>p_2\), la descarga se acelera. Si \(p_1 < p_2\), el flujo se frena y puede incluso anularse antes de que \(h\) llegue a cero.
+          </div>
+        `
+      },
+      {
+        title: 'Viscosidad, turbulencia y presión combinadas',
+        html: String.raw`
+          <div class="math-box">\[
+            \frac{dh}{dt}=-C_d\,\frac{a}{A_s(h)}
+            \sqrt{
+              \frac{2gh+\frac{2(p_1-p_2)}{\rho}}
+              {1-\left(\frac{a}{A_s(h)}\right)^2 + K}
+            }.
+          \]</div>
+          <p>Mientras la incógnita principal siga siendo \(h(t)\), el modelo continúa siendo una EDO de primer orden, aunque ya no sea el caso ideal.</p>
+        `
+      }
+    ];
+
+    /* ====================================================================
+       INFORMACIÓN DE VARIABLES INTERACTIVAS
+       Se muestra al pulsar etiquetas del dibujo.
+       ==================================================================== */
+    const variableInfo = {
+      h: {
+        title: String.raw`Carga hidráulica \(h\)`,
+        formula: String.raw`\[ h(t)=y(t)-z_o \]`,
+        text: String.raw`Es la altura de la superficie libre medida desde el centro del orificio lateral. Cuando \(h=0\), el flujo ideal se detiene.`
+      },
+      A: {
+        title: String.raw`Área transversal \(A_s(h)\)`,
+        formula: String.raw`\[ Q=A_s(h)\left(-\frac{dh}{dt}\right) \]`,
+        text: String.raw`Es el área horizontal del tanque en la cota actual de la superficie libre.`
+      },
+      V: {
+        title: String.raw`Volumen contenido \(V\)`,
+        formula: String.raw`\[ \frac{dV}{dt}=A_s(h)\,\frac{dh}{dt} \]`,
+        text: String.raw`El volumen cambia porque cambia la altura del líquido.`
+      },
+      a: {
+        title: String.raw`Área del orificio \(a\)`,
+        formula: String.raw`\[ Q=a\,v_o \]`,
+        text: String.raw`Es el área de la sección de salida.`
+      },
+      Q: {
+        title: String.raw`Caudal volumétrico \(Q\)`,
+        formula: String.raw`\[ Q(t)=a\,v_o(t)=A_s(h)\left(-\frac{dh}{dt}\right) \]`,
+        text: String.raw`Volumen por unidad de tiempo que atraviesa el orificio.`
+      },
+      vo: {
+        title: String.raw`Velocidad de salida \(v_o\)`,
+        formula: String.raw`\[ v_o(h)=\sqrt{\frac{2gh}{1-\left(\frac{a}{A_s(h)}\right)^2}} \]`,
+        text: String.raw`Rapidez del chorro al salir.`
+      },
+      vs: {
+        title: String.raw`Velocidad de la superficie libre \(v_s\)`,
+        formula: String.raw`\[ v_s=-\frac{dh}{dt} \]`,
+        text: String.raw`Rapidez con que desciende la superficie.`
+      },
+      zo: {
+        title: String.raw`Altura del orificio \(z_o\)`,
+        formula: String.raw`\[ y(t)=z_o+h(t) \]`,
+        text: String.raw`Cota del orificio medida desde la base del tanque.`
+      },
+      dV: {
+        title: String.raw`Balance en un paso \(\Delta t\)`,
+        formula: String.raw`\[ A_s(h)|\Delta h| \approx a\,v_o\,\Delta t \]`,
+        text: String.raw`Se compara la capa aproximada dentro del tanque con el segmento actual del chorro.`
+      }
+    };
+
+    /* ====================================================================
+       ESTADO DE LA SIMULACIÓN
+       Unidades de longitud: centímetros.
+       Unidades de tiempo: segundos.
+       Se usa g = 981 cm/s².
+       ==================================================================== */
+    const state = {
+      activeApp: null,
+      activeDrainTab: 'model',
+      timer: null,
+      playing: false,
+      stepDt: 1,
+      g: 981,
+      params: {
+        rTop: 27,
+        rBottom: 21,
+        H: 84,
+        zOrifice: 12,
+        areaOrifice: 4.50,
+        h0: 68
+      },
+      sim: {
+        t: 0,
+        h: 68,
+        slices: [],
+        jets: [],
+        lastDeltaV: 0,
+        lastDeltaH: 0,
+        lastVo: 0,
+        lastVs: 0,
+        lastQ: 0,
+        highlightKey: 'h'
+      }
+    };
+
+    /* ====================================================================
+       UTILIDADES MATEMÁTICAS Y DE FORMATO
+       ==================================================================== */
+    const fmt = (n, digits=2) => {
+      if (!Number.isFinite(n)) return '—';
+      return Number(n).toFixed(digits);
+    };
+
+    const clamp = (x, min, max) => Math.min(max, Math.max(min, x));
+
+    function radiusAtHeight(y){
+      const p = state.params;
+      return p.rBottom + (p.rTop - p.rBottom) * (y / p.H);
+    }
+
+    function areaAtHeight(y){
+      return Math.PI * Math.pow(radiusAtHeight(y), 2);
+    }
+
+    function headMax(){
+      return Math.max(0.1, state.params.H - state.params.zOrifice);
+    }
+
+    function exactDhdt(h){
+      if (h <= 0) return 0;
+      const p = state.params;
+      const ySurface = p.zOrifice + h;
+      const A = areaAtHeight(ySurface);
+      const a = p.areaOrifice;
+      const denom = Math.max(A*A - a*a, 1e-9);
+      return -(a * Math.sqrt(2 * state.g * h)) / Math.sqrt(denom);
+    }
+
+    function computeKinematics(h){
+      const p = state.params;
+      const ySurface = p.zOrifice + h;
+      const A = areaAtHeight(ySurface);
+      const dhdt = exactDhdt(h);
+      const vs = -dhdt;
+      const vo = (A / p.areaOrifice) * vs;
+      const Q = p.areaOrifice * vo;
+      return { A, dhdt, vs, vo, Q, ySurface };
+    }
+
+    /* ================================================================
+       PALETA DE RODAJAS
+       Se alternan colores cálidos y contrastantes para que las capas
+       acumuladas se distingan claramente del líquido azul.
+       ================================================================ */
+    function getSlicePalette(index){
+      const palettes = [
+        {
+          fill: 'var(--slice-coral)',
+          topFill: 'var(--slice-coral-top)',
+          stroke: 'var(--slice-coral-stroke)'
+        },
+        {
+          fill: 'var(--slice-gold)',
+          topFill: 'var(--slice-gold-top)',
+          stroke: 'var(--slice-gold-stroke)'
+        },
+        {
+          fill: 'var(--slice-violet)',
+          topFill: 'var(--slice-violet-top)',
+          stroke: 'var(--slice-violet-stroke)'
+        },
+        {
+          fill: 'var(--slice-sage)',
+          topFill: 'var(--slice-sage-top)',
+          stroke: 'var(--slice-sage-stroke)'
+        }
+      ];
+      return palettes[index % palettes.length];
+    }
+
+    function resetSimulation(){
+      const p = state.params;
+      p.h0 = clamp(p.h0, 0.1, headMax());
+      state.sim = {
+        t: 0,
+        h: p.h0,
+        slices: [],
+        jets: [],
+        lastDeltaV: 0,
+        lastDeltaH: 0,
+        lastVo: 0,
+        lastVs: 0,
+        lastQ: 0,
+        highlightKey: state.sim.highlightKey || 'h'
+      };
+      updateMetrics();
+      updateVariableCard();
+      drawScene();
+    }
+    function stepSimulation(){
+      const dt = Number(state.stepDt);
+      if (state.sim.h <= 0){
+        stopSimulation();
+        return;
+      }
+      const oldH = state.sim.h;
+      const k = computeKinematics(oldH);
+      const dh = k.dhdt * dt;
+      const newH = Math.max(0, oldH + dh);
+      const deltaH = oldH - newH;
+      const deltaV = Math.max(0, k.A * deltaH);
+
+      state.sim.h = newH;
+      state.sim.t += dt;
+      state.sim.lastDeltaV = deltaV;
+      state.sim.lastDeltaH = deltaH;
+      state.sim.lastVo = k.vo;
+      state.sim.lastVs = k.vs;
+      state.sim.lastQ = k.Q;
+
+      // Capa aproximada del paso actual.
+      // A diferencia del segmento del chorro, las rodajas NO se borran.
+      // Quedan acumuladas para que al final el volumen inicial aparezca
+      // vestido por cilindros aproximados, tal como en una suma de rodajas.
+      const palette = getSlicePalette(state.sim.slices.length);
+      state.sim.slices.push({
+        yTop: state.params.zOrifice + oldH,
+        yBottom: state.params.zOrifice + newH,
+        approxRadius: radiusAtHeight(state.params.zOrifice + oldH),
+        rawDeltaH: deltaH,
+        deltaV: deltaV,
+        alpha: 0.96,
+        fill: palette.fill,
+        topFill: palette.topFill,
+        stroke: palette.stroke
+      });
+
+          // ================================================================
+    // ================================================================
+    // SEGMENTO ÚNICO DEL CHORRO DEL PASO ACTUAL
+    // - La longitud depende de v_o * Δt
+    // - El grosor NO depende de Δt: lo fija el área del orificio
+    // - La curvatura depende de la velocidad:
+    //   más velocidad  -> más recto
+    //   menos velocidad -> más caída
+    // ================================================================
+
+    // Longitud física ideal del tramo expulsado en este paso
+    const rawJetLength = Math.max(0, k.vo * dt);
+
+    /*
+      Escalado visual de la longitud:
+      crece con v_o * Δt, pero sin saturarse tan pronto.
+      Así 1 s, 5 s y 15 s se distinguen mejor.
+    */
+    const visualJetLength = Math.max(0, 14 + 68 * Math.log1p(rawJetLength / 10));
+
+    /*
+      Diámetro del orificio a partir del área:
+          a = pi r^2
+          d = 2 sqrt(a/pi)
+      Lo guardamos en cm para convertirlo luego a píxeles dentro de drawScene().
+    */
+    const orificeDiameterCm = 2 * Math.sqrt(state.params.areaOrifice / Math.PI);
+
+    /*
+      Referencia para decidir cuán "recto" se ve el chorro.
+      Tomamos la velocidad inicial como referencia máxima visual.
+    */
+    const kRef = computeKinematics(state.params.h0);
+    const straightness = clamp(
+      k.vo / Math.max(kRef.vo, 1e-6),
+      0.08,
+      1
+    );
+
+    /*
+      Caída visual del tramo:
+      - si straightness ~ 1 => poca caída (más recto)
+      - si straightness ~ 0 => más caída
+    */
+    const jetDrop = Math.max(
+      8,
+      visualJetLength * (0.64 - 0.46 * straightness)
+    );
+
+    state.sim.jets = [{
+      length: visualJetLength,
+      rawLength: rawJetLength,
+      orificeDiameterCm: orificeDiameterCm,
+      drop: jetDrop,
+      straightness: straightness,
+      alpha: 1
+    }];
+
+      updateMetrics();
+      updateVariableCard();
+      drawScene();
+
+      if (state.sim.h <= 0) stopSimulation();
+    }
+
+    function startSimulation(){
+      if (state.playing) return;
+      state.playing = true;
+      document.getElementById('playBtn').textContent = 'Pausar';
+      state.timer = window.setInterval(stepSimulation, 150);
+    }
+
+    function stopSimulation(){
+      state.playing = false;
+      document.getElementById('playBtn').textContent = 'Iniciar';
+      if (state.timer){
+        clearInterval(state.timer);
+        state.timer = null;
+      }
+    }
+
+    function toggleSimulation(){
+      if (state.playing) stopSimulation();
+      else startSimulation();
+    }
+
+    /* ====================================================================
+       RENDER DEL CATÁLOGO Y DE LAS SECCIONES
+       ==================================================================== */
+    function renderCatalog(){
+      const grid = document.getElementById('catalogGrid');
+      grid.innerHTML = appCatalog.map(app => `
+        <article class="catalog-card">
+          <div class="catalog-top">
+            <div>
+              <h3>${app.title}</h3>
+            </div>
+            <span class="status-pill ${app.status === 'ready' ? 'status-ready' : 'status-soon'}">
+              ${app.status === 'ready' ? 'Listo' : 'Próximamente'}
+            </span>
+          </div>
+          <p>${app.description}</p>
+          <div class="catalog-actions">
+            <button class="action-btn ${app.status === 'ready' ? 'primary' : ''}" data-open-app="${app.id}">${app.button}</button>
+          </div>
+        </article>
+      `).join('');
+    }
+
+    function closeAllSections(){
+      document.querySelectorAll('.app-section').forEach(section => section.classList.remove('active'));
+      state.activeApp = null;
+    }
+
+    function openSection(appId){
+      const section = document.getElementById(`section-${appId}`);
+      if (!section) return;
+
+      // Comportamiento desplegable/replegable.
+      if (state.activeApp === appId){
+        closeAllSections();
+        return;
+      }
+
+      closeAllSections();
+      section.classList.add('active');
+      state.activeApp = appId;
+      section.scrollIntoView({ behavior:'smooth', block:'start' });
+
+      if (appId === 'drain'){
+        renderDrainTabs();
+        renderDrainTheory();
+        updateMetrics();
+        updateVariableCard();
+        drawScene();
+      }
+      typesetMath();
+    }
+
+    /* ====================================================================
+       PESTAÑAS DEL MÓDULO DE DESAGÜE
+       ==================================================================== */
+    function renderDrainTabs(){
+      const tabbar = document.getElementById('drainTabbar');
+      tabbar.innerHTML = drainTabs.map(tab => `
+        <button class="tab-btn ${state.activeDrainTab === tab.id ? 'active' : ''}" data-drain-tab="${tab.id}">${tab.label}</button>
+      `).join('');
+    }
+
+    function renderDrainTheory(){
+      const panel = document.getElementById('theoryPanel');
+      const title = document.getElementById('theoryPanelTitle');
+
+      let source = modelSections;
+      let heading = 'Modelo ideal con Bernoulli';
+
+      if (state.activeDrainTab === 'geometries'){
+        source = geometrySections;
+        heading = 'Geometrías del tanque y área transversal';
+      } else if (state.activeDrainTab === 'extensions'){
+        source = extensionSections;
+        heading = 'Extensiones del modelo';
+      }
+
+      title.textContent = heading;
+      panel.innerHTML = source.map(item => `
+        <article class="theory-card">
+          <div class="theory-head">
+            <h4>${item.title}</h4>
+          </div>
+          <div class="theory-body">${item.html}</div>
+        </article>
+      `).join('');
+      typesetMath();
+    }
+
+    /* ====================================================================
+       MÉTRICAS SUPERIORES DEL PANEL VISUAL
+       ==================================================================== */
+    function updateMetrics(){
+      const k = computeKinematics(Math.max(state.sim.h, 0));
+      const items = [
+        { label:'Tiempo', value:`${fmt(state.sim.t, 1)} s` },
+        { label:'Altura actual', value:`${fmt(state.sim.h, 2)} cm` },
+        { label:'Velocidad del chorro', value:`${fmt(k.vo, 2)} cm/s` },
+        { label:'Caudal', value:`${fmt(k.Q, 2)} cm³/s` }
+      ];
+      const row = document.getElementById('metricsRow');
+      row.innerHTML = items.map(item => `
+        <div class="metric">
+          <div class="metric-label">${item.label}</div>
+          <div class="metric-value">${item.value}</div>
+        </div>
+      `).join('');
+    }
+
+    /* ====================================================================
+       TARJETA DE VARIABLE ACTIVA
+       ==================================================================== */
+    function updateVariableCard(){
+      const key = state.sim.highlightKey || 'h';
+      const info = variableInfo[key];
+      const card = document.getElementById('variableCard');
+      const numeric = computeKinematics(Math.max(state.sim.h, 0));
+
+      let extra = '';
+      if (key === 'dV'){
+        extra = String.raw`<p><strong>Último paso:</strong> \( |\Delta h|=${fmt(state.sim.lastDeltaH, 3)}\,\text{cm} \), \( \Delta V \approx ${fmt(state.sim.lastDeltaV, 3)}\,\text{cm}^3 \).</p>`;
+      }
+      if (key === 'A'){
+        extra = String.raw`<p><strong>Valor actual:</strong> \(A_s(h)=${fmt(numeric.A, 2)}\,\text{cm}^2\).</p>`;
+      }
+      if (key === 'vo'){
+        extra = String.raw`<p><strong>Valor actual:</strong> \(v_o=${fmt(numeric.vo, 2)}\,\text{cm/s}\).</p>`;
+      }
+      if (key === 'vs'){
+        extra = String.raw`<p><strong>Valor actual:</strong> \(v_s=${fmt(numeric.vs, 4)}\,\text{cm/s}\).</p>`;
+      }
+      if (key === 'Q'){
+        extra = String.raw`<p><strong>Valor actual:</strong> \(Q=${fmt(numeric.Q, 2)}\,\text{cm}^3/\text{s}\).</p>`;
+      }
+
+      card.innerHTML = `
+        <h4>${info.title}</h4>
+        <p>${info.text}</p>
+        <div class="formula">${info.formula}</div>
+        ${extra}
+      `;
+      typesetMath();
+    }
+
+    /* ====================================================================
+       DIBUJO SVG 2.5D
+       ==================================================================== */
+    function drawScene(){
+      const svg = document.getElementById('visualStage');
+      if (!svg) return;
+
+      const p = state.params;
+      const h = state.sim.h;
+      const dt = Number(state.stepDt);
+
+      const view = { w:920, h:620 };
+      const tank = {
+        cx: 318,
+        topY: 106,
+        bottomY: 510,
+        maxRx: 148,
+        ryFactor: 0.23,
+        nozzleLen: 30
+      };
+
+      const pxPerCmY = (tank.bottomY - tank.topY) / p.H;
+      const pxPerCmX = tank.maxRx / Math.max(p.rTop, p.rBottom);
+
+      const yToScreen = y => tank.bottomY - y * pxPerCmY;
+      const rToPx = r => r * pxPerCmX;
+      const rxAt = y => rToPx(radiusAtHeight(y));
+      const ryAt = y => Math.max(8, rxAt(y) * tank.ryFactor);
+
+      const liquidAbsY = p.zOrifice + h;
+      const screenLiquidY = yToScreen(liquidAbsY);
+      const screenOrificeY = yToScreen(p.zOrifice);
+
+      // Posición del orificio sobre la pared derecha.
+      const nozzleBaseX = tank.cx + rxAt(p.zOrifice);
+
+      // ================================================================
+      // ================================================================
+      // SEGMENTO ACTUAL DEL CHORRO
+      // - Solo se muestra el del paso actual
+      // - Su longitud depende de v_o * Δt
+      // - Su grosor depende del área del orificio
+      // - Su curvatura depende de la velocidad
+      // ================================================================
+      const jetSVG = state.sim.jets.map(piece => {
+        const startX = nozzleBaseX + 26;
+        const startY = screenOrificeY;
+
+        const len = Math.max(0, piece.length || 0);
+        if (len <= 0.5) return '';
+
+        // Convertimos el diámetro del orificio de cm a px
+        const thickness = Math.max(
+          2,
+          (piece.orificeDiameterCm || 0.8) * pxPerCmX
+        );
+
+        const drop = Math.max(0, piece.drop || 0);
+        const straight = clamp(piece.straightness || 0.5, 0, 1);
+
+        const endX = startX + len;
+        const endY = startY + drop;
+
+        /*
+          Puntos de control:
+          - con mayor straightness el trazo va más horizontal
+          - con menor straightness cae más pronto
+        */
+        const c1x = startX + 0.28 * len;
+        const c1y = startY + drop * (0.03 + 0.10 * (1 - straight));
+
+        const c2x = startX + 0.78 * len;
+        const c2y = startY + drop * (0.58 + 0.24 * (1 - straight));
+
+        const d = `
+          M ${startX} ${startY}
+          C ${c1x} ${c1y},
+            ${c2x} ${c2y},
+            ${endX} ${endY}
+        `;
+
+        const highlightWidth = Math.max(1.2, 0.24 * thickness);
+        const endCap = Math.max(1.8, 0.46 * thickness);
+
+        return `
+          <g opacity="${piece.alpha ?? 1}">
+            <!-- Cuerpo principal curvo del tramo expulsado -->
+            <path
+              d="${d}"
+              fill="none"
+              stroke="var(--jet)"
+              stroke-width="${thickness}"
+              stroke-linecap="round"
+            />
+
+            <!-- Brillo superior -->
+            <path
+              d="${d}"
+              fill="none"
+              stroke="rgba(255,255,255,0.35)"
+              stroke-width="${highlightWidth}"
+              stroke-linecap="round"
+              transform="translate(0,-1.1)"
+            />
+
+            <!-- Boca del orificio -->
+            <circle
+              cx="${startX}"
+              cy="${startY}"
+              r="${0.48 * thickness}"
+              fill="var(--jet)"
+            />
+
+            <!-- Punta del tramo -->
+            <circle
+              cx="${endX}"
+              cy="${endY}"
+              r="${endCap}"
+              fill="rgba(255,255,255,0.22)"
+            />
+          </g>
+        `;
+      }).join('');
+
+      // ================================================================
+      // RODAJAS ACUMULADAS DENTRO DEL TANQUE
+      // Cada rodaja usa el círculo superior del paso como base del cilindro
+      // aproximado. Se conservan todas para vestir progresivamente el tanque.
+      // ================================================================
+      const slicesSVG = state.sim.slices.map((slice, index) => {
+        const yTop = clamp(slice.yTop, 0, p.H);
+        const yBottomReal = clamp(slice.yBottom, 0, p.H);
+        if (yTop <= yBottomReal) return '';
+
+        const topY = yToScreen(yTop);
+        const bottomYReal = yToScreen(yBottomReal);
+        const realHeightPx = Math.max(0.8, bottomYReal - topY);
+
+        // Altura visual mínima suave: suficiente para que se vea la rodaja,
+        // pero sin inflarla tanto como para deformar por completo la suma.
+        const minVisibleSlicePx = 0.9 + 2.1 * dt;
+        const visibleHeightPx = Math.max(realHeightPx, minVisibleSlicePx);
+        const bottomYDraw = Math.min(topY + visibleHeightPx, tank.bottomY - 4);
+
+        const approxRx = rToPx(slice.approxRadius || radiusAtHeight(yTop));
+        const approxRy = Math.max(8, approxRx * tank.ryFactor);
+        const fill = slice.fill || 'var(--slice-gold)';
+        const topFill = slice.topFill || 'var(--slice-gold-top)';
+        const stroke = slice.stroke || 'var(--slice-gold-stroke)';
+        const bodyOpacity = Math.max(0.76, slice.alpha ?? 0.9);
+
+        return `
+          <g opacity="${bodyOpacity}">
+            <path d="M ${tank.cx - approxRx} ${topY}
+                     L ${tank.cx - approxRx} ${bottomYDraw}
+                     L ${tank.cx + approxRx} ${bottomYDraw}
+                     L ${tank.cx + approxRx} ${topY} Z"
+                  fill="${fill}" stroke="${stroke}" stroke-width="1.65" />
+            <ellipse cx="${tank.cx}" cy="${topY}" rx="${approxRx}" ry="${approxRy}" fill="${topFill}" stroke="${stroke}" stroke-width="1.7" />
+            <ellipse cx="${tank.cx}" cy="${bottomYDraw}" rx="${approxRx}" ry="${approxRy}" fill="rgba(255,255,255,0.10)" stroke="${stroke}" stroke-width="1.35" />
+            <line x1="${tank.cx - approxRx}" y1="${topY}" x2="${tank.cx - approxRx}" y2="${bottomYDraw}" stroke="${stroke}" stroke-width="1.4" opacity="0.95" />
+            <line x1="${tank.cx + approxRx}" y1="${topY}" x2="${tank.cx + approxRx}" y2="${bottomYDraw}" stroke="${stroke}" stroke-width="1.4" opacity="0.95" />
+          </g>
+        `;
+      }).join('');
+
+      // Cuerpo del líquido remanente.
+      const liquidTopRx = rxAt(liquidAbsY);
+      const liquidTopRy = ryAt(liquidAbsY);
+      const bottomRx = rxAt(0);
+      const bottomRy = ryAt(0);
+
+      const liquidBody = `
+        <path d="M ${tank.cx - liquidTopRx} ${screenLiquidY}
+                 L ${tank.cx - bottomRx} ${tank.bottomY}
+                 L ${tank.cx + bottomRx} ${tank.bottomY}
+                 L ${tank.cx + liquidTopRx} ${screenLiquidY} Z"
+              fill="url(#liquidBodyGrad)" stroke="rgba(59,136,166,0.36)" stroke-width="1.2" />
+        <ellipse cx="${tank.cx}" cy="${screenLiquidY}" rx="${liquidTopRx}" ry="${liquidTopRy}" fill="url(#liquidTopGrad)" stroke="rgba(27,87,112,0.5)" stroke-width="1.4" />
+        <ellipse cx="${tank.cx}" cy="${tank.bottomY}" rx="${bottomRx}" ry="${bottomRy}" fill="rgba(59,136,166,0.18)" stroke="rgba(27,87,112,0.35)" stroke-width="1.0" />
+      `;
+
+      // Tanque 2.5D.
+      const topRx = rxAt(p.H);
+      const topRy = ryAt(p.H);
+      const shell = `
+        <ellipse cx="${tank.cx}" cy="${tank.topY}" rx="${topRx}" ry="${topRy}" fill="rgba(255,255,255,0.72)" stroke="var(--tank-stroke)" stroke-width="2" />
+        <path d="M ${tank.cx - topRx} ${tank.topY}
+                 L ${tank.cx - bottomRx} ${tank.bottomY}
+                 M ${tank.cx + topRx} ${tank.topY}
+                 L ${tank.cx + bottomRx} ${tank.bottomY}"
+              fill="none" stroke="var(--tank-stroke)" stroke-width="2.2" />
+        <ellipse cx="${tank.cx}" cy="${tank.bottomY}" rx="${bottomRx}" ry="${bottomRy}" fill="rgba(255,255,255,0.38)" stroke="var(--tank-stroke)" stroke-width="2" />
+        <path d="M ${tank.cx - topRx} ${tank.topY}
+                 L ${tank.cx - bottomRx} ${tank.bottomY}
+                 L ${tank.cx + bottomRx} ${tank.bottomY}
+                 L ${tank.cx + topRx} ${tank.topY} Z"
+              fill="url(#glassGrad)" stroke="none" />
+      `;
+
+      // Contorno superior para volver a remarcar el tanque después de dibujar
+      // las rodajas acumuladas. Esto ayuda a que el cono truncado siga leyéndose
+      // claramente aunque las capas tengan colores contrastantes.
+      const tankOutline = `
+        <ellipse cx="${tank.cx}" cy="${tank.topY}" rx="${topRx}" ry="${topRy}" fill="none" stroke="var(--tank-stroke)" stroke-width="2" />
+        <path d="M ${tank.cx - topRx} ${tank.topY}
+                 L ${tank.cx - bottomRx} ${tank.bottomY}
+                 M ${tank.cx + topRx} ${tank.topY}
+                 L ${tank.cx + bottomRx} ${tank.bottomY}"
+              fill="none" stroke="var(--tank-stroke)" stroke-width="2.2" />
+        <ellipse cx="${tank.cx}" cy="${tank.bottomY}" rx="${bottomRx}" ry="${bottomRy}" fill="none" stroke="var(--tank-stroke)" stroke-width="2" />
+      `;
+
+      // Indicador de h con un corchete vertical.
+      const hLineX = tank.cx - topRx - 52;
+      const hBracket = `
+        <g class="hotspot-group" data-var="h">
+          <line class="hotspot-shape" x1="${hLineX}" y1="${screenLiquidY}" x2="${hLineX}" y2="${screenOrificeY}" stroke="var(--accent)" stroke-width="2.2" />
+          <line class="hotspot-shape" x1="${hLineX-12}" y1="${screenLiquidY}" x2="${hLineX+12}" y2="${screenLiquidY}" stroke="var(--accent)" stroke-width="2.2" />
+          <line class="hotspot-shape" x1="${hLineX-12}" y1="${screenOrificeY}" x2="${hLineX+12}" y2="${screenOrificeY}" stroke="var(--accent)" stroke-width="2.2" />
+          <text class="hotspot-text" x="${hLineX - 10}" y="${(screenLiquidY + screenOrificeY)/2 - 8}" text-anchor="end">h</text>
+        </g>
+      `;
+
+      // Hotspots de variables.
+      const hotspots = `
+        <g class="hotspot-group" data-var="A">
+          <ellipse class="hotspot-shape" cx="${tank.cx}" cy="${screenLiquidY}" rx="${Math.max(36, liquidTopRx*0.38)}" ry="${Math.max(12, liquidTopRy*0.72)}" fill="rgba(255,255,255,0.12)" stroke="rgba(31,78,121,0.50)" stroke-width="1.4" stroke-dasharray="5 5" />
+          <text class="hotspot-text" x="${tank.cx}" y="${screenLiquidY - liquidTopRy - 12}" text-anchor="middle">A_s(h)</text>
+        </g>
+
+        <g class="hotspot-group" data-var="V">
+          <text class="hotspot-text" x="${tank.cx}" y="${Math.min(tank.bottomY - 40, screenLiquidY + 0.55*(tank.bottomY-screenLiquidY))}" text-anchor="middle">V</text>
+        </g>
+
+        <g class="hotspot-group" data-var="a">
+          <circle class="hotspot-shape" cx="${nozzleBaseX + 4}" cy="${screenOrificeY}" r="8.2" fill="rgba(31,78,121,0.12)" stroke="var(--accent)" stroke-width="1.6" />
+          <text class="hotspot-text" x="${nozzleBaseX + 18}" y="${screenOrificeY - 10}">a</text>
+        </g>
+
+        <g class="hotspot-group" data-var="Q">
+          <text class="hotspot-text" x="${nozzleBaseX + 110}" y="${screenOrificeY - 18}">Q</text>
+        </g>
+
+        <g class="hotspot-group" data-var="vo">
+          <text class="hotspot-text" x="${nozzleBaseX + 150}" y="${screenOrificeY + 26}">v_o</text>
+        </g>
+
+        <g class="hotspot-group" data-var="zo">
+          <text class="hotspot-text" x="${nozzleBaseX + 18}" y="${screenOrificeY + 34}">z_o</text>
+        </g>
+
+        <g class="hotspot-group" data-var="dV">
+          <text class="hotspot-text" x="${tank.cx + topRx + 30}" y="${screenLiquidY - 20}">ΔV</text>
+        </g>
+      `;
+
+      // Etiquetas auxiliares discretas.
+      const auxiliaryText = `
+        <text class="small-svg-text" x="${tank.cx}" y="${tank.topY - topRy - 14}" text-anchor="middle">superficie libre</text>
+      `;
+
+      svg.innerHTML = `
+        <defs>
+          <linearGradient id="glassGrad" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0%" stop-color="rgba(255,255,255,0.10)" />
+            <stop offset="50%" stop-color="rgba(255,255,255,0.32)" />
+            <stop offset="100%" stop-color="rgba(31,78,121,0.08)" />
+          </linearGradient>
+          <linearGradient id="liquidBodyGrad" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stop-color="rgba(114,183,207,0.72)" />
+            <stop offset="100%" stop-color="rgba(59,136,166,0.45)" />
+          </linearGradient>
+          <linearGradient id="liquidTopGrad" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0%" stop-color="rgba(170,226,244,0.88)" />
+            <stop offset="100%" stop-color="rgba(84,156,184,0.75)" />
+          </linearGradient>
+          <linearGradient id="sliceGrad" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stop-color="rgba(31,78,121,0.30)" />
+            <stop offset="100%" stop-color="rgba(31,78,121,0.14)" />
+          </linearGradient>
+          <linearGradient id="sliceTopGrad" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0%" stop-color="rgba(232,242,248,0.92)" />
+            <stop offset="100%" stop-color="rgba(167,196,216,0.78)" />
+          </linearGradient>
+          <linearGradient id="jetGrad" x1="0" y1="0" x2="1" y2="0">
+            <stop offset="0%" stop-color="rgba(215,154,71,0.92)" />
+            <stop offset="100%" stop-color="rgba(234,190,123,0.96)" />
+          </linearGradient>
+          <filter id="softShadow" x="-20%" y="-20%" width="140%" height="140%">
+            <feDropShadow dx="0" dy="8" stdDeviation="10" flood-color="rgba(20,30,48,0.12)" />
+          </filter>
+        </defs>
+
+        <rect x="0" y="0" width="920" height="620" fill="transparent" />
+
+        <!-- Suelo visual -->
+        <ellipse cx="318" cy="552" rx="196" ry="30" fill="rgba(31,78,121,0.05)" />
+        <ellipse cx="684" cy="${screenOrificeY + 42}" rx="170" ry="24" fill="rgba(215,154,71,0.06)" />
+
+        <!-- Líquido actual -->
+        <g filter="url(#softShadow)">
+          ${liquidBody}
+        </g>
+
+        <!-- Carcasa del tanque -->
+        <g>${shell}</g>
+
+        <!-- Rodajas acumuladas -->
+        ${slicesSVG}
+
+        <!-- Orificio lateral y chorro -->
+        <g>
+          <rect x="${nozzleBaseX}" y="${screenOrificeY - 10}" width="${tank.nozzleLen}" height="20" rx="8" fill="rgba(31,78,121,0.18)" stroke="var(--accent)" stroke-width="1.4" />
+          <circle cx="${nozzleBaseX + 4}" cy="${screenOrificeY}" r="6.5" fill="var(--accent)" />
+          ${jetSVG}
+        </g>
+
+        <!-- Reforzar contorno del tanque tras dibujar las rodajas -->
+        <g>${tankOutline}</g>
+
+        <!-- Hotspots y dimensiones -->
+        ${hBracket}
+        ${hotspots}
+        ${auxiliaryText}
+      `;
+
+      // Asociar eventos a los hotspots recién dibujados.
+      svg.querySelectorAll('.hotspot-group').forEach(group => {
+        group.addEventListener('click', () => {
+          state.sim.highlightKey = group.dataset.var;
+          updateVariableCard();
+        });
+      });
+    }
+
+    /* ====================================================================
+       PANEL DE PARÁMETROS
+       ==================================================================== */
+    function fillParamInputs(){
+      const p = state.params;
+      document.getElementById('paramRTop').value = p.rTop;
+      document.getElementById('paramRBottom').value = p.rBottom;
+      document.getElementById('paramHeight').value = p.H;
+      document.getElementById('paramOrificeHeight').value = p.zOrifice;
+      document.getElementById('paramArea').value = p.areaOrifice;
+      document.getElementById('paramHead0').value = p.h0;
+    }
+
+    function showContextPanel(x = null, y = null){
+      fillParamInputs();
+      const panel = document.getElementById('contextPanel');
+      const wrap = document.getElementById('visualWrap');
+      panel.classList.add('active');
+
+      if (x !== null && y !== null){
+        const rect = wrap.getBoundingClientRect();
+        const localX = clamp(x - rect.left, 8, rect.width - 320);
+        const localY = clamp(y - rect.top, 8, rect.height - 340);
+        panel.style.left = `${localX}px`;
+        panel.style.right = 'auto';
+        panel.style.top = `${localY}px`;
+      } else {
+        panel.style.right = '14px';
+        panel.style.left = 'auto';
+        panel.style.top = '58px';
+      }
+    }
+
+    function hideContextPanel(){
+      document.getElementById('contextPanel').classList.remove('active');
+      const panel = document.getElementById('contextPanel');
+      panel.style.left = '';
+      panel.style.right = '';
+      panel.style.top = '';
+    }
+
+    function applyParams(){
+      const p = state.params;
+      const newParams = {
+        rTop: parseFloat(document.getElementById('paramRTop').value),
+        rBottom: parseFloat(document.getElementById('paramRBottom').value),
+        H: parseFloat(document.getElementById('paramHeight').value),
+        zOrifice: parseFloat(document.getElementById('paramOrificeHeight').value),
+        areaOrifice: parseFloat(document.getElementById('paramArea').value),
+        h0: parseFloat(document.getElementById('paramHead0').value)
+      };
+
+      // Validaciones simples para mantener estabilidad numérica y visual.
+      newParams.rTop = clamp(isFinite(newParams.rTop) ? newParams.rTop : p.rTop, 5, 80);
+      newParams.rBottom = clamp(isFinite(newParams.rBottom) ? newParams.rBottom : p.rBottom, 5, 80);
+      newParams.H = clamp(isFinite(newParams.H) ? newParams.H : p.H, 20, 200);
+      newParams.zOrifice = clamp(isFinite(newParams.zOrifice) ? newParams.zOrifice : p.zOrifice, 1, newParams.H - 1);
+      newParams.areaOrifice = clamp(isFinite(newParams.areaOrifice) ? newParams.areaOrifice : p.areaOrifice, 0.05, 25);
+      newParams.h0 = clamp(isFinite(newParams.h0) ? newParams.h0 : p.h0, 0.1, newParams.H - newParams.zOrifice);
+
+      state.params = newParams;
+      stopSimulation();
+      resetSimulation();
+      hideContextPanel();
+    }
+
+    /* ====================================================================
+       MATHJAX
+       ==================================================================== */
+    function typesetMath(){
+      if (window.MathJax && MathJax.typesetPromise){
+        MathJax.typesetPromise().catch(() => {});
+      }
+    }
+
+    /* ====================================================================
+       EVENTOS
+       ==================================================================== */
+    function bindEvents(){
+      document.addEventListener('click', (event) => {
+        const openBtn = event.target.closest('[data-open-app]');
+        if (openBtn){
+          openSection(openBtn.dataset.openApp);
+          return;
+        }
+
+        const backBtn = event.target.closest('[data-back="true"]');
+        if (backBtn){
+          closeAllSections();
+          window.scrollTo({ top: 0, behavior:'smooth' });
+          return;
+        }
+
+        const tabBtn = event.target.closest('[data-drain-tab]');
+        if (tabBtn){
+          state.activeDrainTab = tabBtn.dataset.drainTab;
+          renderDrainTabs();
+          renderDrainTheory();
+          return;
+        }
+      });
+
+      document.getElementById('playBtn').addEventListener('click', toggleSimulation);
+      document.getElementById('stepBtn').addEventListener('click', () => {
+        stopSimulation();
+        stepSimulation();
+      });
+      document.getElementById('resetBtn').addEventListener('click', () => {
+        stopSimulation();
+        resetSimulation();
+      });
+      document.getElementById('dtSelect').addEventListener('change', (e) => {
+        state.stepDt = Number(e.target.value);
+      });
+      document.getElementById('settingsBtn').addEventListener('click', () => showContextPanel());
+      document.getElementById('applyParamsBtn').addEventListener('click', applyParams);
+      document.getElementById('closeParamsBtn').addEventListener('click', hideContextPanel);
+
+      const visualWrap = document.getElementById('visualWrap');
+      visualWrap.addEventListener('contextmenu', (event) => {
+        event.preventDefault();
+        showContextPanel(event.clientX, event.clientY);
+      });
+
+      document.addEventListener('keydown', (event) => {
+        if (event.key === 'Escape') hideContextPanel();
+      });
+    }
+
+    /* ====================================================================
+       INICIALIZACIÓN
+       ==================================================================== */
+    function init(){
+      renderCatalog();
+      bindEvents();
+      resetSimulation();
+      renderDrainTabs();
+      renderDrainTheory();
+      typesetMath();
+    }
+
+    init();
+  </script>
+</body>
+</html>
