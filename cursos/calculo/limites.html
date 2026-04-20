@@ -115,7 +115,7 @@
           transparent 69%, transparent 100%);
     }
 
-    h1, h2, h3, h4, h5, h6, .brand, nav a, details.block summary, .pill {
+    h1, h2, h3, h4, h5, h6, .brand, nav a, details.block summary, .pill, .proof-title, .proof-step, .result-line {
       font-family: var(--ui-font);
     }
 
@@ -371,6 +371,97 @@
       font-size: 0.95rem;
     }
 
+    .proof-panel {
+      margin-top: 16px;
+      padding: 18px;
+      border-radius: 24px;
+      border: 1px solid rgba(166,207,216,0.86);
+      background: linear-gradient(180deg, rgba(255,253,249,0.98) 0%, rgba(240,251,246,0.98) 100%);
+      box-shadow: 0 10px 0 rgba(60,111,167,0.04), 0 18px 28px rgba(52,47,105,0.10);
+    }
+
+    .proof-title {
+      margin: 0 0 10px;
+      font-size: 1rem;
+      font-weight: 800;
+      color: var(--board-dark);
+    }
+
+    .proof-note {
+      margin: 0 0 12px;
+      color: var(--text-soft);
+    }
+
+    .proof-steps {
+      display: grid;
+      gap: 10px;
+      margin-top: 12px;
+    }
+
+    .proof-step {
+      display: block;
+      text-decoration: none;
+      color: var(--text);
+      border-radius: 16px;
+      padding: 12px 14px;
+      border: 1px solid rgba(166,207,216,0.88);
+      background: linear-gradient(180deg, rgba(255,255,255,0.96) 0%, rgba(248,253,255,0.96) 100%);
+      box-shadow: 0 8px 0 rgba(60,111,167,0.04), 0 12px 18px rgba(52,47,105,0.08);
+      transition: transform 0.18s ease, box-shadow 0.18s ease, border-color 0.18s ease;
+      overflow-x: auto;
+    }
+
+    .proof-step:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 10px 0 rgba(60,111,167,0.05), 0 16px 24px rgba(52,47,105,0.12);
+      border-color: rgba(14,143,137,0.34);
+    }
+
+    .proof-step mjx-container {
+      margin: 0 !important;
+    }
+
+    .graph-card {
+      margin-top: 16px;
+      border-radius: 24px;
+      overflow: hidden;
+      border: 1px solid rgba(166,207,216,0.86);
+      box-shadow: 0 10px 0 rgba(60,111,167,0.04), 0 18px 28px rgba(52,47,105,0.10);
+      background: linear-gradient(180deg, rgba(255,253,249,0.98) 0%, rgba(248,253,255,0.98) 100%);
+    }
+
+    .graph-frame {
+      display: block;
+      width: 100%;
+      min-height: 360px;
+      border: 0;
+      background: #fff;
+    }
+
+    .graph-caption {
+      margin: 0;
+      padding: 12px 16px 16px;
+      color: var(--muted);
+    }
+
+    .result-line {
+      margin-top: 14px;
+      padding: 14px 16px;
+      border-radius: 18px;
+      background: linear-gradient(180deg, rgba(255,249,241,0.98) 0%, rgba(255,246,231,0.98) 100%);
+      border: 2px solid rgba(245,178,73,0.52);
+      color: var(--desk-orange-strong);
+      font-weight: 800;
+      text-align: center;
+      box-shadow: var(--shadow-formula);
+      overflow-x: auto;
+    }
+
+    .result-line mjx-container {
+      color: var(--desk-orange-strong) !important;
+      margin: 0 auto !important;
+    }
+
     @keyframes fadeSlide {
       from { opacity: 0; transform: translateY(-8px); }
       to { opacity: 1; transform: translateY(0); }
@@ -381,6 +472,7 @@
       .hero-body { padding: 24px 30px 30px; }
       .section-head { padding: 24px 28px 0; }
       .card-body { padding-left: 28px; padding-right: 28px; }
+      .proof-panel { padding: 22px; }
     }
   </style>
 </head>
@@ -506,7 +598,7 @@
         </div>
         <div class="card-body">
           <div class="accordion">
-            <details class="block" open>
+            <details class="block" open id="propiedades-reglas">
               <summary>Reglas básicas</summary>
               <div class="block-content">
                 <p>
@@ -535,7 +627,7 @@
         </div>
         <div class="card-body">
           <div class="accordion">
-            <details class="block" open>
+            <details class="block" open id="teorema-intercalacion">
               <summary>Enunciado breve</summary>
               <div class="block-content">
                 <p>
@@ -622,21 +714,120 @@
         </div>
         <div class="card-body">
           <div class="accordion">
-            <details class="block" open>
-              <summary>Ejemplos básicos</summary>
-              <div class="block-content">
-                <p>
-                  Entre los límites especiales más conocidos están los asociados a funciones trigonométricas y a la construcción de la función exponencial.
-                </p>
-              </div>
-            </details>
-            <details class="block" open>
+            <details class="block" open id="limite-seno-clasico">
               <summary>Modelo clásico</summary>
               <div class="block-content">
                 <div class="math-box">
                   \[
                   \lim_{x\to 0} \frac{\sin x}{x}=1
                   \]
+                </div>
+
+                <p class="proof-note">
+                  La gráfica ayuda a visualizar el encierro entre \(\cos x\) y \(1\), y debajo quedan los pasos como botones para que luego puedan servir como hipervínculos internos.
+                </p>
+
+                <div class="graph-card">
+                  <iframe
+                    class="graph-frame"
+                    src="https://www.desmos.com/geometry/alhhnk9es4?embed"
+                    title="Construcción de Desmos para el límite clásico"
+                    loading="lazy"
+                    allowfullscreen
+                  ></iframe>
+                  <p class="graph-caption">
+                    Construcción tomada de Desmos para apoyar la demostración del límite clásico. Si no carga embebida, puedes abrirla en
+                    <a href="https://www.desmos.com/geometry/alhhnk9es4" target="_blank" rel="noreferrer">Desmos</a>.
+                  </p>
+                </div>
+
+                <div class="proof-panel">
+                  <h3 class="proof-title">Demostración</h3>
+                  <div class="proof-steps">
+                    <a class="proof-step" href="#teorema-intercalacion">
+                      \[
+                      \cos x \le \frac{\sin x}{x} \le 1
+                      \]
+                    </a>
+                    <a class="proof-step" href="#trig-continuidad">
+                      \[
+                      \lim_{x\to 0}\cos x = 1
+                      \]
+                    </a>
+                    <a class="proof-step" href="#def-continuidad">
+                      \[
+                      \lim_{x\to 0} 1 = 1
+                      \]
+                    </a>
+                    <a class="proof-step" href="#teorema-intercalacion">
+                      \[
+                      \lim_{x\to 0}\frac{\sin x}{x}=1
+                      \]
+                    </a>
+                  </div>
+                </div>
+
+                <div class="proof-panel">
+                  <div class="proof-steps">
+                    <a class="proof-step" href="#trig-continuidad">
+                      \[
+                      1=\sin^2\!\left(\frac{x}{2}\right)+\cos^2\!\left(\frac{x}{2}\right)
+                      \]
+                    </a>
+                    <a class="proof-step" href="#trig-continuidad">
+                      \[
+                      \cos x=\cos^2\!\left(\frac{x}{2}\right)-\sin^2\!\left(\frac{x}{2}\right)
+                      \]
+                    </a>
+                    <a class="proof-step" href="#trig-continuidad">
+                      \[
+                      1-\cos x = 2\sin^2\!\left(\frac{x}{2}\right)
+                      \]
+                    </a>
+                    <a class="proof-step" href="#trig-continuidad">
+                      \[
+                      \lim_{x\to 0}\frac{1-\cos x}{x}
+                      =
+                      \lim_{x\to 0}\frac{2\sin^2\!\left(\frac{x}{2}\right)}{x}
+                      \]
+                    </a>
+                    <a class="proof-step" href="#propiedades-reglas">
+                      \[
+                      =
+                      \lim_{x\to 0}\left(\sin\!\left(\frac{x}{2}\right)\cdot \frac{2\sin\!\left(\frac{x}{2}\right)}{x}\right)
+                      \]
+                    </a>
+                    <a class="proof-step" href="#propiedades-reglas">
+                      \[
+                      =
+                      \lim_{x\to 0}\left(\sin\!\left(\frac{x}{2}\right)\cdot \frac{\sin\!\left(\frac{x}{2}\right)}{x/2}\right)
+                      \]
+                    </a>
+                    <a class="proof-step" href="#propiedades-reglas">
+                      \[
+                      =
+                      \left(\lim_{x\to 0}\sin\!\left(\frac{x}{2}\right)\right)
+                      \left(\lim_{x\to 0}\frac{\sin\!\left(\frac{x}{2}\right)}{x/2}\right)
+                      \]
+                    </a>
+                    <a class="proof-step" href="#limite-seno-clasico">
+                      \[
+                      =
+                      \sin(0)\cdot 1
+                      \]
+                    </a>
+                    <a class="proof-step" href="#limite-seno-clasico">
+                      \[
+                      = 0
+                      \]
+                    </a>
+                  </div>
+
+                  <div class="result-line">
+                    \[
+                    \lim_{x\to 0}\frac{1-\cos x}{x}=0
+                    \]
+                  </div>
                 </div>
               </div>
             </details>
@@ -651,7 +842,7 @@
         </div>
         <div class="card-body">
           <div class="accordion">
-            <details class="block" open>
+            <details class="block" open id="trig-continuidad">
               <summary>Idea central</summary>
               <div class="block-content">
                 <p>
