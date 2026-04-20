@@ -1,0 +1,743 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Límites</title>
+  <script>
+    window.MathJax = {
+      tex: {
+        inlineMath: [['\\(','\\)']],
+        displayMath: [['\\[','\\]']]
+      },
+      chtml: {
+        scale: 1.08
+      }
+    };
+  </script>
+  <script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"></script>
+  <style>
+    :root {
+      --sky-0: #F7FBFF;
+      --sky-1: #EAF6FF;
+      --sky-2: #D7EFFC;
+      --sky-3: #C5EBF9;
+      --sky-4: #B6E3F4;
+      --sky-5: #A4D8ED;
+      --sky-line: #7FB9D7;
+      --sky-deep: #4E95C2;
+      --sky-shadow: #3C6FA7;
+
+      --board-green: #12E3AA;
+      --board-green-2: #11D4A5;
+      --board-green-3: #17BFA2;
+      --board-teal: #0E8F89;
+      --board-deep: #0A6268;
+      --board-dark: #06474C;
+
+      --surface: #FFFDF9;
+      --surface-soft: #F8FDFF;
+      --surface-green: #F0FBF6;
+      --surface-lilac: #F8F6FF;
+      --surface-note: #FFF6E7;
+
+      --desk-orange: #F08B2F;
+      --desk-orange-2: #E96D25;
+      --desk-orange-strong: #D95B1D;
+      --desk-amber: #F5B249;
+      --desk-yellow: #F6E08A;
+      --desk-cream: #FFF8EE;
+      --desk-shadow: #AA592D;
+      --lamp-cream: #FFF9F1;
+
+      --text: #1A1B49;
+      --text-soft: #4A4457;
+      --muted: #5C7282;
+      --line: #C8E0E7;
+      --line-strong: #A6CFD8;
+
+      --violet-shadow: #342F69;
+      --violet-soft: #7C5AA8;
+      --cyan-glow: #7CEEEE;
+
+      --shadow-card: 0 12px 0 rgba(60,111,167,0.06), 0 18px 34px rgba(52,47,105,0.14), 0 8px 22px rgba(78,149,194,0.14), 0 0 24px rgba(124,238,238,0.06);
+      --shadow-card-strong: 0 16px 0 rgba(60,111,167,0.08), 0 24px 42px rgba(52,47,105,0.18), 0 10px 30px rgba(14,143,137,0.16), 0 0 26px rgba(124,238,238,0.10);
+      --shadow-warm: 0 10px 0 rgba(170,89,45,0.08), 0 16px 30px rgba(240,139,47,0.18), 0 0 20px rgba(245,178,73,0.14);
+      --shadow-formula: 0 4px 12px rgba(240,139,47,0.05), 0 10px 18px rgba(245,178,73,0.06);
+
+      --radius-xl: 28px;
+      --radius-lg: 22px;
+      --radius-md: 16px;
+      --radius-sm: 12px;
+
+      --content-width: 980px;
+      --ui-font: "Segoe UI", Roboto, Arial, sans-serif;
+      --reading-font: Garamond, "Palatino Linotype", Palatino, Georgia, serif;
+    }
+
+    * { box-sizing: border-box; }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      margin: 0;
+      font-family: var(--reading-font);
+      background: linear-gradient(180deg,
+        var(--sky-0) 0%, var(--sky-0) 14%,
+        var(--sky-1) 14%, var(--sky-1) 28%,
+        var(--sky-2) 28%, var(--sky-2) 44%,
+        var(--sky-3) 44%, var(--sky-3) 62%,
+        var(--sky-4) 62%, var(--sky-4) 81%,
+        var(--sky-1) 81%, var(--sky-1) 100%);
+      color: var(--text);
+      line-height: 1.78;
+      position: relative;
+      font-size: 18px;
+    }
+
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 0;
+      background:
+        linear-gradient(118deg,
+          rgba(255,255,255,0.34) 0%, rgba(255,255,255,0.34) 13%,
+          transparent 13%, transparent 31%,
+          rgba(124,238,238,0.06) 31%, rgba(124,238,238,0.06) 41%,
+          transparent 41%, transparent 61%,
+          rgba(60,111,167,0.05) 61%, rgba(60,111,167,0.05) 70%,
+          transparent 70%, transparent 100%),
+        linear-gradient(24deg,
+          transparent 0%, transparent 58%,
+          rgba(255,255,255,0.16) 58%, rgba(255,255,255,0.16) 69%,
+          transparent 69%, transparent 100%);
+    }
+
+    h1, h2, h3, h4, h5, h6, .brand, nav a, details.block summary, .pill {
+      font-family: var(--ui-font);
+    }
+
+    p, li, .block-content, .section-head p {
+      font-size: 1.08rem;
+    }
+
+    header {
+      position: sticky;
+      top: 0;
+      z-index: 40;
+      background: rgba(225, 251, 242, 0.88);
+      backdrop-filter: blur(14px);
+      border-bottom: 1px solid rgba(127, 185, 215, 0.30);
+      box-shadow: 0 8px 20px rgba(52,47,105,0.08), inset 0 -1px 0 rgba(255,255,255,0.45);
+    }
+
+    .topbar {
+      max-width: var(--content-width);
+      margin: 0 auto;
+      padding: 14px 18px 16px;
+      display: flex;
+      flex-direction: column;
+      align-items: stretch;
+      gap: 12px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .brand {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      font-weight: 800;
+      font-size: 1.02rem;
+      letter-spacing: 0.2px;
+      color: var(--board-dark);
+    }
+
+    .brand::before {
+      content: "";
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      background: linear-gradient(180deg, var(--board-green), var(--board-teal));
+      box-shadow: 0 0 0 5px rgba(18,227,170,0.16);
+    }
+
+    nav {
+      display: flex;
+      gap: 10px;
+      overflow-x: auto;
+      padding: 7px;
+      border-radius: 18px;
+      scrollbar-width: none;
+      background: linear-gradient(180deg, #DFF8EC 0%, #DFF8EC 55%, #CBF3E1 55%, #CBF3E1 100%);
+      border: 1px solid rgba(127, 185, 215, 0.28);
+      box-shadow: 0 8px 18px rgba(78,149,194,0.10), inset 0 1px 0 rgba(255,255,255,0.55);
+    }
+
+    nav::-webkit-scrollbar { display: none; }
+
+    nav a {
+      flex: 0 0 auto;
+      text-decoration: none;
+      color: var(--text);
+      background: linear-gradient(180deg, rgba(255,255,255,0.90) 0%, rgba(255,255,255,0.90) 56%, rgba(238,248,245,0.98) 56%, rgba(238,248,245,0.98) 100%);
+      border-width: 1px;
+      border-style: solid;
+      border-color: rgba(127,185,215,0.40) rgba(127,185,215,0.28) rgba(10,98,104,0.12) rgba(127,185,215,0.28);
+      box-shadow: 0 6px 0 rgba(60,111,167,0.05), 0 10px 18px rgba(52,47,105,0.08);
+      padding: 10px 14px;
+      border-radius: 999px;
+      font-size: 0.94rem;
+      font-weight: 700;
+      transition: transform 0.22s ease, box-shadow 0.22s ease, background 0.22s ease, color 0.22s ease, border-color 0.22s ease;
+      white-space: nowrap;
+    }
+
+    nav a:hover,
+    nav a.is-active {
+      color: var(--board-dark);
+      background: linear-gradient(180deg, var(--board-green) 0%, var(--board-green) 56%, var(--board-green-3) 56%, var(--board-green-3) 100%);
+      border-color: rgba(10,98,104,0.36) rgba(10,98,104,0.24) rgba(10,98,104,0.40) rgba(10,98,104,0.24);
+      box-shadow: 0 8px 0 rgba(10,98,104,0.10), 0 16px 26px rgba(14,143,137,0.22), 0 0 22px rgba(18,227,170,0.18);
+      transform: translateY(-1px);
+    }
+
+    .page {
+      max-width: var(--content-width);
+      margin: 0 auto;
+      padding: 24px 18px 56px;
+      position: relative;
+      z-index: 1;
+    }
+
+    main {
+      display: grid;
+      gap: 22px;
+    }
+
+    .hero,
+    .card {
+      border-radius: var(--radius-xl);
+      overflow: hidden;
+      border: 1px solid rgba(166, 207, 216, 0.78);
+      background: linear-gradient(180deg, rgba(255,253,249,0.98) 0%, rgba(255,253,249,0.98) 68%, rgba(248,253,255,0.98) 68%, rgba(248,253,255,0.98) 100%);
+      box-shadow: var(--shadow-card);
+    }
+
+    .hero {
+      background: linear-gradient(180deg, rgba(255,253,249,0.98) 0%, rgba(255,253,249,0.98) 100%);
+      box-shadow: var(--shadow-card-strong);
+    }
+
+    .hero-title-band {
+      padding: 26px 24px 20px;
+      background: linear-gradient(122deg, #16E5AA 0%, #16E5AA 20%, #18D1A7 20%, #18D1A7 37%, #20C2A8 37%, #20C2A8 53%, #18A59D 53%, #18A59D 72%, #0F7F86 72%, #0F7F86 88%, #0A646A 88%, #0A646A 100%);
+      position: relative;
+      overflow: hidden;
+      box-shadow: inset 0 -1px 0 rgba(255,255,255,0.20);
+    }
+
+    .hero-title-band::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(118deg, rgba(255,255,255,0.22) 0%, rgba(255,255,255,0.22) 10%, transparent 10%, transparent 29%, rgba(124,238,238,0.08) 29%, rgba(124,238,238,0.08) 38%, transparent 38%, transparent 100%);
+      pointer-events: none;
+    }
+
+    .hero-title-band h1 {
+      position: relative;
+      z-index: 1;
+      margin: 0;
+      font-size: clamp(2.3rem, 7vw, 4.3rem);
+      line-height: 0.98;
+      letter-spacing: -0.03em;
+      color: #F8FFFE;
+      text-shadow: 0 2px 0 rgba(10,98,104,0.18), 0 10px 22px rgba(52,47,105,0.18);
+    }
+
+    .hero-body {
+      display: grid;
+      gap: 18px;
+      padding: 22px 24px 24px;
+    }
+
+    .section-head {
+      padding: 22px 22px 0;
+    }
+
+    .section-head h2 {
+      margin: 0;
+      font-size: clamp(1.42rem, 4vw, 1.95rem);
+      line-height: 1.15;
+      color: var(--text);
+    }
+
+    .section-head p {
+      margin: 8px 0 0;
+      color: var(--muted);
+    }
+
+    .card-body {
+      padding: 18px 22px 22px;
+    }
+
+    .accordion {
+      display: grid;
+      gap: 14px;
+    }
+
+    details.block {
+      overflow: hidden;
+      border-radius: var(--radius-lg);
+      border: 1px solid rgba(166,207,216,0.82);
+      background: linear-gradient(180deg, rgba(255,253,249,0.98) 0%, rgba(255,253,249,0.98) 70%, rgba(248,253,255,0.98) 70%, rgba(248,253,255,0.98) 100%);
+      box-shadow: 0 10px 0 rgba(60,111,167,0.05), 0 18px 28px rgba(52,47,105,0.10), 0 8px 22px rgba(78,149,194,0.12);
+    }
+
+    details.block[open] {
+      box-shadow: var(--shadow-card-strong);
+    }
+
+    details.block summary {
+      list-style: none;
+      cursor: pointer;
+      padding: 16px 18px;
+      font-weight: 800;
+      color: var(--board-dark);
+      position: relative;
+      background: linear-gradient(180deg, rgba(18,227,170,0.14) 0%, rgba(18,227,170,0.14) 58%, rgba(255,255,255,0.88) 58%, rgba(255,255,255,0.88) 100%);
+    }
+
+    details.block summary::-webkit-details-marker { display: none; }
+
+    details.block summary::after {
+      content: "+";
+      position: absolute;
+      right: 18px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--desk-shadow);
+      font-size: 1.2rem;
+      font-weight: 900;
+    }
+
+    details[open].block summary::after {
+      content: "−";
+    }
+
+    .block-content {
+      padding: 0 18px 18px;
+      animation: fadeSlide 0.35s ease;
+    }
+
+    .math-box {
+      border: 2px solid var(--desk-yellow);
+      border-radius: 28px;
+      background: linear-gradient(180deg, var(--lamp-cream) 0%, var(--lamp-cream) 100%);
+      color: var(--desk-orange-strong);
+      padding: 18px 20px;
+      margin: 14px 0;
+      overflow-x: auto;
+      box-shadow: inset 0 0 0 2px rgba(245,178,73,0.12), var(--shadow-formula);
+      text-align: center;
+      font-size: 1.15rem;
+    }
+
+    .math-box mjx-container {
+      color: var(--desk-orange-strong) !important;
+      font-size: 130% !important;
+      margin: 0.15em auto !important;
+      text-align: center !important;
+    }
+
+    .pill-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 12px;
+    }
+
+    .pill {
+      padding: 10px 14px;
+      border-radius: 999px;
+      border: 1px solid rgba(166,207,216,0.86);
+      background: linear-gradient(180deg, #FFFDF9 0%, #FFFDF9 56%, #F0FBF6 56%, #F0FBF6 100%);
+      color: var(--text-soft);
+      box-shadow: 0 8px 0 rgba(60,111,167,0.04), 0 12px 20px rgba(52,47,105,0.08), 0 0 14px rgba(124,238,238,0.08);
+      font-weight: 700;
+      font-size: 0.95rem;
+    }
+
+    @keyframes fadeSlide {
+      from { opacity: 0; transform: translateY(-8px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    @media (min-width: 760px) {
+      .hero-title-band { padding: 30px 30px 22px; }
+      .hero-body { padding: 24px 30px 30px; }
+      .section-head { padding: 24px 28px 0; }
+      .card-body { padding-left: 28px; padding-right: 28px; }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="topbar">
+      <div class="brand">Cálculo · Límites y continuidad</div>
+      <nav id="topnav">
+        <a href="#motivacion" class="is-active">1. Motivación</a>
+        <a href="#def-limite">2. Definición límite</a>
+        <a href="#def-continuidad">3. Definición continuidad</a>
+        <a href="#propiedades">4. Propiedades algebraicas</a>
+        <a href="#intercalacion">5. Intercalación</a>
+        <a href="#composicion">6. Límite de una composición</a>
+        <a href="#inversa">7. Continuidad de la inversa</a>
+        <a href="#especiales">8. Límites especiales</a>
+        <a href="#trigonometricas">9. Funciones trigonométricas</a>
+        <a href="#exp-log">10. Exponencial y logarítmica</a>
+      </nav>
+    </div>
+  </header>
+
+  <div class="page">
+    <main>
+      <section class="hero" id="motivacion">
+        <div class="hero-title-band">
+          <h1>Límites</h1>
+        </div>
+        <div class="hero-body">
+          <details class="block" open>
+            <summary>Motivación</summary>
+            <div class="block-content">
+              <p>
+                La noción de límite permite describir qué ocurre con una función cuando la variable se aproxima a un punto, incluso si en ese punto la función no está definida o su valor no coincide con la tendencia.
+              </p>
+              <div class="math-box">
+                \[
+                \lim_{x\to a} f(x)=L
+                \]
+              </div>
+            </div>
+          </details>
+
+          <details class="block" open>
+            <summary>Panorama del capítulo</summary>
+            <div class="block-content">
+              <p>
+                En esta página se organiza una ruta breve desde la idea intuitiva de aproximación hasta resultados de continuidad para funciones inversas, trigonométricas, exponenciales y logarítmicas.
+              </p>
+              <div class="pill-row">
+                <div class="pill">Aproximación</div>
+                <div class="pill">Continuidad</div>
+                <div class="pill">Teoremas básicos</div>
+                <div class="pill">Funciones elementales</div>
+              </div>
+            </div>
+          </details>
+        </div>
+      </section>
+
+      <section class="card" id="def-limite">
+        <div class="section-head">
+          <h2>2. Definición de límite</h2>
+          <p>La definición formal convierte la idea de cercanía en una afirmación precisa.</p>
+        </div>
+        <div class="card-body">
+          <div class="accordion">
+            <details class="block" open>
+              <summary>Idea central</summary>
+              <div class="block-content">
+                <p>
+                  Decir que \(f(x)\) tiende a \(L\) cuando \(x\) tiende a \(a\) significa que los valores de la función pueden hacerse tan cercanos a \(L\) como se quiera, haciendo \(x\) suficientemente cercano a \(a\), pero distinto de \(a\).
+                </p>
+              </div>
+            </details>
+            <details class="block" open>
+              <summary>Forma simbólica</summary>
+              <div class="block-content">
+                <div class="math-box">
+                  \[
+                  \forall \varepsilon&gt;0\, \exists \delta&gt;0 \text{ tal que si } 0&lt;|x-a|&lt;\delta, \text{ entonces } |f(x)-L|&lt;\varepsilon.
+                  \]
+                </div>
+              </div>
+            </details>
+          </div>
+        </div>
+      </section>
+
+      <section class="card" id="def-continuidad">
+        <div class="section-head">
+          <h2>3. Definición de continuidad</h2>
+          <p>La continuidad enlaza el valor de la función con su comportamiento límite.</p>
+        </div>
+        <div class="card-body">
+          <div class="accordion">
+            <details class="block" open>
+              <summary>Idea central</summary>
+              <div class="block-content">
+                <p>
+                  Una función es continua en \(a\) cuando el límite al aproximarse a \(a\) existe y coincide con el valor de la función en ese punto.
+                </p>
+              </div>
+            </details>
+            <details class="block" open>
+              <summary>Condición básica</summary>
+              <div class="block-content">
+                <div class="math-box">
+                  \[
+                  \lim_{x\to a} f(x)=f(a)
+                  \]
+                </div>
+              </div>
+            </details>
+          </div>
+        </div>
+      </section>
+
+      <section class="card" id="propiedades">
+        <div class="section-head">
+          <h2>4. Propiedades algebraicas de los límites</h2>
+          <p>Los límites compatibles con suma, producto y cociente permiten calcular expresiones más complejas.</p>
+        </div>
+        <div class="card-body">
+          <div class="accordion">
+            <details class="block" open>
+              <summary>Reglas básicas</summary>
+              <div class="block-content">
+                <p>
+                  Si dos límites existen, entonces el límite de la suma es la suma de los límites, y el producto funciona de manera análoga. El cociente exige además que el límite del denominador no sea cero.
+                </p>
+              </div>
+            </details>
+            <details class="block" open>
+              <summary>Ejemplo simbólico</summary>
+              <div class="block-content">
+                <div class="math-box">
+                  \[
+                  \lim_{x\to a}(f(x)+g(x))=\lim_{x\to a}f(x)+\lim_{x\to a}g(x)
+                  \]
+                </div>
+              </div>
+            </details>
+          </div>
+        </div>
+      </section>
+
+      <section class="card" id="intercalacion">
+        <div class="section-head">
+          <h2>5. Teorema de intercalación</h2>
+          <p>Este teorema permite atrapar un límite entre dos funciones con la misma tendencia.</p>
+        </div>
+        <div class="card-body">
+          <div class="accordion">
+            <details class="block" open>
+              <summary>Enunciado breve</summary>
+              <div class="block-content">
+                <p>
+                  Si \(f(x)\leq g(x)\leq h(x)\) cerca de \(a\) y además \(\lim_{x\to a}f(x)=\lim_{x\to a}h(x)=L\), entonces \(\lim_{x\to a}g(x)=L\).
+                </p>
+              </div>
+            </details>
+            <details class="block" open>
+              <summary>Esquema</summary>
+              <div class="block-content">
+                <div class="math-box">
+                  \[
+                  f(x)\le g(x)\le h(x)
+                  \]
+                </div>
+              </div>
+            </details>
+          </div>
+        </div>
+      </section>
+
+      <section class="card" id="composicion">
+        <div class="section-head">
+          <h2>6. Límite de una composición</h2>
+          <p>La composición permite pasar límites a través de funciones continuas.</p>
+        </div>
+        <div class="card-body">
+          <div class="accordion">
+            <details class="block" open>
+              <summary>Idea central</summary>
+              <div class="block-content">
+                <p>
+                  Si \(g(x)\to b\) cuando \(x\to a\) y \(f\) es continua en \(b\), entonces \(f(g(x))\to f(b)\). Esta idea será útil para trabajar con funciones elementales.
+                </p>
+              </div>
+            </details>
+            <details class="block" open>
+              <summary>Expresión breve</summary>
+              <div class="block-content">
+                <div class="math-box">
+                  \[
+                  \lim_{x\to a} f(g(x)) = f\!\left(\lim_{x\to a} g(x)\right)
+                  \]
+                </div>
+              </div>
+            </details>
+          </div>
+        </div>
+      </section>
+
+      <section class="card" id="inversa">
+        <div class="section-head">
+          <h2>7. Continuidad de la inversa</h2>
+          <p>La función inversa conserva continuidad bajo hipótesis adecuadas de monotonicidad e invertibilidad.</p>
+        </div>
+        <div class="card-body">
+          <div class="accordion">
+            <details class="block" open>
+              <summary>Idea central</summary>
+              <div class="block-content">
+                <p>
+                  Si una función es continua y estrictamente monótona en un intervalo, entonces admite inversa y esa inversa también es continua en su imagen.
+                </p>
+              </div>
+            </details>
+            <details class="block" open>
+              <summary>Relación funcional</summary>
+              <div class="block-content">
+                <div class="math-box">
+                  \[
+                  f^{-1}(f(x))=x
+                  \]
+                </div>
+              </div>
+            </details>
+          </div>
+        </div>
+      </section>
+
+      <section class="card" id="especiales">
+        <div class="section-head">
+          <h2>8. Límites especiales</h2>
+          <p>Algunos límites aparecen una y otra vez y sirven como herramientas fundamentales.</p>
+        </div>
+        <div class="card-body">
+          <div class="accordion">
+            <details class="block" open>
+              <summary>Ejemplos básicos</summary>
+              <div class="block-content">
+                <p>
+                  Entre los límites especiales más conocidos están los asociados a funciones trigonométricas y a la construcción de la función exponencial.
+                </p>
+              </div>
+            </details>
+            <details class="block" open>
+              <summary>Modelo clásico</summary>
+              <div class="block-content">
+                <div class="math-box">
+                  \[
+                  \lim_{x\to 0} \frac{\sin x}{x}=1
+                  \]
+                </div>
+              </div>
+            </details>
+          </div>
+        </div>
+      </section>
+
+      <section class="card" id="trigonometricas">
+        <div class="section-head">
+          <h2>9. Continuidad de funciones trigonométricas</h2>
+          <p>Las funciones trigonométricas elementales son continuas en los puntos donde están definidas.</p>
+        </div>
+        <div class="card-body">
+          <div class="accordion">
+            <details class="block" open>
+              <summary>Idea central</summary>
+              <div class="block-content">
+                <p>
+                  La continuidad de seno y coseno permite estudiar con seguridad combinaciones, composiciones y nuevas funciones construidas a partir de ellas.
+                </p>
+              </div>
+            </details>
+            <details class="block" open>
+              <summary>Ejemplo breve</summary>
+              <div class="block-content">
+                <div class="math-box">
+                  \[
+                  \lim_{x\to a}\sin x = \sin a
+                  \]
+                </div>
+              </div>
+            </details>
+          </div>
+        </div>
+      </section>
+
+      <section class="card" id="exp-log">
+        <div class="section-head">
+          <h2>10. Continuidad de la exponencial y logarítmica</h2>
+          <p>Estas funciones cierran el recorrido hacia una familia amplia de funciones continuas.</p>
+        </div>
+        <div class="card-body">
+          <div class="accordion">
+            <details class="block" open>
+              <summary>Idea central</summary>
+              <div class="block-content">
+                <p>
+                  La función exponencial es continua en todo número real, mientras que la función logarítmica es continua en su dominio positivo.
+                </p>
+              </div>
+            </details>
+            <details class="block" open>
+              <summary>Expresiones básicas</summary>
+              <div class="block-content">
+                <div class="math-box">
+                  \[
+                  \lim_{x\to a} e^x = e^a,
+                  \qquad
+                  \lim_{x\to a} \ln(x)=\ln(a),\ a&gt;0
+                  \]
+                </div>
+              </div>
+            </details>
+          </div>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <script>
+    (() => {
+      const links = [...document.querySelectorAll('#topnav a')];
+      const sections = links
+        .map(link => document.querySelector(link.getAttribute('href')))
+        .filter(Boolean);
+
+      const activateLink = (id) => {
+        links.forEach(link => {
+          link.classList.toggle('is-active', link.getAttribute('href') === `#${id}`);
+        });
+      };
+
+      links.forEach(link => {
+        link.addEventListener('click', () => {
+          const id = link.getAttribute('href').slice(1);
+          activateLink(id);
+        });
+      });
+
+      const observer = new IntersectionObserver((entries) => {
+        const visible = entries
+          .filter(entry => entry.isIntersecting)
+          .sort((a, b) => b.intersectionRatio - a.intersectionRatio);
+        if (visible.length) activateLink(visible[0].target.id);
+      }, {
+        rootMargin: '-25% 0px -55% 0px',
+        threshold: [0.15, 0.3, 0.5, 0.7]
+      });
+
+      sections.forEach(section => observer.observe(section));
+    })();
+  </script>
+</body>
+</html>
