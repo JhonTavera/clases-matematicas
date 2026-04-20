@@ -292,37 +292,6 @@
       padding: 22px 24px 24px;
     }
 
-    .motivation-box,
-    .example-box,
-    .embed-card {
-      border-radius: var(--radius-lg);
-      border: 1px solid rgba(166,207,216,0.82);
-      background: linear-gradient(180deg,
-        rgba(255,253,249,0.98) 0%, rgba(255,253,249,0.98) 65%,
-        rgba(248,253,255,0.98) 65%, rgba(248,253,255,0.98) 100%);
-      box-shadow: var(--shadow-card);
-      overflow: hidden;
-    }
-
-    .box-head {
-      padding: 16px 18px;
-      background: linear-gradient(180deg,
-        rgba(18,227,170,0.14) 0%, rgba(18,227,170,0.14) 58%,
-        rgba(255,255,255,0.88) 58%, rgba(255,255,255,0.88) 100%);
-      border-bottom: 1px solid rgba(166,207,216,0.58);
-    }
-
-    .box-head h2,
-    .box-head h3 {
-      margin: 0;
-      color: var(--board-dark);
-      font-size: 1.24rem;
-    }
-
-    .box-body {
-      padding: 16px 18px 18px;
-    }
-
     .motivation-list {
       display: grid;
       gap: 14px;
@@ -529,6 +498,16 @@
       font-size: 118% !important;
       margin: 0 auto !important;
       text-align: center !important;
+    }
+
+    .neutral-equation {
+      margin-top: 8px;
+      margin-bottom: 4px;
+    }
+
+    .neutral-equation mjx-container {
+      color: #111111 !important;
+      font-size: 122% !important;
     }
 
     .math-box::-webkit-scrollbar {
@@ -826,44 +805,42 @@
           <h1>Métodos numéricos</h1>
         </div>
         <div class="hero-body">
-          <div class="motivation-box">
-            <div class="box-head">
-              <h2>Motivación</h2>
-            </div>
-            <div class="box-body">
+          <details class="block" open>
+            <summary>Motivación</summary>
+            <div class="block-content">
               <div class="motivation-list">
                 <div class="motivation-item">
                   <div class="motivation-number">1</div>
                   <div>
                     <strong>No siempre es posible escribir la solución con funciones elementales.</strong>
-                    <div class="math-box">
-                      \[
-                      y'=e^{-x^2}, \qquad y(0)=0,
-                      \]
-                      \[
-                      y(x)=\int_0^x e^{-s^2}\,ds.
-                      \]
-                    </div>
                   </div>
                 </div>
+              </div>
+              <div class="equation-center neutral-equation">
+                \[
+                y'=e^{-x^2}, \qquad y(0)=0,
+                \]
+                \[
+                y(x)=\int_0^x e^{-s^2}\,ds.
+                \]
+              </div>
+              <div class="motivation-list">
                 <div class="motivation-item">
                   <div class="motivation-number">2</div>
                   <div>
                     <strong>Aun cuando la solución exacta existe, no siempre revela con facilidad el comportamiento de las trayectorias.</strong>
                     <p>
-                      Por ejemplo, en \(y'=y(1-y^2)\) el signo de la derivada permite leer de inmediato zonas de crecimiento, decrecimiento y equilibrio, mientras que la solución obtenida por separación resulta mucho menos transparente para una primera interpretación.
+                      El modelo \(y'=y(y-1)\) permite leer de inmediato zonas de crecimiento, decrecimiento y equilibrio a partir del signo de la derivada, mientras que la fórmula explícita no muestra esa información con la misma inmediatez.
                     </p>
                   </div>
                 </div>
               </div>
             </div>
-          </div>
+          </details>
 
-          <div class="example-box">
-            <div class="box-head">
-              <h3>Ejemplo guía: \(y'=y(y-1)\)</h3>
-            </div>
-            <div class="box-body">
+          <details class="block" open>
+            <summary>Ejemplo guía: \(y'=y(y-1)\)</summary>
+            <div class="block-content">
               <p>
                 La ecuación permite identificar el signo de la pendiente observando el producto \(y(y-1)\). Los puntos \(y=0\) y \(y=1\) son soluciones de equilibrio porque allí la derivada vale cero.
               </p>
@@ -879,19 +856,17 @@
                 \[y(x)=-\frac{1}{Ce^x-1}.\]
               </div>
             </div>
-          </div>
+          </details>
 
-          <div class="embed-card">
-            <div class="box-head">
-              <h3>Familia de soluciones</h3>
-            </div>
-            <div class="box-body">
+          <details class="block" open>
+            <summary>Familia de soluciones</summary>
+            <div class="block-content">
               <div class="desmos-wrap">
                 <iframe src="https://www.desmos.com/calculator/gsrs9irofb?embed" title="Gráfica de soluciones de y'=y(y-1)"></iframe>
               </div>
               <a class="external-link" href="https://www.desmos.com/calculator/gsrs9irofb" target="_blank" rel="noopener noreferrer">Abrir gráfica en Desmos</a>
             </div>
-          </div>
+          </details>
         </div>
       </section>
 
