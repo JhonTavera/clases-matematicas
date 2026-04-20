@@ -1,0 +1,1221 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Métodos Numéricos para EDO</title>
+  <script>
+    window.MathJax = {
+      tex: {
+        inlineMath: [['\\(','\\)']],
+        displayMath: [['\\[','\\]']]
+      },
+      chtml: {
+        scale: 1.08
+      }
+    };
+  </script>
+  <script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"></script>
+  <style>
+    :root {
+      --sky-0: #F7FBFF;
+      --sky-1: #EAF6FF;
+      --sky-2: #D7EFFC;
+      --sky-3: #C5EBF9;
+      --sky-4: #B6E3F4;
+      --sky-5: #A4D8ED;
+      --sky-line: #7FB9D7;
+      --sky-deep: #4E95C2;
+      --sky-shadow: #3C6FA7;
+
+      --board-green: #12E3AA;
+      --board-green-2: #11D4A5;
+      --board-green-3: #17BFA2;
+      --board-teal: #0E8F89;
+      --board-deep: #0A6268;
+      --board-dark: #06474C;
+
+      --surface: #FFFDF9;
+      --surface-soft: #F8FDFF;
+      --surface-green: #F0FBF6;
+      --surface-lilac: #F8F6FF;
+      --surface-note: #FFF6E7;
+
+      --desk-orange: #F08B2F;
+      --desk-orange-2: #E96D25;
+      --desk-orange-strong: #D95B1D;
+      --desk-amber: #F5B249;
+      --desk-yellow: #F6E08A;
+      --desk-cream: #FFF8EE;
+      --desk-shadow: #AA592D;
+      --lamp-cream: #FFF9F1;
+
+      --text: #1A1B49;
+      --text-soft: #4A4457;
+      --muted: #5C7282;
+      --line: #C8E0E7;
+      --line-strong: #A6CFD8;
+
+      --violet-shadow: #342F69;
+      --violet-soft: #7C5AA8;
+      --cyan-glow: #7CEEEE;
+
+      --shadow-card: 0 12px 0 rgba(60,111,167,0.06), 0 18px 34px rgba(52,47,105,0.14), 0 8px 22px rgba(78,149,194,0.14), 0 0 24px rgba(124,238,238,0.06);
+      --shadow-card-strong: 0 16px 0 rgba(60,111,167,0.08), 0 24px 42px rgba(52,47,105,0.18), 0 10px 30px rgba(14,143,137,0.16), 0 0 26px rgba(124,238,238,0.10);
+      --shadow-green: 0 10px 0 rgba(10,98,104,0.08), 0 18px 30px rgba(14,143,137,0.24), 0 0 24px rgba(18,227,170,0.18);
+      --shadow-warm: 0 10px 0 rgba(170,89,45,0.08), 0 16px 30px rgba(240,139,47,0.18), 0 0 20px rgba(245,178,73,0.14);
+      --shadow-formula: 0 4px 12px rgba(240,139,47,0.05), 0 10px 18px rgba(245,178,73,0.06);
+
+      --radius-xl: 28px;
+      --radius-lg: 22px;
+      --radius-md: 16px;
+      --radius-sm: 12px;
+
+      --content-width: 900px;
+      --ui-font: "Segoe UI", Roboto, Arial, sans-serif;
+      --reading-font: Garamond, "Palatino Linotype", Palatino, Georgia, serif;
+    }
+
+    * { box-sizing: border-box; }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      margin: 0;
+      font-family: var(--reading-font);
+      background: linear-gradient(180deg,
+        var(--sky-0) 0%, var(--sky-0) 14%,
+        var(--sky-1) 14%, var(--sky-1) 28%,
+        var(--sky-2) 28%, var(--sky-2) 44%,
+        var(--sky-3) 44%, var(--sky-3) 62%,
+        var(--sky-4) 62%, var(--sky-4) 81%,
+        var(--sky-1) 81%, var(--sky-1) 100%);
+      color: var(--text);
+      line-height: 1.78;
+      position: relative;
+      font-size: 18px;
+    }
+
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 0;
+      background:
+        linear-gradient(118deg,
+          rgba(255,255,255,0.34) 0%, rgba(255,255,255,0.34) 13%,
+          transparent 13%, transparent 31%,
+          rgba(124,238,238,0.06) 31%, rgba(124,238,238,0.06) 41%,
+          transparent 41%, transparent 61%,
+          rgba(60,111,167,0.05) 61%, rgba(60,111,167,0.05) 70%,
+          transparent 70%, transparent 100%),
+        linear-gradient(24deg,
+          transparent 0%, transparent 58%,
+          rgba(255,255,255,0.16) 58%, rgba(255,255,255,0.16) 69%,
+          transparent 69%, transparent 100%);
+    }
+
+    h1, h2, h3, h4, h5, h6,
+    .brand, nav a, .btn, .step-title, details.block summary, .pill, .kpi .label, .kpi .value, .control label, .motivation-number {
+      font-family: var(--ui-font);
+    }
+
+    p, li, td, th, .block-content, .section-head p {
+      font-size: 1.08rem;
+    }
+
+    header {
+      position: sticky;
+      top: 0;
+      z-index: 40;
+      background: rgba(225, 251, 242, 0.88);
+      backdrop-filter: blur(14px);
+      border-bottom: 1px solid rgba(127, 185, 215, 0.30);
+      box-shadow: 0 8px 20px rgba(52,47,105,0.08), inset 0 -1px 0 rgba(255,255,255,0.45);
+    }
+
+    .topbar {
+      max-width: var(--content-width);
+      margin: 0 auto;
+      padding: 14px 18px 16px;
+      display: flex;
+      flex-direction: column;
+      align-items: stretch;
+      gap: 12px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .brand {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      font-weight: 800;
+      font-size: 1.02rem;
+      letter-spacing: 0.2px;
+      color: var(--board-dark);
+    }
+
+    .brand::before {
+      content: "";
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      background: linear-gradient(180deg, var(--board-green), var(--board-teal));
+      box-shadow: 0 0 0 5px rgba(18,227,170,0.16);
+    }
+
+    nav {
+      display: flex;
+      gap: 10px;
+      overflow-x: auto;
+      padding: 7px;
+      border-radius: 18px;
+      scrollbar-width: none;
+      background: linear-gradient(180deg,
+        #DFF8EC 0%, #DFF8EC 55%,
+        #CBF3E1 55%, #CBF3E1 100%);
+      border: 1px solid rgba(127, 185, 215, 0.28);
+      box-shadow: 0 8px 18px rgba(78,149,194,0.10), inset 0 1px 0 rgba(255,255,255,0.55);
+    }
+
+    nav::-webkit-scrollbar {
+      display: none;
+    }
+
+    nav a {
+      flex: 0 0 auto;
+      text-decoration: none;
+      color: var(--text);
+      background: linear-gradient(180deg,
+        rgba(255,255,255,0.90) 0%, rgba(255,255,255,0.90) 56%,
+        rgba(238,248,245,0.98) 56%, rgba(238,248,245,0.98) 100%);
+      border-width: 1px;
+      border-style: solid;
+      border-color: rgba(127,185,215,0.40) rgba(127,185,215,0.28) rgba(10,98,104,0.12) rgba(127,185,215,0.28);
+      box-shadow: 0 6px 0 rgba(60,111,167,0.05), 0 10px 18px rgba(52,47,105,0.08);
+      padding: 10px 14px;
+      border-radius: 999px;
+      font-size: 0.94rem;
+      font-weight: 700;
+      transition: transform 0.22s ease, box-shadow 0.22s ease, background 0.22s ease, color 0.22s ease, border-color 0.22s ease;
+      white-space: nowrap;
+    }
+
+    nav a:hover,
+    nav a.is-active {
+      color: var(--board-dark);
+      background: linear-gradient(180deg,
+        var(--board-green) 0%, var(--board-green) 56%,
+        var(--board-green-3) 56%, var(--board-green-3) 100%);
+      border-color: rgba(10,98,104,0.36) rgba(10,98,104,0.24) rgba(10,98,104,0.40) rgba(10,98,104,0.24);
+      box-shadow: 0 8px 0 rgba(10,98,104,0.10), 0 16px 26px rgba(14,143,137,0.22), 0 0 22px rgba(18,227,170,0.18);
+      transform: translateY(-1px);
+    }
+
+    .page {
+      max-width: var(--content-width);
+      margin: 0 auto;
+      padding: 24px 18px 56px;
+      position: relative;
+      z-index: 1;
+    }
+
+    main {
+      display: grid;
+      gap: 22px;
+    }
+
+    .hero,
+    .card,
+    .theorem,
+    .table-box,
+    .future-box {
+      border-radius: var(--radius-xl);
+      overflow: hidden;
+      border: 1px solid rgba(166, 207, 216, 0.78);
+      background: linear-gradient(180deg,
+        rgba(255,253,249,0.98) 0%, rgba(255,253,249,0.98) 68%,
+        rgba(248,253,255,0.98) 68%, rgba(248,253,255,0.98) 100%);
+      box-shadow: var(--shadow-card);
+    }
+
+    .hero {
+      background: linear-gradient(180deg,
+        rgba(255,253,249,0.98) 0%, rgba(255,253,249,0.98) 100%);
+      box-shadow: var(--shadow-card-strong);
+    }
+
+    .hero-title-band {
+      padding: 26px 24px 20px;
+      background: linear-gradient(122deg,
+        #16E5AA 0%, #16E5AA 20%,
+        #18D1A7 20%, #18D1A7 37%,
+        #20C2A8 37%, #20C2A8 53%,
+        #18A59D 53%, #18A59D 72%,
+        #0F7F86 72%, #0F7F86 88%,
+        #0A646A 88%, #0A646A 100%);
+      position: relative;
+      overflow: hidden;
+      box-shadow: inset 0 -1px 0 rgba(255,255,255,0.20);
+    }
+
+    .hero-title-band::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(118deg,
+        rgba(255,255,255,0.22) 0%, rgba(255,255,255,0.22) 10%,
+        transparent 10%, transparent 29%,
+        rgba(124,238,238,0.08) 29%, rgba(124,238,238,0.08) 38%,
+        transparent 38%, transparent 100%);
+      pointer-events: none;
+    }
+
+    .hero-title-band h1 {
+      position: relative;
+      z-index: 1;
+      margin: 0;
+      font-size: clamp(2.3rem, 7vw, 4.3rem);
+      line-height: 0.98;
+      letter-spacing: -0.03em;
+      color: #F8FFFE;
+      text-shadow: 0 2px 0 rgba(10,98,104,0.18), 0 10px 22px rgba(52,47,105,0.18);
+    }
+
+    .hero-body {
+      display: grid;
+      gap: 20px;
+      padding: 22px 24px 24px;
+    }
+
+    .motivation-box,
+    .example-box,
+    .embed-card {
+      border-radius: var(--radius-lg);
+      border: 1px solid rgba(166,207,216,0.82);
+      background: linear-gradient(180deg,
+        rgba(255,253,249,0.98) 0%, rgba(255,253,249,0.98) 65%,
+        rgba(248,253,255,0.98) 65%, rgba(248,253,255,0.98) 100%);
+      box-shadow: var(--shadow-card);
+      overflow: hidden;
+    }
+
+    .box-head {
+      padding: 16px 18px;
+      background: linear-gradient(180deg,
+        rgba(18,227,170,0.14) 0%, rgba(18,227,170,0.14) 58%,
+        rgba(255,255,255,0.88) 58%, rgba(255,255,255,0.88) 100%);
+      border-bottom: 1px solid rgba(166,207,216,0.58);
+    }
+
+    .box-head h2,
+    .box-head h3 {
+      margin: 0;
+      color: var(--board-dark);
+      font-size: 1.24rem;
+    }
+
+    .box-body {
+      padding: 16px 18px 18px;
+    }
+
+    .motivation-list {
+      display: grid;
+      gap: 14px;
+    }
+
+    .motivation-item {
+      display: grid;
+      grid-template-columns: 36px 1fr;
+      gap: 12px;
+      align-items: start;
+      padding: 12px 12px 10px;
+      border-radius: 16px;
+      background: linear-gradient(180deg,
+        rgba(255,249,240,0.98) 0%, rgba(255,249,240,0.98) 62%,
+        rgba(255,242,214,0.96) 62%, rgba(255,242,214,0.96) 100%);
+      border: 1px solid rgba(245,178,73,0.34);
+      box-shadow: 0 8px 0 rgba(170,89,45,0.03), 0 12px 18px rgba(240,139,47,0.07);
+    }
+
+    .motivation-number {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      display: grid;
+      place-items: center;
+      font-weight: 800;
+      color: #fff;
+      background: linear-gradient(180deg,
+        var(--desk-orange) 0%, var(--desk-orange) 56%,
+        var(--desk-orange-2) 56%, var(--desk-orange-2) 100%);
+      box-shadow: var(--shadow-warm);
+    }
+
+    .motivation-item strong {
+      color: var(--text);
+      display: block;
+      margin-bottom: 0.2rem;
+    }
+
+    .example-box p,
+    .motivation-box p,
+    .embed-card p,
+    .hero p,
+    .card p,
+    .theorem p,
+    .table-box p,
+    .future-box p,
+    .block-content p {
+      margin-top: 0;
+      margin-bottom: 0.85rem;
+    }
+
+    .sign-list {
+      margin: 0.3rem 0 0;
+      padding-left: 1.2rem;
+      color: var(--text-soft);
+    }
+
+    .sign-list li {
+      margin-bottom: 0.4rem;
+    }
+
+    .desmos-wrap {
+      border-radius: 20px;
+      overflow: hidden;
+      border: 1px solid rgba(166,207,216,0.92);
+      box-shadow: 0 12px 0 rgba(60,111,167,0.06), 0 20px 30px rgba(52,47,105,0.12);
+      background: #fff;
+    }
+
+    .desmos-wrap iframe {
+      width: 100%;
+      height: 430px;
+      border: 0;
+      display: block;
+    }
+
+    .external-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      color: var(--sky-shadow);
+      text-decoration: none;
+      font-family: var(--ui-font);
+      font-size: 0.96rem;
+      font-weight: 700;
+      margin-top: 12px;
+    }
+
+    .external-link::before {
+      content: "↗";
+      font-size: 1rem;
+    }
+
+    .section-head {
+      padding: 22px 22px 0;
+    }
+
+    .section-head h2 {
+      margin: 0;
+      font-size: clamp(1.42rem, 4vw, 1.95rem);
+      line-height: 1.15;
+      color: var(--text);
+    }
+
+    .section-head p {
+      margin: 8px 0 0;
+      color: var(--muted);
+    }
+
+    .card-body {
+      padding: 18px 22px 22px;
+    }
+
+    .accordion {
+      display: grid;
+      gap: 14px;
+    }
+
+    details.block {
+      overflow: hidden;
+      border-radius: var(--radius-lg);
+      border: 1px solid rgba(166,207,216,0.82);
+      background: linear-gradient(180deg,
+        rgba(255,253,249,0.98) 0%, rgba(255,253,249,0.98) 70%,
+        rgba(248,253,255,0.98) 70%, rgba(248,253,255,0.98) 100%);
+      box-shadow: 0 10px 0 rgba(60,111,167,0.05), 0 18px 28px rgba(52,47,105,0.10), 0 8px 22px rgba(78,149,194,0.12);
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    details.block[open] {
+      box-shadow: var(--shadow-card-strong);
+    }
+
+    details.block summary {
+      list-style: none;
+      cursor: pointer;
+      padding: 16px 18px;
+      font-weight: 800;
+      color: var(--board-dark);
+      position: relative;
+      background: linear-gradient(180deg,
+        rgba(18,227,170,0.14) 0%, rgba(18,227,170,0.14) 58%,
+        rgba(255,255,255,0.88) 58%, rgba(255,255,255,0.88) 100%);
+    }
+
+    details.block summary::-webkit-details-marker {
+      display: none;
+    }
+
+    details.block summary::after {
+      content: "+";
+      position: absolute;
+      right: 18px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--desk-shadow);
+      font-size: 1.2rem;
+      font-weight: 900;
+      transition: transform 0.2s ease;
+    }
+
+    details[open].block summary::after {
+      content: "−";
+    }
+
+    .block-content {
+      padding: 0 18px 18px;
+      animation: fadeSlide 0.35s ease;
+    }
+
+    .math-box {
+      border: 2px solid var(--desk-yellow);
+      border-radius: 28px;
+      background: linear-gradient(180deg, var(--lamp-cream) 0%, var(--lamp-cream) 100%);
+      color: var(--desk-orange-strong);
+      padding: 18px 20px;
+      margin: 14px 0;
+      overflow-x: auto;
+      box-shadow: inset 0 0 0 2px rgba(245,178,73,0.12), var(--shadow-formula);
+      text-align: center;
+      font-size: 1.22rem;
+    }
+
+    .math-box mjx-container {
+      color: var(--desk-orange-strong) !important;
+      font-size: 135% !important;
+      margin: 0.15em auto !important;
+      text-align: center !important;
+    }
+
+    .math-box mjx-container[display="true"] {
+      display: block !important;
+      text-align: center !important;
+    }
+
+    .equation-center {
+      text-align: center;
+      margin: 14px 0 8px;
+    }
+
+    .equation-center mjx-container {
+      color: #111111 !important;
+      font-size: 118% !important;
+      margin: 0 auto !important;
+      text-align: center !important;
+    }
+
+    .math-box::-webkit-scrollbar {
+      height: 8px;
+    }
+
+    .math-box::-webkit-scrollbar-thumb {
+      background: rgba(240,139,47,0.20);
+      border-radius: 999px;
+    }
+
+    .note {
+      background: linear-gradient(180deg,
+        #FFF6E7 0%, #FFF6E7 62%,
+        #FFF0D0 62%, #FFF0D0 100%);
+      border: 1px solid rgba(245,178,73,0.42);
+      border-radius: 14px;
+      padding: 12px 14px;
+      color: var(--text-soft);
+      box-shadow: 0 10px 0 rgba(170,89,45,0.05), 0 14px 24px rgba(240,139,47,0.08);
+    }
+
+    .steps {
+      display: grid;
+      gap: 12px;
+      margin-top: 14px;
+    }
+
+    .step {
+      border: 1px solid rgba(166,207,216,0.78);
+      border-radius: 16px;
+      padding: 14px;
+      background: linear-gradient(180deg,
+        rgba(255,253,249,0.97) 0%, rgba(255,253,249,0.97) 64%,
+        rgba(248,246,255,0.94) 64%, rgba(248,246,255,0.94) 100%);
+      box-shadow: 0 10px 0 rgba(52,47,105,0.03), 0 14px 24px rgba(52,47,105,0.08);
+    }
+
+    .step-title {
+      font-weight: 800;
+      color: var(--desk-orange-2);
+      margin-bottom: 6px;
+    }
+
+    .theorem {
+      border-left: 7px solid var(--desk-orange-2);
+      background: linear-gradient(180deg,
+        rgba(255,253,249,0.98) 0%, rgba(255,253,249,0.98) 64%,
+        rgba(248,246,255,0.95) 64%, rgba(248,246,255,0.95) 100%);
+    }
+
+    .theorem .card-body {
+      display: grid;
+      gap: 12px;
+    }
+
+    .proof-toggle {
+      margin-top: 4px;
+    }
+
+    .demo-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 16px;
+      padding: 18px 22px 22px;
+    }
+
+    .demo-panel {
+      padding: 18px;
+      background: linear-gradient(180deg,
+        rgba(255,253,249,0.98) 0%, rgba(255,253,249,0.98) 65%,
+        rgba(248,253,255,0.98) 65%, rgba(248,253,255,0.98) 100%);
+      border: 1px solid rgba(166,207,216,0.82);
+      border-radius: var(--radius-lg);
+      box-shadow: var(--shadow-card);
+    }
+
+    .demo-panel h3 {
+      margin: 0;
+      color: var(--board-dark);
+      font-size: 1.16rem;
+    }
+
+    .controls {
+      display: grid;
+      gap: 14px;
+      margin-top: 14px;
+    }
+
+    .control {
+      display: grid;
+      gap: 6px;
+    }
+
+    .control label {
+      font-weight: 700;
+      font-size: 0.98rem;
+      color: var(--text-soft);
+    }
+
+    .control input,
+    .control select {
+      width: 100%;
+      padding: 11px 12px;
+      border-radius: 14px;
+      border: 1px solid rgba(166,207,216,0.88);
+      font: inherit;
+      color: var(--text);
+      background: linear-gradient(180deg,
+        rgba(255,253,249,0.98) 0%, rgba(255,253,249,0.98) 58%,
+        rgba(240,251,246,0.98) 58%, rgba(240,251,246,0.98) 100%);
+      box-shadow: inset 0 1px 0 rgba(255,255,255,0.8), 0 8px 16px rgba(78,149,194,0.06);
+      font-family: var(--ui-font);
+    }
+
+    .kpi-row {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 12px;
+      margin-top: 16px;
+    }
+
+    .kpi {
+      border: 1px solid rgba(166,207,216,0.80);
+      border-radius: 16px;
+      padding: 12px;
+      background: linear-gradient(180deg,
+        rgba(255,253,249,0.98) 0%, rgba(255,253,249,0.98) 55%,
+        rgba(248,246,255,0.94) 55%, rgba(248,246,255,0.94) 100%);
+      box-shadow: 0 10px 0 rgba(52,47,105,0.03), 0 16px 22px rgba(52,47,105,0.10), 0 0 14px rgba(124,238,238,0.08);
+    }
+
+    .kpi .label {
+      font-size: 0.9rem;
+      color: var(--muted);
+    }
+
+    .kpi .value {
+      font-size: 1.24rem;
+      font-weight: 800;
+      margin-top: 4px;
+      color: var(--board-dark);
+    }
+
+    .table-box,
+    .future-box {
+      padding: 22px;
+    }
+
+    .table-box h2,
+    .future-box h2 {
+      margin: 0;
+      font-size: clamp(1.36rem, 4vw, 1.8rem);
+      color: var(--text);
+    }
+
+    .table-box p,
+    .future-box p {
+      color: var(--muted);
+      margin: 10px 0 0;
+    }
+
+    .table-wrap {
+      margin-top: 16px;
+      overflow-x: auto;
+      border-radius: 18px;
+      box-shadow: 0 16px 0 rgba(60,111,167,0.06), 0 22px 34px rgba(52,47,105,0.14), 0 8px 22px rgba(78,149,194,0.12);
+    }
+
+    table {
+      width: 100%;
+      min-width: 720px;
+      border-collapse: collapse;
+      background: rgba(255,253,249,0.98);
+    }
+
+    th,
+    td {
+      border-bottom: 1px solid rgba(200,224,231,0.92);
+      padding: 11px 10px;
+      text-align: center;
+    }
+
+    th {
+      background: linear-gradient(180deg,
+        var(--board-green) 0%, var(--board-green) 52%,
+        var(--board-teal) 52%, var(--board-teal) 100%);
+      color: #083437;
+      font-weight: 900;
+      position: sticky;
+      top: 0;
+      box-shadow: inset 0 -1px 0 rgba(10,98,104,0.24);
+    }
+
+    tbody tr:nth-child(even) {
+      background: rgba(240,251,246,0.68);
+    }
+
+    tbody tr:hover {
+      background: rgba(245,178,73,0.14);
+    }
+
+    .future-box {
+      background: linear-gradient(180deg,
+        rgba(255,253,249,0.98) 0%, rgba(255,253,249,0.98) 66%,
+        rgba(248,253,255,0.98) 66%, rgba(248,253,255,0.98) 100%);
+    }
+
+    .pill-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 16px;
+    }
+
+    .pill {
+      padding: 10px 14px;
+      border-radius: 999px;
+      border: 1px solid rgba(166,207,216,0.86);
+      background: linear-gradient(180deg,
+        #FFFDF9 0%, #FFFDF9 56%,
+        #F0FBF6 56%, #F0FBF6 100%);
+      color: var(--text-soft);
+      box-shadow: 0 8px 0 rgba(60,111,167,0.04), 0 12px 20px rgba(52,47,105,0.08), 0 0 14px rgba(124,238,238,0.08);
+      font-weight: 700;
+    }
+
+    @keyframes fadeSlide {
+      from { opacity: 0; transform: translateY(-8px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    @media (min-width: 760px) {
+      .topbar {
+        gap: 14px;
+      }
+
+      .hero-title-band {
+        padding: 30px 30px 22px;
+      }
+
+      .hero-body {
+        padding: 24px 30px 30px;
+      }
+
+      .section-head {
+        padding: 24px 28px 0;
+      }
+
+      .card-body,
+      .demo-grid,
+      .table-box,
+      .future-box {
+        padding-left: 28px;
+        padding-right: 28px;
+      }
+
+      .table-box,
+      .future-box {
+        padding-top: 24px;
+        padding-bottom: 26px;
+      }
+    }
+
+    @media (min-width: 900px) {
+      .demo-grid {
+        grid-template-columns: 1.02fr 0.98fr;
+      }
+
+      .kpi-row {
+        grid-template-columns: repeat(3, 1fr);
+      }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="topbar">
+      <div class="brand">EDO · Métodos numéricos</div>
+      <nav id="topnav">
+        <a href="#panorama" class="is-active">Panorama</a>
+        <a href="#euler">Euler</a>
+        <a href="#error">Errores</a>
+        <a href="#perturbado">Euler perturbado</a>
+        <a href="#ejemplo">Ejemplo</a>
+        <a href="#rk">Runge–Kutta</a>
+      </nav>
+    </div>
+  </header>
+
+  <div class="page">
+    <main>
+      <section class="hero" id="panorama">
+        <div class="hero-title-band">
+          <h1>Métodos numéricos</h1>
+        </div>
+        <div class="hero-body">
+          <div class="motivation-box">
+            <div class="box-head">
+              <h2>Motivación</h2>
+            </div>
+            <div class="box-body">
+              <div class="motivation-list">
+                <div class="motivation-item">
+                  <div class="motivation-number">1</div>
+                  <div>
+                    <strong>No siempre es posible escribir la solución con funciones elementales.</strong>
+                    <div class="math-box">
+                      \[
+                      y'=e^{-x^2}, \qquad y(0)=0,
+                      \]
+                      \[
+                      y(x)=\int_0^x e^{-s^2}\,ds.
+                      \]
+                    </div>
+                  </div>
+                </div>
+                <div class="motivation-item">
+                  <div class="motivation-number">2</div>
+                  <div>
+                    <strong>Aun cuando la solución exacta existe, no siempre revela con facilidad el comportamiento de las trayectorias.</strong>
+                    <p>
+                      Por ejemplo, en \(y'=y(1-y^2)\) el signo de la derivada permite leer de inmediato zonas de crecimiento, decrecimiento y equilibrio, mientras que la solución obtenida por separación resulta mucho menos transparente para una primera interpretación.
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="example-box">
+            <div class="box-head">
+              <h3>Ejemplo guía: \(y'=y(y-1)\)</h3>
+            </div>
+            <div class="box-body">
+              <p>
+                La ecuación permite identificar el signo de la pendiente observando el producto \(y(y-1)\). Los puntos \(y=0\) y \(y=1\) son soluciones de equilibrio porque allí la derivada vale cero.
+              </p>
+              <ul class="sign-list">
+                <li>Si \(y&lt;0\), entonces \(y&lt;0\) y \(y-1&lt;0\), así que \(y'&gt;0\). Las soluciones crecen.</li>
+                <li>Si \(0&lt;y&lt;1\), entonces \(y&gt;0\) y \(y-1&lt;0\), así que \(y'&lt;0\). Las soluciones decrecen.</li>
+                <li>Si \(y&gt;1\), entonces \(y&gt;0\) y \(y-1&gt;0\), así que \(y'&gt;0\). Las soluciones vuelven a crecer.</li>
+              </ul>
+              <p>
+                Este análisis cualitativo se obtiene directamente de la ecuación sin necesidad de resolverla primero. Sin embargo, la ecuación también admite solución explícita mediante separación de variables.
+              </p>
+              <div class="equation-center">
+                \[y(x)=-\frac{1}{Ce^x-1}.\]
+              </div>
+            </div>
+          </div>
+
+          <div class="embed-card">
+            <div class="box-head">
+              <h3>Familia de soluciones</h3>
+            </div>
+            <div class="box-body">
+              <div class="desmos-wrap">
+                <iframe src="https://www.desmos.com/calculator/gsrs9irofb?embed" title="Gráfica de soluciones de y'=y(y-1)"></iframe>
+              </div>
+              <a class="external-link" href="https://www.desmos.com/calculator/gsrs9irofb" target="_blank" rel="noopener noreferrer">Abrir gráfica en Desmos</a>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="card" id="euler">
+        <div class="section-head">
+          <h2>1. Método de Euler</h2>
+          <p>La construcción geométrica conduce de manera natural a una regla recursiva para aproximar la solución.</p>
+        </div>
+        <div class="card-body">
+          <div class="accordion">
+            <details class="block" open>
+              <summary>Idea geométrica</summary>
+              <div class="block-content">
+                <p>
+                  El método de Euler sustituye la curva solución por su recta tangente en el punto conocido. Así, la derivada aporta una pendiente local que permite avanzar paso a paso mediante una aproximación lineal.
+                </p>
+                <div class="math-box">
+                  \[x(t) \approx x(t_n) + x'(t_n)(t-t_n).\]
+                </div>
+                <p>
+                  Cada nuevo valor aproximado se obtiene a partir del valor anterior y de la inclinación de la curva en ese punto.
+                </p>
+              </div>
+            </details>
+
+            <details class="block">
+              <summary>Definición formal del método de Euler</summary>
+              <div class="block-content">
+                <div class="math-box">
+                  \[
+                  t_n = t_{n-1}+h, \qquad
+                  x_n = x_{n-1} + F(t_{n-1},x_{n-1})h,
+                  \qquad n=1,2,\dots,N.
+                  \]
+                </div>
+                <p>
+                  La regla recursiva produce una sucesión de puntos aproximados. En cada etapa se evalúa la pendiente en el nodo actual y se avanza una distancia fija en el eje independiente.
+                </p>
+                <div class="steps">
+                  <div class="step">
+                    <div class="step-title">Paso 1</div>
+                    Fijar la condición inicial y el tamaño de paso.
+                  </div>
+                  <div class="step">
+                    <div class="step-title">Paso 2</div>
+                    Evaluar la pendiente en el punto actual.
+                  </div>
+                  <div class="step">
+                    <div class="step-title">Paso 3</div>
+                    Avanzar una distancia horizontal \(h\).
+                  </div>
+                  <div class="step">
+                    <div class="step-title">Paso 4</div>
+                    Repetir el procedimiento para construir la curva poligonal aproximada.
+                  </div>
+                </div>
+              </div>
+            </details>
+          </div>
+        </div>
+      </section>
+
+      <section class="card" id="error">
+        <div class="section-head">
+          <h2>2. Error local y error global</h2>
+          <p>Ambos errores miden fenómenos distintos y conviene separarlos desde el inicio.</p>
+        </div>
+        <div class="card-body">
+          <div class="accordion">
+            <details class="block" open>
+              <summary>Definición de error global</summary>
+              <div class="block-content">
+                <div class="math-box">
+                  \[E_n = x_n - x(t_n).\]
+                </div>
+                <p>
+                  El error global en el nodo \(t_n\) es la diferencia entre la aproximación numérica obtenida y el valor exacto de la solución en ese mismo punto.
+                </p>
+              </div>
+            </details>
+
+            <details class="block" open>
+              <summary>Definición de error local</summary>
+              <div class="block-content">
+                <div class="math-box">
+                  \[e_n = \big[x(t_{n-1}) + x'(t_{n-1})(t_n-t_{n-1})\big] - x(t_n).\]
+                </div>
+                <p>
+                  El error local mide la discrepancia cometida en una sola etapa cuando el paso comienza desde el valor exacto.
+                </p>
+              </div>
+            </details>
+
+            <details class="block">
+              <summary>Interpretación conceptual</summary>
+              <div class="block-content">
+                <p>
+                  El error local se aprecia en una sola etapa, mientras que el error global incorpora la acumulación de todos los pasos anteriores. Distinguir ambos conceptos permite entender mejor el comportamiento del método.
+                </p>
+              </div>
+            </details>
+          </div>
+        </div>
+      </section>
+
+      <section class="theorem">
+        <div class="section-head">
+          <h2>3. Teorema de cota para el error global en Euler</h2>
+          <p>La estimación cuantifica cómo se propaga el error a lo largo del mallado.</p>
+        </div>
+        <div class="card-body">
+          <div class="math-box">
+            \[|E_n| \leq (e^{nCh}-1)\frac{Mh}{2C}, \qquad n=0,1,\dots,N.\]
+          </div>
+          <div class="note">
+            Esta cota muestra que el error global de Euler disminuye al reducir el tamaño de paso, siempre que las operaciones numéricas no introduzcan perturbaciones relevantes.
+          </div>
+          <details class="block proof-toggle">
+            <summary>Ver demostración paso a paso</summary>
+            <div class="block-content">
+              <div class="steps">
+                <div class="step">
+                  <div class="step-title">Paso A</div>
+                  Restar la ecuación exacta y la ecuación del método.
+                </div>
+                <div class="step">
+                  <div class="step-title">Paso B</div>
+                  Aplicar Taylor con resto para la solución exacta.
+                </div>
+                <div class="step">
+                  <div class="step-title">Paso C</div>
+                  Usar la condición de Lipschitz para acotar la diferencia de pendientes.
+                </div>
+                <div class="step">
+                  <div class="step-title">Paso D</div>
+                  Obtener una desigualdad recursiva del tipo \(y_n \le (1+a)y_{n-1}+b\).
+                </div>
+                <div class="step">
+                  <div class="step-title">Paso E</div>
+                  Aplicar el lema discreto y concluir la cota del error global.
+                </div>
+              </div>
+            </div>
+          </details>
+        </div>
+      </section>
+
+      <section class="card" id="perturbado">
+        <div class="section-head">
+          <h2>4. Método de Euler perturbado</h2>
+          <p>La versión perturbada permite incorporar errores de redondeo y otras alteraciones del cálculo.</p>
+        </div>
+        <div class="card-body">
+          <div class="accordion">
+            <details class="block" open>
+              <summary>Definición del método perturbado</summary>
+              <div class="block-content">
+                <div class="math-box">
+                  \[
+                  t_n=t_{n-1}+h, \qquad
+                  x_n=x_{n-1}+F(t_{n-1},x_{n-1})h+\delta_n.
+                  \]
+                </div>
+                <p>
+                  La cantidad \(\delta_n\) representa una perturbación en la etapa \(n\). Puede interpretarse como un error de redondeo, de medición o de almacenamiento.
+                </p>
+              </div>
+            </details>
+
+            <details class="block">
+              <summary>Teorema de cota del error global perturbado</summary>
+              <div class="block-content">
+                <div class="math-box">
+                  \[|E_n| \le (e^{nCh}-1)\left(\frac{Mh}{2C}+\frac{\delta}{Ch}\right)+e^{nhC}\delta.\]
+                </div>
+                <p>
+                  La presencia del término \(\delta/(Ch)\) explica por qué un paso demasiado pequeño no siempre mejora el error total cuando hay perturbaciones numéricas.
+                </p>
+              </div>
+            </details>
+
+            <details class="block">
+              <summary>Demostración desplegable</summary>
+              <div class="block-content">
+                <div class="steps">
+                  <div class="step"><div class="step-title">Paso A</div>Restar la solución exacta y el esquema perturbado.</div>
+                  <div class="step"><div class="step-title">Paso B</div>Acotar la perturbación \(|\delta_n|\leq \delta\).</div>
+                  <div class="step"><div class="step-title">Paso C</div>Obtener una desigualdad recursiva con los términos de truncamiento y perturbación.</div>
+                  <div class="step"><div class="step-title">Paso D</div>Aplicar el lema discreto para concluir la cota buscada.</div>
+                </div>
+              </div>
+            </details>
+          </div>
+        </div>
+      </section>
+
+      <section class="card" id="ejemplo">
+        <div class="section-head">
+          <h2>5. Ejemplo interactivo</h2>
+          <p>Este bloque permitirá comparar aproximaciones, errores locales y errores globales sobre un intervalo.</p>
+        </div>
+        <div class="demo-grid">
+          <div class="demo-panel">
+            <h3>Panel de control</h3>
+            <div class="controls">
+              <div class="control">
+                <label for="ode">Ecuación ejemplo</label>
+                <select id="ode">
+                  <option>y' = y - t^2 + 1</option>
+                  <option>y' = -2y + t</option>
+                  <option>y' = y(1-y)</option>
+                </select>
+              </div>
+              <div class="control">
+                <label for="h">Tamaño de paso h</label>
+                <input id="h" type="range" min="0.01" max="0.5" step="0.01" value="0.1" />
+              </div>
+              <div class="control">
+                <label for="delta">Perturbación máxima δ</label>
+                <input id="delta" type="range" min="0" max="0.05" step="0.001" value="0" />
+              </div>
+              <div class="control">
+                <label for="animate">Modo</label>
+                <select id="animate">
+                  <option>Paso a paso</option>
+                  <option>Todo el intervalo</option>
+                </select>
+              </div>
+            </div>
+            <div class="kpi-row">
+              <div class="kpi">
+                <div class="label">Error local actual</div>
+                <div class="value">0.0000</div>
+              </div>
+              <div class="kpi">
+                <div class="label">Error global actual</div>
+                <div class="value">0.0000</div>
+              </div>
+              <div class="kpi">
+                <div class="label">Paso n</div>
+                <div class="value">0</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="demo-panel">
+            <h3>Visualización</h3>
+            <div class="visual-box">Espacio para gráfica y animación</div>
+          </div>
+        </div>
+      </section>
+
+      <section class="table-box">
+        <h2>6. Tabla dinámica de resultados</h2>
+        <p>Para cada nodo \(t_n\), la tabla mostrará la aproximación, el valor exacto y las medidas de error.</p>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>n</th>
+                <th>t_n</th>
+                <th>x_n (Euler)</th>
+                <th>x(t_n) exacta</th>
+                <th>Error local</th>
+                <th>Error global</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr><td>0</td><td>0.00</td><td>1.0000</td><td>1.0000</td><td>0.0000</td><td>0.0000</td></tr>
+              <tr><td>1</td><td>0.10</td><td>1.2000</td><td>1.2140</td><td>0.0140</td><td>0.0140</td></tr>
+              <tr><td>2</td><td>0.20</td><td>1.4180</td><td>1.4428</td><td>0.0105</td><td>0.0248</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <section class="future-box" id="rk">
+        <h2>7. Runge–Kutta</h2>
+        <p>
+          Los métodos de Runge–Kutta mejoran la idea de Euler al usar varias pendientes dentro de cada paso y permiten obtener aproximaciones de mayor orden.
+        </p>
+        <div class="pill-row">
+          <div class="pill">Runge–Kutta de orden 2</div>
+          <div class="pill">Runge–Kutta de orden 4</div>
+          <div class="pill">Comparación Euler vs RK2 vs RK4</div>
+          <div class="pill">Costo computacional</div>
+          <div class="pill">Orden local y global</div>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <script>
+    (() => {
+      const links = [...document.querySelectorAll('#topnav a')];
+      const sections = links
+        .map(link => document.querySelector(link.getAttribute('href')))
+        .filter(Boolean);
+
+      const activateLink = (id) => {
+        links.forEach(link => {
+          link.classList.toggle('is-active', link.getAttribute('href') === `#${id}`);
+        });
+      };
+
+      links.forEach(link => {
+        link.addEventListener('click', () => {
+          const id = link.getAttribute('href').slice(1);
+          activateLink(id);
+        });
+      });
+
+      const observer = new IntersectionObserver((entries) => {
+        const visible = entries
+          .filter(entry => entry.isIntersecting)
+          .sort((a, b) => b.intersectionRatio - a.intersectionRatio);
+        if (visible.length) activateLink(visible[0].target.id);
+      }, {
+        rootMargin: '-25% 0px -55% 0px',
+        threshold: [0.15, 0.3, 0.5, 0.7]
+      });
+
+      sections.forEach(section => observer.observe(section));
+    })();
+  </script>
+</body>
+</html>
