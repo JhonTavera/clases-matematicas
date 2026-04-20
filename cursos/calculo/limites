@@ -461,7 +461,7 @@
               <div class="block-content">
                 <div class="math-box">
                   \[
-                  \forall \varepsilon&gt;0\, \exists \delta&gt;0 \text{ tal que si } 0&lt;|x-a|&lt;\delta, \text{ entonces } |f(x)-L|&lt;\varepsilon.
+                  \forall \varepsilon>0\, \exists \delta>0 \text{ tal que si } 0<|x-a|<\delta, \text{ entonces } |f(x)-L|<\varepsilon.
                   \]
                 </div>
               </div>
@@ -695,7 +695,7 @@
                   \[
                   \lim_{x\to a} e^x = e^a,
                   \qquad
-                  \lim_{x\to a} \ln(x)=\ln(a),\ a&gt;0
+                  \lim_{x\to a} \ln(x)=\ln(a),\ a>0
                   \]
                 </div>
               </div>
