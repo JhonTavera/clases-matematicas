@@ -1,0 +1,728 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Calculadora de Euler con redondeo</title>
+  <style>
+    :root {
+      --bg: #ffffff;
+      --fg: #111111;
+      --muted: #666666;
+      --line: #d9d9d9;
+      --accent: #1d4ed8;
+      --card: #f8fafc;
+      --good: #166534;
+      --warn: #b45309;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: Arial, Helvetica, sans-serif;
+      background: var(--bg);
+      color: var(--fg);
+    }
+    .wrap {
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 20px;
+      display: grid;
+      grid-template-columns: 420px 1fr;
+      gap: 20px;
+    }
+    .card {
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      padding: 18px;
+      box-shadow: 0 4px 18px rgba(0,0,0,0.06);
+    }
+    h1 {
+      margin: 0 0 10px;
+      font-size: 1.7rem;
+    }
+    h2 {
+      margin: 0 0 12px;
+      font-size: 1.1rem;
+    }
+    p, li, label, td, th, input, select, button {
+      font-size: 0.95rem;
+      line-height: 1.4;
+    }
+    .muted { color: var(--muted); }
+    .grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+    }
+    .full { grid-column: 1 / -1; }
+    label {
+      display: block;
+      margin-bottom: 6px;
+      font-weight: 600;
+    }
+    input, select, button, textarea {
+      width: 100%;
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      padding: 10px 12px;
+      background: white;
+      color: var(--fg);
+    }
+    textarea {
+      min-height: 84px;
+      resize: vertical;
+      font-family: Consolas, monospace;
+    }
+    button {
+      background: var(--accent);
+      color: white;
+      font-weight: 700;
+      cursor: pointer;
+      border: none;
+    }
+    button.secondary {
+      background: white;
+      color: var(--fg);
+      border: 1px solid var(--line);
+    }
+    .actions {
+      display: flex;
+      gap: 10px;
+      margin-top: 10px;
+    }
+    .pill {
+      display: inline-block;
+      padding: 5px 10px;
+      border-radius: 999px;
+      border: 1px solid var(--line);
+      background: white;
+      margin-right: 6px;
+      margin-bottom: 6px;
+      cursor: pointer;
+      user-select: none;
+    }
+    .right-col {
+      display: grid;
+      grid-template-rows: auto auto 1fr;
+      gap: 20px;
+    }
+    .metrics {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 10px;
+    }
+    .metric {
+      padding: 12px;
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      background: white;
+    }
+    .metric .label {
+      font-size: 0.82rem;
+      color: var(--muted);
+      margin-bottom: 6px;
+    }
+    .metric .value {
+      font-size: 1rem;
+      font-weight: 700;
+      word-break: break-word;
+    }
+    .chart-wrap {
+      background: white;
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      padding: 10px;
+    }
+    canvas {
+      width: 100%;
+      height: 420px;
+      display: block;
+      background: white;
+      border-radius: 10px;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      background: white;
+      border-radius: 14px;
+      overflow: hidden;
+    }
+    thead th {
+      position: sticky;
+      top: 0;
+      background: #eef2ff;
+      z-index: 1;
+    }
+    th, td {
+      border-bottom: 1px solid var(--line);
+      padding: 8px 10px;
+      text-align: right;
+      white-space: nowrap;
+    }
+    th:first-child, td:first-child { text-align: center; }
+    .table-box {
+      max-height: 430px;
+      overflow: auto;
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      background: white;
+    }
+    .status {
+      padding: 10px 12px;
+      border-radius: 12px;
+      background: #eff6ff;
+      border: 1px solid #bfdbfe;
+      color: #1e3a8a;
+      min-height: 44px;
+    }
+    .status.warn {
+      background: #fff7ed;
+      border-color: #fdba74;
+      color: var(--warn);
+    }
+    .status.good {
+      background: #f0fdf4;
+      border-color: #86efac;
+      color: var(--good);
+    }
+    code.inline {
+      background: #eef2ff;
+      padding: 2px 6px;
+      border-radius: 8px;
+    }
+    @media (max-width: 1050px) {
+      .wrap { grid-template-columns: 1fr; }
+      .metrics { grid-template-columns: 1fr 1fr; }
+    }
+    @media (max-width: 640px) {
+      .grid { grid-template-columns: 1fr; }
+      .metrics { grid-template-columns: 1fr; }
+      .actions { flex-direction: column; }
+      canvas { height: 320px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <div class="card">
+      <h1>Calculadora de Euler con redondeo</h1>
+      <p class="muted">
+        Ingresa un problema de valor inicial de la forma <code class="inline">x' = f(t,x)</code>, elige <code class="inline">h</code>,
+        el número de iteraciones <code class="inline">n</code> y cómo quieres modelar el redondeo. También puedes ingresar una solución exacta opcional para medir errores.
+      </p>
+
+      <div class="grid">
+        <div class="full">
+          <label for="fexpr">f(t,x)</label>
+          <input id="fexpr" value="t^2 - x^2" />
+        </div>
+        <div>
+          <label for="t0">t₀</label>
+          <input id="t0" type="number" step="any" value="0" />
+        </div>
+        <div>
+          <label for="x0">x(t₀)=x₀</label>
+          <input id="x0" type="number" step="any" value="2" />
+        </div>
+        <div>
+          <label for="h">Paso h</label>
+          <input id="h" type="number" step="any" value="0.1" />
+        </div>
+        <div>
+          <label for="n">Iteraciones n</label>
+          <input id="n" type="number" step="1" value="10" />
+        </div>
+
+        <div>
+          <label for="digits">δ = cifras decimales conservadas</label>
+          <input id="digits" type="number" step="1" min="0" value="8" />
+        </div>
+        <div>
+          <label for="roundMode">Dónde redondear</label>
+          <select id="roundMode">
+            <option value="none">Sin redondeo</option>
+            <option value="f_only">Solo al evaluar f(t,x)</option>
+            <option value="step_end" selected>Al final de cada iteración</option>
+            <option value="every_op">Después de cada operación elemental</option>
+          </select>
+        </div>
+
+        <div class="full">
+          <label for="exactExpr">Solución exacta opcional x(t)</label>
+          <input id="exactExpr" value="" placeholder="Ejemplo: t*(gamma(3/4)*besseli(3/4,t^2/2)+gamma(1/4)*besseli(-3/4,t^2/2))/((gamma(3/4)*besseli(-1/4,t^2/2))+(gamma(1/4)*besseli(1/4,t^2/2)))" />
+        </div>
+
+        <div class="full">
+          <label>Ejemplos rápidos</label>
+          <div>
+            <span class="pill" data-example="riccati">x' = t^2 - x^2, x(0)=2</span>
+            <span class="pill" data-example="linear">x' = x - t + 1, x(0)=1</span>
+            <span class="pill" data-example="logistic">x' = x(1-x), x(0)=0.2</span>
+            <span class="pill" data-example="osc">x' = sin(t)-x</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="actions">
+        <button id="runBtn">Calcular</button>
+        <button id="csvBtn" class="secondary">Exportar tabla CSV</button>
+      </div>
+
+      <div style="margin-top: 12px;" id="status" class="status">
+        Listo para calcular.
+      </div>
+
+      <div style="margin-top: 14px;">
+        <h2>Notas</h2>
+        <ul class="muted">
+          <li>Usa <code class="inline">^</code> para potencias. Ejemplo: <code class="inline">t^2 - x^2</code>.</li>
+          <li>Funciones disponibles: <code class="inline">sin, cos, tan, exp, log, sqrt, abs</code> y constantes como <code class="inline">pi</code>, <code class="inline">e</code>.</li>
+          <li>Si ingresas una solución exacta, el programa calcula el error global en los nodos y el error local de truncamiento de cada paso.</li>
+          <li>El redondeo por cifras decimales se modela con una regla decimal simple para visualizar la propagación del error.</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="right-col">
+      <div class="card">
+        <h2>Resumen</h2>
+        <div class="metrics">
+          <div class="metric">
+            <div class="label">t final</div>
+            <div class="value" id="m_tfinal">—</div>
+          </div>
+          <div class="metric">
+            <div class="label">xₙ aproximado</div>
+            <div class="value" id="m_xn">—</div>
+          </div>
+          <div class="metric">
+            <div class="label">Error global máx.</div>
+            <div class="value" id="m_eglob">—</div>
+          </div>
+          <div class="metric">
+            <div class="label">Error local máx. por paso</div>
+            <div class="value" id="m_eloc">—</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <h2>Gráfica</h2>
+        <div class="chart-wrap">
+          <canvas id="plot" width="900" height="420"></canvas>
+        </div>
+      </div>
+
+      <div class="card">
+        <h2>Tabla de iteraciones</h2>
+        <div class="table-box">
+          <table id="resultTable">
+            <thead>
+              <tr>
+                <th>k</th>
+                <th>tₖ</th>
+                <th>xₖ</th>
+                <th>f(tₖ,xₖ)</th>
+                <th>x exacta(tₖ)</th>
+                <th>|error global|</th>
+                <th>|error local paso k→k+1|</th>
+              </tr>
+            </thead>
+            <tbody></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const $ = (id) => document.getElementById(id);
+
+    const state = {
+      rows: [],
+      exactEnabled: false,
+    };
+
+    const pills = document.querySelectorAll('.pill');
+    pills.forEach(p => p.addEventListener('click', () => applyExample(p.dataset.example)));
+
+    function applyExample(name) {
+      if (name === 'riccati') {
+        $('fexpr').value = 't^2 - x^2';
+        $('t0').value = '0';
+        $('x0').value = '2';
+        $('h').value = '0.1';
+        $('n').value = '10';
+        $('digits').value = '8';
+        $('roundMode').value = 'step_end';
+        $('exactExpr').value = '';
+      }
+      if (name === 'linear') {
+        $('fexpr').value = 'x - t + 1';
+        $('t0').value = '0';
+        $('x0').value = '1';
+        $('h').value = '0.2';
+        $('n').value = '10';
+        $('digits').value = '8';
+        $('roundMode').value = 'step_end';
+        $('exactExpr').value = '(t+1)^1';
+      }
+      if (name === 'logistic') {
+        $('fexpr').value = 'x*(1-x)';
+        $('t0').value = '0';
+        $('x0').value = '0.2';
+        $('h').value = '0.25';
+        $('n').value = '20';
+        $('digits').value = '8';
+        $('roundMode').value = 'step_end';
+        $('exactExpr').value = '1/(1+4*exp(-t))';
+      }
+      if (name === 'osc') {
+        $('fexpr').value = 'sin(t)-x';
+        $('t0').value = '0';
+        $('x0').value = '1';
+        $('h').value = '0.1';
+        $('n').value = '50';
+        $('digits').value = '8';
+        $('roundMode').value = 'step_end';
+        $('exactExpr').value = '';
+      }
+      setStatus('Ejemplo cargado.', 'good');
+    }
+
+    function setStatus(msg, kind = '') {
+      const el = $('status');
+      el.className = 'status' + (kind ? ' ' + kind : '');
+      el.textContent = msg;
+    }
+
+    function roundToDecimals(value, digits) {
+      if (!Number.isFinite(value)) return value;
+      const factor = Math.pow(10, digits);
+      return Math.round(value * factor) / factor;
+    }
+
+    function gammaLanczos(z) {
+      const p = [
+        676.5203681218851, -1259.1392167224028, 771.32342877765313,
+        -176.61502916214059, 12.507343278686905, -0.13857109526572012,
+        9.9843695780195716e-6, 1.5056327351493116e-7
+      ];
+      const g = 7;
+      if (z < 0.5) {
+        return Math.PI / (Math.sin(Math.PI * z) * gammaLanczos(1 - z));
+      }
+      z -= 1;
+      let x = 0.99999999999980993;
+      for (let i = 0; i < p.length; i++) x += p[i] / (z + i + 1);
+      const t = z + g + 0.5;
+      return Math.sqrt(2 * Math.PI) * Math.pow(t, z + 0.5) * Math.exp(-t) * x;
+    }
+
+    function besseliSeries(nu, z, terms = 60) {
+      if (!Number.isFinite(z)) return NaN;
+      let sum = 0;
+      for (let k = 0; k < terms; k++) {
+        const term = Math.pow(z / 2, 2 * k + nu) / (factorial(k) * gammaLanczos(k + nu + 1));
+        sum += term;
+        if (Math.abs(term) < 1e-16 * Math.abs(sum || 1)) break;
+      }
+      return sum;
+    }
+
+    const factMemo = [1];
+    function factorial(n) {
+      for (let i = factMemo.length; i <= n; i++) factMemo[i] = factMemo[i - 1] * i;
+      return factMemo[n];
+    }
+
+    function compileExpression(expr, vars = ['t', 'x']) {
+      const normalized = expr
+        .replace(/\^/g, '**')
+        .replace(/π/g, 'pi')
+        .replace(/sen\(/g, 'sin(')
+        .replace(/ln\(/g, 'log(');
+
+      const fn = new Function(...vars, `
+        const pi = Math.PI;
+        const e = Math.E;
+        const sin = Math.sin;
+        const cos = Math.cos;
+        const tan = Math.tan;
+        const asin = Math.asin;
+        const acos = Math.acos;
+        const atan = Math.atan;
+        const sinh = Math.sinh;
+        const cosh = Math.cosh;
+        const tanh = Math.tanh;
+        const exp = Math.exp;
+        const log = Math.log;
+        const sqrt = Math.sqrt;
+        const abs = Math.abs;
+        const max = Math.max;
+        const min = Math.min;
+        const floor = Math.floor;
+        const ceil = Math.ceil;
+        const round = Math.round;
+        const gamma = gammaLanczos;
+        const besseli = besseliSeries;
+        return (${normalized});
+      `);
+      return (...args) => fn(...args);
+    }
+
+    function eulerIteration(f, t0, x0, h, n, digits, roundMode, exactFn = null) {
+      const rows = [];
+      let t = Number(t0);
+      let x = Number(x0);
+
+      function R(v) {
+        return roundMode === 'none' ? v : roundToDecimals(v, digits);
+      }
+
+      function oneEulerStep(tStart, xStart) {
+        let fx = f(tStart, xStart);
+        if (roundMode === 'f_only') fx = R(fx);
+
+        let nextT, nextX, slope;
+        if (roundMode === 'every_op') {
+          const tR = R(tStart);
+          const xR = R(xStart);
+          slope = R(f(tR, xR));
+          const hR = R(h);
+          const incr = R(hR * slope);
+          nextT = R(tR + hR);
+          nextX = R(xR + incr);
+          fx = slope;
+        } else {
+          slope = fx;
+          nextT = tStart + h;
+          nextX = xStart + h * slope;
+          if (roundMode === 'step_end') {
+            nextT = R(nextT);
+            nextX = R(nextX);
+          }
+        }
+
+        return { fx, nextT, nextX };
+      }
+
+      for (let k = 0; k <= n; k++) {
+        const exactVal = exactFn ? exactFn(t) : null;
+        const globalErr = (exactVal !== null && Number.isFinite(exactVal)) ? Math.abs(x - exactVal) : null;
+
+        const stepData = (k < n) ? oneEulerStep(t, x) : { fx: f(t, x), nextT: null, nextX: null };
+        let localErr = null;
+
+        if (exactFn && k < n) {
+          const exactCurrent = exactFn(t);
+          const exactNext = exactFn(t + h);
+          if (Number.isFinite(exactCurrent) && Number.isFinite(exactNext)) {
+            const oneStepFromExact = oneEulerStep(t, exactCurrent).nextX;
+            const local = exactNext - oneStepFromExact;
+            localErr = Number.isFinite(local) ? Math.abs(local) : null;
+          }
+        }
+
+        rows.push({
+          k,
+          t,
+          x,
+          fx: stepData.fx,
+          exactVal,
+          globalErr,
+          localErr
+        });
+
+        if (k === n) break;
+        t = stepData.nextT;
+        x = stepData.nextX;
+      }
+      return rows;
+    }
+
+    function formatNum(v) {
+      if (v === null || v === undefined || Number.isNaN(v)) return '—';
+      if (!Number.isFinite(v)) return String(v);
+      const av = Math.abs(v);
+      if ((av !== 0 && av < 1e-6) || av >= 1e6) return v.toExponential(6);
+      return v.toFixed(10).replace(/0+$/, '').replace(/\.$/, '');
+    }
+
+    function updateSummary(rows) {
+      const last = rows[rows.length - 1];
+      $('m_tfinal').textContent = formatNum(last.t);
+      $('m_xn').textContent = formatNum(last.x);
+
+      const globals = rows.map(r => r.globalErr).filter(v => v !== null && Number.isFinite(v));
+      const locals = rows.map(r => r.localErr).filter(v => v !== null && Number.isFinite(v));
+      $('m_eglob').textContent = globals.length ? formatNum(Math.max(...globals)) : '—';
+      $('m_eloc').textContent = locals.length ? formatNum(Math.max(...locals)) : '—';
+    }
+
+    function updateTable(rows) {
+      const tbody = $('resultTable').querySelector('tbody');
+      tbody.innerHTML = '';
+      rows.forEach(r => {
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+          <td>${r.k}</td>
+          <td>${formatNum(r.t)}</td>
+          <td>${formatNum(r.x)}</td>
+          <td>${formatNum(r.fx)}</td>
+          <td>${formatNum(r.exactVal)}</td>
+          <td>${formatNum(r.globalErr)}</td>
+          <td>${formatNum(r.localErr)}</td>
+        `;
+        tbody.appendChild(tr);
+      });
+    }
+
+    function drawPlot(rows) {
+      const canvas = $('plot');
+      const ctx = canvas.getContext('2d');
+      const W = canvas.width;
+      const H = canvas.height;
+      ctx.clearRect(0, 0, W, H);
+
+      const xs = rows.map(r => r.t);
+      const ysApprox = rows.map(r => r.x);
+      const ysExact = rows.map(r => r.exactVal).filter(v => v !== null && Number.isFinite(v));
+      const ysAll = ysApprox.concat(ysExact);
+      const xmin = Math.min(...xs);
+      const xmax = Math.max(...xs);
+      let ymin = Math.min(...ysAll);
+      let ymax = Math.max(...ysAll);
+      if (!Number.isFinite(ymin) || !Number.isFinite(ymax)) {
+        ymin = -1; ymax = 1;
+      }
+      if (ymin === ymax) {
+        ymin -= 1; ymax += 1;
+      }
+      const pad = 40;
+      const px = (x) => pad + (W - 2 * pad) * (x - xmin) / (xmax - xmin || 1);
+      const py = (y) => H - pad - (H - 2 * pad) * (y - ymin) / (ymax - ymin || 1);
+
+      ctx.strokeStyle = '#d1d5db';
+      ctx.lineWidth = 1;
+      for (let i = 0; i <= 5; i++) {
+        const x = pad + i * (W - 2 * pad) / 5;
+        const y = pad + i * (H - 2 * pad) / 5;
+        ctx.beginPath(); ctx.moveTo(x, pad); ctx.lineTo(x, H - pad); ctx.stroke();
+        ctx.beginPath(); ctx.moveTo(pad, y); ctx.lineTo(W - pad, y); ctx.stroke();
+      }
+
+      ctx.fillStyle = '#111827';
+      ctx.font = '12px Arial';
+      ctx.fillText('t', W - 16, H - 12);
+      ctx.fillText('x', 12, 16);
+
+      ctx.strokeStyle = '#2563eb';
+      ctx.lineWidth = 2.2;
+      ctx.beginPath();
+      rows.forEach((r, i) => {
+        const X = px(r.t), Y = py(r.x);
+        if (i === 0) ctx.moveTo(X, Y); else ctx.lineTo(X, Y);
+      });
+      ctx.stroke();
+
+      ctx.fillStyle = '#2563eb';
+      rows.forEach(r => {
+        ctx.beginPath();
+        ctx.arc(px(r.t), py(r.x), 3, 0, 2 * Math.PI);
+        ctx.fill();
+      });
+
+      const exactRows = rows.filter(r => r.exactVal !== null && Number.isFinite(r.exactVal));
+      if (exactRows.length > 0) {
+        ctx.strokeStyle = '#dc2626';
+        ctx.lineWidth = 2;
+        ctx.beginPath();
+        exactRows.forEach((r, i) => {
+          const X = px(r.t), Y = py(r.exactVal);
+          if (i === 0) ctx.moveTo(X, Y); else ctx.lineTo(X, Y);
+        });
+        ctx.stroke();
+      }
+
+      ctx.fillStyle = '#111827';
+      ctx.fillRect(W - 220, 14, 200, exactRows.length ? 44 : 24);
+      ctx.fillStyle = '#ffffff';
+      ctx.fillText('Azul: Euler', W - 205, 30);
+      if (exactRows.length) ctx.fillText('Rojo: solución exacta', W - 205, 48);
+    }
+
+    function exportCSV(rows) {
+      if (!rows.length) {
+        setStatus('Primero debes calcular.', 'warn');
+        return;
+      }
+      const header = ['k','t_k','x_k','f(t_k,x_k)','x_exacta(t_k)','error_global','error_local'];
+      const lines = [header.join(',')];
+      rows.forEach(r => {
+        lines.push([
+          r.k,
+          r.t,
+          r.x,
+          r.fx,
+          r.exactVal ?? '',
+          r.globalErr ?? '',
+          r.localErr ?? ''
+        ].join(','));
+      });
+      const blob = new Blob([lines.join('\n')], { type: 'text/csv;charset=utf-8;' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'tabla_euler.csv';
+      a.click();
+      URL.revokeObjectURL(url);
+    }
+
+    function run() {
+      try {
+        const fexpr = $('fexpr').value.trim();
+        const t0 = Number($('t0').value);
+        const x0 = Number($('x0').value);
+        const h = Number($('h').value);
+        const n = Number($('n').value);
+        const digits = Number($('digits').value);
+        const roundMode = $('roundMode').value;
+        const exactExpr = $('exactExpr').value.trim();
+
+        if (!fexpr) throw new Error('Debes ingresar f(t,x).');
+        if (!Number.isFinite(t0) || !Number.isFinite(x0) || !Number.isFinite(h) || h === 0) throw new Error('Revisa t₀, x₀ y h.');
+        if (!Number.isInteger(n) || n < 0) throw new Error('n debe ser un entero no negativo.');
+        if (!Number.isInteger(digits) || digits < 0) throw new Error('δ debe ser un entero no negativo.');
+
+        const f = compileExpression(fexpr, ['t', 'x']);
+        let exactFn = null;
+        if (exactExpr) {
+          const exactCompiled = compileExpression(exactExpr, ['t']);
+          exactFn = (t) => exactCompiled(t);
+        }
+
+        const rows = eulerIteration(f, t0, x0, h, n, digits, roundMode, exactFn);
+        state.rows = rows;
+        state.exactEnabled = !!exactFn;
+
+        updateSummary(rows);
+        updateTable(rows);
+        drawPlot(rows);
+
+        const last = rows[rows.length - 1];
+        setStatus(`Cálculo completado. Se obtuvieron ${rows.length} nodos desde t=${formatNum(rows[0].t)} hasta t=${formatNum(last.t)}.`, 'good');
+      } catch (err) {
+        console.error(err);
+        setStatus('Error: ' + err.message, 'warn');
+      }
+    }
+
+    $('runBtn').addEventListener('click', run);
+    $('csvBtn').addEventListener('click', () => exportCSV(state.rows));
+
+    run();
+  </script>
+</body>
+</html>
