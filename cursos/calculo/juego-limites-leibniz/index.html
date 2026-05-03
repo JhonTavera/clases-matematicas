@@ -1,0 +1,993 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Leibniz clasifica límites</title>
+  <script>
+    window.MathJax = {
+      tex: { inlineMath: [['\\(', '\\)'], ['$', '$']] },
+      chtml: { scale: 1.18, matchFontHeight: false },
+      startup: { typeset: false }
+    };
+  </script>
+  <script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"></script>
+  <style>
+    :root {
+      --ink: #17140f;
+      --ink-soft: rgba(23, 20, 15, .72);
+      --paper: rgba(255, 253, 246, .9);
+      --paper-strong: rgba(255, 252, 241, .96);
+      --line: rgba(32, 27, 20, .22);
+      --shadow: 0 18px 45px rgba(25, 20, 14, .22);
+      --hud-h: 68px;
+      --controls-h: 214px;
+      --button-size: clamp(70px, 8.1vw, 112px);
+    }
+
+    * { box-sizing: border-box; }
+
+    html,
+    body { height: 100%; }
+
+    body {
+      margin: 0;
+      overflow: hidden;
+      color: var(--ink);
+      font-family: "Palatino Linotype", "Book Antiqua", Palatino, Georgia, serif;
+      background-color: #f8f4ec;
+    }
+
+    button {
+      font: inherit;
+      border: 0;
+      cursor: pointer;
+      touch-action: manipulation;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    .game-shell {
+      position: relative;
+      height: 100vh;
+      min-height: 620px;
+      display: grid;
+      grid-template-rows: var(--hud-h) 1fr var(--controls-h);
+      isolation: isolate;
+      background-image: url("assets/fondo.png");
+      background-size: cover;
+      background-position: center bottom;
+      background-repeat: no-repeat;
+    }
+
+    .game-shell::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      z-index: -1;
+      background: linear-gradient(90deg, rgba(255,255,255,.04), rgba(255,255,255,.2) 42%, rgba(255,255,255,.06));
+      pointer-events: none;
+    }
+
+    .hud {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(92px, 1fr));
+      gap: 10px;
+      align-items: center;
+      padding: 10px 18px;
+      z-index: 6;
+      background: linear-gradient(180deg, rgba(255,255,255,.74), rgba(255,255,255,.28));
+      backdrop-filter: blur(3px);
+    }
+
+    .hud-item {
+      min-width: 0;
+      height: 48px;
+      border: 1px solid rgba(37, 31, 24, .18);
+      border-radius: 6px;
+      background: rgba(255, 253, 247, .72);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      padding: 8px 12px;
+      box-shadow: 0 8px 18px rgba(25, 20, 14, .09);
+    }
+
+    .hud-label {
+      color: var(--ink-soft);
+      font-size: .76rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: .04em;
+      font-style: normal;
+    }
+
+    .hud-value {
+      color: #1d1a15;
+      font-size: clamp(1.22rem, 2.1vw, 1.66rem);
+      font-weight: 950;
+      white-space: nowrap;
+    }
+
+    .stage {
+      min-height: 0;
+      position: relative;
+      overflow: hidden;
+      z-index: 1;
+    }
+
+    .leibniz-zone {
+      position: absolute;
+      left: 0;
+      top: 0;
+      bottom: -1px;
+      width: min(48vw, 640px);
+      display: flex;
+      align-items: flex-end;
+      justify-content: flex-start;
+      pointer-events: none;
+      z-index: 1;
+    }
+
+    .portrait-frame {
+      height: 100%;
+      width: 100%;
+      display: flex;
+      align-items: flex-end;
+      justify-content: flex-start;
+      overflow: visible;
+    }
+
+    #leibnizImage {
+      height: 100%;
+      width: auto;
+      max-width: none;
+      object-fit: contain;
+      object-position: left bottom;
+      mix-blend-mode: multiply;
+      opacity: .93;
+      -webkit-mask-image: linear-gradient(90deg, #000 0%, rgba(0,0,0,.92) 46%, rgba(0,0,0,.5) 66%, transparent 92%);
+      mask-image: linear-gradient(90deg, #000 0%, rgba(0,0,0,.92) 46%, rgba(0,0,0,.5) 66%, transparent 92%);
+      filter: drop-shadow(18px 18px 18px rgba(20, 17, 12, .22));
+      user-select: none;
+      transform-origin: left bottom;
+      transition: transform .16s ease, filter .16s ease;
+    }
+
+    #leibnizImage.mouth-open {
+      transform: translateY(-5px) scale(1.015);
+      filter: drop-shadow(20px 22px 22px rgba(20, 17, 12, .26));
+    }
+
+    .level-ribbon {
+      position: absolute;
+      left: 18px;
+      top: 16px;
+      z-index: 5;
+      display: inline-flex;
+      align-items: center;
+      height: 32px;
+      padding: 0 12px;
+      border-radius: 6px;
+      background: rgba(255, 253, 246, .78);
+      border: 1px solid rgba(37, 31, 24, .2);
+      font-weight: 900;
+      font-style: italic;
+      color: #201914;
+      box-shadow: 0 10px 24px rgba(25, 20, 14, .12);
+    }
+
+    .fall-zone {
+      position: absolute;
+      inset: 0;
+      overflow: hidden;
+      z-index: 2;
+      background: transparent;
+    }
+
+    .limit-card {
+      position: absolute;
+      top: 0;
+      min-width: 220px;
+      max-width: min(820px, calc(100% - 22px));
+      padding: 18px 22px;
+      border-radius: 999px;
+      border: 2px solid rgba(35, 28, 20, .28);
+      background:
+        radial-gradient(circle at 35% 28%, rgba(255, 255, 255, .96), rgba(255, 252, 241, .91) 64%, rgba(238, 231, 214, .89)),
+        rgba(255, 252, 241, .93);
+      box-shadow: var(--shadow);
+      text-align: center;
+      color: var(--ink);
+      font-style: italic;
+      will-change: transform;
+      z-index: 3;
+      opacity: 0;
+      transition: opacity .18s ease;
+    }
+
+    .limit-card.rendered { opacity: 1; }
+    .limit-card.cleared { animation: popOut .22s ease forwards; }
+
+    .limit-math {
+      line-height: 1.15;
+      overflow-wrap: anywhere;
+      font-family: "Palatino Linotype", "Book Antiqua", Palatino, Georgia, serif;
+      font-style: italic;
+      overflow: hidden;
+    }
+
+    .limit-math mjx-container {
+      margin: 0 !important;
+      font-size: clamp(1.45rem, 2.35vw, 2.42rem) !important;
+    }
+
+    .limit-math mjx-container[jax="CHTML"] {
+      outline: none;
+    }
+
+    .controls {
+      position: relative;
+      z-index: 7;
+      display: grid;
+      grid-template-columns: minmax(250px, 1fr) minmax(250px, 1fr);
+      align-items: center;
+      gap: clamp(20px, 8vw, 140px);
+      padding: 8px clamp(18px, 5vw, 72px) 18px;
+      background: linear-gradient(180deg, rgba(255,255,255,0), rgba(255,255,255,.38) 40%, rgba(255,255,255,.72));
+    }
+
+    .control-cluster {
+      display: grid;
+      grid-template-columns: repeat(3, var(--button-size));
+      grid-template-rows: repeat(2, var(--button-size));
+      gap: clamp(8px, 1vw, 14px);
+      align-items: center;
+      justify-content: center;
+    }
+
+    .control-cluster.wasd { justify-self: end; }
+    .control-cluster.arrows { justify-self: start; }
+
+    .answer-btn {
+      position: relative;
+      width: var(--button-size);
+      height: var(--button-size);
+      padding: 0;
+      border-radius: 12px;
+      background: transparent;
+      display: grid;
+      place-items: center;
+      filter: drop-shadow(0 10px 10px rgba(25, 20, 14, .18));
+      transition: transform .1s ease, filter .1s ease;
+    }
+
+    .answer-btn:hover,
+    .answer-btn:focus-visible {
+      outline: 0;
+      transform: translateY(-3px) scale(1.025);
+      filter: drop-shadow(0 15px 14px rgba(25, 20, 14, .24));
+    }
+
+    .answer-btn.active {
+      transform: translateY(2px) scale(.95);
+      filter: drop-shadow(0 5px 7px rgba(25, 20, 14, .16));
+    }
+
+    .answer-btn img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      display: block;
+      border-radius: 12px;
+      pointer-events: none;
+    }
+
+    .key-badge {
+      position: absolute;
+      right: -5px;
+      bottom: -5px;
+      min-width: 28px;
+      height: 28px;
+      display: grid;
+      place-items: center;
+      border-radius: 50%;
+      border: 1px solid rgba(37, 31, 24, .22);
+      background: rgba(255, 253, 246, .9);
+      color: #15120e;
+      font-family: Georgia, serif;
+      font-size: .92rem;
+      font-weight: 950;
+      font-style: normal;
+      box-shadow: 0 6px 12px rgba(25, 20, 14, .18);
+      pointer-events: none;
+    }
+
+    .key-w, .key-up { grid-column: 2; grid-row: 1; }
+    .key-a, .key-left { grid-column: 1; grid-row: 2; }
+    .key-s, .key-down { grid-column: 2; grid-row: 2; }
+    .key-d, .key-right { grid-column: 3; grid-row: 2; }
+
+    .overlay {
+      position: fixed;
+      inset: 0;
+      display: none;
+      place-items: center;
+      padding: 18px;
+      background: rgba(30, 27, 22, .46);
+      backdrop-filter: blur(5px);
+      z-index: 20;
+    }
+
+    .overlay.show { display: grid; }
+
+    .modal {
+      width: min(620px, 100%);
+      border-radius: 12px;
+      background: rgba(255, 253, 247, .88);
+      border: 1px solid rgba(37, 31, 24, .2);
+      box-shadow: 0 28px 80px rgba(0,0,0,.26);
+      padding: clamp(22px, 5vw, 38px);
+      text-align: center;
+    }
+
+    .modal h1 {
+      margin: 0 0 10px;
+      font-size: clamp(2.15rem, 6vw, 4.7rem);
+      line-height: .94;
+      color: #211b15;
+      letter-spacing: 0;
+      font-style: italic;
+      font-weight: 950;
+    }
+
+    .modal p {
+      margin: 0 auto 22px;
+      max-width: 46ch;
+      color: rgba(27, 23, 18, .74);
+      font-size: clamp(1.02rem, 2.2vw, 1.2rem);
+      line-height: 1.5;
+      font-style: italic;
+    }
+
+    .primary-action {
+      min-width: 210px;
+      height: 58px;
+      padding: 0 24px;
+      border-radius: 8px;
+      background: #1d1a15;
+      color: #fffaf0;
+      font-size: 1.12rem;
+      font-weight: 950;
+      font-style: italic;
+      box-shadow: 0 12px 0 rgba(25, 20, 14, .16);
+    }
+
+    .toast {
+      position: absolute;
+      right: 18px;
+      top: 18px;
+      z-index: 6;
+      max-width: min(420px, calc(100% - 36px));
+      border-radius: 8px;
+      padding: 12px 14px;
+      color: #fffaf0;
+      background: rgba(24, 20, 15, .82);
+      box-shadow: 0 18px 44px rgba(25, 20, 14, .24);
+      font-weight: 850;
+      font-style: italic;
+      opacity: 0;
+      transform: translateY(-8px);
+      pointer-events: none;
+      transition: opacity .2s ease, transform .2s ease;
+    }
+
+    .toast.show { opacity: 1; transform: translateY(0); }
+
+    .music-toggle {
+      position: absolute;
+      right: 18px;
+      top: calc(var(--hud-h) + 12px);
+      z-index: 8;
+      width: 46px;
+      height: 46px;
+      border-radius: 50%;
+      border: 1px solid rgba(37, 31, 24, .22);
+      background: rgba(255, 253, 246, .82);
+      color: #1d1a15;
+      display: grid;
+      place-items: center;
+      font-size: 1.35rem;
+      font-weight: 950;
+      box-shadow: 0 10px 22px rgba(25, 20, 14, .16);
+      backdrop-filter: blur(3px);
+    }
+
+    .music-toggle.off { opacity: .55; }
+
+    @keyframes popOut {
+      to { opacity: 0; transform: translateY(var(--y, 0px)) scale(.74); }
+    }
+
+    @media (max-width: 1000px) {
+      :root { --controls-h: 198px; --button-size: clamp(66px, 11vw, 94px); }
+      .controls { gap: clamp(12px, 4vw, 52px); padding-inline: 14px; }
+      .leibniz-zone { width: 48vw; }
+      .limit-card { min-width: 210px; padding: 16px 18px; }
+      .limit-math mjx-container { font-size: clamp(1.25rem, 3vw, 2rem) !important; }
+    }
+
+    @media (max-width: 700px) {
+      :root { --hud-h: 112px; --controls-h: 208px; --button-size: clamp(54px, 16vw, 76px); }
+      .game-shell { min-height: 700px; }
+      .hud { grid-template-columns: repeat(2, minmax(0, 1fr)); padding: 8px; gap: 8px; }
+      .hud-item { height: 44px; padding: 7px 9px; }
+      .hud-label { font-size: .68rem; }
+      .stage { overflow: hidden; }
+      .leibniz-zone { width: 62vw; opacity: .8; }
+      #leibnizImage { height: 100%; transform: translateX(-18%); }
+      #leibnizImage.mouth-open { transform: translateX(-18%) translateY(-4px) scale(1.015); }
+      .level-ribbon { left: 10px; top: 10px; }
+      .controls { grid-template-columns: 1fr 1fr; gap: 8px; padding: 4px 8px 12px; }
+      .control-cluster { gap: 5px; }
+      .control-cluster.wasd { justify-self: center; }
+      .control-cluster.arrows { justify-self: center; }
+      .key-badge { min-width: 22px; height: 22px; font-size: .72rem; right: -3px; bottom: -3px; }
+      .limit-card { min-width: min(210px, calc(100vw - 18px)); padding: 13px 15px; }
+      .limit-math mjx-container { font-size: clamp(1.08rem, 5vw, 1.55rem) !important; }
+    }
+
+    @media (max-width: 430px) {
+      :root { --controls-h: 192px; --button-size: clamp(48px, 15vw, 64px); }
+      .controls { gap: 2px; }
+      .control-cluster { gap: 3px; }
+      .limit-card { min-width: min(190px, calc(100vw - 14px)); max-width: calc(100% - 12px); }
+    }
+  </style>
+</head>
+<body>
+  <div class="game-shell" aria-label="Juego de clasificación de límites">
+    <header class="hud" aria-live="polite">
+      <div class="hud-item"><span class="hud-label">Vidas</span><span class="hud-value" id="vidasHUD">5</span></div>
+      <div class="hud-item"><span class="hud-label">Puntos</span><span class="hud-value" id="puntosHUD">0 / 35</span></div>
+      <div class="hud-item"><span class="hud-label">Nivel</span><span class="hud-value" id="nivelHUD">1</span></div>
+      <div class="hud-item"><span class="hud-label">Racha</span><span class="hud-value" id="rachaHUD">0 / 5</span></div>
+    </header>
+
+    <button class="music-toggle" id="musicToggle" type="button" aria-label="Pausar música" title="Música">♪</button>
+
+    <main class="stage">
+      <section class="leibniz-zone" aria-label="Leibniz">
+        <div class="level-ribbon" id="levelRibbon">Nivel 1</div>
+        <div class="portrait-frame">
+          <img id="leibnizImage" alt="Retrato de Leibniz" draggable="false">
+        </div>
+      </section>
+      <section class="fall-zone" id="fallZone" aria-label="Área de caída de límites">
+        <div class="toast" id="toast" role="status" aria-live="polite"></div>
+      </section>
+    </main>
+
+    <nav class="controls" id="controls" aria-label="Botones de respuesta"></nav>
+  </div>
+
+  <section class="overlay show" id="startOverlay" aria-modal="true" role="dialog">
+    <div class="modal">
+      <h1>Leibniz clasifica límites</h1>
+      <p>Observa las fórmulas que caen y clasifícalas antes de que lleguen al fondo.</p>
+      <button class="primary-action" id="startButton">Iniciar juego</button>
+    </div>
+  </section>
+
+  <section class="overlay" id="endOverlay" aria-modal="true" role="dialog">
+    <div class="modal">
+      <h1 id="endTitle">Fin del juego</h1>
+      <p id="endMessage">Tu partida terminó.</p>
+      <button class="primary-action" id="restartButton">Reiniciar</button>
+    </div>
+  </section>
+
+  <script>
+    const LEIBNIZ_IMAGES = {
+      1: { closed: "assets/11.png", open: "assets/12.png" },
+      2: { closed: "assets/21.png", open: "assets/22.png" },
+      3: { closed: "assets/31.png", open: "assets/32.png" }
+    };
+
+    const BUTTON_IMAGES = {
+      "+infinito": "assets/infinito.png",
+      "-infinito": "assets/menos-infinito.png",
+      "0-": "assets/0-minus.png",
+      "0+": "assets/0-plus.png",
+      "NE": "assets/ne.png",
+      "-L": "assets/menos-l.png",
+      "0": "assets/0.png",
+      "L": "assets/l.png"
+    };
+
+    const MUSIC_TRACKS = [
+      { title: "Bach goes Metal", src: "assets/bach-goes-metal.mp3" },
+      { title: "Beethoven 5th Metal", src: "assets/beethoven-5-metal.mp3" },
+      { title: "Heavy Metal Moonlight Sonata", src: "assets/moonlight-sonata-metal.mp3" }
+    ];
+    const LIMITES = [{"id":"Ej-a","latex":"\\lim_{x\\to 2}\\frac{(x-2)^2}{x^2-4}","respuesta":"0","dificultad":"bajo"},{"id":"Ej-b","latex":"\\lim_{x\\to 2}\\frac{x-2}{x^2-4}","respuesta":"L","dificultad":"bajo"},{"id":"Ej-c","latex":"\\lim_{x\\to 2^+}\\frac{x-3}{x^2-4}","respuesta":"-infinito","dificultad":"bajo"},{"id":"Ej-d","latex":"\\lim_{x\\to 2^-}\\frac{x-3}{x^2-4}","respuesta":"+infinito","dificultad":"bajo"},{"id":"Ej-e","latex":"\\lim_{x\\to 2}\\frac{x-3}{x^2-4}","respuesta":"NE","dificultad":"bajo"},{"id":"Ej-f","latex":"\\lim_{x\\to 2}\\frac{2-x}{(x-2)^3}","respuesta":"-infinito","dificultad":"bajo"},{"id":"13a","latex":"\\lim_{x\\to\\infty}\\frac{2x+3}{5x+7}","respuesta":"L","dificultad":"bajo"},{"id":"13b","latex":"\\lim_{x\\to-\\infty}\\frac{2x+3}{5x+7}","respuesta":"L","dificultad":"bajo"},{"id":"14a","latex":"\\lim_{x\\to\\infty}\\frac{2x^3+7}{x^3-x^2+x+7}","respuesta":"L","dificultad":"bajo"},{"id":"14b","latex":"\\lim_{x\\to-\\infty}\\frac{2x^3+7}{x^3-x^2+x+7}","respuesta":"L","dificultad":"bajo"},{"id":"15a","latex":"\\lim_{x\\to\\infty}\\frac{x+1}{x^2+3}","respuesta":"0+","dificultad":"bajo"},{"id":"15b","latex":"\\lim_{x\\to-\\infty}\\frac{x+1}{x^2+3}","respuesta":"0-","dificultad":"bajo"},{"id":"16a","latex":"\\lim_{x\\to\\infty}\\frac{3x+7}{x^2-2}","respuesta":"0+","dificultad":"bajo"},{"id":"16b","latex":"\\lim_{x\\to-\\infty}\\frac{3x+7}{x^2-2}","respuesta":"0-","dificultad":"bajo"},{"id":"17a","latex":"\\lim_{x\\to\\infty}\\frac{7x^3}{x^3-3x^2+6x}","respuesta":"L","dificultad":"bajo"},{"id":"17b","latex":"\\lim_{x\\to-\\infty}\\frac{7x^3}{x^3-3x^2+6x}","respuesta":"L","dificultad":"bajo"},{"id":"18a","latex":"\\lim_{x\\to\\infty}\\frac{1}{x^3-4x+1}","respuesta":"0+","dificultad":"bajo"},{"id":"18b","latex":"\\lim_{x\\to-\\infty}\\frac{1}{x^3-4x+1}","respuesta":"0-","dificultad":"bajo"},{"id":"19a","latex":"\\lim_{x\\to\\infty}\\frac{10x^5+x^4+31}{x^6}","respuesta":"0+","dificultad":"bajo"},{"id":"19b","latex":"\\lim_{x\\to-\\infty}\\frac{10x^5+x^4+31}{x^6}","respuesta":"0-","dificultad":"bajo"},{"id":"20a","latex":"\\lim_{x\\to\\infty}\\frac{9x^4+x}{2x^4+5x^2-x+6}","respuesta":"L","dificultad":"bajo"},{"id":"20b","latex":"\\lim_{x\\to-\\infty}\\frac{9x^4+x}{2x^4+5x^2-x+6}","respuesta":"L","dificultad":"bajo"},{"id":"21a","latex":"\\lim_{x\\to\\infty}\\frac{-2x^3-2x+3}{3x^3+3x^2-5x}","respuesta":"-L","dificultad":"bajo"},{"id":"21b","latex":"\\lim_{x\\to-\\infty}\\frac{-2x^3-2x+3}{3x^3+3x^2-5x}","respuesta":"-L","dificultad":"bajo"},{"id":"22a","latex":"\\lim_{x\\to\\infty}\\frac{-x^4}{x^4-7x^3+7x^2+9}","respuesta":"-L","dificultad":"bajo"},{"id":"22b","latex":"\\lim_{x\\to-\\infty}\\frac{-x^4}{x^4-7x^3+7x^2+9}","respuesta":"-L","dificultad":"bajo"},{"id":"23","latex":"\\lim_{x\\to\\infty}\\sqrt{\\frac{8x^2-3}{2x^2+x}}","respuesta":"L","dificultad":"medio"},{"id":"24","latex":"\\lim_{x\\to-\\infty}\\left(\\frac{x^2+x-1}{8x^2-3}\\right)^{1/3}","respuesta":"L","dificultad":"medio"},{"id":"25","latex":"\\lim_{x\\to-\\infty}\\left(\\frac{1-x^3}{x^2+7x}\\right)^5","respuesta":"+infinito","dificultad":"medio"},{"id":"26","latex":"\\lim_{x\\to\\infty}\\sqrt{\\frac{x^2-5x}{x^3+x-2}}","respuesta":"0+","dificultad":"medio"},{"id":"27","latex":"\\lim_{x\\to\\infty}\\frac{2\\sqrt{x}+x^{-1}}{3x-7}","respuesta":"0+","dificultad":"medio"},{"id":"28","latex":"\\lim_{x\\to\\infty}\\frac{2+\\sqrt{x}}{2-\\sqrt{x}}","respuesta":"-L","dificultad":"medio"},{"id":"29","latex":"\\lim_{x\\to-\\infty}\\frac{\\sqrt[3]{x}-\\sqrt[5]{x}}{\\sqrt[3]{x}+\\sqrt[5]{x}}","respuesta":"L","dificultad":"alto"},{"id":"30","latex":"\\lim_{x\\to\\infty}\\frac{x^{-1}+x^{-4}}{x^{-2}-x^{-3}}","respuesta":"+infinito","dificultad":"medio"},{"id":"31","latex":"\\lim_{x\\to\\infty}\\frac{2x^{5/3}-x^{1/3}+7}{x^{8/5}+3x+\\sqrt{x}}","respuesta":"+infinito","dificultad":"alto"},{"id":"32","latex":"\\lim_{x\\to-\\infty}\\frac{\\sqrt[3]{x}-5x+3}{2x+x^{2/3}-4}","respuesta":"-L","dificultad":"alto"},{"id":"33","latex":"\\lim_{x\\to\\infty}\\frac{\\sqrt{x^2+1}}{x+1}","respuesta":"L","dificultad":"medio"},{"id":"34","latex":"\\lim_{x\\to-\\infty}\\frac{\\sqrt{x^2+1}}{x+1}","respuesta":"-L","dificultad":"medio"},{"id":"35","latex":"\\lim_{x\\to\\infty}\\frac{x-3}{\\sqrt{4x^2+25}}","respuesta":"L","dificultad":"medio"},{"id":"36","latex":"\\lim_{x\\to-\\infty}\\frac{4-3x^3}{\\sqrt{x^6+9}}","respuesta":"L","dificultad":"alto"},{"id":"37","latex":"\\lim_{x\\to0^+}\\frac{1}{3x}","respuesta":"+infinito","dificultad":"bajo"},{"id":"38","latex":"\\lim_{x\\to0^-}\\frac{5}{2x}","respuesta":"-infinito","dificultad":"bajo"},{"id":"39","latex":"\\lim_{x\\to2^-}\\frac{3}{x-2}","respuesta":"-infinito","dificultad":"bajo"},{"id":"40","latex":"\\lim_{x\\to3^+}\\frac{1}{x-3}","respuesta":"+infinito","dificultad":"bajo"},{"id":"41","latex":"\\lim_{x\\to-8^+}\\frac{2x}{x+8}","respuesta":"-infinito","dificultad":"bajo"},{"id":"42","latex":"\\lim_{x\\to-5^-}\\frac{3x}{2x+10}","respuesta":"+infinito","dificultad":"bajo"},{"id":"43","latex":"\\lim_{x\\to7}\\frac{4}{(x-7)^2}","respuesta":"+infinito","dificultad":"bajo"},{"id":"44","latex":"\\lim_{x\\to0}\\frac{-1}{x^2(x+1)}","respuesta":"-infinito","dificultad":"medio"},{"id":"45a","latex":"\\lim_{x\\to0^+}\\frac{2}{3x^{1/3}}","respuesta":"+infinito","dificultad":"medio"},{"id":"45b","latex":"\\lim_{x\\to0^-}\\frac{2}{3x^{1/3}}","respuesta":"-infinito","dificultad":"medio"},{"id":"46a","latex":"\\lim_{x\\to0^+}\\frac{2}{x^{1/5}}","respuesta":"+infinito","dificultad":"medio"},{"id":"46b","latex":"\\lim_{x\\to0^-}\\frac{2}{x^{1/5}}","respuesta":"-infinito","dificultad":"medio"},{"id":"47","latex":"\\lim_{x\\to0}\\frac{4}{x^{2/5}}","respuesta":"+infinito","dificultad":"medio"},{"id":"48","latex":"\\lim_{x\\to0}\\frac{1}{x^{2/3}}","respuesta":"+infinito","dificultad":"medio"},{"id":"49","latex":"\\lim_{x\\to(\\pi/2)^-}\\tan x","respuesta":"+infinito","dificultad":"medio"},{"id":"50","latex":"\\lim_{x\\to(-\\pi/2)^+}\\sec x","respuesta":"+infinito","dificultad":"medio"},{"id":"51","latex":"\\lim_{\\theta\\to0}(1+\\csc\\theta)","respuesta":"NE","dificultad":"medio"},{"id":"52","latex":"\\lim_{\\theta\\to0}(2-\\cot\\theta)","respuesta":"NE","dificultad":"medio"},{"id":"53a","latex":"\\lim_{x\\to2^+}\\frac{1}{x^2-4}","respuesta":"+infinito","dificultad":"bajo"},{"id":"53b","latex":"\\lim_{x\\to2^-}\\frac{1}{x^2-4}","respuesta":"-infinito","dificultad":"bajo"},{"id":"53c","latex":"\\lim_{x\\to-2^+}\\frac{1}{x^2-4}","respuesta":"-infinito","dificultad":"bajo"},{"id":"53d","latex":"\\lim_{x\\to-2^-}\\frac{1}{x^2-4}","respuesta":"+infinito","dificultad":"bajo"},{"id":"54a","latex":"\\lim_{x\\to1^+}\\frac{x}{x^2-1}","respuesta":"+infinito","dificultad":"bajo"},{"id":"54b","latex":"\\lim_{x\\to1^-}\\frac{x}{x^2-1}","respuesta":"-infinito","dificultad":"bajo"},{"id":"54c","latex":"\\lim_{x\\to-1^+}\\frac{x}{x^2-1}","respuesta":"+infinito","dificultad":"medio"},{"id":"54d","latex":"\\lim_{x\\to-1^-}\\frac{x}{x^2-1}","respuesta":"-infinito","dificultad":"medio"},{"id":"55a","latex":"\\lim_{x\\to0^+}\\left(\\frac{x^2}{2}-\\frac{1}{x}\\right)","respuesta":"-infinito","dificultad":"bajo"},{"id":"55b","latex":"\\lim_{x\\to0^-}\\left(\\frac{x^2}{2}-\\frac{1}{x}\\right)","respuesta":"+infinito","dificultad":"bajo"},{"id":"55c","latex":"\\lim_{x\\to\\sqrt[3]{2}}\\left(\\frac{x^2}{2}-\\frac{1}{x}\\right)","respuesta":"0","dificultad":"medio"},{"id":"55d","latex":"\\lim_{x\\to-1}\\left(\\frac{x^2}{2}-\\frac{1}{x}\\right)","respuesta":"L","dificultad":"bajo"},{"id":"56a","latex":"\\lim_{x\\to-2^+}\\frac{x^2-1}{2x+4}","respuesta":"+infinito","dificultad":"bajo"},{"id":"56b","latex":"\\lim_{x\\to-2^-}\\frac{x^2-1}{2x+4}","respuesta":"-infinito","dificultad":"bajo"},{"id":"56c","latex":"\\lim_{x\\to1^+}\\frac{x^2-1}{2x+4}","respuesta":"0+","dificultad":"bajo"},{"id":"56d","latex":"\\lim_{x\\to0^-}\\frac{x^2-1}{2x+4}","respuesta":"-L","dificultad":"bajo"},{"id":"57a","latex":"\\lim_{x\\to0^+}\\frac{x^2-3x+2}{x^3-2x^2}","respuesta":"-infinito","dificultad":"medio"},{"id":"57b","latex":"\\lim_{x\\to2^+}\\frac{x^2-3x+2}{x^3-2x^2}","respuesta":"L","dificultad":"medio"},{"id":"57c","latex":"\\lim_{x\\to2^-}\\frac{x^2-3x+2}{x^3-2x^2}","respuesta":"L","dificultad":"medio"},{"id":"57d","latex":"\\lim_{x\\to2}\\frac{x^2-3x+2}{x^3-2x^2}","respuesta":"L","dificultad":"medio"},{"id":"57e","latex":"\\lim_{x\\to0}\\frac{x^2-3x+2}{x^3-2x^2}","respuesta":"-infinito","dificultad":"alto"},{"id":"58a","latex":"\\lim_{x\\to2^+}\\frac{x^2-3x+2}{x^3-4x}","respuesta":"L","dificultad":"medio"},{"id":"58b","latex":"\\lim_{x\\to-2^+}\\frac{x^2-3x+2}{x^3-4x}","respuesta":"+infinito","dificultad":"medio"},{"id":"58c","latex":"\\lim_{x\\to0^-}\\frac{x^2-3x+2}{x^3-4x}","respuesta":"+infinito","dificultad":"medio"},{"id":"58d","latex":"\\lim_{x\\to1^+}\\frac{x^2-3x+2}{x^3-4x}","respuesta":"0+","dificultad":"medio"},{"id":"58e","latex":"\\lim_{x\\to0}\\frac{x^2-3x+2}{x^3-4x}","respuesta":"NE","dificultad":"alto"},{"id":"59a","latex":"\\lim_{t\\to0^+}\\left(2-\\frac{3}{t^{1/3}}\\right)","respuesta":"-infinito","dificultad":"medio"},{"id":"59b","latex":"\\lim_{t\\to0^-}\\left(2-\\frac{3}{t^{1/3}}\\right)","respuesta":"+infinito","dificultad":"medio"},{"id":"60a","latex":"\\lim_{t\\to0^+}\\left(\\frac{1}{t^{3/5}}+7\\right)","respuesta":"+infinito","dificultad":"medio"},{"id":"60b","latex":"\\lim_{t\\to0}\\left(\\frac{1}{t^{3/5}}+7\\right)","respuesta":"NE","dificultad":"alto"},{"id":"61a","latex":"\\lim_{x\\to0^+}\\left(\\frac{1}{x^{2/3}}+\\frac{2}{(x-1)^{2/3}}\\right)","respuesta":"+infinito","dificultad":"medio"},{"id":"61b","latex":"\\lim_{x\\to0^-}\\left(\\frac{1}{x^{2/3}}+\\frac{2}{(x-1)^{2/3}}\\right)","respuesta":"+infinito","dificultad":"medio"},{"id":"61c","latex":"\\lim_{x\\to1^+}\\left(\\frac{1}{x^{2/3}}+\\frac{2}{(x-1)^{2/3}}\\right)","respuesta":"+infinito","dificultad":"medio"},{"id":"61d","latex":"\\lim_{x\\to1^-}\\left(\\frac{1}{x^{2/3}}+\\frac{2}{(x-1)^{2/3}}\\right)","respuesta":"+infinito","dificultad":"medio"},{"id":"62a","latex":"\\lim_{x\\to0^+}\\left(\\frac{1}{x^{1/3}}-\\frac{1}{(x-1)^{4/3}}\\right)","respuesta":"+infinito","dificultad":"medio"},{"id":"62b","latex":"\\lim_{x\\to0^-}\\left(\\frac{1}{x^{1/3}}-\\frac{1}{(x-1)^{4/3}}\\right)","respuesta":"-infinito","dificultad":"medio"},{"id":"62c","latex":"\\lim_{x\\to1^+}\\left(\\frac{1}{x^{1/3}}-\\frac{1}{(x-1)^{4/3}}\\right)","respuesta":"-infinito","dificultad":"medio"},{"id":"62d","latex":"\\lim_{x\\to1^-}\\left(\\frac{1}{x^{1/3}}-\\frac{1}{(x-1)^{4/3}}\\right)","respuesta":"-infinito","dificultad":"medio"},{"id":"80","latex":"\\lim_{x\\to\\infty}(\\sqrt{x+9}-\\sqrt{x+4})","respuesta":"0+","dificultad":"medio"},{"id":"81","latex":"\\lim_{x\\to\\infty}(\\sqrt{x^2+25}-\\sqrt{x^2-1})","respuesta":"0+","dificultad":"medio"},{"id":"82","latex":"\\lim_{x\\to-\\infty}(\\sqrt{x^2+3}+x)","respuesta":"0+","dificultad":"alto"},{"id":"83","latex":"\\lim_{x\\to-\\infty}(2x+\\sqrt{4x^2+3x-2})","respuesta":"-L","dificultad":"alto"},{"id":"84","latex":"\\lim_{x\\to\\infty}(\\sqrt{9x^2-x}-3x)","respuesta":"-L","dificultad":"alto"},{"id":"9","latex":"\\lim_{x\\to\\infty}\\frac{\\sin(2x)}{x}","respuesta":"0","dificultad":"medio"},{"id":"10","latex":"\\lim_{\\theta\\to-\\infty}\\frac{\\cos\\theta}{3\\theta}","respuesta":"0","dificultad":"medio"},{"id":"11","latex":"\\lim_{t\\to-\\infty}\\frac{2-t+\\sin t}{t+\\cos t}","respuesta":"-L","dificultad":"medio"},{"id":"12","latex":"\\lim_{r\\to\\infty}\\frac{r+\\sin r}{2r+7-5\\sin r}","respuesta":"L","dificultad":"medio"},{"id":"17","latex":"\\lim_{x\\to1}\\frac{x^{1/3}-1}{\\sqrt{x}-1}","respuesta":"L","dificultad":"medio"},{"id":"18","latex":"\\lim_{x\\to64}\\frac{x^{2/3}-16}{\\sqrt[4]{x}-8}","respuesta":"0","dificultad":"medio"},{"id":"19","latex":"\\lim_{x\\to0}\\frac{\\tan(2x)}{\\tan(\\pi x)}","respuesta":"L","dificultad":"medio"},{"id":"20","latex":"\\lim_{x\\to\\pi^-}\\csc x","respuesta":"+infinito","dificultad":"medio"},{"id":"21","latex":"\\lim_{x\\to\\pi}\\sin\\left(\\frac{x}{2}+\\sin x\\right)","respuesta":"L","dificultad":"medio"},{"id":"22","latex":"\\lim_{x\\to\\pi}\\cos^2(x-\\tan x)","respuesta":"L","dificultad":"medio"},{"id":"23t","latex":"\\lim_{x\\to0}\\frac{8x}{3\\sin x-x}","respuesta":"L","dificultad":"medio"},{"id":"24t","latex":"\\lim_{x\\to0}\\frac{\\cos(2x)-1}{\\sin x}","respuesta":"0","dificultad":"alto"},{"id":"94","latex":"\\lim_{x\\to0^+}\\frac{1}{x}","respuesta":"+infinito","dificultad":"bajo"},{"id":"95","latex":"\\lim_{x\\to0^-}\\frac{1}{x}","respuesta":"-infinito","dificultad":"bajo"},{"id":"96","latex":"\\lim_{x\\to2^-}\\frac{1}{x-2}","respuesta":"-infinito","dificultad":"bajo"},{"id":"97","latex":"\\lim_{x\\to2^+}\\frac{1}{x-2}","respuesta":"+infinito","dificultad":"bajo"},{"id":"98","latex":"\\lim_{x\\to1^-}\\frac{1}{1-x^2}","respuesta":"+infinito","dificultad":"bajo"}];
+
+    const ANSWERS = [
+      { answer: "+infinito", label: "+∞", key: "↑", code: "ArrowUp", cluster: "arrows", position: "key-up" },
+      { answer: "-infinito", label: "-∞", key: "↓", code: "ArrowDown", cluster: "arrows", position: "key-down" },
+      { answer: "0-", label: "0⁻", key: "←", code: "ArrowLeft", cluster: "arrows", position: "key-left" },
+      { answer: "0+", label: "0⁺", key: "→", code: "ArrowRight", cluster: "arrows", position: "key-right" },
+      { answer: "NE", label: "NE", key: "W", code: "KeyW", cluster: "wasd", position: "key-w" },
+      { answer: "-L", label: "-L", key: "A", code: "KeyA", cluster: "wasd", position: "key-a" },
+      { answer: "0", label: "0", key: "S", code: "KeyS", cluster: "wasd", position: "key-s" },
+      { answer: "L", label: "L", key: "D", code: "KeyD", cluster: "wasd", position: "key-d" }
+    ];
+
+    const LEVELS = {
+      1: { spawnInterval: 24000, fallDuration: 100, difficulties: ["bajo", "bajo", "bajo", "medio"] },
+      2: { spawnInterval: 12000, fallDuration: 50, difficulties: ["medio", "medio", "medio", "bajo"] },
+      3: { spawnInterval: 6000, fallDuration: 25, difficulties: ["alto", "alto", "alto", "medio"] }
+    };
+
+    const MAX_ACTIVE_LIMITS = 4;
+    const EMPTY_SCREEN_DELAY = 2000;
+    const WIN_SCORE = 35;
+    const STARTING_LIVES = 5;
+    const MOUTH_OPEN_MS = 430;
+
+    const gameState = {
+      vidas: STARTING_LIVES,
+      puntos: 0,
+      nivel: 1,
+      racha: 0,
+      limitesActivos: [],
+      ultimoTiempoAparicion: 0,
+      estado: "inicio",
+      animationFrameId: null,
+      lastFrameTime: 0,
+      emptySince: null,
+      mouthTimerId: null,
+      musicAudio: null,
+      musicIndex: 0,
+      musicEnabled: true,
+      musicStarted: false,
+      nextLimitId: 1
+    };
+
+    const fallZone = document.getElementById("fallZone");
+    const controls = document.getElementById("controls");
+    const leibnizImage = document.getElementById("leibnizImage");
+    const startOverlay = document.getElementById("startOverlay");
+    const endOverlay = document.getElementById("endOverlay");
+    const startButton = document.getElementById("startButton");
+    const restartButton = document.getElementById("restartButton");
+    const endTitle = document.getElementById("endTitle");
+    const endMessage = document.getElementById("endMessage");
+    const toast = document.getElementById("toast");
+    const vidasHUD = document.getElementById("vidasHUD");
+    const puntosHUD = document.getElementById("puntosHUD");
+    const nivelHUD = document.getElementById("nivelHUD");
+    const rachaHUD = document.getElementById("rachaHUD");
+    const levelRibbon = document.getElementById("levelRibbon");
+    const musicToggle = document.getElementById("musicToggle");
+
+    function waitForMathJax(deadline = performance.now() + 5000) {
+      if (window.MathJax && typeof MathJax.typesetPromise === "function") {
+        return MathJax.startup && MathJax.startup.promise ? MathJax.startup.promise : Promise.resolve();
+      }
+      if (performance.now() > deadline) return Promise.reject(new Error("MathJax no disponible"));
+      return new Promise(resolve => setTimeout(resolve, 50)).then(() => waitForMathJax(deadline));
+    }
+
+    function typesetElement(element) {
+      return waitForMathJax()
+        .then(() => MathJax.typesetPromise([element]))
+        .catch(() => Promise.resolve());
+    }
+
+    function fitFormulaToBubble(element) {
+      const math = element.querySelector("mjx-container");
+      if (!math) {
+        element.style.width = "auto";
+        return;
+      }
+      const zoneWidth = fallZone.clientWidth;
+      const maxWidth = Math.max(190, Math.min(820, zoneWidth - 22));
+      const minimumWidth = Math.min(maxWidth, window.matchMedia("(max-width: 700px)").matches ? 190 : 220);
+      const styles = getComputedStyle(element);
+      const horizontalSpace =
+        parseFloat(styles.paddingLeft) +
+        parseFloat(styles.paddingRight) +
+        parseFloat(styles.borderLeftWidth) +
+        parseFloat(styles.borderRightWidth) +
+        18;
+
+      element.style.width = "auto";
+      element.style.maxWidth = `${maxWidth}px`;
+      math.style.removeProperty("font-size");
+      const naturalWidth = math.getBoundingClientRect().width;
+      let desiredWidth = Math.ceil(naturalWidth + horizontalSpace);
+
+      if (desiredWidth > maxWidth) {
+        const baseSize = parseFloat(getComputedStyle(math).fontSize);
+        const availableForMath = Math.max(120, maxWidth - horizontalSpace);
+        const scale = Math.max(.62, availableForMath / naturalWidth);
+        math.style.setProperty("font-size", `${baseSize * scale}px`, "important");
+        desiredWidth = Math.ceil(math.getBoundingClientRect().width + horizontalSpace);
+      }
+
+      element.style.width = `${Math.max(minimumWidth, Math.min(maxWidth, desiredWidth))}px`;
+    }
+
+    function placeLimitBubble(activeLimit) {
+      const zoneWidth = fallZone.clientWidth;
+      const width = activeLimit.element.offsetWidth;
+      const rightHalfStart = zoneWidth * 0.50;
+      const leftMax = zoneWidth - width - 8;
+      const left = leftMax <= rightHalfStart
+        ? Math.max(8, leftMax)
+        : rightHalfStart + Math.random() * (leftMax - rightHalfStart);
+      activeLimit.element.style.left = `${left}px`;
+    }
+
+    function initGame() {
+      buildControls();
+      attachEvents();
+      resetGame();
+      startOverlay.classList.add("show");
+      waitForMathJax().then(() => MathJax.typesetPromise()).catch(() => {});
+    }
+
+    function startGame() {
+      resetGame();
+      gameState.estado = "jugando";
+      startOverlay.classList.remove("show");
+      endOverlay.classList.remove("show");
+      gameState.lastFrameTime = performance.now();
+      gameState.ultimoTiempoAparicion = performance.now();
+      showToast("Clasifica con teclado, mouse o toque.");
+      startBackgroundMusic();
+      setTimeout(() => {
+        if (gameState.estado === "jugando" && gameState.limitesActivos.length === 0) spawnLimit();
+      }, 450);
+      gameState.animationFrameId = requestAnimationFrame(updateGameLoop);
+    }
+
+    function spawnLimit() {
+      if (gameState.estado !== "jugando") return;
+      if (gameState.limitesActivos.length >= MAX_ACTIVE_LIMITS) return;
+      updateLevel();
+
+      const selected = pickLimitForCurrentLevel();
+      const element = document.createElement("div");
+      const id = `limite-${gameState.nextLimitId++}`;
+      const zoneRect = fallZone.getBoundingClientRect();
+      element.className = "limit-card";
+      element.id = id;
+      element.style.left = `${Math.max(8, zoneRect.width * 0.50)}px`;
+      element.style.transform = "translateY(0px)";
+      element.innerHTML = `<div class="limit-math">\\(\\displaystyle ${selected.latex}\\)</div>`;
+
+      fallZone.appendChild(element);
+      const activeLimit = {
+        instanceId: id,
+        data: selected,
+        element,
+        y: -Math.max(element.offsetHeight, 92),
+        height: Math.max(element.offsetHeight, 92),
+        removed: false
+      };
+      element.style.transform = `translateY(${activeLimit.y}px)`;
+      element.style.setProperty("--y", `${activeLimit.y}px`);
+      gameState.limitesActivos.push(activeLimit);
+      gameState.ultimoTiempoAparicion = performance.now();
+      gameState.emptySince = null;
+      animateMouth();
+
+      typesetElement(element).then(() => {
+        fitFormulaToBubble(element);
+        placeLimitBubble(activeLimit);
+        activeLimit.height = Math.max(element.offsetHeight, 92);
+        if (activeLimit.y < 0) {
+          activeLimit.y = -activeLimit.height;
+          element.style.transform = `translateY(${activeLimit.y}px)`;
+          element.style.setProperty("--y", `${activeLimit.y}px`);
+        }
+        element.classList.add("rendered");
+      });
+    }
+
+    function updateGameLoop(now) {
+      if (gameState.estado !== "jugando") return;
+      const dt = Math.min(0.05, (now - gameState.lastFrameTime) / 1000 || 0);
+      gameState.lastFrameTime = now;
+      const zoneHeight = fallZone.clientHeight;
+      const levelConfig = LEVELS[gameState.nivel];
+      const speed = zoneHeight / levelConfig.fallDuration;
+
+      for (const activeLimit of [...gameState.limitesActivos]) {
+        if (activeLimit.removed) continue;
+        activeLimit.y += speed * dt;
+        activeLimit.element.style.transform = `translateY(${activeLimit.y}px)`;
+        activeLimit.element.style.setProperty("--y", `${activeLimit.y}px`);
+
+        if (activeLimit.y + activeLimit.height >= zoneHeight) {
+          removeLimitElement(activeLimit);
+          penalizePlayer("Un límite tocó el fondo.");
+        }
+      }
+
+      const elapsedSinceSpawn = now - gameState.ultimoTiempoAparicion;
+      if (gameState.limitesActivos.length === 0) {
+        if (gameState.emptySince === null) gameState.emptySince = now;
+        if (now - gameState.emptySince >= EMPTY_SCREEN_DELAY) spawnLimit();
+      } else if (elapsedSinceSpawn >= levelConfig.spawnInterval && gameState.limitesActivos.length < MAX_ACTIVE_LIMITS) {
+        spawnLimit();
+      }
+
+      gameState.animationFrameId = requestAnimationFrame(updateGameLoop);
+    }
+
+    function handleAnswer(answer) {
+      if (gameState.estado !== "jugando") return;
+      flashButton(answer);
+      const removedCount = removeMatchingLimits(answer);
+
+      if (removedCount === 0) {
+        penalizePlayer("No había límites visibles con esa clasificación.");
+        return;
+      }
+
+      gameState.puntos += removedCount;
+      gameState.racha += removedCount;
+      showToast(removedCount === 1 ? "+1 punto" : `+${removedCount} puntos`);
+
+      while (gameState.racha >= 5) {
+        gameState.vidas += 1;
+        gameState.racha -= 5;
+        showToast("Racha de 5: +1 vida.");
+      }
+
+      updateLevel();
+      updateHUD();
+
+      if (gameState.puntos >= WIN_SCORE) {
+        gameState.puntos = WIN_SCORE;
+        updateHUD();
+        endGame(true);
+      }
+    }
+
+    function removeMatchingLimits(answer) {
+      const matching = gameState.limitesActivos.filter(activeLimit => activeLimit.data.respuesta === answer);
+      for (const activeLimit of matching) removeLimitElement(activeLimit, true);
+      return matching.length;
+    }
+
+    function penalizePlayer(reason) {
+      gameState.puntos = Math.max(0, gameState.puntos - 3);
+      loseLife(reason);
+    }
+
+    function loseLife(reason) {
+      if (gameState.estado !== "jugando") return;
+      gameState.vidas -= 1;
+      gameState.racha = 0;
+      showToast(`${reason} -1 vida, -3 puntos.`);
+      updateLevel();
+      updateHUD();
+
+      if (gameState.vidas <= 0) {
+        gameState.vidas = 0;
+        updateHUD();
+        endGame(false);
+      }
+    }
+
+    function updateLevel() {
+      const previousLevel = gameState.nivel;
+      if (gameState.puntos >= 25) gameState.nivel = 3;
+      else if (gameState.puntos >= 10) gameState.nivel = 2;
+      else gameState.nivel = 1;
+
+      if (previousLevel !== gameState.nivel) {
+        setLeibnizImage(false);
+        showToast(`Nivel ${gameState.nivel}`);
+      }
+      updateHUD();
+    }
+
+    function updateHUD() {
+      vidasHUD.textContent = String(gameState.vidas);
+      puntosHUD.textContent = `${Math.min(gameState.puntos, WIN_SCORE)} / ${WIN_SCORE}`;
+      nivelHUD.textContent = String(gameState.nivel);
+      rachaHUD.textContent = `${gameState.racha} / 5`;
+      levelRibbon.textContent = `Nivel ${gameState.nivel}`;
+    }
+
+    function endGame(win) {
+      gameState.estado = win ? "victoria" : "derrota";
+      if (gameState.animationFrameId) cancelAnimationFrame(gameState.animationFrameId);
+      gameState.animationFrameId = null;
+      endTitle.textContent = win ? "Victoria" : "Derrota";
+      endMessage.textContent = win
+        ? "Llegaste a 35 puntos. Leibniz aprueba esta clasificación."
+        : "Te quedaste sin vidas. Reinicia y vuelve a leer los signos con calma.";
+      endOverlay.classList.add("show");
+    }
+
+    function resetGame() {
+      if (gameState.animationFrameId) cancelAnimationFrame(gameState.animationFrameId);
+      if (gameState.mouthTimerId) clearTimeout(gameState.mouthTimerId);
+      gameState.vidas = STARTING_LIVES;
+      gameState.puntos = 0;
+      gameState.nivel = 1;
+      gameState.racha = 0;
+      gameState.limitesActivos.forEach(activeLimit => activeLimit.element.remove());
+      gameState.limitesActivos = [];
+      gameState.ultimoTiempoAparicion = 0;
+      gameState.estado = "inicio";
+      gameState.animationFrameId = null;
+      gameState.lastFrameTime = 0;
+      gameState.emptySince = null;
+      gameState.mouthTimerId = null;
+      gameState.nextLimitId = 1;
+      setLeibnizImage(false);
+      updateHUD();
+      updateMusicToggle();
+      toast.classList.remove("show");
+    }
+
+    function buildControls() {
+      const wasd = ANSWERS.filter(item => item.cluster === "wasd");
+      const arrows = ANSWERS.filter(item => item.cluster === "arrows");
+      controls.innerHTML = `
+        <div class="control-cluster wasd" aria-label="Controles W A S D">${wasd.map(controlButtonHTML).join("")}</div>
+        <div class="control-cluster arrows" aria-label="Controles de flechas">${arrows.map(controlButtonHTML).join("")}</div>
+      `;
+    }
+
+    function controlButtonHTML(item) {
+      return `
+        <button class="answer-btn ${item.position}" type="button" data-answer="${item.answer}" aria-label="${item.label}, tecla ${item.key}">
+          <img src="${BUTTON_IMAGES[item.answer]}" alt="${item.label}">
+          <span class="key-badge">${item.key}</span>
+        </button>
+      `;
+    }
+
+    function attachEvents() {
+      startButton.addEventListener("click", startGame);
+      restartButton.addEventListener("click", startGame);
+      musicToggle.addEventListener("click", toggleBackgroundMusic);
+      controls.addEventListener("click", event => {
+        const button = event.target.closest("button[data-answer]");
+        if (!button) return;
+        handleAnswer(button.dataset.answer);
+      });
+      document.addEventListener("keydown", event => {
+        if (event.repeat) return;
+        const match = ANSWERS.find(item => item.code === event.code);
+        if (!match) return;
+        event.preventDefault();
+        handleAnswer(match.answer);
+      });
+      window.addEventListener("resize", keepLimitsInside);
+    }
+
+    function pickLimitForCurrentLevel() {
+      const desiredDifficulties = LEVELS[gameState.nivel].difficulties;
+      const selectedDifficulty = desiredDifficulties[Math.floor(Math.random() * desiredDifficulties.length)];
+      let pool = LIMITES.filter(item => item.dificultad === selectedDifficulty);
+      if (pool.length === 0) pool = LIMITES;
+      return pool[Math.floor(Math.random() * pool.length)];
+    }
+
+    function removeLimitElement(activeLimit, animate = false) {
+      if (activeLimit.removed) return;
+      activeLimit.removed = true;
+      gameState.limitesActivos = gameState.limitesActivos.filter(item => item !== activeLimit);
+      if (animate) {
+        activeLimit.element.classList.add("cleared");
+        setTimeout(() => activeLimit.element.remove(), 240);
+      } else {
+        activeLimit.element.remove();
+      }
+      if (gameState.limitesActivos.length === 0) gameState.emptySince = performance.now();
+    }
+
+    function animateMouth() {
+      setLeibnizImage(true);
+      if (gameState.mouthTimerId) clearTimeout(gameState.mouthTimerId);
+      gameState.mouthTimerId = setTimeout(() => setLeibnizImage(false), MOUTH_OPEN_MS);
+    }
+
+    function setLeibnizImage(open) {
+      const imageSet = LEIBNIZ_IMAGES[gameState.nivel];
+      leibnizImage.src = open ? imageSet.open : imageSet.closed;
+      leibnizImage.classList.toggle("mouth-open", open);
+    }
+
+    function flashButton(answer) {
+      const button = controls.querySelector(`[data-answer="${CSS.escape(answer)}"]`);
+      if (!button) return;
+      button.classList.add("active");
+      setTimeout(() => button.classList.remove("active"), 130);
+    }
+
+    function createMusicAudio() {
+      if (gameState.musicAudio) return gameState.musicAudio;
+      const audio = new Audio();
+      audio.preload = "auto";
+      audio.volume = 0.28;
+      audio.addEventListener("ended", () => playMusicTrack(gameState.musicIndex + 1));
+      gameState.musicAudio = audio;
+      return audio;
+    }
+
+    function startBackgroundMusic() {
+      gameState.musicEnabled = true;
+      if (!gameState.musicStarted) {
+        gameState.musicStarted = true;
+        playMusicTrack(gameState.musicIndex);
+      } else if (gameState.musicAudio && gameState.musicAudio.paused) {
+        gameState.musicAudio.play().catch(() => {});
+      }
+      updateMusicToggle();
+    }
+
+    function playMusicTrack(index) {
+      const audio = createMusicAudio();
+      gameState.musicIndex = ((index % MUSIC_TRACKS.length) + MUSIC_TRACKS.length) % MUSIC_TRACKS.length;
+      audio.src = MUSIC_TRACKS[gameState.musicIndex].src;
+      audio.play().catch(() => {
+        gameState.musicEnabled = false;
+        updateMusicToggle();
+      });
+      updateMusicToggle();
+    }
+
+    function toggleBackgroundMusic() {
+      const audio = createMusicAudio();
+      if (!gameState.musicStarted || audio.paused) {
+        gameState.musicEnabled = true;
+        gameState.musicStarted = true;
+        if (!audio.src) audio.src = MUSIC_TRACKS[gameState.musicIndex].src;
+        audio.play().catch(() => {});
+      } else {
+        gameState.musicEnabled = false;
+        audio.pause();
+      }
+      updateMusicToggle();
+    }
+
+    function updateMusicToggle() {
+      if (!musicToggle) return;
+      const audio = gameState.musicAudio;
+      const playing = Boolean(audio && !audio.paused && gameState.musicEnabled);
+      musicToggle.textContent = playing ? "♪" : "♫";
+      musicToggle.classList.toggle("off", !playing);
+      musicToggle.setAttribute("aria-label", playing ? "Pausar música" : "Reanudar música");
+    }
+
+    function showToast(message) {
+      toast.textContent = message;
+      toast.classList.add("show");
+      clearTimeout(showToast.timerId);
+      showToast.timerId = setTimeout(() => toast.classList.remove("show"), 1700);
+    }
+
+    function keepLimitsInside() {
+      const zoneWidth = fallZone.clientWidth;
+      gameState.limitesActivos.forEach(activeLimit => {
+        const width = activeLimit.element.offsetWidth;
+        const left = parseFloat(activeLimit.element.style.left || "0");
+        activeLimit.element.style.left = `${Math.max(8, Math.min(left, zoneWidth - width - 8))}px`;
+        activeLimit.height = Math.max(activeLimit.element.offsetHeight, 92);
+      });
+    }
+
+    window.addEventListener("load", initGame);
+  </script>
+</body>
+</html>
