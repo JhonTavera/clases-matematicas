@@ -159,6 +159,13 @@
       filter: drop-shadow(20px 22px 22px rgba(20, 17, 12, .26));
     }
 
+    body.time-feature-enabled #leibnizImage { cursor: grab; }
+
+    body.time-feature-enabled #leibnizImage.time-boosting {
+      cursor: grabbing;
+      filter: drop-shadow(24px 26px 24px rgba(20, 17, 12, .32));
+    }
+
     .level-ribbon {
       position: absolute;
       left: 18px;
@@ -406,6 +413,33 @@
 
     .music-toggle.off { opacity: .55; }
 
+    .time-bubble {
+      position: absolute;
+      left: 24px;
+      bottom: calc(var(--controls-h) + 14px);
+      z-index: 8;
+      min-width: 112px;
+      height: 50px;
+      padding: 0 16px;
+      border-radius: 999px;
+      border: 2px solid rgba(37, 31, 24, .24);
+      background: rgba(255, 253, 246, .88);
+      color: #1d1a15;
+      display: none;
+      place-items: center;
+      font-size: 1.18rem;
+      font-weight: 950;
+      font-style: italic;
+      box-shadow: 0 12px 26px rgba(25, 20, 14, .18);
+      backdrop-filter: blur(3px);
+      user-select: none;
+      touch-action: none;
+    }
+
+    .time-bubble.show { display: grid; }
+    .time-bubble.active { background: rgba(29, 26, 21, .9); color: #fffaf0; }
+    .time-bubble.empty { opacity: .62; }
+
     @keyframes popOut {
       to { opacity: 0; transform: translateY(var(--y, 0px)) scale(.74); }
     }
@@ -433,6 +467,7 @@
       .control-cluster { gap: 5px; transform: translateY(-14px); }
       .control-cluster.wasd { justify-self: center; }
       .control-cluster.arrows { justify-self: center; }
+      .time-bubble { left: 10px; bottom: calc(var(--controls-h) + 10px); min-width: 92px; height: 42px; font-size: .98rem; }
       .key-badge { min-width: 22px; height: 22px; font-size: .72rem; right: -3px; bottom: -3px; }
       .limit-card { min-width: min(210px, calc(100vw - 18px)); padding: 13px 15px; }
       .limit-math mjx-container { font-size: clamp(1.08rem, 5vw, 1.55rem) !important; }
@@ -456,6 +491,7 @@
     </header>
 
     <button class="music-toggle" id="musicToggle" type="button" aria-label="Pausar música" title="Música">♪</button>
+    <button class="time-bubble empty" id="timeBubble" type="button" aria-label="Tiempo guardado">0.0 s</button>
 
     <main class="stage">
       <section class="leibniz-zone" aria-label="Leibniz">
@@ -535,10 +571,14 @@
     const WIN_SCORE = 35;
     const STARTING_LIVES = 5;
     const MOUTH_OPEN_MS = 430;
+    const SECRET_MUSIC_CLICKS = 4;
+    const SECRET_MUSIC_WINDOW = 2000;
+    const BOOST_MULTIPLIER = 3;
 
     const gameState = {
       vidas: STARTING_LIVES,
       puntos: 0,
+      maxScore: 0,
       nivel: 1,
       racha: 0,
       limitesActivos: [],
@@ -552,6 +592,12 @@
       musicIndex: 0,
       musicEnabled: true,
       musicStarted: false,
+      musicClickTimes: [],
+      timeFeatureEnabled: false,
+      storedLimitTime: 0,
+      boostHeld: false,
+      stasisHeld: false,
+      holdPointerId: null,
       nextLimitId: 1
     };
 
@@ -571,6 +617,7 @@
     const rachaHUD = document.getElementById("rachaHUD");
     const levelRibbon = document.getElementById("levelRibbon");
     const musicToggle = document.getElementById("musicToggle");
+    const timeBubble = document.getElementById("timeBubble");
 
     function waitForMathJax(deadline = performance.now() + 5000) {
       if (window.MathJax && typeof MathJax.typesetPromise === "function") {
@@ -702,13 +749,30 @@
       if (gameState.estado !== "jugando") return;
       const dt = Math.min(0.05, (now - gameState.lastFrameTime) / 1000 || 0);
       gameState.lastFrameTime = now;
+
+      if (gameState.timeFeatureEnabled) {
+        if (gameState.boostHeld) {
+          gameState.storedLimitTime += dt;
+          updateTimeBubble();
+        }
+
+        if (gameState.stasisHeld) {
+          gameState.storedLimitTime = Math.max(0, gameState.storedLimitTime - dt);
+          updateTimeBubble();
+          if (gameState.storedLimitTime <= 0) stopTimeHolds();
+          gameState.animationFrameId = requestAnimationFrame(updateGameLoop);
+          return;
+        }
+      }
+
       const zoneHeight = fallZone.clientHeight;
       const levelConfig = LEVELS[gameState.nivel];
       const speed = zoneHeight / levelConfig.fallDuration;
+      const speedMultiplier = gameState.boostHeld ? BOOST_MULTIPLIER : 1;
 
       for (const activeLimit of [...gameState.limitesActivos]) {
         if (activeLimit.removed) continue;
-        activeLimit.y += speed * dt;
+        activeLimit.y += speed * speedMultiplier * dt;
         activeLimit.element.style.transform = `translateY(${activeLimit.y}px)`;
         activeLimit.element.style.setProperty("--y", `${activeLimit.y}px`);
 
@@ -741,6 +805,7 @@
 
       gameState.puntos += removedCount;
       gameState.racha += removedCount;
+      updateMaxScore();
       showToast(removedCount === 1 ? "+1 punto" : `+${removedCount} puntos`);
 
       while (gameState.racha >= 5) {
@@ -754,6 +819,7 @@
 
       if (gameState.puntos >= WIN_SCORE) {
         gameState.puntos = WIN_SCORE;
+        updateMaxScore();
         updateHUD();
         endGame(true);
       }
@@ -768,6 +834,10 @@
     function penalizePlayer(reason) {
       gameState.puntos = Math.max(0, gameState.puntos - 3);
       loseLife(reason);
+    }
+
+    function updateMaxScore() {
+      gameState.maxScore = Math.max(gameState.maxScore, Math.min(gameState.puntos, WIN_SCORE));
     }
 
     function loseLife(reason) {
@@ -810,11 +880,30 @@
       gameState.estado = win ? "victoria" : "derrota";
       if (gameState.animationFrameId) cancelAnimationFrame(gameState.animationFrameId);
       gameState.animationFrameId = null;
-      endTitle.textContent = win ? "Victoria" : "Derrota";
-      endMessage.textContent = win
-        ? "Llegaste a 35 puntos. Leibniz aprueba esta clasificación."
-        : "Te quedaste sin vidas. Reinicia y vuelve a leer los signos con calma.";
+      stopTimeHolds();
+      updateMaxScore();
+
+      if (win) {
+        endTitle.textContent = "Victoria";
+        endMessage.textContent = `Llegaste a 35 puntos. Puntuacion maxima: ${gameState.maxScore} / ${WIN_SCORE}.`;
+      } else {
+        const defeatCopy = getDefeatCopy(gameState.maxScore);
+        endTitle.textContent = defeatCopy.title;
+        endMessage.textContent = `${defeatCopy.message} Puntuacion maxima: ${gameState.maxScore} / ${WIN_SCORE}.`;
+      }
       endOverlay.classList.add("show");
+    }
+
+    function getDefeatCopy(score) {
+      if (score < 10) {
+        return {
+          title: "Derrota",
+          message: "Te quedaste sin vidas. Reinicia y vuelve a leer los signos con calma."
+        };
+      }
+      if (score < 20) return { title: "Las vidas se te acabaron", message: "las vidas se te acabaron." };
+      if (score < 30) return { title: "Estas cerca", message: "estas cerca." };
+      return { title: "Estas muy cerca", message: "estas muy cerca." };
     }
 
     function resetGame() {
@@ -822,6 +911,7 @@
       if (gameState.mouthTimerId) clearTimeout(gameState.mouthTimerId);
       gameState.vidas = STARTING_LIVES;
       gameState.puntos = 0;
+      gameState.maxScore = 0;
       gameState.nivel = 1;
       gameState.racha = 0;
       gameState.limitesActivos.forEach(activeLimit => activeLimit.element.remove());
@@ -832,10 +922,16 @@
       gameState.lastFrameTime = 0;
       gameState.emptySince = null;
       gameState.mouthTimerId = null;
+      gameState.musicClickTimes = [];
+      gameState.storedLimitTime = 0;
+      gameState.boostHeld = false;
+      gameState.stasisHeld = false;
+      gameState.holdPointerId = null;
       gameState.nextLimitId = 1;
       setLeibnizImage(false);
       updateHUD();
       updateMusicToggle();
+      updateTimeBubble();
       toast.classList.remove("show");
     }
 
@@ -860,12 +956,16 @@
     function attachEvents() {
       startButton.addEventListener("click", startGame);
       restartButton.addEventListener("click", startGame);
-      musicToggle.addEventListener("click", toggleBackgroundMusic);
+      musicToggle.addEventListener("click", handleMusicToggleClick);
       controls.addEventListener("click", event => {
         const button = event.target.closest("button[data-answer]");
         if (!button) return;
         handleAnswer(button.dataset.answer);
       });
+      document.addEventListener("pointerdown", handleSecretPointerDown);
+      document.addEventListener("pointerup", stopTimeHolds);
+      document.addEventListener("pointercancel", stopTimeHolds);
+      window.addEventListener("blur", () => stopTimeHolds());
       document.addEventListener("keydown", event => {
         if (event.repeat) return;
         const match = ANSWERS.find(item => item.code === event.code);
@@ -874,6 +974,90 @@
         handleAnswer(match.answer);
       });
       window.addEventListener("resize", keepLimitsInside);
+    }
+
+    function handleMusicToggleClick() {
+      registerMusicSecretClick();
+      toggleBackgroundMusic();
+    }
+
+    function registerMusicSecretClick() {
+      if (gameState.timeFeatureEnabled) return;
+      const now = performance.now();
+      gameState.musicClickTimes = gameState.musicClickTimes
+        .filter(time => now - time <= SECRET_MUSIC_WINDOW)
+        .concat(now);
+
+      if (gameState.musicClickTimes.length >= SECRET_MUSIC_CLICKS) {
+        enableTimeFeature();
+      }
+    }
+
+    function enableTimeFeature() {
+      gameState.timeFeatureEnabled = true;
+      gameState.musicClickTimes = [];
+      document.body.classList.add("time-feature-enabled");
+      updateTimeBubble();
+      showToast("Modo tiempo activado.");
+    }
+
+    function handleSecretPointerDown(event) {
+      if (!gameState.timeFeatureEnabled || gameState.estado !== "jugando") return;
+      if (event.pointerType === "mouse" && event.button !== 0) return;
+
+      if (event.target === timeBubble) {
+        if (gameState.storedLimitTime <= 0) return;
+        event.preventDefault();
+        startStasisHold(event.pointerId);
+        return;
+      }
+
+      if (isPointerInsideLeibniz(event)) {
+        event.preventDefault();
+        startBoostHold(event.pointerId);
+      }
+    }
+
+    function isPointerInsideLeibniz(event) {
+      const rect = leibnizImage.getBoundingClientRect();
+      return event.clientX >= rect.left &&
+        event.clientX <= rect.right &&
+        event.clientY >= rect.top &&
+        event.clientY <= rect.bottom;
+    }
+
+    function startBoostHold(pointerId) {
+      gameState.holdPointerId = pointerId;
+      gameState.boostHeld = true;
+      gameState.stasisHeld = false;
+      leibnizImage.classList.add("time-boosting");
+      updateTimeBubble();
+    }
+
+    function startStasisHold(pointerId) {
+      gameState.holdPointerId = pointerId;
+      gameState.boostHeld = false;
+      gameState.stasisHeld = true;
+      leibnizImage.classList.remove("time-boosting");
+      updateTimeBubble();
+    }
+
+    function stopTimeHolds(event) {
+      if (event && gameState.holdPointerId !== null && event.pointerId !== gameState.holdPointerId) return;
+      gameState.holdPointerId = null;
+      gameState.boostHeld = false;
+      gameState.stasisHeld = false;
+      leibnizImage.classList.remove("time-boosting");
+      updateTimeBubble();
+    }
+
+    function updateTimeBubble() {
+      if (!timeBubble) return;
+      const isVisible = gameState.timeFeatureEnabled;
+      timeBubble.classList.toggle("show", isVisible);
+      timeBubble.classList.toggle("active", gameState.stasisHeld);
+      timeBubble.classList.toggle("empty", gameState.storedLimitTime <= 0.05);
+      timeBubble.textContent = `${gameState.storedLimitTime.toFixed(1)} s`;
     }
 
     function pickLimitForCurrentLevel() {
