@@ -1,0 +1,1691 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Familia Runge Kutta</title>
+  <style>
+    :root {
+      --bg: #f5f7fb;
+      --surface: #ffffff;
+      --surface-soft: #f8fafc;
+      --fg: #101828;
+      --muted: #667085;
+      --line: #d0d5dd;
+      --line-strong: #98a2b3;
+      --blue: #2563eb;
+      --blue-soft: #eff6ff;
+      --green: #059669;
+      --green-soft: #ecfdf3;
+      --red: #dc2626;
+      --amber: #b45309;
+      --amber-soft: #fff7ed;
+      --shadow: 0 10px 24px rgba(16, 24, 40, 0.08);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: Arial, Helvetica, sans-serif;
+      background: var(--bg);
+      color: var(--fg);
+    }
+
+    .app-shell {
+      max-width: 1540px;
+      margin: 0 auto;
+      padding: 20px;
+      display: grid;
+      grid-template-columns: minmax(380px, 510px) minmax(0, 1fr);
+      gap: 18px;
+      align-items: start;
+    }
+
+    .panel {
+      background: var(--surface);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      box-shadow: var(--shadow);
+      padding: 16px;
+    }
+
+    .left-stack,
+    .right-stack {
+      display: grid;
+      gap: 16px;
+    }
+
+    .right-stack {
+      grid-template-rows: auto auto 1fr;
+    }
+
+    h1,
+    h2,
+    h3 {
+      margin: 0;
+      line-height: 1.15;
+      letter-spacing: 0;
+    }
+
+    h1 {
+      font-size: 1.75rem;
+    }
+
+    h2 {
+      font-size: 1.05rem;
+    }
+
+    h3 {
+      font-size: 0.98rem;
+    }
+
+    p,
+    label,
+    input,
+    select,
+    button,
+    td,
+    th,
+    .status,
+    .check-line {
+      font-size: 0.94rem;
+      line-height: 1.4;
+    }
+
+    .muted {
+      color: var(--muted);
+    }
+
+    .title-block {
+      display: grid;
+      gap: 8px;
+    }
+
+    .title-block p {
+      margin: 0;
+    }
+
+    .form-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+    }
+
+    .full {
+      grid-column: 1 / -1;
+    }
+
+    label {
+      display: block;
+      margin-bottom: 6px;
+      font-weight: 700;
+    }
+
+    input,
+    select,
+    button {
+      width: 100%;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 10px 11px;
+      background: var(--surface);
+      color: var(--fg);
+      min-height: 42px;
+    }
+
+    input:focus,
+    select:focus,
+    button:focus {
+      outline: 2px solid rgba(37, 99, 235, 0.25);
+      outline-offset: 1px;
+      border-color: var(--blue);
+    }
+
+    button {
+      background: var(--blue);
+      color: white;
+      border: none;
+      font-weight: 800;
+      cursor: pointer;
+    }
+
+    button.secondary {
+      background: var(--surface);
+      color: var(--fg);
+      border: 1px solid var(--line);
+    }
+
+    button:disabled,
+    input:disabled,
+    select:disabled {
+      opacity: 0.55;
+      cursor: not-allowed;
+    }
+
+    .actions {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+    }
+
+    .quick-grid {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .pill {
+      width: auto;
+      min-height: 34px;
+      padding: 7px 10px;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      background: var(--surface-soft);
+      color: var(--fg);
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    .status {
+      min-height: 44px;
+      padding: 10px 12px;
+      border-radius: 8px;
+      border: 1px solid #bfdbfe;
+      background: var(--blue-soft);
+      color: #1e3a8a;
+    }
+
+    .status.good {
+      border-color: #86efac;
+      background: var(--green-soft);
+      color: #166534;
+    }
+
+    .status.warn {
+      border-color: #fdba74;
+      background: var(--amber-soft);
+      color: var(--amber);
+    }
+
+    .method-card {
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--surface-soft);
+      padding: 12px;
+      display: grid;
+      gap: 12px;
+    }
+
+    .method-card.is-disabled {
+      opacity: 0.58;
+    }
+
+    .method-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+    }
+
+    .method-badge {
+      flex: 0 0 auto;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-width: 36px;
+      height: 28px;
+      border-radius: 999px;
+      color: white;
+      font-weight: 800;
+      font-size: 0.86rem;
+    }
+
+    .method-badge.a {
+      background: var(--blue);
+    }
+
+    .method-badge.b {
+      background: var(--green);
+    }
+
+    .method-grid {
+      display: grid;
+      grid-template-columns: minmax(0, 1.25fr) minmax(110px, 0.8fr) minmax(130px, 0.9fr);
+      gap: 10px;
+      align-items: end;
+    }
+
+    .compare-row {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+      padding: 10px 12px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--surface-soft);
+      font-weight: 700;
+    }
+
+    .compare-row input {
+      width: 18px;
+      min-height: 18px;
+      height: 18px;
+      margin: 0;
+      flex: 0 0 auto;
+    }
+
+    .butcher-wrap {
+      overflow: auto;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--surface);
+      padding: 10px;
+    }
+
+    table.butcher {
+      border-collapse: collapse;
+      width: max-content;
+      min-width: 100%;
+    }
+
+    .butcher td {
+      padding: 5px;
+      min-width: 76px;
+      text-align: center;
+      border: none;
+    }
+
+    .butcher .c-cell {
+      border-right: 2px solid var(--fg);
+      min-width: 72px;
+    }
+
+    .butcher .b-row td {
+      border-top: 2px solid var(--fg);
+    }
+
+    .butcher .corner {
+      border-right: 2px solid var(--fg);
+      border-top: 2px solid var(--fg);
+    }
+
+    .butcher input {
+      min-width: 66px;
+      width: 100%;
+      min-height: 36px;
+      padding: 7px 8px;
+      text-align: center;
+      font-family: Consolas, "Courier New", monospace;
+    }
+
+    .zero-cell {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 36px;
+      color: var(--muted);
+      background: #f2f4f7;
+      border-radius: 6px;
+      font-family: Consolas, "Courier New", monospace;
+    }
+
+    .check-line {
+      padding: 8px 10px;
+      border-radius: 8px;
+      background: var(--surface);
+      border: 1px solid var(--line);
+      color: var(--muted);
+    }
+
+    .check-line.good {
+      background: var(--green-soft);
+      border-color: #bbf7d0;
+      color: #166534;
+    }
+
+    .check-line.warn {
+      background: var(--amber-soft);
+      border-color: #fed7aa;
+      color: var(--amber);
+    }
+
+    .metrics {
+      display: grid;
+      grid-template-columns: repeat(5, minmax(0, 1fr));
+      gap: 10px;
+    }
+
+    .metric {
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--surface-soft);
+      padding: 11px;
+      min-width: 0;
+    }
+
+    .metric .label {
+      color: var(--muted);
+      font-size: 0.78rem;
+      font-weight: 700;
+      margin-bottom: 5px;
+    }
+
+    .metric .value {
+      font-size: 0.98rem;
+      font-weight: 800;
+      word-break: break-word;
+    }
+
+    .chart-wrap {
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 10px;
+      background: var(--surface);
+    }
+
+    .chart-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+    }
+
+    .chart-head button {
+      width: auto;
+      min-height: 34px;
+      padding: 7px 11px;
+      font-size: 0.84rem;
+    }
+
+    canvas {
+      display: block;
+      width: 100%;
+      height: 430px;
+      border-radius: 6px;
+      background: white;
+      cursor: grab;
+    }
+
+    .table-box {
+      max-height: 470px;
+      overflow: auto;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--surface);
+    }
+
+    table.results {
+      width: 100%;
+      border-collapse: collapse;
+      min-width: 980px;
+      background: var(--surface);
+    }
+
+    .results th,
+    .results td {
+      border-bottom: 1px solid var(--line);
+      padding: 8px 10px;
+      text-align: right;
+      white-space: nowrap;
+    }
+
+    .results th {
+      position: sticky;
+      top: 0;
+      z-index: 1;
+      background: #eef2ff;
+      font-size: 0.84rem;
+    }
+
+    .results th:first-child,
+    .results td:first-child {
+      text-align: center;
+    }
+
+    .legend-note {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-top: 10px;
+      color: var(--muted);
+      font-size: 0.86rem;
+      font-weight: 700;
+    }
+
+    .legend-dot {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .legend-dot::before {
+      content: "";
+      width: 12px;
+      height: 12px;
+      border-radius: 999px;
+      background: var(--dot);
+    }
+
+    code.inline {
+      background: #eef2ff;
+      padding: 2px 6px;
+      border-radius: 6px;
+      font-family: Consolas, "Courier New", monospace;
+    }
+
+    @media (max-width: 1180px) {
+      .app-shell {
+        grid-template-columns: 1fr;
+      }
+
+      .metrics {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+      }
+    }
+
+    @media (max-width: 700px) {
+      .app-shell {
+        padding: 12px;
+      }
+
+      .form-grid,
+      .actions,
+      .method-grid,
+      .metrics {
+        grid-template-columns: 1fr;
+      }
+
+      canvas {
+        height: 330px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="app-shell">
+    <section class="left-stack">
+      <div class="panel title-block">
+        <h1>Familia Runge Kutta</h1>
+        <p class="muted">
+          Calculadora para PVI de la forma <code class="inline">x' = f(t,x)</code> con uno o dos cuadros de Butcher expl&iacute;citos.
+        </p>
+      </div>
+
+      <div class="panel">
+        <h2>Problema y redondeo</h2>
+        <div class="form-grid" style="margin-top: 12px;">
+          <div class="full">
+            <label for="fexpr">f(t,x)</label>
+            <input id="fexpr" value="x - t + 1" />
+          </div>
+
+          <div>
+            <label for="t0">t<sub>0</sub></label>
+            <input id="t0" type="number" step="any" value="0" />
+          </div>
+
+          <div>
+            <label for="x0">x(t<sub>0</sub>) = x<sub>0</sub></label>
+            <input id="x0" type="number" step="any" value="1" />
+          </div>
+
+          <div>
+            <label for="n">Pasos n</label>
+            <input id="n" type="number" step="1" min="0" value="10" />
+          </div>
+
+          <div>
+            <label for="roundMode">Redondeo</label>
+            <select id="roundMode">
+              <option value="none">Sin redondeo</option>
+              <option value="step_end" selected>Al final de cada paso</option>
+              <option value="stage">En cada etapa y al final</option>
+            </select>
+          </div>
+
+          <div class="full">
+            <label for="exactExpr">Soluci&oacute;n exacta opcional x(t)</label>
+            <input id="exactExpr" value="t + exp(t)" placeholder="Ejemplo: t + exp(t)" />
+          </div>
+
+          <div class="full">
+            <label>Ejemplos r&aacute;pidos</label>
+            <div class="quick-grid">
+              <button type="button" class="pill" data-example="linear">x' = x - t + 1</button>
+              <button type="button" class="pill" data-example="logistic">x' = x(1-x)</button>
+              <button type="button" class="pill" data-example="osc">x' = sin(t)-x</button>
+              <button type="button" class="pill" data-example="riccati">x' = t^2 - x^2</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="panel">
+        <div class="compare-row">
+          <input id="compareEnabled" type="checkbox" checked />
+          <label for="compareEnabled" style="margin: 0;">Ingresar un segundo m&eacute;todo de Runge-Kutta</label>
+        </div>
+      </div>
+
+      <div class="panel left-stack">
+        <h2>Cuadros de Butcher</h2>
+
+        <article class="method-card" id="methodCardA">
+          <div class="method-head">
+            <h3>M&eacute;todo 1</h3>
+            <span class="method-badge a">M1</span>
+          </div>
+          <div class="method-grid">
+            <div>
+              <label for="methodNameA">Nombre</label>
+              <input id="methodNameA" value="RK4 cl&aacute;sico" />
+            </div>
+            <div>
+              <label for="mA">Orden m (etapas)</label>
+              <input id="mA" type="number" min="1" max="12" step="1" value="4" />
+            </div>
+            <div>
+              <label for="presetA">Preset</label>
+              <select id="presetA"></select>
+            </div>
+            <div>
+              <label for="hA">Paso h M1</label>
+              <input id="hA" type="number" step="any" value="0.2" />
+            </div>
+            <div>
+              <label for="digitsA">&delta; decimales M1</label>
+              <input id="digitsA" type="number" step="1" min="0" value="8" />
+            </div>
+          </div>
+          <div class="butcher-wrap">
+            <table class="butcher" id="butcherA" aria-label="Cuadro de Butcher del metodo 1"></table>
+          </div>
+          <div class="check-line" id="checkA">Listo.</div>
+        </article>
+
+        <article class="method-card" id="methodCardB">
+          <div class="method-head">
+            <h3>M&eacute;todo 2</h3>
+            <span class="method-badge b">M2</span>
+          </div>
+          <div class="method-grid">
+            <div>
+              <label for="methodNameB">Nombre</label>
+              <input id="methodNameB" value="Heun" />
+            </div>
+            <div>
+              <label for="mB">Orden m (etapas)</label>
+              <input id="mB" type="number" min="1" max="12" step="1" value="2" />
+            </div>
+            <div>
+              <label for="presetB">Preset</label>
+              <select id="presetB"></select>
+            </div>
+            <div>
+              <label for="hB">Paso h M2</label>
+              <input id="hB" type="number" step="any" value="0.2" />
+            </div>
+            <div>
+              <label for="digitsB">&delta; decimales M2</label>
+              <input id="digitsB" type="number" step="1" min="0" value="8" />
+            </div>
+          </div>
+          <div class="butcher-wrap">
+            <table class="butcher" id="butcherB" aria-label="Cuadro de Butcher del metodo 2"></table>
+          </div>
+          <div class="check-line" id="checkB">Listo.</div>
+        </article>
+      </div>
+
+      <div class="panel left-stack">
+        <div class="actions">
+          <button id="runBtn" type="button">Calcular</button>
+          <button id="csvBtn" type="button" class="secondary">Exportar CSV</button>
+        </div>
+        <div id="status" class="status">Listo para calcular.</div>
+      </div>
+    </section>
+
+    <section class="right-stack">
+      <div class="panel">
+        <h2>Resumen</h2>
+        <div class="metrics" style="margin-top: 12px;">
+          <div class="metric">
+            <div class="label">t final</div>
+            <div class="value" id="m_tfinal">-</div>
+          </div>
+          <div class="metric">
+            <div class="label">x final M1</div>
+            <div class="value" id="m_xa">-</div>
+          </div>
+          <div class="metric">
+            <div class="label">x final M2</div>
+            <div class="value" id="m_xb">-</div>
+          </div>
+          <div class="metric">
+            <div class="label">Error global max.</div>
+            <div class="value" id="m_eglob">-</div>
+          </div>
+          <div class="metric">
+            <div class="label">Max. |M1-M2|</div>
+            <div class="value" id="m_diff">-</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="panel">
+        <div class="chart-head">
+          <h2>Gr&aacute;fica</h2>
+          <button id="resetZoomBtn" type="button" class="secondary">Reiniciar vista</button>
+        </div>
+        <div class="chart-wrap" style="margin-top: 12px;">
+          <canvas id="plot" width="1050" height="430"></canvas>
+        </div>
+        <div class="legend-note">
+          <span class="legend-dot" style="--dot: #2563eb;">M&eacute;todo 1</span>
+          <span class="legend-dot" style="--dot: #059669;">M&eacute;todo 2</span>
+          <span class="legend-dot" style="--dot: #dc2626;">Exacta</span>
+        </div>
+      </div>
+
+      <div class="panel">
+        <h2>Tabla de resultados</h2>
+        <div class="table-box" style="margin-top: 12px;">
+          <table class="results" id="resultTable">
+            <thead>
+              <tr>
+                <th>t</th>
+                <th>k M1</th>
+                <th>x<sub>k</sub> M1</th>
+                <th>k M2</th>
+                <th>x<sub>k</sub> M2</th>
+                <th>M1 - M2 si t coincide</th>
+                <th>x exacta(t)</th>
+                <th>|error global M1|</th>
+                <th>|error global M2|</th>
+                <th>|error local M1|</th>
+                <th>|error local M2|</th>
+              </tr>
+            </thead>
+            <tbody></tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script>
+    const $ = (id) => document.getElementById(id);
+
+    const state = {
+      rowsA: [],
+      rowsB: [],
+      compare: true,
+      exactEnabled: false,
+      plot: {
+        full: null,
+        view: null,
+        rect: null,
+        drag: {
+          active: false,
+          lastX: 0,
+          lastY: 0
+        }
+      }
+    };
+
+    const presets = {
+      custom: null,
+      euler: {
+        label: 'Euler',
+        name: 'Euler',
+        m: 1,
+        c: ['0'],
+        a: [['0']],
+        b: ['1']
+      },
+      midpoint: {
+        label: 'Punto medio',
+        name: 'Punto medio',
+        m: 2,
+        c: ['0', '1/2'],
+        a: [['0', '0'], ['1/2', '0']],
+        b: ['0', '1']
+      },
+      heun: {
+        label: 'Heun',
+        name: 'Heun',
+        m: 2,
+        c: ['0', '1'],
+        a: [['0', '0'], ['1', '0']],
+        b: ['1/2', '1/2']
+      },
+      ralston: {
+        label: 'Ralston',
+        name: 'Ralston',
+        m: 2,
+        c: ['0', '2/3'],
+        a: [['0', '0'], ['2/3', '0']],
+        b: ['1/4', '3/4']
+      },
+      rk3: {
+        label: 'Kutta RK3',
+        name: 'Kutta RK3',
+        m: 3,
+        c: ['0', '1/2', '1'],
+        a: [['0', '0', '0'], ['1/2', '0', '0'], ['-1', '2', '0']],
+        b: ['1/6', '2/3', '1/6']
+      },
+      rk4: {
+        label: 'RK4 clasico',
+        name: 'RK4 clasico',
+        m: 4,
+        c: ['0', '1/2', '1/2', '1'],
+        a: [
+          ['0', '0', '0', '0'],
+          ['1/2', '0', '0', '0'],
+          ['0', '1/2', '0', '0'],
+          ['0', '0', '1', '0']
+        ],
+        b: ['1/6', '1/3', '1/3', '1/6']
+      },
+      rk38: {
+        label: 'RK4 3/8',
+        name: 'RK4 regla 3/8',
+        m: 4,
+        c: ['0', '1/3', '2/3', '1'],
+        a: [
+          ['0', '0', '0', '0'],
+          ['1/3', '0', '0', '0'],
+          ['-1/3', '1', '0', '0'],
+          ['1', '-1', '1', '0']
+        ],
+        b: ['1/8', '3/8', '3/8', '1/8']
+      }
+    };
+
+    const methods = {
+      A: clonePreset('rk4'),
+      B: clonePreset('heun')
+    };
+
+    function clonePreset(key) {
+      const source = presets[key];
+      return {
+        preset: key,
+        name: source.name,
+        m: source.m,
+        c: source.c.slice(),
+        a: source.a.map(row => row.slice()),
+        b: source.b.slice()
+      };
+    }
+
+    function escapeAttr(value) {
+      return String(value ?? '').replace(/[&<>"']/g, (ch) => ({
+        '&': '&amp;',
+        '<': '&lt;',
+        '>': '&gt;',
+        '"': '&quot;',
+        "'": '&#39;'
+      }[ch]));
+    }
+
+    function normalizeExpr(expr) {
+      return String(expr)
+        .replace(/\^/g, '**')
+        .replace(/π/g, 'pi')
+        .replace(/\bsen\s*\(/gi, 'sin(')
+        .replace(/\bln\s*\(/gi, 'log(');
+    }
+
+    function gammaLanczos(z) {
+      const p = [
+        676.5203681218851, -1259.1392167224028, 771.32342877765313,
+        -176.61502916214059, 12.507343278686905, -0.13857109526572012,
+        9.9843695780195716e-6, 1.5056327351493116e-7
+      ];
+      const g = 7;
+      if (z < 0.5) {
+        return Math.PI / (Math.sin(Math.PI * z) * gammaLanczos(1 - z));
+      }
+      z -= 1;
+      let x = 0.99999999999980993;
+      for (let i = 0; i < p.length; i++) x += p[i] / (z + i + 1);
+      const t = z + g + 0.5;
+      return Math.sqrt(2 * Math.PI) * Math.pow(t, z + 0.5) * Math.exp(-t) * x;
+    }
+
+    const factMemo = [1];
+    function factorial(n) {
+      for (let i = factMemo.length; i <= n; i++) factMemo[i] = factMemo[i - 1] * i;
+      return factMemo[n];
+    }
+
+    function besseliSeries(nu, z, terms = 60) {
+      if (!Number.isFinite(z)) return NaN;
+      let sum = 0;
+      for (let k = 0; k < terms; k++) {
+        const term = Math.pow(z / 2, 2 * k + nu) / (factorial(k) * gammaLanczos(k + nu + 1));
+        sum += term;
+        if (Math.abs(term) < 1e-16 * Math.abs(sum || 1)) break;
+      }
+      return sum;
+    }
+
+    function compileExpression(expr, vars = ['t', 'x']) {
+      const normalized = normalizeExpr(expr);
+      const fn = new Function(...vars, `
+        const pi = Math.PI;
+        const e = Math.E;
+        const sin = Math.sin;
+        const cos = Math.cos;
+        const tan = Math.tan;
+        const asin = Math.asin;
+        const acos = Math.acos;
+        const atan = Math.atan;
+        const sinh = Math.sinh;
+        const cosh = Math.cosh;
+        const tanh = Math.tanh;
+        const exp = Math.exp;
+        const log = Math.log;
+        const sqrt = Math.sqrt;
+        const abs = Math.abs;
+        const max = Math.max;
+        const min = Math.min;
+        const floor = Math.floor;
+        const ceil = Math.ceil;
+        const round = Math.round;
+        const pow = Math.pow;
+        const gamma = gammaLanczos;
+        const besseli = besseliSeries;
+        return (${normalized});
+      `);
+      return (...args) => fn(...args);
+    }
+
+    function scalarValue(expr, label) {
+      const text = String(expr ?? '').trim();
+      if (!text) return 0;
+      const value = compileExpression(text, [])();
+      if (!Number.isFinite(value)) {
+        throw new Error(`${label} no produce un numero finito.`);
+      }
+      return Number(value);
+    }
+
+    function roundToDecimals(value, digits) {
+      if (!Number.isFinite(value)) return value;
+      const factor = Math.pow(10, digits);
+      return Math.round(value * factor) / factor;
+    }
+
+    function renderPresetOptions(id) {
+      const select = $(`preset${id}`);
+      const current = methods[id].preset || 'custom';
+      select.innerHTML = '';
+      const custom = document.createElement('option');
+      custom.value = 'custom';
+      custom.textContent = 'Personalizado';
+      select.appendChild(custom);
+      Object.entries(presets).forEach(([key, preset]) => {
+        if (!preset) return;
+        const option = document.createElement('option');
+        option.value = key;
+        option.textContent = preset.label;
+        select.appendChild(option);
+      });
+      select.value = current;
+    }
+
+    function resizeMethod(id, nextM) {
+      const method = methods[id];
+      const oldC = method.c.slice();
+      const oldA = method.a.map(row => row.slice());
+      const oldB = method.b.slice();
+      method.m = nextM;
+      method.c = Array.from({ length: nextM }, (_, i) => oldC[i] ?? (i === 0 ? '0' : ''));
+      method.b = Array.from({ length: nextM }, (_, i) => oldB[i] ?? '');
+      method.a = Array.from({ length: nextM }, (_, i) =>
+        Array.from({ length: nextM }, (_, j) => (j < i ? (oldA[i]?.[j] ?? '') : '0'))
+      );
+    }
+
+    function readMethodInputs(id) {
+      const method = methods[id];
+      method.name = $(`methodName${id}`).value.trim() || `Metodo ${id}`;
+
+      const table = $(`butcher${id}`);
+      table.querySelectorAll('input[data-part]').forEach(input => {
+        const part = input.dataset.part;
+        const i = Number(input.dataset.i);
+        const j = Number(input.dataset.j);
+        if (part === 'c') method.c[i] = input.value;
+        if (part === 'a' && method.a[i]) method.a[i][j] = input.value;
+        if (part === 'b') method.b[j] = input.value;
+      });
+
+      const rawM = Number($(`m${id}`).value);
+      if (Number.isInteger(rawM) && rawM >= 1 && rawM <= 12 && rawM !== method.m) {
+        resizeMethod(id, rawM);
+      }
+    }
+
+    function renderButcher(id) {
+      const method = methods[id];
+      $(`methodName${id}`).value = method.name;
+      $(`m${id}`).value = method.m;
+      renderPresetOptions(id);
+
+      const table = $(`butcher${id}`);
+      let html = '<tbody>';
+      for (let i = 0; i < method.m; i++) {
+        html += '<tr>';
+        html += `
+          <td class="c-cell">
+            <input aria-label="c_${i + 1}" placeholder="c${i + 1}" data-part="c" data-i="${i}" value="${escapeAttr(method.c[i])}" />
+          </td>
+        `;
+        for (let j = 0; j < method.m; j++) {
+          if (j < i) {
+            html += `
+              <td>
+                <input aria-label="a_${i + 1}_${j + 1}" placeholder="a${i + 1}${j + 1}" data-part="a" data-i="${i}" data-j="${j}" value="${escapeAttr(method.a[i][j])}" />
+              </td>
+            `;
+          } else {
+            html += '<td><span class="zero-cell">0</span></td>';
+          }
+        }
+        html += '</tr>';
+      }
+
+      html += '<tr class="b-row">';
+      html += '<td class="corner"></td>';
+      for (let j = 0; j < method.m; j++) {
+        html += `
+          <td>
+            <input aria-label="b_${j + 1}" placeholder="b${j + 1}" data-part="b" data-j="${j}" value="${escapeAttr(method.b[j])}" />
+          </td>
+        `;
+      }
+      html += '</tr></tbody>';
+      table.innerHTML = html;
+      updateMethodCheck(id);
+    }
+
+    function methodNumbers(id) {
+      readMethodInputs(id);
+      const method = methods[id];
+      const c = method.c.map((value, i) => scalarValue(value, `c_${i + 1}`));
+      const b = method.b.map((value, i) => scalarValue(value, `b_${i + 1}`));
+      const a = Array.from({ length: method.m }, (_, i) =>
+        Array.from({ length: method.m }, (_, j) => j < i ? scalarValue(method.a[i][j], `a_${i + 1}_${j + 1}`) : 0)
+      );
+      return {
+        id,
+        name: method.name,
+        m: method.m,
+        c,
+        a,
+        b
+      };
+    }
+
+    function updateMethodCheck(id) {
+      const el = $(`check${id}`);
+      try {
+        const method = methodNumbers(id);
+        const sumB = method.b.reduce((acc, value) => acc + value, 0);
+        let maxRowDiff = 0;
+        for (let i = 0; i < method.m; i++) {
+          const rowSum = method.a[i].reduce((acc, value) => acc + value, 0);
+          maxRowDiff = Math.max(maxRowDiff, Math.abs(method.c[i] - rowSum));
+        }
+        const okB = Math.abs(sumB - 1) < 1e-10;
+        const okC = maxRowDiff < 1e-10;
+        if (okB && okC) {
+          el.className = 'check-line good';
+          el.textContent = `Consistente: suma b = ${formatNum(sumB)} y c coincide con las filas de A.`;
+        } else {
+          el.className = 'check-line warn';
+          el.textContent = `Aviso: suma b = ${formatNum(sumB)}, max |c_i - suma a_ij| = ${formatNum(maxRowDiff)}.`;
+        }
+      } catch (err) {
+        el.className = 'check-line warn';
+        el.textContent = 'Revisa las entradas del cuadro de Butcher.';
+      }
+    }
+
+    function rkStep(f, t, x, h, method, digits, roundMode) {
+      const k = [];
+      const R = (value) => roundMode === 'none' ? value : roundToDecimals(value, digits);
+
+      for (let i = 0; i < method.m; i++) {
+        let weighted = 0;
+        for (let j = 0; j < i; j++) {
+          const product = roundMode === 'stage' ? R(method.a[i][j] * k[j]) : method.a[i][j] * k[j];
+          weighted = roundMode === 'stage' ? R(weighted + product) : weighted + product;
+        }
+
+        const tArg = roundMode === 'stage' ? R(t + R(method.c[i] * h)) : t + method.c[i] * h;
+        const xArg = roundMode === 'stage' ? R(x + R(h * weighted)) : x + h * weighted;
+        const slope = f(tArg, xArg);
+        k[i] = roundMode === 'stage' ? R(slope) : slope;
+      }
+
+      let weightedFinal = 0;
+      for (let i = 0; i < method.m; i++) {
+        const product = roundMode === 'stage' ? R(method.b[i] * k[i]) : method.b[i] * k[i];
+        weightedFinal = roundMode === 'stage' ? R(weightedFinal + product) : weightedFinal + product;
+      }
+
+      let nextT = t + h;
+      let nextX = x + h * weightedFinal;
+      if (roundMode === 'step_end' || roundMode === 'stage') {
+        nextT = R(nextT);
+        nextX = R(nextX);
+      }
+
+      return { nextT, nextX, stages: k };
+    }
+
+    function integrateRK(f, t0, x0, h, n, digits, roundMode, method, exactFn) {
+      const rows = [];
+      let t = t0;
+      let x = x0;
+
+      for (let stepIndex = 0; stepIndex <= n; stepIndex++) {
+        const exactVal = exactFn ? exactFn(t) : null;
+        const globalErr = exactFn && Number.isFinite(exactVal) ? Math.abs(x - exactVal) : null;
+        const stepData = stepIndex < n
+          ? rkStep(f, t, x, h, method, digits, roundMode)
+          : { nextT: null, nextX: null, stages: [] };
+
+        let localErr = null;
+        if (exactFn && stepIndex < n) {
+          const exactCurrent = exactFn(t);
+          const exactNext = exactFn(t + h);
+          if (Number.isFinite(exactCurrent) && Number.isFinite(exactNext)) {
+            const fromExact = rkStep(f, t, exactCurrent, h, method, digits, roundMode).nextX;
+            const local = exactNext - fromExact;
+            localErr = Number.isFinite(local) ? Math.abs(local) : null;
+          }
+        }
+
+        rows.push({
+          k: stepIndex,
+          t,
+          x,
+          exactVal,
+          globalErr,
+          localErr,
+          stages: stepData.stages
+        });
+
+        if (stepIndex === n) break;
+        t = stepData.nextT;
+        x = stepData.nextX;
+      }
+
+      return rows;
+    }
+
+    function formatNum(value) {
+      if (value === null || value === undefined || Number.isNaN(value)) return '-';
+      if (!Number.isFinite(value)) return String(value);
+      const av = Math.abs(value);
+      if ((av !== 0 && av < 1e-6) || av >= 1e7) return value.toExponential(6);
+      return value.toFixed(10).replace(/0+$/, '').replace(/\.$/, '');
+    }
+
+    function sameTime(tA, tB) {
+      if (!Number.isFinite(tA) || !Number.isFinite(tB)) return false;
+      const scale = Math.max(1, Math.abs(tA), Math.abs(tB));
+      return Math.abs(tA - tB) <= 1e-10 * scale;
+    }
+
+    function setStatus(message, kind = '') {
+      const el = $('status');
+      el.className = 'status' + (kind ? ` ${kind}` : '');
+      el.textContent = message;
+    }
+
+    function pairedDiff(rowA, rowB) {
+      if (!rowA || !rowB) return null;
+      if (!sameTime(rowA.t, rowB.t)) return null;
+      return rowA.x - rowB.x;
+    }
+
+    function buildCombinedRows(rowsA, rowsB, compare) {
+      const combined = rowsA.map(row => ({ t: row.t, a: row, b: null }));
+      if (compare) {
+        rowsB.forEach(rowB => {
+          const existing = combined.find(row => sameTime(row.t, rowB.t));
+          if (existing) existing.b = rowB;
+          else combined.push({ t: rowB.t, a: null, b: rowB });
+        });
+      }
+      return combined.sort((left, right) => left.t - right.t);
+    }
+
+    function updateSummary(rowsA, rowsB, compare) {
+      const lastA = rowsA[rowsA.length - 1];
+      const lastB = compare ? rowsB[rowsB.length - 1] : null;
+      $('m_tfinal').textContent = compare && lastB
+        ? `M1: ${formatNum(lastA?.t)}, M2: ${formatNum(lastB.t)}`
+        : (lastA ? formatNum(lastA.t) : '-');
+      $('m_xa').textContent = lastA ? formatNum(lastA.x) : '-';
+      $('m_xb').textContent = lastB ? formatNum(lastB.x) : '-';
+
+      const globalValues = rowsA
+        .map(r => r.globalErr)
+        .concat(compare ? rowsB.map(r => r.globalErr) : [])
+        .filter(v => v !== null && Number.isFinite(v));
+      $('m_eglob').textContent = globalValues.length ? formatNum(Math.max(...globalValues)) : '-';
+
+      const diffs = buildCombinedRows(rowsA, rowsB, compare)
+        .map(row => pairedDiff(row.a, row.b))
+        .filter(v => v !== null && Number.isFinite(v))
+        .map(v => Math.abs(v));
+      $('m_diff').textContent = compare && diffs.length ? formatNum(Math.max(...diffs)) : '-';
+    }
+
+    function updateTable(rowsA, rowsB, compare) {
+      const tbody = $('resultTable').querySelector('tbody');
+      tbody.innerHTML = '';
+      const combined = buildCombinedRows(rowsA, rowsB, compare);
+      combined.forEach(row => {
+        const a = row.a;
+        const b = row.b;
+        const diff = compare ? pairedDiff(a, b) : null;
+        const exact = a?.exactVal ?? b?.exactVal ?? null;
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+          <td>${formatNum(row.t)}</td>
+          <td>${formatNum(a?.k)}</td>
+          <td>${formatNum(a?.x)}</td>
+          <td>${formatNum(b?.k)}</td>
+          <td>${formatNum(b?.x)}</td>
+          <td>${formatNum(diff)}</td>
+          <td>${formatNum(exact)}</td>
+          <td>${formatNum(a?.globalErr)}</td>
+          <td>${formatNum(b?.globalErr)}</td>
+          <td>${formatNum(a?.localErr)}</td>
+          <td>${formatNum(b?.localErr)}</td>
+        `;
+        tbody.appendChild(tr);
+      });
+    }
+
+    function drawSeries(ctx, rows, yKey, color, px, py, dashed = false) {
+      const valid = rows.filter(r => Number.isFinite(r.t) && Number.isFinite(r[yKey]));
+      if (!valid.length) return;
+      ctx.save();
+      ctx.strokeStyle = color;
+      ctx.lineWidth = dashed ? 2 : 2.4;
+      ctx.setLineDash(dashed ? [7, 5] : []);
+      ctx.beginPath();
+      valid.forEach((row, index) => {
+        const x = px(row.t);
+        const y = py(row[yKey]);
+        if (index === 0) ctx.moveTo(x, y);
+        else ctx.lineTo(x, y);
+      });
+      ctx.stroke();
+      ctx.setLineDash([]);
+      if (!dashed) {
+        ctx.fillStyle = color;
+        valid.forEach(row => {
+          ctx.beginPath();
+          ctx.arc(px(row.t), py(row[yKey]), 3, 0, 2 * Math.PI);
+          ctx.fill();
+        });
+      }
+      ctx.restore();
+    }
+
+    function drawPlot(rowsA, rowsB, compare, exactEnabled) {
+      const canvas = $('plot');
+      const ctx = canvas.getContext('2d');
+      const W = canvas.width;
+      const H = canvas.height;
+      ctx.clearRect(0, 0, W, H);
+      ctx.fillStyle = '#ffffff';
+      ctx.fillRect(0, 0, W, H);
+
+      const allRows = rowsA.concat(compare ? rowsB : []);
+      const xValues = allRows.map(r => r.t).filter(Number.isFinite);
+      const yValues = allRows.map(r => r.x).filter(Number.isFinite);
+      const exactRows = exactEnabled
+        ? buildCombinedRows(rowsA, rowsB, compare).map(row => ({
+          t: row.t,
+          exactVal: row.a?.exactVal ?? row.b?.exactVal ?? null
+        }))
+        : [];
+      if (exactEnabled) {
+        exactRows.forEach(r => {
+          if (Number.isFinite(r.exactVal)) yValues.push(r.exactVal);
+        });
+      }
+
+      if (!xValues.length || !yValues.length) {
+        ctx.fillStyle = '#667085';
+        ctx.font = '16px Arial';
+        ctx.fillText('Sin datos para graficar.', 30, 40);
+        return;
+      }
+
+      let xmin = Math.min(...xValues);
+      let xmax = Math.max(...xValues);
+      let ymin = Math.min(...yValues);
+      let ymax = Math.max(...yValues);
+      if (xmin === xmax) { xmin -= 1; xmax += 1; }
+      if (ymin === ymax) { ymin -= 1; ymax += 1; }
+
+      const yPad = (ymax - ymin) * 0.08;
+      ymin -= yPad;
+      ymax += yPad;
+
+      const fullBounds = { xmin, xmax, ymin, ymax };
+      state.plot.full = fullBounds;
+      if (!state.plot.view) {
+        state.plot.view = { ...fullBounds };
+      }
+
+      const padL = 58;
+      const padR = 22;
+      const padT = 24;
+      const padB = 46;
+      const plotW = W - padL - padR;
+      const plotH = H - padT - padB;
+      state.plot.rect = { padL, padR, padT, padB, plotW, plotH, W, H };
+
+      xmin = state.plot.view.xmin;
+      xmax = state.plot.view.xmax;
+      ymin = state.plot.view.ymin;
+      ymax = state.plot.view.ymax;
+
+      const px = (x) => padL + plotW * (x - xmin) / (xmax - xmin);
+      const py = (y) => padT + plotH - plotH * (y - ymin) / (ymax - ymin);
+
+      ctx.strokeStyle = '#d0d5dd';
+      ctx.lineWidth = 1;
+      ctx.fillStyle = '#475467';
+      ctx.font = '12px Arial';
+      for (let i = 0; i <= 5; i++) {
+        const gx = padL + i * plotW / 5;
+        const gy = padT + i * plotH / 5;
+        ctx.beginPath();
+        ctx.moveTo(gx, padT);
+        ctx.lineTo(gx, padT + plotH);
+        ctx.stroke();
+        ctx.beginPath();
+        ctx.moveTo(padL, gy);
+        ctx.lineTo(padL + plotW, gy);
+        ctx.stroke();
+
+        const tx = xmin + i * (xmax - xmin) / 5;
+        const ty = ymax - i * (ymax - ymin) / 5;
+        ctx.fillText(formatNum(tx), gx - 16, H - 18);
+        ctx.fillText(formatNum(ty), 8, gy + 4);
+      }
+
+      ctx.strokeStyle = '#101828';
+      ctx.lineWidth = 1.3;
+      ctx.beginPath();
+      ctx.moveTo(padL, padT);
+      ctx.lineTo(padL, padT + plotH);
+      ctx.lineTo(padL + plotW, padT + plotH);
+      ctx.stroke();
+
+      ctx.save();
+      ctx.beginPath();
+      ctx.rect(padL, padT, plotW, plotH);
+      ctx.clip();
+      drawSeries(ctx, rowsA, 'x', '#2563eb', px, py);
+      if (compare) drawSeries(ctx, rowsB, 'x', '#059669', px, py);
+      if (exactEnabled) drawSeries(ctx, exactRows, 'exactVal', '#dc2626', px, py, true);
+      ctx.restore();
+    }
+
+    function clamp(value, min, max) {
+      return Math.min(max, Math.max(min, value));
+    }
+
+    function resetPlotZoom() {
+      state.plot.view = null;
+      state.plot.drag.active = false;
+      $('plot').style.cursor = 'grab';
+      drawPlot(state.rowsA, state.rowsB, state.compare, state.exactEnabled);
+    }
+
+    function zoomPlot(event) {
+      if (!state.rowsA.length || !state.plot.full || !state.plot.view || !state.plot.rect) return;
+      event.preventDefault();
+
+      const canvas = $('plot');
+      const bounds = canvas.getBoundingClientRect();
+      const sx = (event.clientX - bounds.left) * (canvas.width / bounds.width);
+      const sy = (event.clientY - bounds.top) * (canvas.height / bounds.height);
+      const rect = state.plot.rect;
+      const current = state.plot.view;
+
+      const rx = clamp((sx - rect.padL) / rect.plotW, 0, 1);
+      const ry = clamp((sy - rect.padT) / rect.plotH, 0, 1);
+      const anchorX = current.xmin + rx * (current.xmax - current.xmin);
+      const anchorY = current.ymax - ry * (current.ymax - current.ymin);
+      const zoomFactor = event.deltaY < 0 ? 0.82 : 1.22;
+
+      const nextWidth = (current.xmax - current.xmin) * zoomFactor;
+      const nextHeight = (current.ymax - current.ymin) * zoomFactor;
+      const minWidth = Math.max((state.plot.full.xmax - state.plot.full.xmin) * 1e-6, 1e-12);
+      const minHeight = Math.max((state.plot.full.ymax - state.plot.full.ymin) * 1e-6, 1e-12);
+
+      if (nextWidth < minWidth || nextHeight < minHeight) return;
+
+      state.plot.view = {
+        xmin: anchorX - rx * nextWidth,
+        xmax: anchorX + (1 - rx) * nextWidth,
+        ymin: anchorY - (1 - ry) * nextHeight,
+        ymax: anchorY + ry * nextHeight
+      };
+
+      drawPlot(state.rowsA, state.rowsB, state.compare, state.exactEnabled);
+    }
+
+    function startPlotPan(event) {
+      if (event.button !== 0 || !state.rowsA.length || !state.plot.view || !state.plot.rect) return;
+      event.preventDefault();
+      state.plot.drag.active = true;
+      state.plot.drag.lastX = event.clientX;
+      state.plot.drag.lastY = event.clientY;
+      $('plot').style.cursor = 'grabbing';
+    }
+
+    function panPlot(event) {
+      if (!state.plot.drag.active || !state.plot.view || !state.plot.rect) return;
+      if (event.buttons !== undefined && (event.buttons & 1) !== 1) {
+        endPlotPan();
+        return;
+      }
+      event.preventDefault();
+
+      const canvas = $('plot');
+      const bounds = canvas.getBoundingClientRect();
+      const dx = (event.clientX - state.plot.drag.lastX) * (canvas.width / bounds.width);
+      const dy = (event.clientY - state.plot.drag.lastY) * (canvas.height / bounds.height);
+      state.plot.drag.lastX = event.clientX;
+      state.plot.drag.lastY = event.clientY;
+
+      const rect = state.plot.rect;
+      const current = state.plot.view;
+      const width = current.xmax - current.xmin;
+      const height = current.ymax - current.ymin;
+      const shiftX = -dx * width / rect.plotW;
+      const shiftY = dy * height / rect.plotH;
+
+      state.plot.view = {
+        xmin: current.xmin + shiftX,
+        xmax: current.xmax + shiftX,
+        ymin: current.ymin + shiftY,
+        ymax: current.ymax + shiftY
+      };
+
+      drawPlot(state.rowsA, state.rowsB, state.compare, state.exactEnabled);
+    }
+
+    function endPlotPan() {
+      if (!state.plot.drag.active) return;
+      state.plot.drag.active = false;
+      $('plot').style.cursor = 'grab';
+    }
+
+    function exportCSV() {
+      if (!state.rowsA.length) {
+        setStatus('Primero debes calcular.', 'warn');
+        return;
+      }
+
+      const header = [
+        't',
+        'k_metodo_1',
+        'x_k_metodo_1',
+        'k_metodo_2',
+        'x_k_metodo_2',
+        'metodo_1_menos_metodo_2_si_t_coincide',
+        'x_exacta',
+        'error_global_metodo_1',
+        'error_global_metodo_2',
+        'error_local_metodo_1',
+        'error_local_metodo_2'
+      ];
+      const lines = [header.join(',')];
+      const combined = buildCombinedRows(state.rowsA, state.rowsB, state.compare);
+      combined.forEach(row => {
+        const a = row.a;
+        const b = row.b;
+        const diff = state.compare ? pairedDiff(a, b) : null;
+        const exact = a?.exactVal ?? b?.exactVal ?? '';
+        lines.push([
+          row.t ?? '',
+          a?.k ?? '',
+          a?.x ?? '',
+          b?.k ?? '',
+          b?.x ?? '',
+          diff ?? '',
+          exact ?? '',
+          a?.globalErr ?? '',
+          b?.globalErr ?? '',
+          a?.localErr ?? '',
+          b?.localErr ?? ''
+        ].join(','));
+      });
+
+      const blob = new Blob([lines.join('\n')], { type: 'text/csv;charset=utf-8;' });
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.href = url;
+      link.download = 'familia_runge_kutta.csv';
+      link.click();
+      URL.revokeObjectURL(url);
+    }
+
+    function applyExample(name) {
+      if (name === 'linear') {
+        $('fexpr').value = 'x - t + 1';
+        $('t0').value = '0';
+        $('x0').value = '1';
+        $('hA').value = '0.2';
+        $('hB').value = '0.2';
+        $('n').value = '10';
+        $('digitsA').value = '8';
+        $('digitsB').value = '8';
+        $('exactExpr').value = 't + exp(t)';
+      }
+      if (name === 'logistic') {
+        $('fexpr').value = 'x*(1-x)';
+        $('t0').value = '0';
+        $('x0').value = '0.2';
+        $('hA').value = '0.25';
+        $('hB').value = '0.25';
+        $('n').value = '20';
+        $('digitsA').value = '8';
+        $('digitsB').value = '8';
+        $('exactExpr').value = '1/(1+4*exp(-t))';
+      }
+      if (name === 'osc') {
+        $('fexpr').value = 'sin(t)-x';
+        $('t0').value = '0';
+        $('x0').value = '1';
+        $('hA').value = '0.1';
+        $('hB').value = '0.1';
+        $('n').value = '40';
+        $('digitsA').value = '8';
+        $('digitsB').value = '8';
+        $('exactExpr').value = '1.5*exp(-t)+(sin(t)-cos(t))/2';
+      }
+      if (name === 'riccati') {
+        $('fexpr').value = 't^2 - x^2';
+        $('t0').value = '0';
+        $('x0').value = '2';
+        $('hA').value = '0.1';
+        $('hB').value = '0.1';
+        $('n').value = '10';
+        $('digitsA').value = '8';
+        $('digitsB').value = '8';
+        $('exactExpr').value = '';
+      }
+      setStatus('Ejemplo cargado.', 'good');
+      run();
+    }
+
+    function run() {
+      try {
+        readMethodInputs('A');
+        readMethodInputs('B');
+        updateMethodCheck('A');
+        updateMethodCheck('B');
+
+        const fexpr = $('fexpr').value.trim();
+        const t0 = Number($('t0').value);
+        const x0 = Number($('x0').value);
+        const hA = Number($('hA').value);
+        const hB = Number($('hB').value);
+        const n = Number($('n').value);
+        const digitsA = Number($('digitsA').value);
+        const digitsB = Number($('digitsB').value);
+        const roundMode = $('roundMode').value;
+        const exactExpr = $('exactExpr').value.trim();
+        const compare = $('compareEnabled').checked;
+
+        if (!fexpr) throw new Error('Debes ingresar f(t,x).');
+        if (!Number.isFinite(t0) || !Number.isFinite(x0)) {
+          throw new Error('Revisa t0 y x0.');
+        }
+        if (!Number.isFinite(hA) || hA === 0 || (compare && (!Number.isFinite(hB) || hB === 0))) {
+          throw new Error('Revisa h en los metodos activos.');
+        }
+        if (!Number.isInteger(n) || n < 0) throw new Error('n debe ser un entero no negativo.');
+        if (!Number.isInteger(digitsA) || digitsA < 0 || (compare && (!Number.isInteger(digitsB) || digitsB < 0))) {
+          throw new Error('delta debe ser un entero no negativo en los metodos activos.');
+        }
+
+        const f = compileExpression(fexpr, ['t', 'x']);
+        const testValue = f(t0, x0);
+        if (!Number.isFinite(testValue)) {
+          throw new Error('f(t0,x0) no produce un numero finito.');
+        }
+
+        let exactFn = null;
+        if (exactExpr) {
+          const exactCompiled = compileExpression(exactExpr, ['t']);
+          exactFn = (t) => exactCompiled(t);
+          const exactTest = exactFn(t0);
+          if (!Number.isFinite(exactTest)) {
+            throw new Error('La solucion exacta no produce un numero finito en t0.');
+          }
+        }
+
+        const methodA = methodNumbers('A');
+        const methodB = compare ? methodNumbers('B') : null;
+        const rowsA = integrateRK(f, t0, x0, hA, n, digitsA, roundMode, methodA, exactFn);
+        const rowsB = compare ? integrateRK(f, t0, x0, hB, n, digitsB, roundMode, methodB, exactFn) : [];
+
+        state.rowsA = rowsA;
+        state.rowsB = rowsB;
+        state.compare = compare;
+        state.exactEnabled = !!exactFn;
+        state.plot.view = null;
+        state.plot.full = null;
+        state.plot.rect = null;
+        state.plot.drag.active = false;
+
+        updateSummary(rowsA, rowsB, compare);
+        updateTable(rowsA, rowsB, compare);
+        drawPlot(rowsA, rowsB, compare, !!exactFn);
+
+        const last = rowsA[rowsA.length - 1];
+        const extra = compare
+          ? ` Comparando ${methodA.name} (h=${formatNum(hA)}, delta=${digitsA}) contra ${methodB.name} (h=${formatNum(hB)}, delta=${digitsB}).`
+          : ` Metodo usado: ${methodA.name} (h=${formatNum(hA)}, delta=${digitsA}).`;
+        const finalText = compare
+          ? `M1 llega a t=${formatNum(last.t)} y M2 llega a t=${formatNum(rowsB[rowsB.length - 1].t)}.`
+          : `M1 llega a t=${formatNum(last.t)}.`;
+        setStatus(`Calculo completado: ${rowsA.length} nodos para M1${compare ? ` y ${rowsB.length} para M2` : ''}. ${finalText}${extra}`, 'good');
+      } catch (err) {
+        console.error(err);
+        setStatus('Error: ' + err.message, 'warn');
+      }
+    }
+
+    function setCompareEnabled(enabled, recalc = true) {
+      state.compare = enabled;
+      $('methodCardB').classList.toggle('is-disabled', !enabled);
+      $('methodCardB').querySelectorAll('input, select').forEach(control => {
+        control.disabled = !enabled;
+      });
+      if (recalc) run();
+    }
+
+    function wireEvents() {
+      ['A', 'B'].forEach(id => {
+        $(`preset${id}`).addEventListener('change', () => {
+          const key = $(`preset${id}`).value;
+          if (key !== 'custom') {
+            methods[id] = clonePreset(key);
+            renderButcher(id);
+            run();
+          }
+        });
+
+        $(`m${id}`).addEventListener('change', () => {
+          readMethodInputs(id);
+          const nextM = Number($(`m${id}`).value);
+          if (!Number.isInteger(nextM) || nextM < 1 || nextM > 12) {
+            setStatus('m debe ser un entero entre 1 y 12.', 'warn');
+            $(`m${id}`).value = methods[id].m;
+            return;
+          }
+          methods[id].preset = 'custom';
+          resizeMethod(id, nextM);
+          renderButcher(id);
+          run();
+        });
+
+        $(`methodName${id}`).addEventListener('input', () => {
+          methods[id].name = $(`methodName${id}`).value;
+        });
+
+        $(`butcher${id}`).addEventListener('input', () => {
+          methods[id].preset = 'custom';
+          $(`preset${id}`).value = 'custom';
+          readMethodInputs(id);
+          updateMethodCheck(id);
+        });
+      });
+
+      $('runBtn').addEventListener('click', run);
+      $('csvBtn').addEventListener('click', exportCSV);
+      $('resetZoomBtn').addEventListener('click', resetPlotZoom);
+      $('plot').addEventListener('wheel', zoomPlot, { passive: false });
+      $('plot').addEventListener('mousedown', startPlotPan);
+      $('plot').addEventListener('dblclick', resetPlotZoom);
+      document.addEventListener('mousemove', panPlot);
+      document.addEventListener('mouseup', endPlotPan);
+      $('compareEnabled').addEventListener('change', () => setCompareEnabled($('compareEnabled').checked));
+      document.querySelectorAll('.pill[data-example]').forEach(button => {
+        button.addEventListener('click', () => applyExample(button.dataset.example));
+      });
+    }
+
+    renderButcher('A');
+    renderButcher('B');
+    wireEvents();
+    setCompareEnabled(true, false);
+  </script>
+</body>
+</html>
