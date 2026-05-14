@@ -358,6 +358,39 @@
       font-style: italic;
     }
 
+    .max-score-display {
+      display: none;
+      margin: 4px auto 24px;
+      text-align: center;
+      color: #1d1a15;
+      font-style: italic;
+    }
+
+    .max-score-display.show {
+      display: grid;
+      justify-items: center;
+      gap: 3px;
+    }
+
+    .max-score-label {
+      font-size: clamp(.9rem, 2vw, 1.08rem);
+      font-weight: 850;
+      color: rgba(27, 23, 18, .68);
+    }
+
+    .max-score-number {
+      font-size: clamp(3.2rem, 12vw, 7rem);
+      line-height: .9;
+      font-weight: 950;
+      color: #211b15;
+    }
+
+    .max-score-total {
+      font-size: clamp(1rem, 2.4vw, 1.28rem);
+      font-weight: 900;
+      color: rgba(27, 23, 18, .68);
+    }
+
     .primary-action {
       min-width: 210px;
       height: 58px;
@@ -520,6 +553,7 @@
     <div class="modal">
       <h1 id="endTitle">Fin del juego</h1>
       <p id="endMessage">Tu partida terminó.</p>
+      <div class="max-score-display" id="maxScoreDisplay" aria-live="polite"></div>
       <button class="primary-action" id="restartButton">Reiniciar</button>
     </div>
   </section>
@@ -610,6 +644,7 @@
     const restartButton = document.getElementById("restartButton");
     const endTitle = document.getElementById("endTitle");
     const endMessage = document.getElementById("endMessage");
+    const maxScoreDisplay = document.getElementById("maxScoreDisplay");
     const toast = document.getElementById("toast");
     const vidasHUD = document.getElementById("vidasHUD");
     const puntosHUD = document.getElementById("puntosHUD");
@@ -778,7 +813,7 @@
 
         if (activeLimit.y + activeLimit.height >= zoneHeight) {
           removeLimitElement(activeLimit);
-          penalizePlayer("Un límite tocó el fondo.");
+          penalizePlayer("Un límite tocó el fondo.", 2);
         }
       }
 
@@ -827,24 +862,28 @@
 
     function removeMatchingLimits(answer) {
       const matching = gameState.limitesActivos.filter(activeLimit => activeLimit.data.respuesta === answer);
-      for (const activeLimit of matching) removeLimitElement(activeLimit, true);
-      return matching.length;
+      if (matching.length === 0) return 0;
+      const closestToBottom = matching.reduce((lowest, activeLimit) =>
+        activeLimit.y > lowest.y ? activeLimit : lowest
+      );
+      removeLimitElement(closestToBottom, true);
+      return 1;
     }
 
-    function penalizePlayer(reason) {
-      gameState.puntos = Math.max(0, gameState.puntos - 3);
-      loseLife(reason);
+    function penalizePlayer(reason, pointLoss = 3) {
+      gameState.puntos = Math.max(0, gameState.puntos - pointLoss);
+      loseLife(reason, pointLoss);
     }
 
     function updateMaxScore() {
       gameState.maxScore = Math.max(gameState.maxScore, Math.min(gameState.puntos, WIN_SCORE));
     }
 
-    function loseLife(reason) {
+    function loseLife(reason, pointLoss = 3) {
       if (gameState.estado !== "jugando") return;
       gameState.vidas -= 1;
       gameState.racha = 0;
-      showToast(`${reason} -1 vida, -3 puntos.`);
+      showToast(`${reason} -1 vida, -${pointLoss} puntos.`);
       updateLevel();
       updateHUD();
 
@@ -885,13 +924,23 @@
 
       if (win) {
         endTitle.textContent = "Victoria";
-        endMessage.textContent = `Llegaste a 35 puntos. Puntuacion maxima: ${gameState.maxScore} / ${WIN_SCORE}.`;
+        endMessage.textContent = "Llegaste a 35 puntos. Leibniz aprueba esta clasificación.";
       } else {
         const defeatCopy = getDefeatCopy(gameState.maxScore);
         endTitle.textContent = defeatCopy.title;
-        endMessage.textContent = `${defeatCopy.message} Puntuacion maxima: ${gameState.maxScore} / ${WIN_SCORE}.`;
+        endMessage.textContent = defeatCopy.message;
       }
+      renderMaxScore();
       endOverlay.classList.add("show");
+    }
+
+    function renderMaxScore() {
+      maxScoreDisplay.innerHTML = `
+        <span class="max-score-label">Puntuación máxima</span>
+        <strong class="max-score-number">${gameState.maxScore}</strong>
+        <span class="max-score-total">de ${WIN_SCORE} puntos</span>
+      `;
+      maxScoreDisplay.classList.add("show");
     }
 
     function getDefeatCopy(score) {
@@ -932,6 +981,8 @@
       updateHUD();
       updateMusicToggle();
       updateTimeBubble();
+      maxScoreDisplay.classList.remove("show");
+      maxScoreDisplay.textContent = "";
       toast.classList.remove("show");
     }
 
