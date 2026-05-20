@@ -1,0 +1,691 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Iteraciones de Picard para sistemas de EDO</title>
+
+  <script src="https://cdn.jsdelivr.net/npm/mathjs/lib/browser/math.js"></script>
+  <script src="https://cdn.plot.ly/plotly-2.35.2.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+  <style>
+    :root {
+      --fondo-1: #102a43;
+      --fondo-2: #0b3d3a;
+      --verde: #1f9d55;
+      --verde-oscuro: #137333;
+      --naranja: #f97316;
+      --amarillo: #facc15;
+      --texto: #f8fafc;
+      --panel: #ffffff;
+      --texto-panel: #172554;
+      --borde: #fed7aa;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background: linear-gradient(135deg, var(--fondo-1) 0 33%, var(--fondo-2) 33% 66%, #143601 66% 100%);
+      color: var(--texto);
+    }
+
+    header {
+      padding: 1.4rem 1rem 0.6rem;
+      text-align: center;
+    }
+
+    header h1 {
+      margin: 0;
+      font-size: clamp(1.5rem, 4vw, 2.5rem);
+      color: #ffffff;
+    }
+
+    header p {
+      max-width: 900px;
+      margin: 0.7rem auto 0;
+      line-height: 1.5;
+      color: #dbeafe;
+    }
+
+    main {
+      width: min(1200px, 96vw);
+      margin: 0 auto 2rem;
+      display: grid;
+      grid-template-columns: 380px 1fr;
+      gap: 1rem;
+    }
+
+    .panel {
+      background: var(--panel);
+      color: var(--texto-panel);
+      border-radius: 18px;
+      box-shadow: 0 14px 30px rgba(0, 0, 0, 0.25);
+      border: 2px solid var(--borde);
+      overflow: hidden;
+    }
+
+    .panel h2 {
+      margin: 0;
+      padding: 0.9rem 1rem;
+      font-size: 1.15rem;
+      background: #ecfdf5;
+      color: #14532d;
+      border-bottom: 2px solid var(--borde);
+    }
+
+    .contenido {
+      padding: 1rem;
+    }
+
+    label {
+      display: block;
+      font-weight: 700;
+      margin: 0.75rem 0 0.25rem;
+    }
+
+    input, select {
+      width: 100%;
+      padding: 0.62rem;
+      border-radius: 10px;
+      border: 1.5px solid #cbd5e1;
+      font-size: 0.95rem;
+    }
+
+    input:focus, select:focus {
+      outline: 2px solid var(--naranja);
+      border-color: var(--naranja);
+    }
+
+    .grid-2 {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0.6rem;
+    }
+
+    .grid-3 {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 0.6rem;
+    }
+
+    .formula {
+      margin: 1rem 0;
+      padding: 0.8rem;
+      border-radius: 14px;
+      border: 2px solid var(--amarillo);
+      background: #fff7ed;
+      color: var(--naranja);
+      font-weight: 700;
+      overflow-x: auto;
+    }
+
+    button {
+      width: 100%;
+      margin-top: 1rem;
+      border: none;
+      border-radius: 14px;
+      padding: 0.8rem 1rem;
+      background: var(--verde);
+      color: white;
+      font-weight: 800;
+      font-size: 1rem;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background: var(--verde-oscuro);
+    }
+
+    .tabs {
+      display: flex;
+      gap: 0.5rem;
+      flex-wrap: wrap;
+      margin-bottom: 0.8rem;
+    }
+
+    .tab {
+      flex: 1;
+      min-width: 120px;
+      margin: 0;
+      padding: 0.65rem;
+      background: #16a34a;
+      border-radius: 12px;
+    }
+
+    .tab.activa {
+      background: var(--naranja);
+    }
+
+    .salida {
+      display: none;
+    }
+
+    .salida.activa {
+      display: block;
+    }
+
+    #grafica {
+      width: 100%;
+      min-height: 560px;
+    }
+
+    .tabla-contenedor {
+      max-height: 560px;
+      overflow: auto;
+      border: 1px solid #cbd5e1;
+      border-radius: 12px;
+    }
+
+    table {
+      border-collapse: collapse;
+      width: 100%;
+      min-width: 900px;
+      font-size: 0.88rem;
+    }
+
+    th, td {
+      border: 1px solid #dbeafe;
+      padding: 0.45rem;
+      text-align: right;
+      white-space: nowrap;
+    }
+
+    th {
+      position: sticky;
+      top: 0;
+      background: #ecfdf5;
+      color: #14532d;
+      z-index: 1;
+    }
+
+    .aviso {
+      margin-top: 0.7rem;
+      padding: 0.7rem;
+      background: #fff7ed;
+      border-left: 5px solid var(--naranja);
+      border-radius: 10px;
+      color: #7c2d12;
+      line-height: 1.4;
+    }
+
+    .error {
+      margin-top: 0.8rem;
+      color: #991b1b;
+      font-weight: 700;
+    }
+
+    @media (max-width: 900px) {
+      main {
+        grid-template-columns: 1fr;
+      }
+
+      #grafica {
+        min-height: 480px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Calculadora de iteraciones de Picard</h1>
+    <p>
+      Para sistemas de ecuaciones diferenciales ordinarias de dimensión 3:
+      \[\mathbf y'(t)=\mathbf f(t,\mathbf y(t)),\qquad \mathbf y(t_0)=\mathbf y_0.\]
+    </p>
+  </header>
+
+  <main>
+    <section class="panel">
+      <h2>Datos del sistema</h2>
+      <div class="contenido">
+        <div class="formula">
+          \[
+          \mathbf y_{n+1}(t)=\mathbf y_0+\int_{t_0}^{t}\mathbf f(s,\mathbf y_n(s))\,ds
+          \]
+        </div>
+
+        <label for="f1">\(f_1(t,y_1,y_2,y_3)\)</label>
+        <input id="f1" value="0.065 - 0.0021*y1" />
+
+        <label for="f2">\(f_2(t,y_1,y_2,y_3)\)</label>
+        <input id="f2" value="0.025 + 0.002*y1 - 0.0021*y2" />
+
+        <label for="f3">\(f_3(t,y_1,y_2,y_3)\)</label>
+        <input id="f3" value="0.025 + 0.002*y2 - 0.0021*y3" />
+
+        <div class="grid-2">
+          <div>
+            <label for="t0">\(t_0\)</label>
+            <input id="t0" type="number" value="0" step="any" />
+          </div>
+          <div>
+            <label for="tf">\(t_f\)</label>
+            <input id="tf" type="number" value="1000" step="any" />
+          </div>
+        </div>
+
+        <label>Condición inicial \(\mathbf y_0\)</label>
+        <div class="grid-3">
+          <input id="y10" type="number" value="0" step="any" placeholder="y1(t0)" />
+          <input id="y20" type="number" value="0" step="any" placeholder="y2(t0)" />
+          <input id="y30" type="number" value="0" step="any" placeholder="y3(t0)" />
+        </div>
+
+        <div class="grid-2">
+          <div>
+            <label for="iteraciones">Iteraciones</label>
+            <input id="iteraciones" type="number" value="5" min="1" max="15" />
+          </div>
+          <div>
+            <label for="puntos">Puntos de malla</label>
+            <input id="puntos" type="number" value="80" min="10" max="600" />
+          </div>
+        </div>
+
+        <label for="metodoIntegral">Método de integración numérica</label>
+        <select id="metodoIntegral">
+          <option value="trapecio">Trapecio acumulado</option>
+          <option value="simpson">Simpson 1/3 por subintervalos</option>
+          <option value="gauss2">Gauss-Legendre de 2 puntos</option>
+        </select>
+
+        <label for="componente">Componente para graficar</label>
+        <select id="componente">
+          <option value="1">Graficar y₁(t)</option>
+          <option value="2">Graficar y₂(t)</option>
+          <option value="3">Graficar y₃(t)</option>
+          <option value="todas">Graficar y₁, y₂, y₃ de la última iteración</option>
+        </select>
+
+        <label>Ajuste de ventana gráfica</label>
+        <div class="grid-2">
+          <input id="tMinGraf" type="number" step="any" placeholder="t mínimo, opcional" />
+          <input id="tMaxGraf" type="number" step="any" placeholder="t máximo, opcional" />
+        </div>
+
+        <div class="grid-2">
+          <input id="yMinGraf" type="number" step="any" placeholder="y mínimo, opcional" />
+          <input id="yMaxGraf" type="number" step="any" placeholder="y máximo, opcional" />
+        </div>
+
+        <label for="escalaY">Escala vertical</label>
+        <select id="escalaY">
+          <option value="linear">Lineal</option>
+          <option value="log">Logarítmica</option>
+        </select>
+
+        <button onclick="calcularPicard()">Calcular y graficar</button>
+        <button onclick="animarPicard()">Animar iteraciones</button>
+        <div id="mensaje" class="error"></div>
+
+        <div class="aviso">
+          Las integrales se aproximan numéricamente con el método seleccionado. La iteración inicial se toma constante:
+          \(\mathbf y_0(t)=\mathbf y(t_0)\).
+        </div>
+      </div>
+    </section>
+
+    <section class="panel">
+      <h2>Resultados</h2>
+      <div class="contenido">
+        <div class="tabs">
+          <button class="tab activa" id="btnGrafica" onclick="mostrarSalida('grafica')">Gráfica</button>
+          <button class="tab" id="btnTabla" onclick="mostrarSalida('tabla')">Tabla cruda</button>
+        </div>
+
+        <div id="salidaGrafica" class="salida activa">
+          <div id="grafica"></div>
+        </div>
+
+        <div id="salidaTabla" class="salida">
+          <div class="tabla-contenedor">
+            <table id="tabla"></table>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script>
+    let ultimoCalculo = null;
+    let animacionActiva = false;
+    function leerNumero(id) {
+      const valor = Number(document.getElementById(id).value);
+      if (!Number.isFinite(valor)) {
+        throw new Error("El campo " + id + " no contiene un número válido.");
+      }
+      return valor;
+    }
+
+    function crearMalla(t0, tf, puntos) {
+      const t = [];
+      const h = (tf - t0) / (puntos - 1);
+      for (let i = 0; i < puntos; i++) {
+        t.push(t0 + i * h);
+      }
+      return { t, h };
+    }
+
+    function evaluarFuncion(compilada, t, y1, y2, y3) {
+      const valor = compilada.evaluate({ t, y1, y2, y3 });
+      if (!Number.isFinite(valor)) {
+        throw new Error("Una función produjo un valor no numérico o infinito.");
+      }
+      return valor;
+    }
+
+    function calcularPicard() {
+      const mensaje = document.getElementById("mensaje");
+      mensaje.textContent = "";
+
+      try {
+        const f1 = math.compile(document.getElementById("f1").value);
+        const f2 = math.compile(document.getElementById("f2").value);
+        const f3 = math.compile(document.getElementById("f3").value);
+
+        const t0 = leerNumero("t0");
+        const tf = leerNumero("tf");
+        const yInicial = [leerNumero("y10"), leerNumero("y20"), leerNumero("y30")];
+        const iteraciones = Math.max(1, Math.floor(leerNumero("iteraciones")));
+        const puntos = Math.max(10, Math.floor(leerNumero("puntos")));
+        const componente = document.getElementById("componente").value;
+        const metodoIntegral = document.getElementById("metodoIntegral").value;
+        const opcionesGrafica = leerOpcionesGrafica();
+
+        if (t0 === tf) {
+          throw new Error("Debe cumplirse t0 distinto de tf.");
+        }
+
+        const { t, h } = crearMalla(t0, tf, puntos);
+        const soluciones = [];
+
+        const y0 = {
+          y1: Array(puntos).fill(yInicial[0]),
+          y2: Array(puntos).fill(yInicial[1]),
+          y3: Array(puntos).fill(yInicial[2])
+        };
+        soluciones.push(y0);
+
+        for (let n = 0; n < iteraciones; n++) {
+          const anterior = soluciones[n];
+          const siguiente = {
+            y1: Array(puntos).fill(yInicial[0]),
+            y2: Array(puntos).fill(yInicial[1]),
+            y3: Array(puntos).fill(yInicial[2])
+          };
+
+          for (let j = 1; j < puntos; j++) {
+            const inc = incrementoIntegral(f1, f2, f3, metodoIntegral, t, h, anterior, j);
+            siguiente.y1[j] = siguiente.y1[j - 1] + inc[0];
+            siguiente.y2[j] = siguiente.y2[j - 1] + inc[1];
+            siguiente.y3[j] = siguiente.y3[j - 1] + inc[2];
+          }
+
+          soluciones.push(siguiente);
+        }
+
+        ultimoCalculo = { t, soluciones, componente, opcionesGrafica, metodoIntegral };
+        animacionActiva = false;
+
+        graficar(t, soluciones, componente, opcionesGrafica);
+        construirTabla(t, soluciones);
+        mostrarSalida("grafica");
+      } catch (error) {
+        mensaje.textContent = error.message;
+      }
+    }
+
+    function valorInterpolado(anterior, clave, j, alpha) {
+      return anterior[clave][j - 1] + alpha * (anterior[clave][j] - anterior[clave][j - 1]);
+    }
+
+    function evaluarVector(f1, f2, f3, tau, anterior, j, alpha) {
+      const y1 = valorInterpolado(anterior, "y1", j, alpha);
+      const y2 = valorInterpolado(anterior, "y2", j, alpha);
+      const y3 = valorInterpolado(anterior, "y3", j, alpha);
+
+      return [
+        evaluarFuncion(f1, tau, y1, y2, y3),
+        evaluarFuncion(f2, tau, y1, y2, y3),
+        evaluarFuncion(f3, tau, y1, y2, y3)
+      ];
+    }
+
+    function incrementoIntegral(f1, f2, f3, metodo, t, h, anterior, j) {
+      const a = t[j - 1];
+      const b = t[j];
+      const m = 0.5 * (a + b);
+
+      if (metodo === "simpson") {
+        const fa = evaluarVector(f1, f2, f3, a, anterior, j, 0);
+        const fm = evaluarVector(f1, f2, f3, m, anterior, j, 0.5);
+        const fb = evaluarVector(f1, f2, f3, b, anterior, j, 1);
+        return [
+          (h / 6) * (fa[0] + 4 * fm[0] + fb[0]),
+          (h / 6) * (fa[1] + 4 * fm[1] + fb[1]),
+          (h / 6) * (fa[2] + 4 * fm[2] + fb[2])
+        ];
+      }
+
+      if (metodo === "gauss2") {
+        const r = 1 / Math.sqrt(3);
+        const alpha1 = 0.5 * (1 - r);
+        const alpha2 = 0.5 * (1 + r);
+        const tau1 = a + alpha1 * h;
+        const tau2 = a + alpha2 * h;
+        const fA = evaluarVector(f1, f2, f3, tau1, anterior, j, alpha1);
+        const fB = evaluarVector(f1, f2, f3, tau2, anterior, j, alpha2);
+        return [
+          0.5 * h * (fA[0] + fB[0]),
+          0.5 * h * (fA[1] + fB[1]),
+          0.5 * h * (fA[2] + fB[2])
+        ];
+      }
+
+      const fa = evaluarVector(f1, f2, f3, a, anterior, j, 0);
+      const fb = evaluarVector(f1, f2, f3, b, anterior, j, 1);
+      return [
+        0.5 * h * (fa[0] + fb[0]),
+        0.5 * h * (fa[1] + fb[1]),
+        0.5 * h * (fa[2] + fb[2])
+      ];
+    }
+
+    function graficar(t, soluciones, componente, opcionesGrafica = leerOpcionesGrafica()) {
+      const trazas = [];
+      const ultima = soluciones.length - 1;
+
+      if (componente === "todas") {
+        trazas.push({ x: t, y: soluciones[ultima].y1, mode: "lines", name: "y₁, iteración " + ultima });
+        trazas.push({ x: t, y: soluciones[ultima].y2, mode: "lines", name: "y₂, iteración " + ultima });
+        trazas.push({ x: t, y: soluciones[ultima].y3, mode: "lines", name: "y₃, iteración " + ultima });
+      } else {
+        const clave = "y" + componente;
+        for (let n = 0; n < soluciones.length; n++) {
+          trazas.push({
+            x: t,
+            y: soluciones[n][clave],
+            mode: "lines",
+            name: "Iteración " + n
+          });
+        }
+      }
+
+      Plotly.newPlot("grafica", trazas, layoutGrafica(componente, "", opcionesGrafica), { responsive: true });
+    }
+
+    function layoutGrafica(componente, tituloExtra = "", opcionesGrafica = leerOpcionesGrafica()) {
+      const xaxis = { title: "t" };
+      const yaxis = {
+        title: componente === "todas" ? "componentes" : "y" + componente + "(t)",
+        type: opcionesGrafica.escalaY
+      };
+
+      if (opcionesGrafica.tMin !== null && opcionesGrafica.tMax !== null && opcionesGrafica.tMin < opcionesGrafica.tMax) {
+        xaxis.range = [opcionesGrafica.tMin, opcionesGrafica.tMax];
+      }
+
+      if (opcionesGrafica.yMin !== null && opcionesGrafica.yMax !== null && opcionesGrafica.yMin < opcionesGrafica.yMax) {
+        yaxis.range = opcionesGrafica.escalaY === "log"
+          ? [Math.log10(opcionesGrafica.yMin), Math.log10(opcionesGrafica.yMax)]
+          : [opcionesGrafica.yMin, opcionesGrafica.yMax];
+      }
+
+      return {
+        title: "Iteraciones de Picard" + tituloExtra,
+        xaxis,
+        yaxis,
+        margin: { t: 55, r: 20, b: 50, l: 60 },
+        legend: { orientation: "h" }
+      };
+    }
+
+    function leerOpcionesGrafica() {
+      const tomar = id => {
+        const texto = document.getElementById(id).value.trim();
+        if (texto === "") return null;
+        const numero = Number(texto);
+        return Number.isFinite(numero) ? numero : null;
+      };
+
+      let escalaY = document.getElementById("escalaY").value;
+      const yMin = tomar("yMinGraf");
+      const yMax = tomar("yMaxGraf");
+
+      if (escalaY === "log" && ((yMin !== null && yMin <= 0) || (yMax !== null && yMax <= 0))) {
+        escalaY = "linear";
+      }
+
+      return {
+        tMin: tomar("tMinGraf"),
+        tMax: tomar("tMaxGraf"),
+        yMin,
+        yMax,
+        escalaY
+      };
+    }
+
+    function trazaAnimada(t, soluciones, componente, n) {
+      const trazas = [];
+
+      if (componente === "todas") {
+        const anterior = Math.max(0, n - 1);
+
+        if (n > 0) {
+          trazas.push({ x: t, y: soluciones[anterior].y1, mode: "lines", name: "y₁ anterior", opacity: 0.18, line: { dash: "dot" } });
+          trazas.push({ x: t, y: soluciones[anterior].y2, mode: "lines", name: "y₂ anterior", opacity: 0.18, line: { dash: "dot" } });
+          trazas.push({ x: t, y: soluciones[anterior].y3, mode: "lines", name: "y₃ anterior", opacity: 0.18, line: { dash: "dot" } });
+        }
+
+        trazas.push({ x: t, y: soluciones[n].y1, mode: "lines", name: "y₁, iteración " + n, line: { width: 4 } });
+        trazas.push({ x: t, y: soluciones[n].y2, mode: "lines", name: "y₂, iteración " + n, line: { width: 4 } });
+        trazas.push({ x: t, y: soluciones[n].y3, mode: "lines", name: "y₃, iteración " + n, line: { width: 4 } });
+      } else {
+        const clave = "y" + componente;
+
+        for (let k = 0; k <= n; k++) {
+          const distancia = n - k;
+          const opacidad = distancia === 0 ? 1 : Math.max(0.08, 0.35 - 0.07 * distancia);
+          const grosor = distancia === 0 ? 4 : 1.5;
+
+          trazas.push({
+            x: t,
+            y: soluciones[k][clave],
+            mode: "lines",
+            name: "Iteración " + k,
+            opacity: opacidad,
+            line: { width: grosor }
+          });
+        }
+      }
+
+      return trazas;
+    }
+
+    async function animarPicard() {
+      if (!ultimoCalculo) {
+        calcularPicard();
+      }
+
+      if (!ultimoCalculo) {
+        return;
+      }
+
+      animacionActiva = true;
+      mostrarSalida("grafica");
+
+      const { t, soluciones, componente, opcionesGrafica } = ultimoCalculo;
+      const ultima = soluciones.length - 1;
+
+      for (let n = 0; n <= ultima; n++) {
+        if (!animacionActiva) {
+          return;
+        }
+
+        const trazas = trazaAnimada(t, soluciones, componente, n);
+        await Plotly.react(
+          "grafica",
+          trazas,
+          layoutGrafica(componente, ": iteración " + n, opcionesGrafica),
+          { responsive: true }
+        );
+
+        await pausa(900);
+      }
+    }
+
+    function pausa(ms) {
+      return new Promise(resolve => setTimeout(resolve, ms));
+    }
+
+    function construirTabla(t, soluciones) {
+      const tabla = document.getElementById("tabla");
+      const ultima = soluciones.length - 1;
+      let html = "<thead><tr><th>j</th><th>t</th>";
+
+      for (let n = 0; n <= ultima; n++) {
+        html += `<th>y1_${n}</th><th>y2_${n}</th><th>y3_${n}</th>`;
+      }
+      html += "</tr></thead><tbody>";
+
+      for (let j = 0; j < t.length; j++) {
+        html += `<tr><td>${j}</td><td>${formato(t[j])}</td>`;
+        for (let n = 0; n <= ultima; n++) {
+          html += `<td>${formato(soluciones[n].y1[j])}</td>`;
+          html += `<td>${formato(soluciones[n].y2[j])}</td>`;
+          html += `<td>${formato(soluciones[n].y3[j])}</td>`;
+        }
+        html += "</tr>";
+      }
+      html += "</tbody>";
+      tabla.innerHTML = html;
+    }
+
+    function formato(x) {
+      if (Math.abs(x) >= 1e6 || Math.abs(x) < 1e-4 && x !== 0) {
+        return x.toExponential(6);
+      }
+      return Number(x).toFixed(6);
+    }
+
+    function mostrarSalida(tipo) {
+      document.getElementById("salidaGrafica").classList.toggle("activa", tipo === "grafica");
+      document.getElementById("salidaTabla").classList.toggle("activa", tipo === "tabla");
+      document.getElementById("btnGrafica").classList.toggle("activa", tipo === "grafica");
+      document.getElementById("btnTabla").classList.toggle("activa", tipo === "tabla");
+    }
+
+    window.addEventListener("load", () => {
+      calcularPicard();
+      if (window.MathJax) {
+        MathJax.typesetPromise();
+      }
+    });
+  </script>
+</body>
+</html>
