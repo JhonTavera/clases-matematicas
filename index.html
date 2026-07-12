@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="es">
+<html lang="es" data-theme="dark">
 <head>
   <!-- [1] Metadatos generales + anti-caché del HTML base -->
   <meta name="google-site-verification" content="BLKs_-ciNXuEIIuRlkfnAwS2pvIhlNUR5qeVY9FW7Oc" />
@@ -11,47 +11,280 @@
   <meta http-equiv="Pragma" content="no-cache" />
   <meta http-equiv="Expires" content="0" />
 
+  <script>document.documentElement.dataset.theme = "dark";</script>
+
   <!-- [2] Estilos globales (ajusta colores/espaciados aquí) -->
   <style>
-    :root { --maxw: 980px; --line:#e8e9ef; --ink:#111; --muted:#555; --accent:#0b63c5; }
+    :root {
+      color-scheme: dark;
+      --maxw: 1040px;
+      --bg: #080a0f;
+      --bg-elevated: #0e1219;
+      --surface: #121720;
+      --surface-soft: #171d27;
+      --line: #252d39;
+      --line-strong: #394352;
+      --ink: #f7f8fb;
+      --muted: #9da6b5;
+      --accent: #de0306;
+      --accent-hover: #f0191c;
+      --accent-soft: rgba(222, 3, 6, .14);
+      --danger: #ff7074;
+      --shadow: 0 24px 70px rgba(0, 0, 0, .34);
+    }
+
+    html[data-theme="light"] {
+      color-scheme: light;
+      --bg: #f7f7f5;
+      --bg-elevated: #ffffff;
+      --surface: #ffffff;
+      --surface-soft: #f3f4f7;
+      --line: #e2e4e9;
+      --line-strong: #cbd0d8;
+      --ink: #17191d;
+      --muted: #667080;
+      --accent-soft: rgba(222, 3, 6, .09);
+      --danger: #b00020;
+      --shadow: 0 24px 70px rgba(26, 31, 40, .12);
+    }
+
     * { box-sizing: border-box; }
-    body { font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif; margin: 0; color: var(--ink); background: #fff; }
-    header { padding: 1.25rem 1rem 0; background: #f6f7fb; border-bottom: 1px solid var(--line); }
-    .container { max-width: var(--maxw); margin: 0 auto; padding: 1rem; }
+    html { min-height: 100%; background: var(--bg); }
+    body {
+      min-height: 100vh;
+      margin: 0;
+      overflow-x: hidden;
+      color: var(--ink);
+      background:
+        radial-gradient(circle at 12% 8%, var(--accent-soft), transparent 30rem),
+        var(--bg);
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
+      transition: color .25s ease, background-color .25s ease;
+    }
+    body.intro-active { overflow: hidden; }
+    body.gate-open { overflow: hidden; }
+    button, input { font: inherit; }
+    button { color: inherit; }
+    a { color: inherit; }
+    .container { width: min(100%, var(--maxw)); margin: 0 auto; padding: 1.25rem; }
+    .sr-only {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      padding: 0;
+      margin: -1px;
+      overflow: hidden;
+      clip: rect(0, 0, 0, 0);
+      white-space: nowrap;
+      border: 0;
+    }
 
-    /* [2a] Frases motivadoras */
-    .quoteWrap { text-align: center; padding: .5rem 1rem 0; }
-    .quoteWrap em { display: block; font-style: italic; font-size: clamp(1rem, 2.4vw, 1.25rem); }
-    .quoteWrap .author { color: var(--muted); margin-top: .3rem; }
+    .theme-switch {
+      position: fixed;
+      top: 1rem;
+      right: 1rem;
+      z-index: 11000;
+      display: inline-flex;
+      gap: .2rem;
+      padding: .25rem;
+      border: 1px solid var(--line-strong);
+      border-radius: 999px;
+      background: color-mix(in srgb, var(--surface) 88%, transparent);
+      box-shadow: 0 12px 34px rgba(0, 0, 0, .2);
+      backdrop-filter: blur(16px);
+    }
+    .theme-switch button {
+      min-height: 2.2rem;
+      padding: .45rem .78rem;
+      border: 0;
+      border-radius: 999px;
+      background: transparent;
+      color: var(--muted);
+      cursor: pointer;
+      font-size: .82rem;
+      font-weight: 650;
+    }
+    .theme-switch button[aria-pressed="true"] {
+      background: var(--ink);
+      color: var(--bg);
+    }
 
-    /* [2b] Barra superior con el botón para cambiar clave */
-    .toolbar { display: grid; grid-template-columns: 1fr auto; align-items: center; gap: .75rem; padding: .5rem 0 1rem; }
-    .btn { padding: .6rem .8rem; border: 1px solid #d7d8e0; border-radius: .6rem; background:#fff; cursor:pointer; }
-    .btn:hover { background:#fff; box-shadow: 0 1px 0 rgba(0,0,0,.04); }
-    @media (max-width:700px) { .toolbar { grid-template-columns: 1fr; } }
+    .intro {
+      position: fixed;
+      inset: 0;
+      z-index: 9000;
+      display: grid;
+      place-items: center;
+      overflow: hidden;
+      background: var(--bg);
+      opacity: 1;
+      visibility: visible;
+      transition: opacity .65s ease, visibility .65s step-end;
+    }
+    .intro::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      background:
+        radial-gradient(circle at 50% 44%, transparent 0 23%, rgba(222, 3, 6, .035) 55%, transparent 76%),
+        linear-gradient(180deg, transparent 72%, rgba(0, 0, 0, .08));
+    }
+    html[data-theme="light"] .intro::after {
+      background: radial-gradient(circle at 50% 44%, rgba(222, 3, 6, .025), transparent 64%);
+    }
+    .intro.leaving { opacity: 0; visibility: hidden; pointer-events: none; }
+    .intro canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
+    .intro-action {
+      position: absolute;
+      top: max(.5rem, calc(var(--intro-logo-top, 10rem) - 4rem));
+      left: 50%;
+      z-index: 2;
+      opacity: 0;
+      visibility: hidden;
+      transform: translate(-50%, -12px);
+      pointer-events: none;
+      transition: opacity .55s ease, transform .55s ease;
+    }
+    .intro.ready .intro-action { opacity: 1; visibility: visible; transform: translate(-50%, 0); pointer-events: auto; }
+    .intro-access-btn {
+      min-height: 3.25rem;
+      padding: .82rem 1.35rem;
+      border: 1px solid rgba(255, 255, 255, .16);
+      border-radius: 999px;
+      background: var(--accent);
+      color: #fff;
+      box-shadow: 0 14px 38px rgba(222, 3, 6, .28);
+      cursor: pointer;
+      font-weight: 750;
+      letter-spacing: .01em;
+      transition: transform .2s ease, background .2s ease, box-shadow .2s ease;
+    }
+    .intro-access-btn:hover { transform: translateY(-2px); background: var(--accent-hover); box-shadow: 0 18px 46px rgba(222, 3, 6, .34); }
 
-    /* [2c] Tarjetas de cursos/secciones */
-    .course { border: 1px solid var(--line); border-radius: .9rem; padding: 1rem; margin: 1rem 0; background: #fff; }
-    .course h2 { margin: 0 0 .5rem; font-size: 1.2rem; }
-    .details { border: 1px solid #ececf3; border-radius: .6rem; padding: .6rem .8rem; background: #fcfcff; margin: .5rem 0; }
-    details > summary { cursor: pointer; font-weight: 600; color: #0b63c5; }
-    .list { display: grid; gap: .5rem; }
-    .pdf { display: flex; align-items: center; justify-content: space-between; padding: .65rem .8rem; border: 1px solid #ececf3; border-radius: .6rem; }
-    .pdf a { text-decoration: none; color: #0b63c5; word-break: break-word; }
-    .badge { font-size: .75rem; padding: .2rem .5rem; border-radius: .5rem; background: #eef6ff; color: #0b63c5; }
+    .site-content { transition: opacity .45s ease, visibility .45s ease; }
+    body.content-locked .site-content { opacity: 0; visibility: hidden; pointer-events: none; }
 
-    footer { text-align: center; font-size: .85rem; color: #555; padding: 2rem 1rem; }
+    header {
+      padding: 5rem 1rem 0;
+      border-bottom: 1px solid var(--line);
+      background: linear-gradient(180deg, var(--bg-elevated), color-mix(in srgb, var(--bg) 92%, transparent));
+    }
+    .quoteWrap { max-width: 760px; margin: 0 auto; text-align: center; padding: 1rem 1rem .4rem; }
+    .quoteWrap em { display: block; font-style: normal; font-size: clamp(1.08rem, 2.6vw, 1.48rem); font-weight: 520; line-height: 1.55; letter-spacing: -.018em; }
+    .quoteWrap .author { color: var(--muted); margin-top: .65rem; font-size: .92rem; }
+    .toolbar { display: grid; grid-template-columns: 1fr auto; align-items: center; gap: .75rem; min-height: 4.2rem; padding: .5rem 0 1rem; }
 
-    /* [2d] Puerta de acceso (overlay) */
-    .gate { position: fixed; inset: 0; z-index: 9999; background: rgba(255,255,255,0.96); display: none; align-items: center; justify-content: center; }
+    .btn {
+      min-height: 2.65rem;
+      padding: .62rem .9rem;
+      border: 1px solid var(--line-strong);
+      border-radius: .75rem;
+      background: var(--surface);
+      color: var(--ink);
+      cursor: pointer;
+      font-weight: 650;
+      transition: transform .18s ease, border-color .18s ease, background .18s ease;
+    }
+    .btn:hover { transform: translateY(-1px); border-color: var(--accent); background: var(--accent-soft); }
+
+    main.container { padding-top: 1.6rem; padding-bottom: 1.5rem; }
+    .course {
+      border: 1px solid var(--line);
+      border-radius: 1.1rem;
+      padding: clamp(1rem, 2.5vw, 1.45rem);
+      margin: 1rem 0;
+      background: linear-gradient(145deg, var(--surface), color-mix(in srgb, var(--surface) 86%, var(--bg)));
+      box-shadow: 0 12px 36px rgba(0, 0, 0, .08);
+    }
+    .course h2 { margin: 0 0 1rem; font-size: clamp(1.25rem, 2.6vw, 1.55rem); letter-spacing: -.025em; }
+    .details { border: 1px solid var(--line); border-radius: .85rem; padding: .72rem .9rem; background: var(--surface-soft); margin: .65rem 0; }
+    details > summary { cursor: pointer; font-weight: 700; color: var(--ink); outline: none; }
+    details > summary::marker { color: var(--accent); }
+    .list { display: grid; gap: .58rem; padding-top: .7rem; }
+    .pdf {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: .9rem;
+      padding: .78rem .86rem;
+      border: 1px solid var(--line);
+      border-radius: .75rem;
+      background: var(--surface);
+      transition: transform .18s ease, border-color .18s ease, background .18s ease;
+    }
+    .pdf:hover { transform: translateY(-1px); border-color: color-mix(in srgb, var(--accent) 58%, var(--line)); background: var(--accent-soft); }
+    .pdf a { flex: 1; text-decoration: none; color: var(--ink); word-break: break-word; font-weight: 560; }
+    .pdf a:hover { color: var(--accent-hover); }
+    .badge { flex: 0 0 auto; font-size: .7rem; font-weight: 800; letter-spacing: .055em; padding: .25rem .52rem; border-radius: 999px; background: var(--accent-soft); color: var(--accent-hover); }
+
+    footer { text-align: center; font-size: .84rem; color: var(--muted); padding: 2.3rem 1rem 2.8rem; }
+
+    .gate {
+      position: fixed;
+      inset: 0;
+      z-index: 12000;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 1rem;
+      background: color-mix(in srgb, var(--bg) 82%, transparent);
+      backdrop-filter: blur(18px);
+    }
     .gate.show { display: flex; }
-    .gate .panel { width: min(420px, 92vw); background: #fff; border: 1px solid var(--line); border-radius: .9rem; padding: 1rem; box-shadow: 0 10px 30px rgba(0,0,0,.06); }
-    .gate h2 { margin: 0 0 .25rem; font-size: 1.2rem; }
-    .gate p { margin: .2rem 0 .8rem; color: var(--muted); }
-    .gate input { width: 100%; padding: .75rem .85rem; border: 1px solid #d7d8e0; border-radius: .6rem; }
-    .gate .row { display: grid; grid-template-columns: 1fr auto; gap: .6rem; margin-top: .8rem; }
-    .gate button { padding: .75rem 1rem; border: 1px solid #0b63c5; background: #0b63c5; color: #fff; border-radius: .6rem; cursor: pointer; }
-    .gate .err { color: #b00020; font-size: .9rem; margin-top: .5rem; min-height: 1.2em; }
+    .gate .panel {
+      width: min(440px, 94vw);
+      padding: 1.35rem;
+      border: 1px solid var(--line-strong);
+      border-radius: 1.15rem;
+      background: var(--surface);
+      box-shadow: var(--shadow);
+    }
+    .gate .eyebrow { margin: 0 0 .45rem; color: var(--accent-hover); font-size: .74rem; font-weight: 820; letter-spacing: .1em; text-transform: uppercase; }
+    .gate h2 { margin: 0 0 .4rem; font-size: 1.45rem; letter-spacing: -.025em; }
+    .gate p { margin: .2rem 0 1rem; color: var(--muted); line-height: 1.55; }
+    .gate label { display: block; margin-bottom: .42rem; font-size: .82rem; font-weight: 700; }
+    .gate input {
+      width: 100%;
+      min-height: 3rem;
+      padding: .74rem .86rem;
+      border: 1px solid var(--line-strong);
+      border-radius: .75rem;
+      outline: none;
+      background: var(--bg-elevated);
+      color: var(--ink);
+      transition: border-color .18s ease, box-shadow .18s ease;
+    }
+    .gate input:focus { border-color: var(--accent); box-shadow: 0 0 0 4px var(--accent-soft); }
+    .gate .row { display: grid; grid-template-columns: 1fr auto; gap: .65rem; align-items: end; }
+    .gate button {
+      min-height: 3rem;
+      padding: .74rem 1rem;
+      border: 1px solid var(--accent);
+      border-radius: .75rem;
+      background: var(--accent);
+      color: #fff;
+      cursor: pointer;
+      font-weight: 750;
+    }
+    .gate .err { color: var(--danger); font-size: .86rem; margin-top: .65rem; min-height: 1.2em; }
+
+    :focus-visible { outline: 3px solid color-mix(in srgb, var(--accent) 70%, white); outline-offset: 3px; }
+
+    @media (max-width: 700px) {
+      .container { padding-inline: .9rem; }
+      header { padding-top: 4.75rem; }
+      .toolbar { grid-template-columns: 1fr; }
+      .toolbar .btn { justify-self: stretch; }
+      .gate .row { grid-template-columns: 1fr; }
+      .gate button { width: 100%; }
+      .pdf { align-items: flex-start; }
+      .theme-switch { top: .7rem; right: .7rem; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after { scroll-behavior: auto !important; transition-duration: .01ms !important; animation-duration: .01ms !important; }
+    }
   </style>
 
   <!-- [3] MathJax (para LaTeX si lo necesitas en los módulos) -->
@@ -63,9 +296,29 @@
   </script>
   <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"></script>
 </head>
-<body>
+<body class="intro-active content-locked">
+  <!-- Intro animada y logo institucional final -->
+  <div class="theme-switch" role="group" aria-label="Seleccionar tema visual">
+    <button id="themeDark" type="button" aria-pressed="true">Oscuro</button>
+    <button id="themeLight" type="button" aria-pressed="false">Claro</button>
+  </div>
+
+  <section id="intro" class="intro" aria-label="Animación del logo de la Universidad del Tolima">
+    <canvas
+      id="introCanvas"
+      role="img"
+      aria-label="Una animación matemática reconstruye el símbolo de la Universidad del Tolima"
+    ></canvas>
+    <div class="intro-action">
+      <button id="introAccessBtn" class="intro-access-btn" type="button" disabled>
+        Ingresar contraseña
+      </button>
+    </div>
+    <p class="sr-only">Al terminar la animación aparecerá el botón para ingresar la contraseña.</p>
+  </section>
+
   <!-- [4] Zona superior: frase motivadora y botón para cambiar clave -->
-  <header>
+  <header class="site-content">
     <div class="container">
       <div class="quoteWrap">
         <em id="quoteText">“…”</em>
@@ -79,26 +332,31 @@
   </header>
 
   <!-- [5] Contenido -->
-  <main class="container">
-    <div id="root"></div>
+  <main class="container site-content">
+    <div id="root" tabindex="-1"></div>
   </main>
 
   <!-- [6] Pie -->
-  <footer>
+  <footer class="site-content">
     © <span id="year"></span> • Universidad del Tolima.
   </footer>
 
   <!-- [7] Puerta de acceso (pide la clave) -->
-  <div id="gate" class="gate" aria-hidden="true">
-    <div class="panel">
-      <h2>Ingresa la clave del curso</h2>
+  <div id="gate" class="gate" aria-hidden="true" role="dialog" aria-modal="true" aria-labelledby="gateTitle">
+    <form id="gateForm" class="panel">
+      <div class="eyebrow">Acceso académico</div>
+      <h2 id="gateTitle">Ingresar contraseña</h2>
+      <p>Escribe la clave asignada para abrir los contenidos de tu curso.</p>
+      <label for="gateInput">Contraseña del curso</label>
       <div class="row">
-        <input id="gateInput" placeholder="Clave de curso" autocomplete="off" />
-        <button id="gateBtn" type="button">Entrar</button>
+        <input id="gateInput" type="password" placeholder="Escribe tu contraseña" autocomplete="current-password" />
+        <button id="gateBtn" type="submit">Acceder</button>
       </div>
-      <div class="err" id="gateErr"></div>
-    </div>
+      <div class="err" id="gateErr" role="alert" aria-live="polite"></div>
+    </form>
   </div>
+
+  <script src="intro-fourier.js?v=20260712-2"></script>
 
   <!-- [8] App JS -->
   <script>
@@ -235,18 +493,46 @@
   const yearEl = document.getElementById("year");
   const root = document.getElementById("root");
   const gate = document.getElementById("gate");
+  const gateForm = document.getElementById("gateForm");
   const gateInput = document.getElementById("gateInput");
   const gateBtn = document.getElementById("gateBtn");
   const gateErr = document.getElementById("gateErr");
   const changeKeyBtn = document.getElementById("changeKey");
+  const introAccessBtn = document.getElementById("introAccessBtn");
+  const introEl = document.getElementById("intro");
+  const modalBackground = document.querySelectorAll(".site-content, .theme-switch, #intro");
   yearEl.textContent = new Date().getFullYear();
+
+  // Respaldo: si el archivo de animación no carga, la página sigue siendo accesible.
+  if (!window.UTIntro) {
+    introEl.classList.add("ready");
+    introAccessBtn.disabled = false;
+    window.UTIntro = {
+      setButtonLabel(label) { introAccessBtn.textContent = label; },
+      hide() {
+        introEl.hidden = true;
+        introEl.style.display = "none";
+        document.body.classList.remove("intro-active", "content-locked");
+        root.focus({ preventScroll: true });
+      }
+    };
+  }
 
   // [8.6] Estado “curso permitido” (clave en sesión) + ?clave= en URL
   let ALLOWED = sessionStorage.getItem("allowedCourse") || null;
-  const urlKey = new URL(location.href).searchParams.get("clave");
+  const pageUrl = new URL(location.href);
+  const urlKey = pageUrl.searchParams.get("clave");
   if (urlKey && CODES[urlKey.toLowerCase()]) {
     ALLOWED = CODES[urlKey.toLowerCase()];
     sessionStorage.setItem("allowedCourse", ALLOWED);
+  }
+  if (urlKey !== null) {
+    pageUrl.searchParams.delete("clave");
+    try {
+      history.replaceState(null, "", `${pageUrl.pathname}${pageUrl.search}${pageUrl.hash}`);
+    } catch (_) {
+      // La autorización ya fue consumida; algunos navegadores restringen cambios en URLs file://.
+    }
   }
 
   // [8.7] Utilidades UI
@@ -282,8 +568,10 @@
   function render() {
     root.innerHTML = "";
 
+    if (!ALLOWED) return;
+
     const entries = Object.entries(DATA)
-      .filter(([curso]) => (!ALLOWED || curso === ALLOWED));
+      .filter(([curso]) => curso === ALLOWED);
 
     if (entries.length === 0) {
       root.innerHTML = "<p>No hay cursos para mostrar.</p>";
@@ -333,43 +621,86 @@
   }
 
   // [8.9] Lógica de la puerta (clave)
+  let gateReturnFocus = null;
+
+  function setModalBackgroundInert(isInert) {
+    modalBackground.forEach(element => {
+      if (isInert) element.setAttribute("inert", "");
+      else element.removeAttribute("inert");
+    });
+  }
+
   function openGate() {
+    gateReturnFocus = document.activeElement;
     gate.classList.add("show");
     gate.setAttribute("aria-hidden", "false");
+    document.body.classList.add("gate-open");
+    setModalBackgroundInert(true);
     gateInput.value = "";
     gateErr.textContent = "";
     setTimeout(() => gateInput.focus(), 0);
   }
-  function closeGate() {
+  function closeGate({ restoreFocus = true } = {}) {
     gate.classList.remove("show");
     gate.setAttribute("aria-hidden", "true");
+    document.body.classList.remove("gate-open");
+    setModalBackgroundInert(false);
+    if (restoreFocus && gateReturnFocus instanceof HTMLElement) gateReturnFocus.focus();
   }
   function submitGate() {
     const raw = (gateInput.value || "").trim().toLowerCase();
     const course = CODES[raw];
     if (!course) {
-      gateErr.textContent = "Clave inválida. Prueba: precalculo o teoriadenumeros.";
+      gateErr.textContent = "Clave inválida. Verifica la contraseña e intenta nuevamente.";
+      gateInput.select();
       return;
     }
     ALLOWED = course;
     sessionStorage.setItem("allowedCourse", ALLOWED);
-    closeGate();
+    closeGate({ restoreFocus: false });
     render();
+    window.UTIntro?.setButtonLabel("Continuar al curso");
+    window.UTIntro?.hide();
   }
-  gateBtn.addEventListener("click", submitGate);
-  gateInput.addEventListener("keydown", e => { if (e.key === "Enter") submitGate(); });
+  gateForm.addEventListener("submit", event => {
+    event.preventDefault();
+    submitGate();
+  });
+  document.addEventListener("keydown", event => {
+    if (!gate.classList.contains("show")) return;
+    if (event.key === "Escape") {
+      closeGate();
+      return;
+    }
+    if (event.key === "Tab") {
+      if (event.shiftKey && document.activeElement === gateInput) {
+        event.preventDefault();
+        gateBtn.focus();
+      } else if (!event.shiftKey && document.activeElement === gateBtn) {
+        event.preventDefault();
+        gateInput.focus();
+      }
+    }
+  });
+  introAccessBtn.addEventListener("click", () => {
+    if (ALLOWED) window.UTIntro?.hide();
+    else openGate();
+  });
   changeKeyBtn.addEventListener("click", () => {
     ALLOWED = null;
     sessionStorage.removeItem("allowedCourse");
+    window.UTIntro?.setButtonLabel("Ingresar contraseña");
+    render();
     openGate();
   });
 
   // [8.10] Inicialización
-  if (!ALLOWED) openGate();    // muestra la puerta si no hay clave
-  render();                    // dibuja el contenido según la clave (o todos si quitas la puerta)
+  window.UTIntro?.setButtonLabel(ALLOWED ? "Continuar al curso" : "Ingresar contraseña");
+  render();
   </script>
 </body>
 </html>
+
 
 </html>
 
