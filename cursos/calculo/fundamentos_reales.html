@@ -650,12 +650,15 @@
       min-width: 144px;
       min-height: 50px;
       padding: 12px 24px;
+      display: inline-grid;
+      place-items: center;
       border: 0;
       border-radius: 999px;
       color: var(--accent-ink);
       background: var(--accent);
       cursor: pointer;
       font-weight: 850;
+      text-decoration: none;
       transition: transform .2s ease, box-shadow .2s ease;
       white-space: nowrap;
     }
@@ -1239,7 +1242,14 @@
           </div>
 
           <div class="action-row" data-reveal>
-            <button id="playBtn" class="action-button" type="button">Jugar</button>
+            <a
+              id="playBtn"
+              class="action-button"
+              href="algebra-en-equilibrio/index.html"
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label="Abrir el juego Álgebra en equilibrio en una pestaña nueva"
+            >Jugar</a>
           </div>
         </div>
       </div>
@@ -2003,11 +2013,6 @@
       $("#resetBtn").addEventListener("click", () => resetPath(true));
       $("#centerBtn").addEventListener("click", centerNumber);
       $("#newBtn").addEventListener("click", () => startChallenge());
-      $("#playBtn").addEventListener("click", () => {
-        state.precision = 1;
-        startChallenge();
-        $("#laboratorio").scrollIntoView({ behavior: reducedMotion() ? "auto" : "smooth", block: "center" });
-      });
 
       function launchConfetti() {
         if (matchMedia("(prefers-reduced-motion: reduce)").matches) return;
