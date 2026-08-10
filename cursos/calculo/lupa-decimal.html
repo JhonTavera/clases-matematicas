@@ -1,0 +1,2186 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#07151c">
+  <meta name="color-scheme" content="dark">
+  <meta name="description" content="Una exploración interactiva de los números reales como cuerpo ordenado y completo.">
+  <meta property="og:title" content="Los números reales">
+  <meta property="og:description" content="Explora la recta real, sus axiomas y sus propiedades fundamentales.">
+  <meta property="og:type" content="website">
+  <meta property="og:image" content="https://lupa-decimal-interactiva.jhonftb.chatgpt.site/og.png">
+  <meta name="twitter:card" content="summary_large_image">
+  <title>ℝ | Cuerpo, orden y completitud</title>
+  <script>
+    window.MathJax = {
+      tex: { inlineMath: [["\\(", "\\)"]], displayMath: [["\\[", "\\]"]] },
+      options: { skipHtmlTags: ["script", "noscript", "style", "textarea", "pre", "code"] }
+    };
+  </script>
+  <script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+  <style>
+    :root {
+      --bg: #07151c;
+      --bg-deep: #030b10;
+      --surface: #0c2028;
+      --surface-2: #112b34;
+      --surface-3: #173742;
+      --line: #edf7f1;
+      --muted: #99aaa8;
+      --soft: #27434a;
+      --accent: #65e6b4;
+      --accent-ink: #062117;
+      --cyan: #65e6b4;
+      --violet: #8ebcf2;
+      --amber: #e6b968;
+      --red: #ff7c75;
+      --ui: "Aptos", "Segoe UI", "Helvetica Neue", Arial, system-ui, sans-serif;
+      --display: "Aptos Display", "Helvetica Neue", Arial, system-ui, sans-serif;
+      --math: "STIX Two Text", "Cambria Math", Cambria, Georgia, serif;
+      --page: min(1420px, calc(100vw - 40px));
+      --reading: min(820px, calc(100vw - 40px));
+      --radius-panel: 24px;
+      --nav-height: 68px;
+    }
+
+    * { box-sizing: border-box; }
+
+    html { scroll-behavior: smooth; background: var(--bg); }
+    html, body { margin: 0; min-width: 320px; min-height: 100%; }
+
+    body {
+      color: var(--line);
+      font-family: var(--ui);
+      overflow-x: hidden;
+      background: var(--bg);
+      line-height: 1.55;
+      text-rendering: optimizeLegibility;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    body::before {
+      content: "";
+      position: fixed;
+      inset: -28vmax;
+      z-index: -2;
+      pointer-events: none;
+      background:
+        repeating-radial-gradient(circle at 74% 18%, transparent 0 8.8vmax, rgba(101, 230, 180, .035) 8.9vmax 9vmax),
+        radial-gradient(circle at 74% 18%, rgba(101, 230, 180, .07), transparent 34vmax),
+        linear-gradient(135deg, var(--bg-deep), var(--bg) 48%, #0b2028);
+    }
+
+    body::after {
+      content: "";
+      position: fixed;
+      inset: 0;
+      z-index: 50;
+      pointer-events: none;
+      opacity: .16;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 160 160' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.82' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.28'/%3E%3C/svg%3E");
+      mix-blend-mode: soft-light;
+    }
+
+    a { color: inherit; }
+    button { color: inherit; font: inherit; }
+    button:focus-visible, a:focus-visible, [tabindex="0"]:focus-visible { outline: 2px solid var(--accent); outline-offset: 4px; }
+
+    ::selection { color: var(--accent-ink); background: var(--accent); }
+
+    .site-nav {
+      position: fixed;
+      top: 0;
+      left: 50%;
+      z-index: 30;
+      width: min(100%, 1500px);
+      min-height: var(--nav-height);
+      padding: max(12px, env(safe-area-inset-top)) max(18px, env(safe-area-inset-right)) 10px max(18px, env(safe-area-inset-left));
+      display: grid;
+      grid-template-columns: 1fr auto 1fr;
+      align-items: center;
+      transform: translateX(-50%);
+      pointer-events: none;
+    }
+
+    .site-nav > * { pointer-events: auto; }
+
+    .nav-brand {
+      width: 44px;
+      height: 44px;
+      display: grid;
+      place-items: center;
+      border: 1px solid rgba(237, 247, 241, .18);
+      border-radius: 50%;
+      color: var(--line);
+      background: rgba(7, 21, 28, .72);
+      backdrop-filter: blur(14px);
+      text-decoration: none;
+      font: 700 1.35rem/1 var(--math);
+    }
+
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 2px;
+      padding: 4px;
+      border: 1px solid rgba(237, 247, 241, .14);
+      border-radius: 999px;
+      background: rgba(7, 21, 28, .72);
+      backdrop-filter: blur(14px);
+    }
+
+    .nav-links a {
+      min-height: 36px;
+      padding: 8px 14px;
+      border-radius: 999px;
+      color: var(--muted);
+      text-decoration: none;
+      font-size: .78rem;
+      font-weight: 700;
+      transition: color .2s ease, background-color .2s ease, transform .2s ease;
+    }
+
+    .nav-links a:hover { color: var(--line); background: rgba(237, 247, 241, .08); }
+    .nav-links a:active { transform: scale(.97); }
+
+    .nav-progress {
+      justify-self: end;
+      width: 72px;
+      height: 2px;
+      overflow: hidden;
+      background: rgba(237, 247, 241, .15);
+    }
+
+    .nav-progress span {
+      display: block;
+      width: 100%;
+      height: 100%;
+      background: var(--accent);
+      transform: scaleX(0);
+      transform-origin: left center;
+    }
+
+    .hero {
+      position: relative;
+      min-height: 100dvh;
+      display: grid;
+      place-items: center;
+      overflow: hidden;
+      isolation: isolate;
+    }
+
+    .hero-field {
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      width: min(84vw, 900px);
+      aspect-ratio: 1;
+      transform: translate(-50%, -50%);
+      border: 1px solid rgba(101, 230, 180, .12);
+      border-radius: 50%;
+      box-shadow:
+        0 0 0 8vw rgba(101, 230, 180, .022),
+        0 0 0 16vw rgba(101, 230, 180, .016),
+        0 0 0 24vw rgba(101, 230, 180, .011);
+    }
+
+    .hero-copy {
+      position: relative;
+      z-index: 1;
+      display: grid;
+      place-items: center;
+      text-align: center;
+    }
+
+    .hero-symbol {
+      margin: 0;
+      color: var(--line);
+      font: 500 clamp(9rem, 30vw, 25rem)/.76 var(--math);
+      letter-spacing: -.08em;
+      text-shadow: 0 24px 80px rgba(0, 0, 0, .28);
+    }
+
+    .hero-caption {
+      margin: clamp(2rem, 5vw, 4rem) 0 0;
+      color: var(--muted);
+      font-size: clamp(.78rem, 1vw, .92rem);
+      font-weight: 700;
+      letter-spacing: .14em;
+      text-transform: uppercase;
+    }
+
+    .lab-section {
+      position: relative;
+      width: var(--page);
+      min-height: min(900px, 100dvh);
+      margin: 0 auto;
+      padding: clamp(6rem, 10vw, 10rem) 0;
+      display: grid;
+      align-items: center;
+    }
+
+    .lab-frame {
+      position: relative;
+      overflow: hidden;
+      border: 1px solid rgba(237, 247, 241, .12);
+      border-radius: var(--radius-panel);
+      background: rgba(3, 11, 16, .72);
+      box-shadow: 0 36px 100px rgba(0, 0, 0, .28);
+    }
+
+    .lab-frame::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      background: radial-gradient(circle at 50% -20%, rgba(101, 230, 180, .09), transparent 45%);
+    }
+
+    .decimal-app {
+      position: relative;
+      min-height: clamp(540px, 74dvh, 720px);
+      padding: 18px;
+      display: grid;
+      grid-template-rows: auto auto minmax(300px, 1fr);
+      align-content: start;
+    }
+
+    .lab-topbar {
+      position: relative;
+      z-index: 5;
+      min-height: 48px;
+      display: grid;
+      grid-template-columns: 1fr auto 1fr;
+      align-items: start;
+      gap: 16px;
+    }
+
+    .lab-mark {
+      width: 42px;
+      height: 42px;
+      display: grid;
+      place-items: center;
+      color: var(--line);
+      border: 1px solid var(--soft);
+      border-radius: 50%;
+      font: 700 24px/1 var(--math);
+    }
+
+    .modes {
+      position: relative;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      padding: 4px;
+      border: 1px solid var(--soft);
+      border-radius: 999px;
+      background: rgba(12, 32, 40, .92);
+    }
+
+    .mode-button {
+      min-height: 36px;
+      padding: 7px 15px;
+      border: 0;
+      border-radius: 999px;
+      color: var(--muted);
+      background: transparent;
+      cursor: pointer;
+      font-size: .82rem;
+      font-weight: 750;
+      transition: color .18s ease, background-color .18s ease, transform .18s ease;
+    }
+
+    .mode-button:hover { color: var(--line); }
+    .mode-button:active { transform: scale(.97); }
+    .mode-button[aria-pressed="true"] { color: var(--accent-ink); background: var(--accent); }
+    .mode-button .chevron { margin-left: 5px; font-size: .7em; }
+
+    .level-menu {
+      position: absolute;
+      top: calc(100% + 8px);
+      right: 0;
+      width: 178px;
+      padding: 6px;
+      border: 1px solid var(--soft);
+      border-radius: 16px;
+      background: var(--surface-2);
+      box-shadow: 0 18px 45px rgba(0, 0, 0, .38);
+    }
+
+    .level-menu[hidden] { display: none; }
+    .level-menu button {
+      width: 100%;
+      padding: 10px 11px;
+      border: 0;
+      border-radius: 11px;
+      color: #b7c6c3;
+      background: transparent;
+      text-align: left;
+      cursor: pointer;
+      font-size: .82rem;
+      font-weight: 700;
+    }
+
+    .level-menu button:hover,
+    .level-menu button[aria-checked="true"] { color: var(--line); background: var(--surface-3); }
+
+    .timer {
+      justify-self: end;
+      padding-top: 8px;
+      color: var(--line);
+      font-size: .93rem;
+      font-variant-numeric: tabular-nums;
+      font-weight: 750;
+      letter-spacing: .03em;
+    }
+
+    .timer[hidden] { display: none; }
+
+    .number-stage {
+      min-height: clamp(110px, 16vh, 160px);
+      display: grid;
+      place-content: center;
+      text-align: center;
+      padding: 10px 0 0;
+    }
+
+    .main-number {
+      min-width: 4ch;
+      color: var(--line);
+      font: 700 clamp(3.4rem, 10vw, 7rem)/.95 var(--math);
+      font-variant-numeric: tabular-nums lining-nums;
+      letter-spacing: .025em;
+      transition: color .18s ease, transform .18s ease;
+    }
+
+    .main-number.long { font-size: clamp(2.15rem, 7vw, 4.6rem); letter-spacing: .01em; }
+    .main-number.placeholder { color: #40545a; }
+    .main-number.error { color: var(--red); animation: nudge .28s ease; }
+    .main-number.solved { color: var(--accent); }
+    @keyframes nudge { 30% { transform: translateX(-5px); } 70% { transform: translateX(5px); } }
+
+    .result {
+      height: 24px;
+      margin-top: 10px;
+      color: var(--accent);
+      font-size: .79rem;
+      font-weight: 800;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+      opacity: 0;
+      transition: opacity .2s ease;
+    }
+
+    .result.visible { opacity: 1; }
+
+    .line-stage {
+      position: relative;
+      min-height: 300px;
+      overflow: hidden;
+    }
+
+    #numberline {
+      display: block;
+      width: 100%;
+      height: 100%;
+      min-height: 300px;
+      cursor: grab;
+      touch-action: pan-y;
+      user-select: none;
+      -webkit-user-select: none;
+    }
+
+    #numberline.dragging { cursor: grabbing; }
+
+    .axis { stroke: var(--line); stroke-width: 2; }
+    .tick-line { stroke: currentColor; stroke-width: 1.6; }
+    .tick-dot { fill: currentColor; stroke: none; }
+    .tick-label { fill: currentColor; font-family: var(--math); font-weight: 650; font-variant-numeric: tabular-nums; }
+    .tick-hit { fill: transparent; }
+    .tick-action { color: #a7b8b6; cursor: pointer; transition: color .15s ease; }
+    .tick-action:hover, .tick-action:focus { color: var(--accent); }
+    .tick-action.selected.color-0 { color: var(--cyan); }
+    .tick-action.selected.color-1 { color: var(--violet); }
+    .tick-action.selected.color-2 { color: var(--amber); }
+
+    .interval-hit { fill: transparent; cursor: zoom-in; }
+    .interval-hit.locked { cursor: default; }
+    .division { stroke: #2c464d; stroke-width: 1; pointer-events: none; }
+    .interval-preview { stroke: transparent; stroke-width: 4; stroke-linecap: round; pointer-events: none; transition: stroke .15s ease; }
+    .interval-hit:hover + .interval-preview,
+    .interval-hit:focus + .interval-preview { stroke: rgba(101, 230, 180, .62); }
+
+    .selection-segment { stroke-width: 5; stroke-linecap: round; pointer-events: none; }
+    .selection-segment.depth-0 { stroke: var(--cyan); }
+    .selection-segment.depth-1 { stroke: var(--violet); }
+    .selection-segment.depth-2 { stroke: var(--amber); }
+
+    .controls {
+      position: absolute;
+      left: 50%;
+      bottom: 14px;
+      transform: translateX(-50%);
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      padding: 5px;
+      border: 1px solid var(--soft);
+      border-radius: 999px;
+      background: rgba(12, 32, 40, .9);
+      backdrop-filter: blur(10px);
+    }
+
+    .control {
+      width: 35px;
+      height: 35px;
+      display: grid;
+      place-items: center;
+      border: 0;
+      border-radius: 50%;
+      color: #9fb0ae;
+      background: transparent;
+      cursor: pointer;
+      font-size: 1rem;
+      transition: color .15s ease, background-color .15s ease, transform .15s ease;
+    }
+
+    .control:hover:not(:disabled) { color: var(--line); background: var(--surface-3); }
+    .control:active:not(:disabled) { transform: scale(.93); }
+    .control:disabled { opacity: .25; cursor: default; }
+    .control.challenge-only { color: var(--accent); }
+
+    .manifesto {
+      position: relative;
+      min-height: 170dvh;
+    }
+
+    .manifesto-pin {
+      min-height: 100dvh;
+      padding: var(--nav-height) max(20px, 7vw) 6vh;
+      display: grid;
+      align-content: center;
+      overflow: hidden;
+    }
+
+    .manifesto-copy {
+      width: min(1260px, 100%);
+      margin: 0 auto;
+      display: grid;
+      gap: .02em;
+      color: var(--line);
+      font: 800 clamp(3.3rem, 9.4vw, 9rem)/.9 var(--display);
+      letter-spacing: -.07em;
+    }
+
+    .manifesto-line:nth-child(2) { padding-left: 13vw; }
+    .manifesto-line:nth-child(3) { padding-left: 4vw; }
+    .manifesto-line strong { color: var(--accent); font-weight: inherit; }
+
+    .content-section {
+      position: relative;
+      width: var(--page);
+      margin: 0 auto;
+      padding: clamp(7rem, 12vw, 12rem) 0;
+    }
+
+    .content-section + .content-section { border-top: 1px solid rgba(237, 247, 241, .08); }
+
+    .chapter-grid {
+      display: grid;
+      grid-template-columns: minmax(220px, .7fr) minmax(0, 1.45fr);
+      gap: clamp(3rem, 8vw, 9rem);
+      align-items: start;
+    }
+
+    .chapter-heading {
+      position: sticky;
+      top: 22vh;
+      padding-bottom: 2rem;
+    }
+
+    .chapter-heading h2 {
+      max-width: 7ch;
+      margin: 0;
+      font: 800 clamp(4.3rem, 9vw, 9rem)/.82 var(--display);
+      letter-spacing: -.075em;
+    }
+
+    .chapter-heading h2.long-title {
+      font-size: clamp(3.8rem, 6vw, 6.6rem);
+      letter-spacing: -.065em;
+    }
+
+    .chapter-heading p {
+      max-width: 28ch;
+      margin: 2.2rem 0 0;
+      color: var(--muted);
+      font-size: 1rem;
+    }
+
+    .chapter-body { min-width: 0; }
+
+    .section-title {
+      max-width: 14ch;
+      margin: 0 0 2.5rem;
+      font: 750 clamp(2.2rem, 4.6vw, 4.6rem)/.95 var(--display);
+      letter-spacing: -.05em;
+    }
+
+    .axiom-structure {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 18px;
+    }
+
+    .axiom-lane {
+      min-width: 0;
+      padding: clamp(1.5rem, 3vw, 2.5rem);
+      border-radius: var(--radius-panel);
+      background: rgba(17, 43, 52, .7);
+    }
+
+    .axiom-lane h3,
+    .subsection-title {
+      margin: 0 0 2rem;
+      color: var(--accent);
+      font-size: .84rem;
+      font-weight: 800;
+      letter-spacing: .12em;
+      text-transform: uppercase;
+    }
+
+    .axiom-list {
+      margin: 0;
+      padding: 0;
+      display: grid;
+      gap: 2rem;
+      list-style: none;
+    }
+
+    .axiom-item {
+      display: grid;
+      grid-template-columns: 2.1rem minmax(0, 1fr);
+      gap: 1rem;
+      align-items: start;
+    }
+
+    .axiom-index {
+      padding-top: .18rem;
+      color: var(--muted);
+      font-size: .76rem;
+      font-variant-numeric: tabular-nums;
+      font-weight: 800;
+    }
+
+    .axiom-item h4 {
+      margin: 0 0 .65rem;
+      font-size: 1rem;
+      font-weight: 750;
+    }
+
+    .axiom-item p { margin: 0; color: #d4e1dd; }
+
+    .distributive {
+      margin-top: 18px;
+      padding: clamp(1.8rem, 4vw, 3.4rem);
+      border: 1px solid rgba(101, 230, 180, .24);
+      border-radius: var(--radius-panel);
+      background: rgba(101, 230, 180, .055);
+    }
+
+    .distributive .axiom-item { grid-template-columns: 2.1rem minmax(0, 1fr); }
+
+    .math-display {
+      overflow-x: auto;
+      overflow-y: hidden;
+      color: var(--line);
+      font-family: var(--math);
+      scrollbar-width: thin;
+    }
+
+    .statement {
+      margin: clamp(5rem, 9vw, 9rem) auto;
+      padding: clamp(2.5rem, 7vw, 6rem) 0;
+      text-align: center;
+      font: 600 clamp(2.3rem, 6vw, 5.8rem)/1.08 var(--math);
+      letter-spacing: -.035em;
+    }
+
+    .statement small {
+      display: block;
+      margin-top: 1.2rem;
+      color: var(--muted);
+      font: 700 .82rem/1.5 var(--ui);
+      letter-spacing: .08em;
+      text-transform: uppercase;
+    }
+
+    .property-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 14px;
+    }
+
+    .property {
+      min-height: 126px;
+      padding: 1.6rem;
+      display: grid;
+      align-content: center;
+      border-left: 2px solid rgba(101, 230, 180, .34);
+      background: rgba(237, 247, 241, .025);
+      font-size: clamp(1.05rem, 2vw, 1.4rem);
+    }
+
+    .property.important {
+      grid-column: 1 / -1;
+      min-height: 150px;
+      border-left-color: var(--accent);
+      background: rgba(101, 230, 180, .055);
+      font-size: clamp(1.25rem, 2.5vw, 1.8rem);
+    }
+
+    .action-row {
+      margin-top: clamp(3rem, 7vw, 6rem);
+      display: flex;
+      justify-content: center;
+    }
+
+    .action-button {
+      min-width: 144px;
+      min-height: 50px;
+      padding: 12px 24px;
+      border: 0;
+      border-radius: 999px;
+      color: var(--accent-ink);
+      background: var(--accent);
+      cursor: pointer;
+      font-weight: 850;
+      transition: transform .2s ease, box-shadow .2s ease;
+      white-space: nowrap;
+    }
+
+    .action-button:hover { transform: translateY(-2px); box-shadow: 0 12px 30px rgba(101, 230, 180, .14); }
+    .action-button:active { transform: scale(.97); }
+
+    .annex {
+      width: min(1160px, calc(100vw - 40px));
+      margin: 0 auto;
+      padding: clamp(6rem, 10vw, 10rem) 0;
+    }
+
+    .annex-header {
+      margin-bottom: clamp(3rem, 7vw, 6rem);
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      gap: 2rem;
+      align-items: end;
+    }
+
+    .annex-header h2 {
+      margin: 0;
+      font: 800 clamp(3.2rem, 7vw, 6.7rem)/.9 var(--display);
+      letter-spacing: -.065em;
+    }
+
+    .annex-header h2.long-annex-title { font-size: clamp(2.8rem, 5.2vw, 5.2rem); }
+
+    .annex-header p { max-width: 32ch; margin: 0; color: var(--muted); }
+
+    .fraction-layout {
+      display: grid;
+      grid-template-columns: 1.2fr .8fr;
+      gap: 18px;
+    }
+
+    .fraction-main,
+    .fraction-side {
+      padding: clamp(1.8rem, 4vw, 3.6rem);
+      border-radius: var(--radius-panel);
+      background: rgba(17, 43, 52, .62);
+    }
+
+    .fraction-main { display: grid; gap: 3.4rem; }
+    .fraction-side { display: grid; align-content: center; gap: 3rem; background: rgba(101, 230, 180, .06); }
+
+    .formula-block h3 { margin: 0 0 .8rem; color: var(--muted); font-size: .9rem; }
+    .formula-block p { margin: 0; font-size: clamp(1.05rem, 2vw, 1.35rem); }
+
+    .order-premise {
+      max-width: 62ch;
+      margin: -1rem 0 2.4rem;
+      color: var(--muted);
+    }
+
+    .order-foundation {
+      margin-bottom: clamp(3rem, 7vw, 6rem);
+      border-block: 1px solid rgba(237, 247, 241, .12);
+    }
+
+    .order-axiom {
+      padding: clamp(1.5rem, 3vw, 2.4rem) 0;
+      display: grid;
+      grid-template-columns: minmax(150px, .42fr) minmax(0, 1fr);
+      gap: 2rem;
+      align-items: center;
+    }
+
+    .order-axiom + .order-axiom { border-top: 1px solid rgba(237, 247, 241, .08); }
+    .order-axiom h4 { margin: 0; color: var(--muted); font-size: .86rem; letter-spacing: .08em; text-transform: uppercase; }
+    .order-axiom p { margin: 0; font-size: clamp(1.05rem, 2vw, 1.4rem); }
+
+    .order-definition {
+      margin-bottom: clamp(5rem, 9vw, 9rem);
+      padding: clamp(2.6rem, 7vw, 5.5rem) clamp(1.2rem, 4vw, 3rem);
+      border-radius: var(--radius-panel);
+      background: rgba(101, 230, 180, .055);
+      text-align: center;
+    }
+
+    .order-definition .primary {
+      margin: 0;
+      font-size: clamp(1.8rem, 4vw, 3.6rem);
+    }
+
+    .order-equivalences {
+      margin-top: 2rem;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: .8rem 2.2rem;
+      color: var(--muted);
+      font-size: clamp(.9rem, 1.7vw, 1.1rem);
+    }
+
+    .order-property {
+      grid-column: 1 / -1;
+      grid-template-columns: minmax(0, 1fr) minmax(160px, auto);
+      gap: 2rem;
+      align-items: center;
+    }
+
+    .property-name {
+      color: var(--muted);
+      text-align: right;
+      font-size: inherit;
+    }
+
+    .interval-definitions {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 14px;
+    }
+
+    .intervals-title { margin-top: clamp(5rem, 9vw, 9rem); }
+
+    .interval-definition {
+      min-height: 150px;
+      padding: clamp(1.5rem, 3vw, 2.4rem);
+      display: grid;
+      align-content: center;
+      gap: .8rem;
+      background: rgba(237, 247, 241, .025);
+      border-top: 1px solid rgba(101, 230, 180, .32);
+    }
+
+    .interval-definition.infinite { grid-column: 1 / -1; }
+    .interval-definition h4 { margin: 0; color: var(--muted); font-size: .82rem; letter-spacing: .08em; text-transform: uppercase; }
+    .interval-definition p { margin: 0; font-size: clamp(1rem, 2vw, 1.28rem); }
+
+    .interval-infinite-formulas {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: .8rem 2rem;
+      font-size: clamp(.95rem, 1.7vw, 1.18rem);
+    }
+
+    .power-field {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 14px;
+    }
+
+    .power-formula {
+      min-height: 180px;
+      padding: 2rem;
+      display: grid;
+      place-items: center;
+      border-radius: var(--radius-panel);
+      background: rgba(17, 43, 52, .62);
+      text-align: center;
+      font-size: clamp(1.1rem, 2.2vw, 1.55rem);
+    }
+
+    .power-formula.wide {
+      grid-column: 1 / -1;
+      min-height: 250px;
+      background: rgba(101, 230, 180, .065);
+      font-size: clamp(1.3rem, 3vw, 2.2rem);
+    }
+
+    .conditions {
+      max-width: 68ch;
+      margin: 2rem auto 0;
+      color: var(--muted);
+      text-align: center;
+      font-size: .9rem;
+    }
+
+    .bounds-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 18px;
+    }
+
+    .bound-definition {
+      padding: clamp(1.8rem, 4vw, 3.5rem);
+      border-radius: var(--radius-panel);
+      background: rgba(17, 43, 52, .62);
+    }
+
+    .bound-definition h3 { margin: 0 0 1.3rem; color: var(--accent); font-size: 1.2rem; }
+    .bound-definition p { margin: 0; color: #d4e1dd; }
+
+    .completeness-axiom {
+      margin: clamp(4rem, 8vw, 8rem) 0;
+      padding: clamp(2.5rem, 6vw, 5rem);
+      border: 1px solid rgba(101, 230, 180, .28);
+      border-radius: var(--radius-panel);
+      background: rgba(101, 230, 180, .055);
+      font: 600 clamp(1.7rem, 3.8vw, 3.4rem)/1.2 var(--display);
+      letter-spacing: -.035em;
+    }
+
+    .completeness-axiom h3 {
+      margin: 0 0 1.5rem;
+      color: var(--accent);
+      font: 800 .82rem/1.4 var(--ui);
+      letter-spacing: .12em;
+      text-transform: uppercase;
+    }
+
+    .completeness-axiom p { margin: 0; }
+
+    .consequence-list {
+      margin: 0;
+      padding: 0;
+      display: grid;
+      gap: 12px;
+      list-style: none;
+    }
+
+    .consequence-list li { padding: 0; }
+
+    .theorem-card {
+      border-left: 2px solid rgba(101, 230, 180, .34);
+      background: rgba(237, 247, 241, .025);
+    }
+
+    .theorem-card summary {
+      min-height: 132px;
+      padding: clamp(1.4rem, 3vw, 2.2rem);
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) 36px;
+      gap: 1.5rem;
+      align-items: center;
+      cursor: pointer;
+      list-style: none;
+    }
+
+    .theorem-card summary::-webkit-details-marker { display: none; }
+    .theorem-copy strong { display: block; margin-bottom: .55rem; font-size: clamp(1.15rem, 2.1vw, 1.45rem); }
+    .theorem-copy span { display: block; color: var(--muted); }
+
+    .proof-toggle {
+      width: 36px;
+      height: 36px;
+      display: grid;
+      place-items: center;
+      border: 1px solid rgba(237, 247, 241, .14);
+      border-radius: 50%;
+      color: var(--accent);
+      font-size: 1.25rem;
+      transition: transform .24s ease, background-color .24s ease;
+    }
+
+    .theorem-card[open] .proof-toggle { transform: rotate(45deg); background: rgba(101, 230, 180, .08); }
+
+    .proof {
+      padding: 0 clamp(1.4rem, 3vw, 2.2rem) clamp(1.7rem, 4vw, 2.8rem);
+      border-top: 1px solid rgba(237, 247, 241, .08);
+      color: #d4e1dd;
+    }
+
+    .proof h4 {
+      margin: 1.5rem 0 .7rem;
+      color: var(--accent);
+      font-size: .76rem;
+      letter-spacing: .1em;
+      text-transform: uppercase;
+    }
+
+    .proof p { max-width: 72ch; margin: 0; }
+
+    .site-footer {
+      width: var(--page);
+      margin: 0 auto;
+      padding: 4rem 0 max(4rem, env(safe-area-inset-bottom));
+      display: grid;
+      grid-template-columns: 1fr auto;
+      align-items: end;
+      border-top: 1px solid rgba(237, 247, 241, .12);
+    }
+
+    .footer-symbol { font: 600 clamp(4rem, 8vw, 7rem)/1 var(--math); }
+    .footer-note { max-width: 32ch; color: var(--muted); text-align: right; }
+
+    .exercise-dialog {
+      width: min(720px, calc(100vw - 28px));
+      max-height: min(82dvh, 820px);
+      padding: 0;
+      overflow: hidden;
+      border: 1px solid rgba(237, 247, 241, .16);
+      border-radius: var(--radius-panel);
+      color: var(--line);
+      background: var(--surface);
+      box-shadow: 0 30px 100px rgba(0, 0, 0, .46);
+    }
+
+    .exercise-dialog::backdrop { background: rgba(1, 7, 10, .74); backdrop-filter: blur(8px); }
+
+    .dialog-shell { max-height: inherit; padding: clamp(1.4rem, 4vw, 2.8rem); overflow-y: auto; }
+    .dialog-header { display: grid; grid-template-columns: 1fr auto; gap: 2rem; align-items: start; }
+    .dialog-header h2 { margin: 0; font: 800 clamp(2rem, 5vw, 3.8rem)/.95 var(--display); letter-spacing: -.05em; }
+
+    .dialog-close {
+      width: 42px;
+      height: 42px;
+      border: 1px solid var(--soft);
+      border-radius: 50%;
+      background: transparent;
+      cursor: pointer;
+      font-size: 1.2rem;
+    }
+
+    .exercise-list { margin: 2.5rem 0 0; padding: 0; display: grid; gap: 1.2rem; list-style: none; counter-reset: exercise; }
+    .exercise-list li { padding: 1.2rem 0; counter-increment: exercise; }
+    .exercise-list li::before { content: counter(exercise, decimal-leading-zero); display: block; margin-bottom: .6rem; color: var(--accent); font-size: .75rem; font-weight: 800; }
+    .exercise-list p { margin: 0 0 1rem; }
+    .exercise-list details { color: var(--muted); }
+    .exercise-list summary { width: fit-content; cursor: pointer; color: var(--line); font-weight: 700; }
+
+    #confetti {
+      position: fixed;
+      inset: 0;
+      z-index: 40;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+    }
+
+    .sr-only {
+      position: absolute !important;
+      width: 1px;
+      height: 1px;
+      padding: 0;
+      margin: -1px;
+      overflow: hidden;
+      clip: rect(0, 0, 0, 0);
+      white-space: nowrap;
+      border: 0;
+    }
+
+    [hidden] { display: none !important; }
+
+    @media (max-width: 980px) {
+      .chapter-grid { grid-template-columns: 1fr; }
+      .chapter-heading { position: relative; top: auto; }
+      .chapter-heading h2 { max-width: none; }
+      .chapter-heading h2.long-title { font-size: clamp(4.3rem, 12vw, 7rem); }
+      .chapter-heading p { max-width: 50ch; }
+      .axiom-structure { grid-template-columns: 1fr; }
+      .fraction-layout { grid-template-columns: 1fr; }
+      .manifesto-copy { font-size: clamp(3.2rem, 11vw, 6rem); }
+    }
+
+    @media (max-width: 720px) {
+      :root { --page: calc(100vw - 24px); --reading: calc(100vw - 24px); --nav-height: 58px; }
+      body::after { display: none; }
+      .site-nav { min-height: var(--nav-height); padding: max(8px, env(safe-area-inset-top)) 12px 8px; grid-template-columns: auto 1fr; gap: 10px; }
+      .nav-brand { width: 40px; height: 40px; }
+      .nav-links { justify-self: end; }
+      .nav-links a { min-height: 32px; padding: 7px 9px; font-size: .7rem; }
+      .nav-progress { display: none; }
+      .hero-symbol { font-size: clamp(9rem, 54vw, 16rem); }
+      .hero-field { width: 110vw; }
+      .lab-section { width: 100%; padding: 5rem 0 7rem; }
+      .lab-frame { border-inline: 0; border-radius: 0; }
+      .decimal-app { min-height: 560px; padding: 12px; grid-template-rows: auto auto minmax(300px, 1fr); }
+      .lab-topbar { grid-template-columns: 40px 1fr 56px; gap: 7px; }
+      .lab-mark { width: 38px; height: 38px; font-size: 21px; }
+      .modes { justify-self: center; }
+      .mode-button { padding-inline: 10px; font-size: .74rem; }
+      .timer { padding-top: 9px; font-size: .75rem; }
+      .number-stage { min-height: 125px; }
+      .main-number { font-size: clamp(3rem, 18vw, 5rem); }
+      .main-number.long { font-size: clamp(1.75rem, 9.5vw, 3rem); }
+      .line-stage, #numberline { min-height: 300px; }
+      .level-menu { right: -6px; }
+      .manifesto { min-height: auto; }
+      .manifesto-pin { min-height: 88dvh; padding-inline: 18px; }
+      .manifesto-line:nth-child(2), .manifesto-line:nth-child(3) { padding-left: 0; }
+      .content-section { padding-block: 6rem; }
+      .chapter-heading h2 { font-size: clamp(4rem, 21vw, 6.5rem); }
+      .axiom-lane { padding: 1.35rem; }
+      .axiom-item { grid-template-columns: 1.7rem minmax(0, 1fr); gap: .7rem; }
+      .property-grid, .power-field, .bounds-grid, .interval-definitions { grid-template-columns: 1fr; }
+      .property { min-height: 100px; }
+      .property.important { min-height: 120px; }
+      .order-property { grid-template-columns: 1fr; gap: .55rem; }
+      .property-name { justify-self: end; font-size: .94rem; }
+      .interval-definition.infinite { grid-column: auto; }
+      .interval-infinite-formulas { grid-template-columns: 1fr; }
+      .annex-header { grid-template-columns: 1fr; align-items: start; }
+      .annex-header p { max-width: 50ch; }
+      .order-axiom { grid-template-columns: 1fr; gap: .7rem; }
+      .theorem-card summary { min-height: 116px; grid-template-columns: minmax(0, 1fr) 34px; gap: .9rem; }
+      .power-formula.wide { min-height: 210px; }
+      .site-footer { grid-template-columns: 1fr; gap: 2rem; }
+      .footer-note { text-align: left; }
+    }
+
+    @media (orientation: landscape) and (max-height: 520px) {
+      .hero { min-height: 560px; }
+      .decimal-app { min-height: 470px; grid-template-rows: 42px 82px minmax(260px, 1fr); }
+      .number-stage { min-height: 0; padding-top: 2px; }
+      .main-number { font-size: clamp(2.6rem, 13vh, 3.4rem); }
+      .main-number.long { font-size: clamp(1.65rem, 8vh, 2.3rem); }
+      .line-stage, #numberline { min-height: 260px; }
+      .controls { bottom: 6px; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      html { scroll-behavior: auto; }
+      *, *::before, *::after { animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; }
+    }
+
+    @media (prefers-reduced-transparency: reduce) {
+      .site-nav, .nav-brand, .nav-links, .controls { backdrop-filter: none; background: var(--surface); }
+      .exercise-dialog::backdrop { backdrop-filter: none; }
+    }
+  </style>
+</head>
+<body>
+  <canvas id="confetti" aria-hidden="true"></canvas>
+  <nav class="site-nav" aria-label="Secciones principales">
+    <a class="nav-brand" href="#top" aria-label="Inicio">ℝ</a>
+    <div class="nav-links">
+      <a href="#cuerpo">Cuerpo</a>
+      <a href="#ordenado">Ordenado</a>
+      <a href="#completo">Completo</a>
+    </div>
+    <div class="nav-progress" aria-hidden="true"><span id="pageProgress"></span></div>
+  </nav>
+
+  <main id="top">
+    <section class="hero" aria-labelledby="heroTitle">
+      <div class="hero-field" aria-hidden="true"></div>
+      <div class="hero-copy">
+        <h1 id="heroTitle" class="hero-symbol">ℝ</h1>
+        <p class="hero-caption">El continuo numérico</p>
+      </div>
+    </section>
+
+    <section id="laboratorio" class="lab-section" aria-label="Recta numérica interactiva">
+      <div class="lab-frame">
+        <div id="decimalLab" class="decimal-app">
+          <header class="lab-topbar">
+            <div class="lab-mark" aria-label="Lupa decimal">ℝ</div>
+
+            <div class="modes" aria-label="Modo">
+              <button id="exploreMode" class="mode-button" type="button" aria-pressed="false">Exploración</button>
+              <button id="challengeMode" class="mode-button" type="button" aria-pressed="true" aria-haspopup="menu" aria-expanded="false">
+                <span id="challengeLabel">Reto · décimas</span><span class="chevron" aria-hidden="true">▾</span>
+              </button>
+              <div id="levelMenu" class="level-menu" role="menu" hidden>
+                <button type="button" role="menuitemradio" data-level="1" aria-checked="true">Décimas</button>
+                <button type="button" role="menuitemradio" data-level="2" aria-checked="false">Centésimas</button>
+                <button type="button" role="menuitemradio" data-level="3" aria-checked="false">Milésimas</button>
+                <button type="button" role="menuitemradio" data-level="10" aria-checked="false">10 decimales</button>
+              </div>
+            </div>
+
+            <div id="timerWrap" class="timer"><span class="sr-only">Tiempo </span><span id="timer">0:00.0</span></div>
+          </header>
+
+          <section class="number-stage" aria-live="polite">
+            <div id="mainNumber" class="main-number">0.0</div>
+            <div id="result" class="result">¡Correcto!</div>
+          </section>
+
+          <section id="lineStage" class="line-stage">
+            <svg id="numberline" role="application" aria-labelledby="lineTitle lineDescription">
+              <title id="lineTitle">Recta numérica decimal interactiva</title>
+              <desc id="lineDescription">Selecciona intervalos para subdividirlos, marcas para elegir números, arrastra para mover, usa dos dedos en una pantalla táctil o Control más rueda para ampliar.</desc>
+              <g id="lineContent"></g>
+            </svg>
+
+            <div class="controls" aria-label="Controles">
+              <button id="backBtn" class="control" type="button" aria-label="Volver" title="Volver" disabled>↶</button>
+              <button id="resetBtn" class="control" type="button" aria-label="Reiniciar vista" title="Reiniciar vista">⌂</button>
+              <button id="centerBtn" class="control" type="button" aria-label="Centrar número" title="Centrar número">◎</button>
+              <button id="newBtn" class="control challenge-only" type="button" aria-label="Nuevo reto" title="Nuevo reto">✦</button>
+            </div>
+          </section>
+        </div>
+      </div>
+    </section>
+
+    <section id="manifesto" class="manifesto" aria-labelledby="manifestoTitle">
+      <div class="manifesto-pin">
+        <h2 id="manifestoTitle" class="manifesto-copy">
+          <span class="manifesto-line">Los reales son</span>
+          <span class="manifesto-line">un <strong>cuerpo</strong>, ordenado</span>
+          <span class="manifesto-line">y completo.</span>
+        </h2>
+      </div>
+    </section>
+
+    <section id="cuerpo" class="content-section" aria-labelledby="cuerpoTitle">
+      <div class="chapter-grid">
+        <header class="chapter-heading" data-reveal>
+          <h2 id="cuerpoTitle">Cuerpo</h2>
+          <p>Once reglas describen cómo se suman, multiplican y relacionan los números reales.</p>
+        </header>
+
+        <div class="chapter-body">
+          <h3 class="section-title" data-reveal>Axiomas de cuerpo</h3>
+
+          <div class="axiom-structure">
+            <section class="axiom-lane" aria-labelledby="sumaTitle" data-reveal>
+              <h3 id="sumaTitle">Suma</h3>
+              <ol class="axiom-list">
+                <li class="axiom-item">
+                  <span class="axiom-index">01</span>
+                  <div><h4>Clausura</h4><p class="math-display">\(a+b\in\mathbb{R}\)</p></div>
+                </li>
+                <li class="axiom-item">
+                  <span class="axiom-index">02</span>
+                  <div><h4>Asociativa</h4><p class="math-display">\((a+b)+c=a+(b+c)\)</p></div>
+                </li>
+                <li class="axiom-item">
+                  <span class="axiom-index">03</span>
+                  <div><h4>Conmutativa</h4><p class="math-display">\(a+b=b+a\)</p></div>
+                </li>
+                <li class="axiom-item">
+                  <span class="axiom-index">04</span>
+                  <div><h4>Neutro aditivo</h4><p class="math-display">\(\exists!\,0\in\mathbb{R}:\ a+0=a\)</p></div>
+                </li>
+                <li class="axiom-item">
+                  <span class="axiom-index">05</span>
+                  <div><h4>Inverso aditivo</h4><p class="math-display">\(\forall a\in\mathbb{R},\ \exists\,(-a):\ a+(-a)=0\)</p></div>
+                </li>
+              </ol>
+            </section>
+
+            <section class="axiom-lane" aria-labelledby="productoTitle" data-reveal>
+              <h3 id="productoTitle">Multiplicación</h3>
+              <ol class="axiom-list" start="6">
+                <li class="axiom-item">
+                  <span class="axiom-index">06</span>
+                  <div><h4>Clausura</h4><p class="math-display">\(ab\in\mathbb{R}\)</p></div>
+                </li>
+                <li class="axiom-item">
+                  <span class="axiom-index">07</span>
+                  <div><h4>Asociativa</h4><p class="math-display">\((ab)c=a(bc)\)</p></div>
+                </li>
+                <li class="axiom-item">
+                  <span class="axiom-index">08</span>
+                  <div><h4>Conmutativa</h4><p class="math-display">\(ab=ba\)</p></div>
+                </li>
+                <li class="axiom-item">
+                  <span class="axiom-index">09</span>
+                  <div><h4>Neutro multiplicativo</h4><p class="math-display">\(\exists!\,1\in\mathbb{R},\ 1\ne0:\ a\cdot1=a\)</p></div>
+                </li>
+                <li class="axiom-item">
+                  <span class="axiom-index">10</span>
+                  <div><h4>Inverso multiplicativo</h4><p class="math-display">\(a\ne0\Rightarrow\exists\,a^{-1}:\ aa^{-1}=1\)</p></div>
+                </li>
+              </ol>
+            </section>
+          </div>
+
+          <section class="distributive" aria-labelledby="distributivaTitle" data-reveal>
+            <div class="axiom-item">
+              <span class="axiom-index">11</span>
+              <div>
+                <h4 id="distributivaTitle">Distributiva del producto respecto de la suma</h4>
+                <p class="math-display">\(a(b+c)=ab+ac\)</p>
+              </div>
+            </div>
+          </section>
+
+          <div class="statement" data-reveal>
+            \(a-b=a+(-b)\)
+            <small>La resta se define mediante la suma</small>
+          </div>
+
+          <h3 class="section-title" data-reveal>Propiedades deducibles</h3>
+          <div class="property-grid">
+            <div class="property" data-reveal>\(-(-a)=a\)</div>
+            <div class="property" data-reveal>\((-1)a=-a\)</div>
+            <div class="property" data-reveal>\(a\cdot0=0\)</div>
+            <div class="property" data-reveal>\((-a)b=a(-b)=-(ab)\)</div>
+            <div class="property" data-reveal>\((-a)(-b)=ab\)</div>
+            <div class="property" data-reveal>\(a+c=b+c\Rightarrow a=b\)</div>
+            <div class="property" data-reveal>\(ac=bc,\ c\ne0\Rightarrow a=b\)</div>
+            <div class="property" data-reveal>\(ab=0\Rightarrow a=0\ \text{o}\ b=0\)</div>
+            <div class="property important" data-reveal>\(a\text{ es invertible}\Longleftrightarrow a\ne0\)</div>
+          </div>
+
+          <div class="action-row" data-reveal>
+            <button id="playBtn" class="action-button" type="button">Jugar</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="anexo-fracciones" class="annex" aria-labelledby="fraccionesTitle">
+      <header class="annex-header" data-reveal>
+        <h2 id="fraccionesTitle" class="long-annex-title">Anexo (fracciones)</h2>
+        <p>Las fracciones expresan productos por inversos y conservan su valor al ampliar o simplificar.</p>
+      </header>
+
+      <div class="fraction-layout">
+        <div class="fraction-main" data-reveal>
+          <article class="formula-block">
+            <h3>Definición</h3>
+            <p class="math-display">\(\displaystyle \frac{a}{b}=ab^{-1},\qquad b\ne0\)</p>
+          </article>
+          <article class="formula-block">
+            <h3>Fracciones equivalentes</h3>
+            <p class="math-display">\(\displaystyle \frac{a}{b}=\frac{ak}{bk},\qquad b\ne0,\ k\ne0\)</p>
+          </article>
+          <article class="formula-block">
+            <h3>Identidad</h3>
+            <p class="math-display">\(\displaystyle \frac{a}{1}=a\)</p>
+          </article>
+        </div>
+
+        <div class="fraction-side" data-reveal>
+          <article class="formula-block">
+            <h3>Suma homogénea</h3>
+            <p class="math-display">\(\displaystyle \frac{a}{c}+\frac{b}{c}=\frac{a+b}{c},\quad c\ne0\)</p>
+          </article>
+          <article class="formula-block">
+            <h3>Multiplicación</h3>
+            <p class="math-display">\(\displaystyle \frac{a}{b}\frac{c}{d}=\frac{ac}{bd}\)</p>
+          </article>
+          <article class="formula-block">
+            <h3>División</h3>
+            <p class="math-display">\(\displaystyle \frac{\frac{a}{b}}{\frac{c}{d}}=\frac{a}{b}\frac{d}{c}=\frac{ad}{bc}\)</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section id="ordenado" class="content-section" aria-labelledby="ordenadoTitle">
+      <div class="chapter-grid">
+        <header class="chapter-heading" data-reveal>
+          <h2 id="ordenadoTitle" class="long-title">Ordenado</h2>
+          <p>El orden compara los reales y es compatible con sus dos operaciones fundamentales.</p>
+        </header>
+
+        <div class="chapter-body">
+          <h3 class="section-title" data-reveal>Axiomas de orden</h3>
+          <p class="order-premise" data-reveal>Existe un subconjunto \(\mathbb{R}^{+}\subset\mathbb{R}\), llamado conjunto de los reales positivos, que satisface:</p>
+          <div class="order-foundation">
+            <article class="order-axiom" data-reveal>
+              <h4>Cerradura</h4>
+              <p class="math-display">\(x,y\in\mathbb{R}^{+}\Rightarrow x+y\in\mathbb{R}^{+}\ \text{y}\ xy\in\mathbb{R}^{+}\)</p>
+            </article>
+            <article class="order-axiom" data-reveal>
+              <h4>Alternativa de signo</h4>
+              <p class="math-display">Si \(x\ne0\), exactamente uno de \(x\) y \(-x\) pertenece a \(\mathbb{R}^{+}\).</p>
+            </article>
+            <article class="order-axiom" data-reveal>
+              <h4>El cero</h4>
+              <p class="math-display">\(0\notin\mathbb{R}^{+}\)</p>
+            </article>
+          </div>
+
+          <div class="order-definition" data-reveal>
+            <p class="primary math-display">\(x&lt;y\Longleftrightarrow y-x\in\mathbb{R}^{+}\)</p>
+            <div class="order-equivalences">
+              <span>\(x&lt;y\Longleftrightarrow y&gt;x\)</span>
+              <span>\(x\le y\Longleftrightarrow(x&lt;y\ \lor\ x=y)\Longleftrightarrow y\ge x\)</span>
+            </div>
+          </div>
+
+          <h3 class="section-title" data-reveal>Propiedades deducibles</h3>
+          <div class="property-grid">
+            <div class="property order-property" data-reveal><span class="math-display">Exactamente una: \(a&lt;b\), \(a=b\) o \(b&lt;a\).</span><span class="property-name">(Tricotomía)</span></div>
+            <div class="property order-property" data-reveal><span class="math-display">\(a&lt;b,\ b&lt;c\Rightarrow a&lt;c\)</span><span class="property-name">(Transitividad)</span></div>
+            <div class="property order-property" data-reveal><span class="math-display">\(a&lt;b\Rightarrow a+c&lt;b+c\)</span><span class="property-name">(Suma de la misma cantidad)</span></div>
+            <div class="property order-property" data-reveal><span class="math-display">\(a&lt;b,\ c&gt;0\Rightarrow ac&lt;bc\)</span><span class="property-name">(Producto por positivo)</span></div>
+            <div class="property order-property" data-reveal><span class="math-display">\(a^2\ge0\)</span><span class="property-name">(Cuadrado no negativo)</span></div>
+            <div class="property order-property" data-reveal><span class="math-display">\(1&gt;0\)</span><span class="property-name">(Unidad positiva)</span></div>
+            <div class="property order-property" data-reveal><span class="math-display">\(a&lt;b,\ c&lt;0\Rightarrow ac&gt;bc\)</span><span class="property-name">(Producto por negativo)</span></div>
+            <div class="property order-property" data-reveal><span class="math-display">\(a&lt;b\Rightarrow -a&gt;-b\)</span><span class="property-name">(Cambio de signo)</span></div>
+            <div class="property order-property" data-reveal><span class="math-display">\(\begin{aligned}ab&gt;0\Rightarrow{}&amp;(a&gt;0,\ b&gt;0)\\[-2pt]&amp;\lor\ (a&lt;0,\ b&lt;0)\end{aligned}\)</span><span class="property-name">(Signo del producto)</span></div>
+            <div class="property order-property" data-reveal><span class="math-display">\(a&lt;c,\ b&lt;d\Rightarrow a+b&lt;c+d\)</span><span class="property-name">(Suma de desigualdades)</span></div>
+          </div>
+
+          <h3 class="section-title intervals-title" data-reveal>Intervalos</h3>
+          <div class="interval-definitions">
+            <article class="interval-definition" data-reveal>
+              <h4>Abierto</h4>
+              <p class="math-display">\((a,b)=\{x\in\mathbb{R}:a&lt;x&lt;b\}\)</p>
+            </article>
+            <article class="interval-definition" data-reveal>
+              <h4>Cerrado</h4>
+              <p class="math-display">\([a,b]=\{x\in\mathbb{R}:a\le x\le b\}\)</p>
+            </article>
+            <article class="interval-definition infinite" data-reveal>
+              <h4>Infinitos</h4>
+              <div class="interval-infinite-formulas">
+                <span class="math-display">\((a,\infty)=\{x\in\mathbb{R}:x&gt;a\}\)</span>
+                <span class="math-display">\([a,\infty)=\{x\in\mathbb{R}:x\ge a\}\)</span>
+                <span class="math-display">\((-\infty,b)=\{x\in\mathbb{R}:x&lt;b\}\)</span>
+                <span class="math-display">\((-\infty,b]=\{x\in\mathbb{R}:x\le b\}\)</span>
+              </div>
+            </article>
+          </div>
+
+          <div class="action-row" data-reveal>
+            <button class="action-button exercise-button" type="button" data-exercise="orden">Ejercicios</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="anexo-potencias" class="annex" aria-labelledby="potenciasTitle">
+      <header class="annex-header" data-reveal>
+        <h2 id="potenciasTitle" class="long-annex-title">Anexo (Potencia)</h2>
+        <p>Las leyes de los exponentes condensan productos repetidos y extienden la potencia a exponentes racionales.</p>
+      </header>
+
+      <div class="power-field">
+        <div class="power-formula" data-reveal>\(a^1=a\)</div>
+        <div class="power-formula" data-reveal>\(a^na^m=a^{n+m}\)</div>
+        <div class="power-formula" data-reveal>\(\displaystyle \frac{a^n}{a^m}=a^{n-m}\)</div>
+        <div class="power-formula" data-reveal>\((a^n)^m=a^{nm}\)</div>
+        <div class="power-formula" data-reveal>\((ab)^n=a^nb^n\)</div>
+        <div class="power-formula" data-reveal>\(a^0=1,\quad a\ne0\)</div>
+        <div class="power-formula" data-reveal>\(\displaystyle a^{-n}=\frac1{a^n},\quad a\ne0\)</div>
+        <div class="power-formula wide" data-reveal>\(\displaystyle a^{n/m}=\sqrt[m]{a^n}=\left(\sqrt[m]{a}\right)^n\)</div>
+      </div>
+      <p class="conditions" data-reveal>En exponentes racionales, \(m\in\mathbb{N}\) y \(m&gt;0\). Si \(m\) es par, \(a\ge0\). Si el exponente es negativo, \(a\ne0\).</p>
+
+      <div class="action-row" data-reveal>
+        <button class="action-button exercise-button" type="button" data-exercise="potencias">Ejercicios</button>
+      </div>
+    </section>
+
+    <section id="completo" class="content-section" aria-labelledby="completoTitle">
+      <div class="chapter-grid">
+        <header class="chapter-heading" data-reveal>
+          <h2 id="completoTitle" class="long-title">Completo</h2>
+          <p>En la recta real no quedan huecos: los conjuntos acotados alcanzan una frontera real precisa.</p>
+        </header>
+
+        <div class="chapter-body">
+          <h3 class="section-title" data-reveal>Supremo e ínfimo</h3>
+          <div class="bounds-grid">
+            <article class="bound-definition" data-reveal>
+              <h3>Supremo</h3>
+              <p>El supremo de un conjunto es su menor cota superior. Se escribe \(\sup A\).</p>
+            </article>
+            <article class="bound-definition" data-reveal>
+              <h3>Ínfimo</h3>
+              <p>El ínfimo de un conjunto es su mayor cota inferior. Se escribe \(\inf A\).</p>
+            </article>
+          </div>
+
+          <div class="completeness-axiom" data-reveal>
+            <h3>Axioma de completitud</h3>
+            <p>Todo subconjunto no vacío de \(\mathbb{R}\), acotado superiormente, posee supremo en \(\mathbb{R}\).</p>
+          </div>
+
+          <h3 class="section-title" data-reveal>Consecuencias de la completitud</h3>
+          <ul class="consequence-list">
+            <li data-reveal>
+              <details class="theorem-card">
+                <summary><span class="theorem-copy"><strong>Propiedad arquimediana</strong><span>Si \(x&gt;0\) y \(y\in\mathbb{R}\), existe \(n\in\mathbb{N}\) tal que \(nx&gt;y\).</span></span><span class="proof-toggle" aria-hidden="true">+</span></summary>
+                <div class="proof"><h4>Demostración</h4><p>Si \(\{nx:n\in\mathbb{N}\}\) estuviera acotado superiormente y \(s\) fuera su supremo, \(s-x\) no sería cota superior. Existiría \(n\) con \(nx&gt;s-x\), luego \((n+1)x&gt;s\), contradicción.</p></div>
+              </details>
+            </li>
+            <li data-reveal>
+              <details class="theorem-card">
+                <summary><span class="theorem-copy"><strong>Aproximación arquimediana</strong><span>Si \(a\le x\le a+\frac{y}{n}\) para todo \(n\ge1\), entonces \(x=a\).</span></span><span class="proof-toggle" aria-hidden="true">+</span></summary>
+                <div class="proof"><h4>Demostración</h4><p>Si \(x&gt;a\), la propiedad arquimediana proporciona \(n\) con \(n(x-a)&gt;y\). Entonces \(x&gt;a+\frac{y}{n}\), contradicción. Por tanto, \(x=a\).</p></div>
+              </details>
+            </li>
+            <li data-reveal>
+              <details class="theorem-card">
+                <summary><span class="theorem-copy"><strong>Aproximación al supremo y al ínfimo</strong><span>Si \(h&gt;0\) y \(\sup S\in\mathbb{R}\), existe \(x\in S\) con \(x&gt;\sup S-h\); si \(\inf S\in\mathbb{R}\), existe \(x\in S\) con \(x&lt;\inf S+h\).</span></span><span class="proof-toggle" aria-hidden="true">+</span></summary>
+                <div class="proof"><h4>Demostración</h4><p>Si todo \(x\in S\) cumpliera \(x\le\sup S-h\), entonces \(\sup S-h\) sería una cota superior menor que \(\sup S\), lo cual es imposible. El argumento para el ínfimo es análogo.</p></div>
+              </details>
+            </li>
+            <li data-reveal>
+              <details class="theorem-card">
+                <summary><span class="theorem-copy"><strong>Los racionales son densos</strong><span>Si \(x&lt;y\), existe \(q\in\mathbb{Q}\) tal que \(x&lt;q&lt;y\).</span></span><span class="proof-toggle" aria-hidden="true">+</span></summary>
+                <div class="proof"><h4>Demostración</h4><p>Elija \(n\in\mathbb{N}\) con \(n(y-x)&gt;1\). Existe un entero \(m\) con \(nx&lt;m&lt;ny\); por tanto, \(q=m/n\) es racional y \(x&lt;q&lt;y\).</p></div>
+              </details>
+            </li>
+            <li data-reveal>
+              <details class="theorem-card">
+                <summary><span class="theorem-copy"><strong>Los irracionales son densos</strong><span>Si \(x&lt;y\), existe \(r\in\mathbb{R}\setminus\mathbb{Q}\) tal que \(x&lt;r&lt;y\).</span></span><span class="proof-toggle" aria-hidden="true">+</span></summary>
+                <div class="proof"><h4>Demostración</h4><p>Elija \(n\) con \(\sqrt2/n&lt;y-x\) y un racional \(q\) en \((x-\sqrt2/n,\ y-\sqrt2/n)\). Entonces \(r=q+\sqrt2/n\) es irracional y pertenece a \((x,y)\).</p></div>
+              </details>
+            </li>
+            <li data-reveal>
+              <details class="theorem-card">
+                <summary><span class="theorem-copy"><strong>Intervalos encajados</strong><span>Si \([a_n,b_n]\) son cerrados, encajados y \(b_n-a_n\to0\), su intersección contiene un único real.</span></span><span class="proof-toggle" aria-hidden="true">+</span></summary>
+                <div class="proof"><h4>Demostración</h4><p>Sea \(s=\sup\{a_n:n\in\mathbb{N}\}\). El encajamiento implica \(a_n\le s\le b_n\) para todo \(n\), así que \(s\) pertenece a cada intervalo. La condición \(b_n-a_n\to0\) fuerza la unicidad.</p></div>
+              </details>
+            </li>
+            <li data-reveal>
+              <details class="theorem-card">
+                <summary><span class="theorem-copy"><strong>Existencia de raíces</strong><span>Si \(a&gt;0\) y \(n\in\mathbb{N}\), existe un único \(r&gt;0\) con \(r^n=a\).</span></span><span class="proof-toggle" aria-hidden="true">+</span></summary>
+                <div class="proof"><h4>Demostración</h4><p>Considere \(S=\{t\ge0:t^n\le a\}\) y sea \(r=\sup S\). Si \(r^n&lt;a\) o \(r^n&gt;a\), una perturbación suficientemente pequeña de \(r\) contradice, respectivamente, que \(r\) sea cota superior o que sea el supremo. Luego \(r^n=a\); la monotonía en \(\mathbb{R}^{+}\) da la unicidad.</p></div>
+              </details>
+            </li>
+            <li data-reveal>
+              <details class="theorem-card">
+                <summary><span class="theorem-copy"><strong>El decimal periódico nueve</strong><span>\(0.999\ldots=0.\overline{9}=1\).</span></span><span class="proof-toggle" aria-hidden="true">+</span></summary>
+                <div class="proof"><h4>Demostración</h4><p>Sea \(s=0.\overline9\). Entonces \(10s=9.\overline9\). Al restar ambas igualdades, \(9s=9\), y por tanto \(s=1\).</p></div>
+              </details>
+            </li>
+          </ul>
+
+          <div class="action-row" data-reveal>
+            <button class="action-button exercise-button" type="button" data-exercise="completitud">Ejercicios</button>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="footer-symbol">ℝ</div>
+    <p class="footer-note">Una herramienta para explorar la estructura algebraica, el orden y la continuidad de los números reales.</p>
+  </footer>
+
+  <dialog id="exerciseDialog" class="exercise-dialog" aria-labelledby="dialogTitle">
+    <div class="dialog-shell">
+      <header class="dialog-header">
+        <h2 id="dialogTitle">Ejercicios</h2>
+        <button id="dialogClose" class="dialog-close" type="button" aria-label="Cerrar">×</button>
+      </header>
+      <ol id="exerciseList" class="exercise-list"></ol>
+    </div>
+  </dialog>
+
+  <script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/gsap.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/ScrollTrigger.min.js"></script>
+  <script>
+    (() => {
+      "use strict";
+
+      // Modelo matemático: todos los valores se representan como enteros escalados.
+      const MAX_DECIMALS = 10;
+      const SCALE = 10 ** MAX_DECIMALS;
+      const STEPS = Array.from({ length: MAX_DECIMALS + 1 }, (_, index) => 10 ** (MAX_DECIMALS - index));
+      const INITIAL = Object.freeze({ min: -5 * SCALE, max: 5 * SCALE });
+      const LEVELS = Object.freeze({ 1: "décimas", 2: "centésimas", 3: "milésimas", 10: "10 decimales" });
+      const EXERCISES = Object.freeze({
+        orden: {
+          title: "Ejercicios de orden",
+          items: [
+            ["Si \\(a<b\\), explica por qué \\(a+c<b+c\\).", "Es una propiedad deducida de la definición del orden y la cerradura de \\(\\mathbb{R}^{+}\\) bajo la suma."],
+            ["Ordena \\(-1.7\\), \\(-1.07\\) y \\(0.17\\).", "\\(-1.7<-1.07<0.17\\). Entre negativos, el de mayor valor absoluto es menor."],
+            ["Si \\(0<a<b\\) y \\(c>0\\), compara \\(ac\\) y \\(bc\\).", "\\(ac<bc\\), porque multiplicar por un positivo conserva el orden."]
+          ]
+        },
+        potencias: {
+          title: "Ejercicios de potencias",
+          items: [
+            ["Simplifica \\(a^4a^7\\).", "\\(a^{11}\\). Se suman los exponentes de la misma base."],
+            ["Escribe \\(x^{-3}\\) sin exponente negativo.", "\\(x^{-3}=1/x^3\\), con \\(x\\ne0\\)."],
+            ["Reescribe \\(a^{3/2}\\) como radical.", "\\(a^{3/2}=\\sqrt{a^3}=(\\sqrt a)^3\\), para \\(a\\ge0\\)."]
+          ]
+        },
+        completitud: {
+          title: "Ejercicios de completitud",
+          items: [
+            ["Para \\(A=(0,1)\\), determina \\(\\sup A\\) e \\(\\inf A\\).", "\\(\\sup A=1\\) e \\(\\inf A=0\\), aunque ninguno pertenece a \\(A\\)."],
+            ["¿Por qué \\(\\mathbb{N}\\) no puede estar acotado superiormente en \\(\\mathbb{R}\\)?", "Por la propiedad arquimediana: para cada real existe un natural mayor."],
+            ["Da un racional situado entre \\(1.2\\) y \\(1.3\\).", "Por ejemplo \\(1.25\\). La densidad garantiza que existen infinitos."]
+          ]
+        }
+      });
+      const $ = (selector) => document.querySelector(selector);
+      const svg = $("#numberline");
+      const content = $("#lineContent");
+      const reducedMotion = () => matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+      // Estado y reglas del juego.
+      const state = {
+        mode: "challenge",
+        precision: 1,
+        target: 0,
+        history: [],
+        selected: null,
+        selectedDigits: 0,
+        viewMin: INITIAL.min,
+        viewMax: INITIAL.max,
+        attempts: 0,
+        solved: false,
+        startedAt: 0,
+        elapsed: 0,
+        timerRunning: false,
+        timerFrame: 0,
+        viewFrame: 0,
+        recentTargets: []
+      };
+
+      function format(raw, digits) {
+        const places = Math.max(0, Math.min(MAX_DECIMALS, digits));
+        const sign = raw < 0 ? "−" : "";
+        const absolute = Math.abs(raw);
+        const whole = Math.floor(absolute / SCALE);
+        if (!places) return sign + whole;
+        const fraction = String(absolute % SCALE).padStart(MAX_DECIMALS, "0").slice(0, places);
+        return `${sign}${whole}.${fraction}`;
+      }
+
+      function elapsedText(ms) {
+        const tenths = Math.max(0, Math.floor(ms / 100));
+        const minutes = Math.floor(tenths / 600);
+        const seconds = Math.floor((tenths % 600) / 10);
+        return `${minutes}:${String(seconds).padStart(2, "0")}.${tenths % 10}`;
+      }
+
+      function floorTo(value, step) { return Math.floor(value / step) * step; }
+      function currentDepth() { return state.history.length; }
+      function currentStep() { return STEPS[currentDepth()]; }
+      function maxCameraSpan() { return currentStep() * 50; }
+      function minCameraSpan() { return Math.max(4, currentStep() * 4); }
+
+      function randomTarget(precision) {
+        const unit = STEPS[precision];
+        const limit = Math.floor((4.9 * SCALE) / unit);
+        let raw = unit;
+        for (let guard = 0; guard < 200; guard += 1) {
+          const coefficient = Math.floor(Math.random() * (limit * 2 + 1)) - limit;
+          if (!coefficient || Math.abs(coefficient) % 10 === 0) continue;
+          raw = coefficient * unit;
+          if (!state.recentTargets.includes(raw)) break;
+        }
+        state.recentTargets = [raw, ...state.recentTargets].slice(0, 8);
+        return raw;
+      }
+
+      function showNumber(raw = null, digits = 0) {
+        const element = $("#mainNumber");
+        element.classList.toggle("long", raw !== null && digits >= 7);
+        if (raw === null) {
+          element.textContent = "…";
+          element.classList.add("placeholder");
+        } else {
+          element.textContent = format(raw, digits);
+          element.classList.remove("placeholder");
+        }
+        if (window.gsap && !reducedMotion()) {
+          window.gsap.fromTo(element, { autoAlpha: .5, y: 7 }, {
+            autoAlpha: 1, y: 0, duration: .32, ease: "power2.out", overwrite: "auto"
+          });
+        }
+      }
+
+      function flashError() {
+        const number = $("#mainNumber");
+        number.classList.remove("error");
+        void number.offsetWidth;
+        number.classList.add("error");
+        window.setTimeout(() => number.classList.remove("error"), 360);
+      }
+
+      function updateModeUI() {
+        const challenge = state.mode === "challenge";
+        $("#exploreMode").setAttribute("aria-pressed", String(!challenge));
+        $("#challengeMode").setAttribute("aria-pressed", String(challenge));
+        $("#timerWrap").hidden = !challenge;
+        $("#newBtn").hidden = !challenge;
+        $("#challengeLabel").textContent = `Reto · ${LEVELS[state.precision]}`;
+        document.querySelectorAll("[data-level]").forEach((button) => {
+          button.setAttribute("aria-checked", String(Number(button.dataset.level) === state.precision));
+        });
+      }
+
+      function updateControls() {
+        $("#backBtn").disabled = state.history.length === 0;
+      }
+
+      function setMenu(open) {
+        $("#levelMenu").hidden = !open;
+        $("#challengeMode").setAttribute("aria-expanded", String(open));
+      }
+
+      function startTimer() {
+        if (state.timerFrame) cancelAnimationFrame(state.timerFrame);
+        state.startedAt = performance.now();
+        state.elapsed = 0;
+        state.timerRunning = true;
+        $("#timer").textContent = "0:00.0";
+        const tick = (now) => {
+          if (!state.timerRunning) return;
+          state.elapsed = now - state.startedAt;
+          $("#timer").textContent = elapsedText(state.elapsed);
+          state.timerFrame = requestAnimationFrame(tick);
+        };
+        state.timerFrame = requestAnimationFrame(tick);
+      }
+
+      function stopTimer() {
+        if (state.timerRunning) state.elapsed = performance.now() - state.startedAt;
+        state.timerRunning = false;
+        if (state.timerFrame) cancelAnimationFrame(state.timerFrame);
+        state.timerFrame = 0;
+        $("#timer").textContent = elapsedText(state.elapsed);
+      }
+
+      function resetPath(animate = false) {
+        state.history = [];
+        state.selected = null;
+        state.selectedDigits = 0;
+        state.solved = false;
+        $("#mainNumber").classList.remove("solved", "error");
+        $("#result").classList.remove("visible");
+        updateControls();
+        if (state.mode === "challenge") showNumber(state.target, state.precision);
+        else showNumber(null);
+        if (animate) animateView(INITIAL.min, INITIAL.max);
+        else {
+          state.viewMin = INITIAL.min;
+          state.viewMax = INITIAL.max;
+          render();
+        }
+      }
+
+      function startChallenge(target = null) {
+        state.mode = "challenge";
+        state.target = target === null ? randomTarget(state.precision) : target;
+        state.attempts = 0;
+        resetPath(false);
+        updateModeUI();
+        startTimer();
+      }
+
+      function startExploration() {
+        state.mode = "explore";
+        stopTimer();
+        resetPath(false);
+        updateModeUI();
+        setMenu(false);
+      }
+
+      function mapX(value, width) {
+        return ((value - state.viewMin) / (state.viewMax - state.viewMin)) * width;
+      }
+
+      function activeBounds() {
+        const step = currentStep();
+        return {
+          start: floorTo(state.viewMin, step) - step,
+          end: floorTo(state.viewMax, step) + step * 2,
+          step
+        };
+      }
+
+      function render() {
+        const width = Math.max(320, svg.clientWidth || 900);
+        const height = Math.max(160, svg.clientHeight || 320);
+        svg.setAttribute("viewBox", `0 0 ${width} ${height}`);
+        const axisY = Math.round(height * .31);
+        const bounds = activeBounds();
+        const depth = currentDepth();
+        const count = Math.min(54, Math.ceil((bounds.end - bounds.start) / bounds.step));
+        const px = Math.abs(mapX(bounds.start + bounds.step, width) - mapX(bounds.start, width));
+        const showLabels = px >= (depth === 0 ? 28 : 34);
+        const showStructure = px >= 14;
+        const structureScale = Math.max(0, Math.min(1, (px - 14) / 28));
+        const labelSize = depth === 0
+          ? Math.max(14, Math.min(22, 10 + px * .12))
+          : Math.max(10, Math.min(17, 7 + px * .105));
+        const availableHalf = Math.max(8, Math.min(axisY - 12, height - axisY - 58));
+        const divisionHalf = Math.min(9 + structureScale * 66, availableHalf);
+        const divisionOpacity = .2 + structureScale * .8;
+        const tickHalf = 6 + structureScale * 8;
+        const dotRadius = 1.8 + structureScale * 2.1;
+        const hitHalf = Math.max(6, Math.min(13, px * .23));
+        const locked = depth >= MAX_DECIMALS || (state.mode === "challenge" && depth >= state.precision);
+        const parts = [];
+
+        parts.push(`<line class="axis" x1="0" y1="${axisY}" x2="${width}" y2="${axisY}"/>`);
+
+        for (let i = 0; i < count; i += 1) {
+          const min = bounds.start + i * bounds.step;
+          const max = min + bounds.step;
+          const x1 = mapX(min, width);
+          const x2 = mapX(max, width);
+          if (x2 < -3 || x1 > width + 3) continue;
+          if (showStructure) {
+            parts.push(`<line class="division" x1="${x1.toFixed(2)}" y1="${(axisY - divisionHalf).toFixed(2)}" x2="${x1.toFixed(2)}" y2="${(axisY + divisionHalf).toFixed(2)}" opacity="${divisionOpacity.toFixed(2)}"/>`);
+          }
+          const left = Math.max(-2, x1);
+          const visibleWidth = Math.max(1, Math.min(width + 2, x2) - left);
+          parts.push(`<rect class="interval-hit ${locked ? "locked" : ""}" data-action="interval" data-min="${min}" data-max="${max}" tabindex="0" role="button" aria-label="Intervalo ${format(min, depth)} a ${format(max, depth)}" x="${left.toFixed(2)}" y="${axisY - 86}" width="${visibleWidth.toFixed(2)}" height="172"/>`);
+          parts.push(`<line class="interval-preview" x1="${Math.max(0, x1 + 2).toFixed(2)}" y1="${axisY}" x2="${Math.min(width, x2 - 2).toFixed(2)}" y2="${axisY}"/>`);
+        }
+
+        const selectedInterval = state.history[state.history.length - 1];
+        if (selectedInterval) {
+          const index = state.history.length - 1;
+          const interval = selectedInterval;
+          const x1 = mapX(interval.min, width);
+          const x2 = mapX(interval.max, width);
+          if (!(x2 < 0 || x1 > width)) {
+            parts.push(`<line class="selection-segment depth-${index % 3}" x1="${Math.max(0, x1 + 2).toFixed(2)}" y1="${axisY}" x2="${Math.min(width, x2 - 2).toFixed(2)}" y2="${axisY}"/>`);
+          }
+        }
+
+        for (let i = 0; i <= count; i += 1) {
+          const value = bounds.start + i * bounds.step;
+          const x = mapX(value, width);
+          if (x < -20 || x > width + 20) continue;
+          const selected = state.selected === value;
+          parts.push(
+            `<g class="tick-action ${selected ? `selected color-${depth % 3}` : ""}" data-action="tick" data-value="${value}" tabindex="0" role="button" aria-label="Marca ${format(value, depth)}" transform="translate(${x.toFixed(2)} 0)">` +
+              `<rect class="tick-hit" x="${(-hitHalf).toFixed(2)}" y="${axisY - 32}" width="${(hitHalf * 2).toFixed(2)}" height="77"/>` +
+              (showStructure ? `<line class="tick-line" x1="0" y1="${(axisY - tickHalf).toFixed(2)}" x2="0" y2="${(axisY + tickHalf).toFixed(2)}" opacity="${divisionOpacity.toFixed(2)}"/><circle class="tick-dot" cx="0" cy="${axisY}" r="${dotRadius.toFixed(2)}" opacity="${divisionOpacity.toFixed(2)}"/>` : "") +
+              (showLabels ? `<text class="tick-label" x="0" y="${axisY + 43}" text-anchor="middle" style="font-size:${labelSize.toFixed(1)}px">${format(value, depth)}</text>` : "") +
+            `</g>`
+          );
+        }
+
+        content.innerHTML = parts.join("");
+      }
+
+      function stopViewAnimation() {
+        if (state.viewFrame) cancelAnimationFrame(state.viewFrame);
+        state.viewFrame = 0;
+      }
+
+      function animateView(targetMin, targetMax, duration = 560) {
+        stopViewAnimation();
+        const fromMin = state.viewMin;
+        const fromMax = state.viewMax;
+        const started = performance.now();
+        const reduced = matchMedia("(prefers-reduced-motion: reduce)").matches;
+        const actualDuration = reduced ? 1 : duration;
+        const frame = (now) => {
+          const t = Math.min(1, (now - started) / actualDuration);
+          const eased = 1 - Math.pow(1 - t, 4);
+          state.viewMin = fromMin + (targetMin - fromMin) * eased;
+          state.viewMax = fromMax + (targetMax - fromMax) * eased;
+          render();
+          if (t < 1) state.viewFrame = requestAnimationFrame(frame);
+          else state.viewFrame = 0;
+        };
+        state.viewFrame = requestAnimationFrame(frame);
+      }
+
+      function zoomToInterval(interval) {
+        const pad = (interval.max - interval.min) * .22;
+        animateView(interval.min - pad, interval.max + pad);
+      }
+
+      function handleInterval(min, max) {
+        if (state.solved) return;
+        const depth = currentDepth();
+        if (depth >= MAX_DECIMALS || (state.mode === "challenge" && depth >= state.precision)) return;
+        if (state.mode === "challenge" && !(state.target >= min && state.target <= max)) {
+          flashError();
+          return;
+        }
+        state.history.push({ min, max });
+        state.selected = null;
+        state.selectedDigits = currentDepth();
+        if (state.mode === "explore") showNumber(null);
+        updateControls();
+        zoomToInterval({ min, max });
+      }
+
+      function handleTick(value) {
+        state.selected = value;
+        state.selectedDigits = currentDepth();
+        render();
+        if (state.mode === "explore") {
+          showNumber(value, state.selectedDigits);
+          return;
+        }
+        if (state.solved) return;
+        state.attempts += 1;
+        if (value === state.target && currentDepth() >= state.precision) completeChallenge();
+        else flashError();
+      }
+
+      function completeChallenge() {
+        state.solved = true;
+        stopTimer();
+        $("#mainNumber").classList.add("solved");
+        $("#result").classList.add("visible");
+        if (window.gsap && !reducedMotion()) {
+          window.gsap.fromTo("#result", { autoAlpha: 0, scale: .92 }, {
+            autoAlpha: 1, scale: 1, duration: .5, ease: "back.out(1.7)", overwrite: "auto"
+          });
+        }
+        launchConfetti();
+      }
+
+      function goBack() {
+        if (!state.history.length) return;
+        state.history.pop();
+        state.selected = null;
+        state.selectedDigits = currentDepth();
+        if (state.mode === "explore") showNumber(null);
+        updateControls();
+        const previous = state.history[state.history.length - 1];
+        if (previous) zoomToInterval(previous);
+        else animateView(INITIAL.min, INITIAL.max);
+      }
+
+      function centerNumber() {
+        const raw = state.mode === "challenge" ? state.target : state.selected;
+        if (raw === null) return;
+        const span = Math.min(maxCameraSpan(), Math.max(minCameraSpan(), state.viewMax - state.viewMin));
+        animateView(raw - span / 2, raw + span / 2, 420);
+      }
+
+      function activate(element) {
+        if (!element) return;
+        if (element.dataset.action === "interval") handleInterval(Number(element.dataset.min), Number(element.dataset.max));
+        if (element.dataset.action === "tick") handleTick(Number(element.dataset.value));
+      }
+
+      let ignoreClickUntil = 0;
+      content.addEventListener("click", (event) => {
+        if (performance.now() < ignoreClickUntil) return;
+        activate(event.target.closest("[data-action]"));
+      });
+      content.addEventListener("keydown", (event) => {
+        if (event.key !== "Enter" && event.key !== " ") return;
+        const action = event.target.closest("[data-action]");
+        if (!action) return;
+        event.preventDefault();
+        activate(action);
+      });
+
+      const pointers = new Map();
+      let dragOrigin = null;
+      let dragMoved = false;
+      let pinchOrigin = null;
+
+      function localPoint(event) {
+        const rect = svg.getBoundingClientRect();
+        return { x: event.clientX - rect.left, y: event.clientY - rect.top };
+      }
+
+      svg.addEventListener("pointerdown", (event) => {
+        if (event.pointerType === "mouse" && event.button !== 0) return;
+        stopViewAnimation();
+        const point = localPoint(event);
+        pointers.set(event.pointerId, point);
+        try { svg.setPointerCapture(event.pointerId); } catch (_) {}
+        if (pointers.size === 1) {
+          dragMoved = false;
+          dragOrigin = { x: point.x, y: point.y, min: state.viewMin, max: state.viewMax };
+        } else if (pointers.size === 2) {
+          const [a, b] = [...pointers.values()];
+          const center = (a.x + b.x) / 2;
+          pinchOrigin = {
+            distance: Math.max(10, Math.hypot(a.x - b.x, a.y - b.y)),
+            center,
+            min: state.viewMin,
+            max: state.viewMax,
+            world: state.viewMin + (center / svg.clientWidth) * (state.viewMax - state.viewMin)
+          };
+          dragMoved = true;
+        }
+      });
+
+      svg.addEventListener("pointermove", (event) => {
+        if (!pointers.has(event.pointerId)) return;
+        const point = localPoint(event);
+        pointers.set(event.pointerId, point);
+        if (pointers.size >= 2 && pinchOrigin) {
+          event.preventDefault();
+          const [a, b] = [...pointers.values()];
+          const distance = Math.max(10, Math.hypot(a.x - b.x, a.y - b.y));
+          const center = (a.x + b.x) / 2;
+          const requested = (pinchOrigin.max - pinchOrigin.min) * pinchOrigin.distance / distance;
+          const span = Math.min(maxCameraSpan(), Math.max(minCameraSpan(), requested));
+          const ratio = center / Math.max(1, svg.clientWidth);
+          state.viewMin = pinchOrigin.world - ratio * span;
+          state.viewMax = state.viewMin + span;
+          dragMoved = true;
+          svg.classList.add("dragging");
+          render();
+          return;
+        }
+        if (pointers.size === 1 && dragOrigin) {
+          const dx = point.x - dragOrigin.x;
+          const dy = point.y - dragOrigin.y;
+          if (!dragMoved && Math.hypot(dx, dy) > 6) dragMoved = true;
+          if (dragMoved) {
+            event.preventDefault();
+            const span = dragOrigin.max - dragOrigin.min;
+            const shift = -(dx / Math.max(1, svg.clientWidth)) * span;
+            state.viewMin = dragOrigin.min + shift;
+            state.viewMax = dragOrigin.max + shift;
+            svg.classList.add("dragging");
+            render();
+          }
+        }
+      });
+
+      function release(event) {
+        if (!pointers.has(event.pointerId)) return;
+        const gesture = dragMoved || pointers.size > 1;
+        pointers.delete(event.pointerId);
+        try { svg.releasePointerCapture(event.pointerId); } catch (_) {}
+        if (gesture) ignoreClickUntil = performance.now() + 280;
+        if (pointers.size === 1) {
+          const point = [...pointers.values()][0];
+          dragOrigin = { x: point.x, y: point.y, min: state.viewMin, max: state.viewMax };
+          dragMoved = true;
+        } else if (!pointers.size) {
+          dragOrigin = null;
+          pinchOrigin = null;
+          dragMoved = false;
+          svg.classList.remove("dragging");
+        }
+      }
+
+      svg.addEventListener("pointerup", release);
+      svg.addEventListener("pointercancel", release);
+      svg.addEventListener("wheel", (event) => {
+        if (!(event.ctrlKey || event.metaKey)) return;
+        event.preventDefault();
+        stopViewAnimation();
+        const point = localPoint(event);
+        const oldSpan = state.viewMax - state.viewMin;
+        const factor = Math.exp(Math.max(-1.2, Math.min(1.2, event.deltaY * .0015)));
+        const span = Math.min(maxCameraSpan(), Math.max(minCameraSpan(), oldSpan * factor));
+        const ratio = point.x / Math.max(1, svg.clientWidth);
+        const world = state.viewMin + ratio * oldSpan;
+        state.viewMin = world - ratio * span;
+        state.viewMax = state.viewMin + span;
+        render();
+      }, { passive: false });
+
+      $("#exploreMode").addEventListener("click", startExploration);
+      $("#challengeMode").addEventListener("click", (event) => {
+        event.stopPropagation();
+        setMenu($("#levelMenu").hidden);
+      });
+      document.querySelectorAll("[data-level]").forEach((button) => {
+        button.addEventListener("click", () => {
+          state.precision = Number(button.dataset.level);
+          setMenu(false);
+          startChallenge();
+        });
+      });
+      document.addEventListener("click", (event) => {
+        if (!event.target.closest(".modes")) setMenu(false);
+      });
+      document.addEventListener("keydown", (event) => {
+        if (event.key === "Escape") setMenu(false);
+      });
+      $("#backBtn").addEventListener("click", goBack);
+      $("#resetBtn").addEventListener("click", () => resetPath(true));
+      $("#centerBtn").addEventListener("click", centerNumber);
+      $("#newBtn").addEventListener("click", () => startChallenge());
+      $("#playBtn").addEventListener("click", () => {
+        state.precision = 1;
+        startChallenge();
+        $("#laboratorio").scrollIntoView({ behavior: reducedMotion() ? "auto" : "smooth", block: "center" });
+      });
+
+      function launchConfetti() {
+        if (matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+        const canvas = $("#confetti");
+        const ctx = canvas.getContext("2d");
+        const dpr = Math.min(2, devicePixelRatio || 1);
+        canvas.width = innerWidth * dpr;
+        canvas.height = innerHeight * dpr;
+        canvas.style.width = innerWidth + "px";
+        canvas.style.height = innerHeight + "px";
+        ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+        const colors = ["#65e6b4", "#64d9ff", "#ffc36c", "#edf7f1"];
+        const particles = Array.from({ length: 70 }, (_, i) => ({
+          x: innerWidth * (.3 + Math.random() * .4), y: innerHeight * .28,
+          vx: (Math.random() - .5) * 8, vy: -4 - Math.random() * 6,
+          g: .19 + Math.random() * .06, r: Math.random() * Math.PI,
+          s: (Math.random() - .5) * .22, w: 4 + Math.random() * 5,
+          h: 7 + Math.random() * 7, color: colors[i % colors.length]
+        }));
+        const started = performance.now();
+        const frame = (now) => {
+          ctx.clearRect(0, 0, innerWidth, innerHeight);
+          const age = now - started;
+          particles.forEach((p) => {
+            p.x += p.vx; p.y += p.vy; p.vy += p.g; p.r += p.s;
+            ctx.save(); ctx.globalAlpha = Math.max(0, 1 - Math.max(0, age - 850) / 650);
+            ctx.translate(p.x, p.y); ctx.rotate(p.r); ctx.fillStyle = p.color;
+            ctx.fillRect(-p.w / 2, -p.h / 2, p.w, p.h); ctx.restore();
+          });
+          if (age < 1500) requestAnimationFrame(frame); else ctx.clearRect(0, 0, innerWidth, innerHeight);
+        };
+        requestAnimationFrame(frame);
+      }
+
+      // Contenido complementario: ejercicios breves con respuesta desplegable.
+      function initExercises() {
+        const dialog = $("#exerciseDialog");
+        const list = $("#exerciseList");
+        const closeButton = $("#dialogClose");
+
+        const closeDialog = () => {
+          if (!dialog.open) return;
+          if (!window.gsap || reducedMotion()) {
+            dialog.close();
+            return;
+          }
+          window.gsap.to(".dialog-shell", {
+            autoAlpha: 0,
+            scale: .97,
+            duration: .18,
+            ease: "power2.in",
+            overwrite: "auto",
+            onComplete: () => {
+              dialog.close();
+              window.gsap.set(".dialog-shell", { clearProps: "all" });
+            }
+          });
+        };
+
+        document.querySelectorAll("[data-exercise]").forEach((button) => {
+          button.addEventListener("click", () => {
+            const group = EXERCISES[button.dataset.exercise];
+            if (!group) return;
+            $("#dialogTitle").textContent = group.title;
+            list.innerHTML = group.items.map(([question, answer]) =>
+              `<li><p>${question}</p><details><summary>Ver respuesta</summary><p>${answer}</p></details></li>`
+            ).join("");
+            dialog.showModal();
+            if (window.gsap && !reducedMotion()) {
+              window.gsap.fromTo(".dialog-shell", { autoAlpha: 0, scale: .96, y: 12 }, {
+                autoAlpha: 1, scale: 1, y: 0, duration: .36, ease: "power3.out", overwrite: "auto"
+              });
+            }
+            if (window.MathJax?.typesetPromise) window.MathJax.typesetPromise([list]);
+            closeButton.focus();
+          });
+        });
+
+        closeButton.addEventListener("click", closeDialog);
+        dialog.addEventListener("click", (event) => {
+          if (event.target === dialog) closeDialog();
+        });
+      }
+
+      // Presentación: movimiento editorial limitado a transformación y opacidad.
+      function initMotion() {
+        const gsap = window.gsap;
+        const ScrollTrigger = window.ScrollTrigger;
+        if (!gsap || !ScrollTrigger) return;
+
+        gsap.registerPlugin(ScrollTrigger);
+        const media = gsap.matchMedia();
+
+        media.add("(prefers-reduced-motion: no-preference)", () => {
+          gsap.timeline({ defaults: { ease: "power3.out" } })
+            .from(".hero-field", { autoAlpha: 0, scale: .8, duration: 1.15 })
+            .from(".hero-symbol", { autoAlpha: 0, scale: .86, duration: .85 }, "-=.78")
+            .from(".hero-caption", { autoAlpha: 0, y: 14, duration: .52 }, "-=.38");
+
+          gsap.to(".hero-field", {
+            scale: 1.12,
+            autoAlpha: .34,
+            ease: "none",
+            scrollTrigger: { trigger: ".hero", start: "top top", end: "bottom top", scrub: .8 }
+          });
+          gsap.to(".hero-copy", {
+            yPercent: -14,
+            autoAlpha: .26,
+            ease: "none",
+            scrollTrigger: { trigger: ".hero", start: "top top", end: "bottom top", scrub: .8 }
+          });
+
+          gsap.timeline({
+            defaults: { ease: "power3.out" },
+            scrollTrigger: { trigger: ".lab-frame", start: "top 84%", toggleActions: "play none none none" }
+          })
+            .from(".lab-frame", { autoAlpha: 0, y: 56, duration: .8 })
+            .from(".lab-topbar, .number-stage, .controls", { autoAlpha: 0, y: 16, duration: .48, stagger: .08 }, "-=.36")
+            .from(".axis", { scaleX: 0, transformOrigin: "50% 50%", duration: .72 }, "-=.3");
+
+          const revealItems = gsap.utils.toArray("[data-reveal]");
+          gsap.set(revealItems, { autoAlpha: 0, y: 30 });
+          ScrollTrigger.batch(revealItems, {
+            start: "top 88%",
+            once: true,
+            onEnter: (batch) => gsap.to(batch, {
+              autoAlpha: 1,
+              y: 0,
+              duration: .68,
+              stagger: .075,
+              ease: "power3.out",
+              overwrite: "auto"
+            })
+          });
+
+          const manifestoLines = gsap.utils.toArray(".manifesto-line");
+          gsap.set(manifestoLines, { autoAlpha: .18, y: 26 });
+          gsap.timeline({
+            scrollTrigger: {
+              trigger: "#manifesto",
+              start: "top top",
+              end: "bottom bottom",
+              scrub: .8,
+              pin: ".manifesto-pin",
+              pinSpacing: false,
+              anticipatePin: 1
+            }
+          }).to(manifestoLines, { autoAlpha: 1, y: 0, duration: 1, stagger: .52, ease: "power2.out" });
+
+          ScrollTrigger.create({
+            start: 0,
+            end: "max",
+            onUpdate: (self) => gsap.set("#pageProgress", { scaleX: self.progress })
+          });
+        });
+
+        media.add("(prefers-reduced-motion: reduce)", () => {
+          gsap.set(".hero-field, .hero-symbol, .hero-caption, .hero-copy, .lab-frame, .lab-topbar, .number-stage, .controls, .manifesto-line, [data-reveal]", { clearProps: "all" });
+        });
+
+        addEventListener("pagehide", () => media.revert(), { once: true });
+        if (window.MathJax?.startup?.promise) {
+          window.MathJax.startup.promise.then(() => ScrollTrigger.refresh());
+        }
+      }
+
+      if ("ResizeObserver" in window) new ResizeObserver(render).observe(svg);
+      else addEventListener("resize", render);
+
+      startChallenge();
+      initExercises();
+      initMotion();
+    })();
+  </script>
+</body>
+</html>
