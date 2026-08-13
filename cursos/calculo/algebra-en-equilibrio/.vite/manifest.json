@@ -11,7 +11,7 @@
     "name": "rolldown-runtime"
   },
   "app/AlgebraGame.tsx": {
-    "file": "assets/AlgebraGame-jQKtJocQ.js",
+    "file": "assets/AlgebraGame-DkLwXLcN.js",
     "name": "AlgebraGame",
     "src": "app/AlgebraGame.tsx",
     "isDynamicEntry": true,
@@ -21,19 +21,29 @@
       "_framework-DjPHiq1u.js"
     ],
     "dynamicImports": [
-      "node_modules/@zxing/browser/esm/index.js"
+      "node_modules/.pnpm/@zxing+browser@0.2.1_@zxing+library@0.23.0/node_modules/@zxing/browser/esm/index.js",
+      "node_modules/.pnpm/phaser@3.90.0/node_modules/phaser/dist/phaser.js"
     ]
   },
-  "node_modules/@zxing/browser/esm/index.js": {
+  "node_modules/.pnpm/@zxing+browser@0.2.1_@zxing+library@0.23.0/node_modules/@zxing/browser/esm/index.js": {
     "file": "assets/esm-DcSgsUa0.js",
     "name": "esm",
-    "src": "node_modules/@zxing/browser/esm/index.js",
+    "src": "node_modules/.pnpm/@zxing+browser@0.2.1_@zxing+library@0.23.0/node_modules/@zxing/browser/esm/index.js",
     "isDynamicEntry": true
   },
-  "node_modules/vinext/dist/shims/layout-segment-context.js": {
-    "file": "assets/layout-segment-context-C7WkVTMb.js",
+  "node_modules/.pnpm/phaser@3.90.0/node_modules/phaser/dist/phaser.js": {
+    "file": "assets/phaser-D2OU0fu5.js",
+    "name": "phaser",
+    "src": "node_modules/.pnpm/phaser@3.90.0/node_modules/phaser/dist/phaser.js",
+    "isDynamicEntry": true,
+    "imports": [
+      "_rolldown-runtime-S-ySWqyJ.js"
+    ]
+  },
+  "node_modules/.pnpm/vinext@0.0.50_@vitejs+plugi_3cf57d6cac45c99fc136490a231829fe/node_modules/vinext/dist/shims/layout-segment-context.js": {
+    "file": "assets/layout-segment-context-BwwHSFQC.js",
     "name": "layout-segment-context",
-    "src": "node_modules/vinext/dist/shims/layout-segment-context.js",
+    "src": "node_modules/.pnpm/vinext@0.0.50_@vitejs+plugi_3cf57d6cac45c99fc136490a231829fe/node_modules/vinext/dist/shims/layout-segment-context.js",
     "isDynamicEntry": true,
     "imports": [
       "_rolldown-runtime-S-ySWqyJ.js",
@@ -42,7 +52,7 @@
     ]
   },
   "virtual:vinext-app-browser-entry": {
-    "file": "assets/index-CrUNvRRR.js",
+    "file": "assets/index-3x9scOWM.js",
     "name": "index",
     "src": "virtual:vinext-app-browser-entry",
     "isEntry": true,
@@ -51,7 +61,7 @@
       "_framework-DjPHiq1u.js"
     ],
     "dynamicImports": [
-      "node_modules/vinext/dist/shims/layout-segment-context.js",
+      "node_modules/.pnpm/vinext@0.0.50_@vitejs+plugi_3cf57d6cac45c99fc136490a231829fe/node_modules/vinext/dist/shims/layout-segment-context.js",
       "virtual:vinext-app-browser-entry",
       "app/AlgebraGame.tsx"
     ]
