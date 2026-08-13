@@ -1903,7 +1903,9 @@
         stopViewAnimation();
         const point = localPoint(event);
         pointers.set(event.pointerId, point);
-        try { svg.setPointerCapture(event.pointerId); } catch (_) {}
+        if (event.pointerType !== "mouse") {
+          try { svg.setPointerCapture(event.pointerId); } catch (_) {}
+        }
         if (pointers.size === 1) {
           dragMoved = false;
           dragOrigin = { x: point.x, y: point.y, min: state.viewMin, max: state.viewMax };
@@ -1943,7 +1945,12 @@
         if (pointers.size === 1 && dragOrigin) {
           const dx = point.x - dragOrigin.x;
           const dy = point.y - dragOrigin.y;
-          if (!dragMoved && Math.hypot(dx, dy) > 6) dragMoved = true;
+          if (!dragMoved && Math.hypot(dx, dy) > 6) {
+            dragMoved = true;
+            if (event.pointerType === "mouse") {
+              try { svg.setPointerCapture(event.pointerId); } catch (_) {}
+            }
+          }
           if (dragMoved) {
             event.preventDefault();
             const span = dragOrigin.max - dragOrigin.min;
@@ -1977,16 +1984,12 @@
       svg.addEventListener("pointerup", release);
       svg.addEventListener("pointercancel", release);
       svg.addEventListener("wheel", (event) => {
+        if (!(event.ctrlKey || event.metaKey)) return;
         event.preventDefault();
         stopViewAnimation();
         const point = localPoint(event);
         const oldSpan = state.viewMax - state.viewMin;
-        const delta = event.deltaY * (event.deltaMode === 1
-          ? 16
-          : event.deltaMode === 2
-            ? Math.max(1, svg.clientHeight)
-            : 1);
-        const factor = Math.exp(Math.max(-1.2, Math.min(1.2, delta * .0015)));
+        const factor = Math.exp(Math.max(-1.2, Math.min(1.2, event.deltaY * .0015)));
         const span = Math.min(maxCameraSpan(), Math.max(minCameraSpan(), oldSpan * factor));
         const ratio = point.x / Math.max(1, svg.clientWidth);
         const world = state.viewMin + ratio * oldSpan;
