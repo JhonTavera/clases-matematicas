@@ -1221,6 +1221,42 @@
       font-weight: 800;
     }
 
+    .exercise-reading {
+      max-width: 68ch;
+      margin: 1.75rem 0;
+      display: grid;
+      gap: 1rem;
+      color: #c9d7d3;
+    }
+
+    .exercise-reading p { margin: 0; }
+
+    .exercise-bibliography {
+      max-width: 68ch;
+      margin-top: 2.5rem;
+      padding-top: 1.2rem;
+      border-top: 1px solid rgba(237, 247, 241, .12);
+      color: var(--muted);
+      font-size: .86rem;
+      line-height: 1.6;
+    }
+
+    .exercise-bibliography h4 {
+      margin: 0 0 .65rem;
+      color: var(--accent);
+      font-size: .72rem;
+      letter-spacing: .09em;
+      text-transform: uppercase;
+    }
+
+    .exercise-bibliography p { margin: 0; }
+
+    .exercise-bibliography a {
+      color: var(--accent);
+      overflow-wrap: anywhere;
+      text-underline-offset: .2em;
+    }
+
     .exercise-empty {
       min-height: 280px;
       display: grid;
@@ -1883,6 +1919,7 @@
       const EXERCISE_TOPICS = Object.freeze({
         simplificacion: "Simplificación",
         modelacion: "Modelación",
+        inecuaciones: "Intervalos e inecuaciones",
         despeje: "Despeje de variables",
         potenciacion: "Potenciación",
         completitud: "Completitud"
@@ -2150,13 +2187,34 @@
           topic: "modelacion",
           level: "avanzado",
           title: "Herencia de los 35 camellos",
-          prompt: "Tres hermanos heredan 35 camellos en proporciones de 1/2, 1/3 y 1/9. Analiza algebraicamente el reparto de Beremiz al completar temporalmente 36 camellos.",
-          formula: "\\frac12+\\frac13+\\frac19",
+          prompt: "Lee el relato completo, explica la situación y justifica algebraicamente por qué el reparto propuesto por Beremiz es posible.",
+          body: [
+            "Hacía pocas horas que viajábamos sin detenernos cuando nos ocurrió una aventura digna de ser relatada, en la que mi compañero Beremiz, con gran talento, puso en práctica sus habilidades de eximio cultivador del Álgebra.",
+            "Cerca de un viejo albergue de caravanas medio abandonado, vimos tres hombres que discutían acaloradamente junto a un hato de camellos.",
+            "Entre gritos e improperios, en plena discusión, braceando como posesos, se oían exclamaciones: «¡Que no puede ser!», «¡Es un robo!», «¡Pues yo no estoy de acuerdo!».",
+            "El inteligente Beremiz procuró informarse de lo que discutían.",
+            "«Somos hermanos», explicó el más viejo, «y recibimos como herencia esos 35 camellos. Según la voluntad expresa de mi padre, me corresponde la mitad, a mi hermano Hamed Namur una tercera parte y a Harim, el más joven, solo la novena parte. No sabemos, sin embargo, cómo efectuar la partición y a cada reparto propuesto por uno de nosotros sigue la negativa de los otros dos. Ninguna de las particiones ensayadas hasta el momento nos ha ofrecido un resultado aceptable. Si la mitad de 35 es 17 y medio, y la tercera parte y la novena de dicha cantidad tampoco son exactas, ¿cómo proceder a tal partición?».",
+            "«Muy sencillo», dijo el Hombre que Calculaba. «Yo me comprometo a hacer con justicia ese reparto, mas antes permítanme que una a esos 35 camellos de la herencia este espléndido animal que nos trajo aquí en buena hora».",
+            "En este punto intervine en la cuestión: «¿Cómo voy a permitir semejante locura? ¿Cómo vamos a seguir el viaje si nos quedamos sin el camello?».",
+            "«No te preocupes, bagdalí», me dijo en voz baja Beremiz. «Sé muy bien lo que estoy haciendo. Cédeme tu camello y verás a qué conclusión llegamos».",
+            "Y tal fue el tono de seguridad con que lo dijo que le entregué sin el menor titubeo mi bello jamal, que inmediatamente pasó a incrementar la cáfila que debía ser repartida entre los tres herederos.",
+            "«Amigos míos», dijo, «voy a hacer la división justa y exacta de los camellos, que como ahora ven son 36».",
+            "Y volviéndose hacia el más viejo de los hermanos, habló así: «Tendrías que recibir, amigo mío, la mitad de 35, esto es, 17 y medio. Pues bien, recibirás la mitad de 36 y, por tanto, 18. Nada tienes que reclamar puesto que sales ganando con esta división».",
+            "Y dirigiéndose al segundo heredero, continuó: «Y tú, Hamed, tendrías que recibir un tercio de 35, es decir, 11 y poco más. Recibirás un tercio de 36, esto es, 12. No podrás protestar, pues también tú sales ganando en la división».",
+            "Y por fin dijo al más joven: «Y tú, joven Harim Namur, según la última voluntad de tu padre, tendrías que recibir una novena parte de 35, o sea, 3 camellos y parte del otro. Sin embargo, te daré la novena parte de 36, o sea, 4. Tu ganancia será también notable y bien podrás agradecerme el resultado».",
+            "Y concluyó con la mayor seguridad: «Por esta ventajosa división que a todos ha favorecido, corresponden 18 camellos al primero, 12 al segundo y 4 al tercero, lo que da un resultado de 34 camellos. De los 36 camellos sobran, por tanto, dos. Uno, como saben, pertenece al bagdalí, mi amigo y compañero; el otro es justo que me corresponda por haber resuelto a satisfacción de todos el complicado problema de la herencia».",
+            "«Eres inteligente, extranjero», exclamó el más viejo de los tres hermanos, «y aceptamos tu división con la seguridad de que fue hecha con justicia y equidad».",
+            "Y el astuto Beremiz, el Hombre que Calculaba, tomó posesión de uno de los más bellos jamales del hato y me dijo, entregándome por la rienda el animal que me pertenecía: «Ahora podrás, querido amigo, continuar el viaje en tu camello, manso y seguro. Tengo otro para mi especial servicio».",
+            "Y seguimos camino hacia Bagdad."
+          ],
+          formula: "\\frac12+\\frac13+\\frac19=\\frac{17}{18}<1",
           parts: [
             "Modifica las proporciones para que los tres hermanos reciban más de lo esperado y queden dos camellos para Beremiz.",
             "Modifica las proporciones para que los tres reciban más de lo esperado, pero se pierda el camello añadido.",
             "Modifica las proporciones para que sea imposible que los tres obtengan simultáneamente una ganancia."
-          ]
+          ],
+          bibliography: "Tahan, Malba, seudónimo de Júlio César de Mello e Souza. El hombre que calculaba. Obra original: O homem que calculava. Río de Janeiro: Livraria José Olympio Editora, 1938.",
+          bibliographyUrl: "https://funcea.com.co/CampusCea/Biblioteca-digital/assets/el-hombre-que-calculaba-malba-tahan.pdf"
         },
         {
           id: "mod-14",
@@ -2170,6 +2228,157 @@
             "Sea p el precio de M1 en COP. Determina el intervalo de p para que el costo total esté entre 70 y 120 millones de COP.",
             "Si el precio de M1 es 3.45 gramos de oro por unidad, expresa el costo total en kilogramos de oro.",
             "Calcula los metros cuadrados instalados de cada material, usando área(M1) = 5/4 área(M2), área(M3) = 2 m² y área(M2) = 10/6 área(M3)."
+          ]
+        },
+
+        {
+          id: "ine-01",
+          topic: "inecuaciones",
+          level: "inicial",
+          title: "Rango de precio de una canasta",
+          prompt: "Una familia considera que una canasta alimentaria es aceptable si su precio mensual es al menos 180 000 pesos por criterios de calidad y no supera 230 000 pesos por restricción presupuestaria.",
+          parts: [
+            "Representa la condición mediante una inecuación compuesta.",
+            "Escribe el conjunto de precios admisibles en notación de intervalo.",
+            "Interpreta económicamente los dos extremos del intervalo."
+          ]
+        },
+        {
+          id: "ine-02",
+          topic: "inecuaciones",
+          level: "inicial",
+          title: "Presupuesto para consumo discrecional",
+          prompt: "Una persona recibe 2 800 000 pesos al mes, destina 2 100 000 a gastos esenciales y desea ahorrar por lo menos 350 000. Sea x el gasto máximo en ocio y compras no esenciales.",
+          formula: "2\\,800\\,000-2\\,100\\,000-x\\ge350\\,000",
+          parts: [
+            "Resuelve la inecuación para x.",
+            "Expresa los valores económicamente posibles de x como un intervalo, teniendo en cuenta que x no puede ser negativo."
+          ]
+        },
+        {
+          id: "ine-03",
+          topic: "inecuaciones",
+          level: "inicial",
+          title: "Intervalo de descuento comercial",
+          prompt: "Un producto cuesta 150 000 pesos. El comercio quiere que su precio después de aplicar una tasa de descuento d quede entre 120 000 y 135 000 pesos.",
+          formula: "120\\,000\\le150\\,000(1-d)\\le135\\,000,\\qquad 0\\le d\\le1",
+          parts: [
+            "Determina el intervalo de tasas de descuento admisibles.",
+            "Expresa el intervalo en porcentajes."
+          ]
+        },
+        {
+          id: "ine-04",
+          topic: "inecuaciones",
+          level: "inicial",
+          title: "Horas de trabajo e ingreso neto",
+          prompt: "Una persona obtiene 18 000 pesos por hora y paga 60 000 pesos semanales de transporte. Desea recibir al menos 300 000 pesos netos y puede trabajar como máximo 30 horas.",
+          formula: "18\\,000h-60\\,000\\ge300\\,000,\\qquad 0\\le h\\le30",
+          parts: [
+            "Determina el intervalo de horas que satisface las dos condiciones.",
+            "Interpreta el extremo inferior del intervalo."
+          ]
+        },
+
+        {
+          id: "ine-05",
+          topic: "inecuaciones",
+          level: "intermedio",
+          title: "Intervalo de producción rentable",
+          prompt: "Una panadería vende cada unidad a 8 000 pesos, incurre en un costo variable de 4 500 pesos por unidad y tiene costos fijos mensuales de 1 050 000. Busca una utilidad entre 350 000 y 1 050 000 pesos.",
+          formula: "350\\,000\\le(8\\,000-4\\,500)q-1\\,050\\,000\\le1\\,050\\,000",
+          parts: [
+            "Resuelve la inecuación compuesta para q.",
+            "Ajusta el intervalo a cantidades enteras de unidades.",
+            "Explica qué ocurre económicamente fuera del extremo inferior."
+          ]
+        },
+        {
+          id: "ine-06",
+          topic: "inecuaciones",
+          level: "intermedio",
+          title: "Tasa de cambio para una importación",
+          prompt: "Una empresa importa una máquina de 2 400 dólares y paga 1 200 000 pesos de costos fijos. Su presupuesto total está entre 9 600 000 y 10 800 000 pesos. Sea e la tasa de cambio en pesos por dólar.",
+          formula: "9\\,600\\,000\\le2\\,400e+1\\,200\\,000\\le10\\,800\\,000",
+          parts: [
+            "Determina el intervalo de tasas de cambio compatible con el presupuesto.",
+            "Interpreta qué sucede si la tasa de cambio supera el intervalo."
+          ]
+        },
+        {
+          id: "ine-07",
+          topic: "inecuaciones",
+          level: "intermedio",
+          title: "Interés simple de un crédito",
+          prompt: "Una persona solicita 6 000 000 de pesos durante 18 meses con interés simple anual r. Puede pagar como máximo 6 900 000 y el banco ofrece tasas no inferiores al 6 % anual.",
+          formula: "6\\,000\\,000(1+1.5r)\\le6\\,900\\,000,\\qquad r\\ge0.06",
+          parts: [
+            "Determina el intervalo de tasas anuales que puede aceptar.",
+            "Explica la consecuencia económica de una tasa situada por encima del intervalo."
+          ]
+        },
+        {
+          id: "ine-08",
+          topic: "inecuaciones",
+          level: "intermedio",
+          title: "Precio y demanda esperada",
+          prompt: "La demanda mensual de un producto se modela por q = 1200 - 4p, donde p es el precio en miles de pesos. La empresa desea vender entre 400 y 700 unidades.",
+          formula: "400\\le1\\,200-4p\\le700",
+          parts: [
+            "Determina el intervalo de precios que produce la demanda deseada.",
+            "Describe el efecto de fijar un precio menor o mayor que los extremos obtenidos."
+          ]
+        },
+
+        {
+          id: "ine-09",
+          topic: "inecuaciones",
+          level: "avanzado",
+          title: "Producción con utilidad mínima",
+          prompt: "La utilidad mensual, en miles de pesos, de una empresa se aproxima mediante P(q) = -2q² + 240q - 4000. La empresa exige una utilidad de al menos 2 000.",
+          formula: "-2q^2+240q-4\\,000\\ge2\\,000",
+          parts: [
+            "Resuelve la inecuación cuadrática.",
+            "Expresa el intervalo de producción admisible.",
+            "Interpreta por qué producir demasiado también puede reducir la utilidad."
+          ]
+        },
+        {
+          id: "ine-10",
+          topic: "inecuaciones",
+          level: "avanzado",
+          title: "Costo promedio y capacidad",
+          prompt: "Una fábrica tiene costo total C(q) = 500 000 + 12 000q. Necesita que el costo promedio no supere 17 000 pesos por unidad y su capacidad máxima es de 180 unidades.",
+          formula: "\\frac{500\\,000+12\\,000q}{q}\\le17\\,000,\\qquad 0<q\\le180",
+          parts: [
+            "Determina el intervalo de producción que cumple las dos restricciones.",
+            "Explica la función económica del costo fijo en el extremo inferior del intervalo."
+          ]
+        },
+        {
+          id: "ine-11",
+          topic: "inecuaciones",
+          level: "avanzado",
+          title: "Precio para alcanzar una meta de ingresos",
+          prompt: "La demanda de un producto es q(p) = 1000 - 5p, donde p está expresado en miles de pesos. La empresa busca ingresos de al menos 40 000 miles de pesos.",
+          formula: "p(1\\,000-5p)\\ge40\\,000",
+          parts: [
+            "Resuelve la inecuación cuadrática para p.",
+            "Expresa el conjunto de precios admisibles como un intervalo.",
+            "Interpreta por qué precios excesivamente bajos o altos incumplen la meta."
+          ]
+        },
+        {
+          id: "ine-12",
+          topic: "inecuaciones",
+          level: "avanzado",
+          title: "Riesgo de una cartera de inversión",
+          prompt: "Una cartera asigna una proporción x a un activo de mayor rendimiento y 1 - x a un activo conservador. Su indicador de riesgo se modela por 0.09x² + 0.01(1 - x)² y no debe superar 0.04.",
+          formula: "0.09x^2+0.01(1-x)^2\\le0.04,\\qquad 0\\le x\\le1",
+          parts: [
+            "Determina el intervalo de asignaciones que satisface el límite de riesgo.",
+            "Si el rendimiento esperado es R(x) = 0.04(1 - x) + 0.12x, identifica dentro del intervalo la asignación que maximiza el rendimiento.",
+            "Interpreta la relación entre el extremo superior y la tolerancia al riesgo."
           ]
         },
 
@@ -3033,8 +3242,10 @@
           item.title,
           item.prompt,
           item.formula,
+          item.bibliography,
           EXERCISE_TOPICS[item.topic],
           EXERCISE_LEVELS[item.level],
+          ...(item.body || []),
           ...(item.parts || []),
           ...(item.options || [])
         ].join(" "));
@@ -3074,6 +3285,14 @@
           const options = item.options?.length
             ? '<ol class="exercise-options" type="A">' + item.options.map((option) => '<li>' + option + '</li>').join("") + '</ol>'
             : "";
+          const body = item.body?.length
+            ? '<div class="exercise-reading">' + item.body.map((paragraph) => '<p>' + paragraph + '</p>').join("") + '</div>'
+            : "";
+          const bibliography = item.bibliography
+            ? '<footer class="exercise-bibliography"><h4>Bibliografía</h4><p>' + item.bibliography +
+              (item.bibliographyUrl ? ' <a href="' + item.bibliographyUrl + '" target="_blank" rel="noopener noreferrer">Consulta digital</a>' : "") +
+              '</p></footer>'
+            : "";
 
           if (window.MathJax?.typesetClear) window.MathJax.typesetClear([contentPanel]);
           contentPanel.innerHTML =
@@ -3088,9 +3307,11 @@
               '</header>' +
               '<div class="exercise-statement">' +
                 '<p>' + item.prompt + '</p>' +
+                body +
                 formula +
                 parts +
                 options +
+                bibliography +
               '</div>' +
             '</article>';
 
