@@ -938,8 +938,8 @@
     .footer-note { max-width: 32ch; color: var(--muted); text-align: right; }
 
     .exercise-dialog {
-      width: min(720px, calc(100vw - 28px));
-      max-height: min(82dvh, 820px);
+      width: min(1180px, calc(100vw - 28px));
+      max-height: min(90dvh, 900px);
       padding: 0;
       overflow: hidden;
       border: 1px solid rgba(237, 247, 241, .16);
@@ -949,28 +949,363 @@
       box-shadow: 0 30px 100px rgba(0, 0, 0, .46);
     }
 
-    .exercise-dialog::backdrop { background: rgba(1, 7, 10, .74); backdrop-filter: blur(8px); }
+    .exercise-dialog::backdrop {
+      background: rgba(1, 7, 10, .78);
+      backdrop-filter: blur(8px);
+    }
 
-    .dialog-shell { max-height: inherit; padding: clamp(1.4rem, 4vw, 2.8rem); overflow-y: auto; }
-    .dialog-header { display: grid; grid-template-columns: 1fr auto; gap: 2rem; align-items: start; }
-    .dialog-header h2 { margin: 0; font: 800 clamp(2rem, 5vw, 3.8rem)/.95 var(--display); letter-spacing: -.05em; }
+    .dialog-shell {
+      height: min(90dvh, 900px);
+      max-height: inherit;
+      display: grid;
+      grid-template-rows: auto auto minmax(0, 1fr);
+      overflow: hidden;
+    }
+
+    .dialog-header {
+      padding: clamp(1.25rem, 3vw, 2.15rem) clamp(1.25rem, 3vw, 2.4rem) 1.2rem;
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      gap: 2rem;
+      align-items: start;
+    }
+
+    .dialog-heading { min-width: 0; }
+    .dialog-header h2 {
+      margin: 0;
+      font: 800 clamp(2rem, 4vw, 3.35rem)/.95 var(--display);
+      letter-spacing: -.05em;
+    }
+
+    .exercise-count {
+      margin: .65rem 0 0;
+      color: var(--muted);
+      font-size: .82rem;
+      font-variant-numeric: tabular-nums;
+    }
 
     .dialog-close {
       width: 42px;
       height: 42px;
+      display: grid;
+      place-items: center;
       border: 1px solid var(--soft);
       border-radius: 50%;
+      color: var(--line);
       background: transparent;
       cursor: pointer;
       font-size: 1.2rem;
+      transition: border-color .2s ease, color .2s ease, transform .2s ease;
     }
 
-    .exercise-list { margin: 2.5rem 0 0; padding: 0; display: grid; gap: 1.2rem; list-style: none; counter-reset: exercise; }
-    .exercise-list li { padding: 1.2rem 0; counter-increment: exercise; }
-    .exercise-list li::before { content: counter(exercise, decimal-leading-zero); display: block; margin-bottom: .6rem; color: var(--accent); font-size: .75rem; font-weight: 800; }
-    .exercise-list p { margin: 0 0 1rem; }
-    .exercise-list details { color: var(--muted); }
-    .exercise-list summary { width: fit-content; cursor: pointer; color: var(--line); font-weight: 700; }
+    .dialog-close:hover, .dialog-close:focus-visible {
+      border-color: var(--accent);
+      color: var(--accent);
+    }
+
+    .dialog-close:active { transform: scale(.96); }
+
+    .exercise-toolbar {
+      padding: 0 clamp(1.25rem, 3vw, 2.4rem) 1.35rem;
+      display: grid;
+      grid-template-columns: minmax(180px, .85fr) minmax(160px, .7fr) minmax(220px, 1.45fr);
+      gap: 12px;
+      border-bottom: 1px solid rgba(237, 247, 241, .1);
+    }
+
+    .exercise-field {
+      min-width: 0;
+      display: grid;
+      gap: .45rem;
+    }
+
+    .exercise-field span,
+    .exercise-mobile-select span {
+      color: var(--muted);
+      font-size: .7rem;
+      font-weight: 800;
+      letter-spacing: .09em;
+      text-transform: uppercase;
+    }
+
+    .exercise-field select,
+    .exercise-field input,
+    .exercise-mobile-select select {
+      width: 100%;
+      min-height: 44px;
+      padding: 0 .9rem;
+      border: 1px solid rgba(237, 247, 241, .14);
+      border-radius: 10px;
+      color: var(--line);
+      background: rgba(237, 247, 241, .045);
+      font: 650 .9rem/1 var(--ui);
+      outline: none;
+    }
+
+    .exercise-field select,
+    .exercise-mobile-select select { cursor: pointer; }
+
+    .exercise-field select:focus-visible,
+    .exercise-field input:focus-visible,
+    .exercise-mobile-select select:focus-visible {
+      border-color: var(--accent);
+      box-shadow: 0 0 0 3px rgba(101, 230, 180, .12);
+    }
+
+    .exercise-field input::placeholder { color: #78908d; opacity: 1; }
+    .exercise-field option,
+    .exercise-mobile-select option { color: #eaf4ef; background: #102a32; }
+
+    .exercise-browser {
+      min-height: 0;
+      display: grid;
+      grid-template-columns: minmax(250px, 300px) minmax(0, 1fr);
+    }
+
+    .exercise-nav {
+      min-height: 0;
+      padding: 1rem;
+      overflow-y: auto;
+      border-right: 1px solid rgba(237, 247, 241, .1);
+      background: rgba(4, 19, 24, .34);
+      overscroll-behavior: contain;
+      scrollbar-width: thin;
+      scrollbar-color: rgba(101, 230, 180, .38) transparent;
+    }
+
+    .exercise-index {
+      margin: 0;
+      padding: 0;
+      display: grid;
+      gap: 6px;
+      list-style: none;
+    }
+
+    .exercise-index-button {
+      width: 100%;
+      padding: .85rem .9rem;
+      display: grid;
+      grid-template-columns: 2rem minmax(0, 1fr);
+      gap: .6rem;
+      align-items: start;
+      border: 1px solid transparent;
+      border-radius: 10px;
+      color: #c9d7d3;
+      background: transparent;
+      text-align: left;
+      cursor: pointer;
+      transition: color .18s ease, border-color .18s ease, background-color .18s ease;
+    }
+
+    .exercise-index-button:hover {
+      color: var(--line);
+      background: rgba(237, 247, 241, .04);
+    }
+
+    .exercise-index-button[aria-current="true"] {
+      color: var(--line);
+      border-color: rgba(101, 230, 180, .3);
+      background: rgba(101, 230, 180, .075);
+    }
+
+    .exercise-index-number {
+      color: var(--accent);
+      font: 800 .72rem/1.5 var(--ui);
+      font-variant-numeric: tabular-nums;
+    }
+
+    .exercise-index-copy {
+      min-width: 0;
+      display: grid;
+      gap: .35rem;
+    }
+
+    .exercise-index-title {
+      overflow: hidden;
+      font-size: .82rem;
+      font-weight: 750;
+      line-height: 1.25;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .exercise-index-meta {
+      color: var(--muted);
+      font-size: .68rem;
+      line-height: 1.25;
+    }
+
+    .exercise-view {
+      min-width: 0;
+      min-height: 0;
+      padding: clamp(1.35rem, 4vw, 3rem);
+      display: grid;
+      grid-template-rows: auto minmax(0, 1fr) auto;
+      overflow-y: auto;
+      overscroll-behavior: contain;
+      scrollbar-width: thin;
+      scrollbar-color: rgba(101, 230, 180, .38) transparent;
+    }
+
+    .exercise-mobile-select { display: none; }
+
+    .exercise-sheet {
+      width: min(100%, 760px);
+      align-self: start;
+    }
+
+    .exercise-sheet-header {
+      padding-bottom: 1.4rem;
+      border-bottom: 1px solid rgba(237, 247, 241, .1);
+    }
+
+    .exercise-sheet-meta {
+      margin: 0 0 .8rem;
+      display: flex;
+      flex-wrap: wrap;
+      gap: .45rem 1rem;
+      color: var(--accent);
+      font-size: .72rem;
+      font-weight: 800;
+      letter-spacing: .06em;
+      text-transform: uppercase;
+    }
+
+    .exercise-sheet h3 {
+      max-width: 18ch;
+      margin: 0;
+      font: 780 clamp(1.65rem, 3vw, 2.65rem)/1.02 var(--display);
+      letter-spacing: -.035em;
+    }
+
+    .exercise-statement {
+      padding: clamp(1.5rem, 4vw, 2.7rem) 0;
+      color: #dce8e4;
+      font-size: clamp(1rem, 1.6vw, 1.16rem);
+      line-height: 1.65;
+    }
+
+    .exercise-statement > :first-child { margin-top: 0; }
+    .exercise-statement > :last-child { margin-bottom: 0; }
+    .exercise-statement p { max-width: 68ch; margin: 0 0 1.2rem; }
+
+    .exercise-formula {
+      margin: 1.5rem 0;
+      padding: clamp(1.25rem, 3vw, 2rem);
+      overflow-x: auto;
+      border-left: 2px solid var(--accent);
+      background: rgba(101, 230, 180, .045);
+      font: 600 clamp(1.05rem, 2.1vw, 1.5rem)/1.45 var(--math);
+      scrollbar-width: thin;
+    }
+
+    .exercise-formula mjx-container[display="true"] { margin: .25em 0 !important; }
+
+    .exercise-parts,
+    .exercise-options {
+      margin: 1.35rem 0 0;
+      padding-left: 1.6rem;
+      display: grid;
+      gap: .85rem;
+    }
+
+    .exercise-parts li,
+    .exercise-options li {
+      padding-left: .35rem;
+      color: #d4e1dd;
+    }
+
+    .exercise-parts li::marker,
+    .exercise-options li::marker {
+      color: var(--accent);
+      font-weight: 800;
+    }
+
+    .exercise-empty {
+      min-height: 280px;
+      display: grid;
+      place-items: center;
+      color: var(--muted);
+      text-align: center;
+    }
+
+    .exercise-pagination {
+      width: min(100%, 760px);
+      margin-top: 1.4rem;
+      padding-top: 1.2rem;
+      display: grid;
+      grid-template-columns: 1fr auto 1fr;
+      gap: 12px;
+      align-items: center;
+      border-top: 1px solid rgba(237, 247, 241, .1);
+    }
+
+    .exercise-page-status {
+      color: var(--muted);
+      font-size: .78rem;
+      font-variant-numeric: tabular-nums;
+      text-align: center;
+    }
+
+    .exercise-page-button {
+      min-height: 42px;
+      padding: 0 1rem;
+      border: 1px solid rgba(237, 247, 241, .16);
+      border-radius: 10px;
+      color: var(--line);
+      background: transparent;
+      cursor: pointer;
+      font-weight: 750;
+      transition: border-color .18s ease, color .18s ease, transform .18s ease;
+    }
+
+    .exercise-page-button:last-child { justify-self: end; }
+    .exercise-page-button:hover:not(:disabled),
+    .exercise-page-button:focus-visible:not(:disabled) {
+      border-color: var(--accent);
+      color: var(--accent);
+    }
+
+    .exercise-page-button:active:not(:disabled) { transform: translateY(1px); }
+    .exercise-page-button:disabled { opacity: .32; cursor: default; }
+
+    @media (max-width: 760px) {
+      .exercise-dialog {
+        width: calc(100vw - 14px);
+        max-height: calc(100dvh - 14px);
+      }
+
+      .dialog-shell { height: calc(100dvh - 14px); }
+      .dialog-header { padding: 1.15rem 1rem .95rem; }
+      .dialog-header h2 { font-size: clamp(1.8rem, 9vw, 2.65rem); }
+      .dialog-close { width: 40px; height: 40px; }
+      .exercise-toolbar {
+        padding: 0 1rem 1rem;
+        grid-template-columns: 1fr 1fr;
+      }
+
+      .exercise-field:last-child { grid-column: 1 / -1; }
+      .exercise-browser { grid-template-columns: 1fr; }
+      .exercise-nav { display: none; }
+      .exercise-view { padding: 1rem; }
+      .exercise-mobile-select {
+        margin-bottom: 1.25rem;
+        display: grid;
+        gap: .45rem;
+      }
+
+      .exercise-sheet h3 { max-width: none; }
+      .exercise-pagination { grid-template-columns: 1fr 1fr; }
+      .exercise-page-status { grid-column: 1 / -1; grid-row: 1; }
+      .exercise-page-button { grid-row: 2; }
+    }
+
+    @media (max-width: 460px) {
+      .exercise-toolbar { grid-template-columns: 1fr; }
+      .exercise-field:last-child { grid-column: auto; }
+      .exercise-sheet-meta { gap: .35rem .75rem; font-size: .66rem; }
+      .exercise-formula { margin-inline: -.25rem; padding-inline: .9rem; }
+    }
 
     #confetti {
       position: fixed;
@@ -1485,10 +1820,51 @@
   <dialog id="exerciseDialog" class="exercise-dialog" aria-labelledby="dialogTitle">
     <div class="dialog-shell">
       <header class="dialog-header">
-        <h2 id="dialogTitle">Ejercicios</h2>
+        <div class="dialog-heading">
+          <h2 id="dialogTitle">Banco de ejercicios</h2>
+          <p id="exerciseCount" class="exercise-count" aria-live="polite"></p>
+        </div>
         <button id="dialogClose" class="dialog-close" type="button" aria-label="Cerrar">×</button>
       </header>
-      <ol id="exerciseList" class="exercise-list"></ol>
+
+      <div class="exercise-toolbar" aria-label="Filtros de ejercicios">
+        <label class="exercise-field">
+          <span>Tema</span>
+          <select id="exerciseTopic"></select>
+        </label>
+        <label class="exercise-field">
+          <span>Dificultad</span>
+          <select id="exerciseLevel">
+            <option value="all">Todas</option>
+            <option value="inicial">Inicial</option>
+            <option value="intermedio">Intermedio</option>
+            <option value="avanzado">Avanzado</option>
+          </select>
+        </label>
+        <label class="exercise-field">
+          <span>Buscar</span>
+          <input id="exerciseSearch" type="search" autocomplete="off" placeholder="Título, tema o expresión">
+        </label>
+      </div>
+
+      <div class="exercise-browser">
+        <nav class="exercise-nav" aria-label="Índice de ejercicios">
+          <ol id="exerciseIndex" class="exercise-index"></ol>
+        </nav>
+
+        <section id="exerciseView" class="exercise-view">
+          <label class="exercise-mobile-select">
+            <span>Ejercicio</span>
+            <select id="exerciseSelect"></select>
+          </label>
+          <div id="exerciseContent" aria-live="polite" aria-atomic="true"></div>
+          <footer class="exercise-pagination">
+            <button id="exercisePrevious" class="exercise-page-button" type="button">Anterior</button>
+            <span id="exercisePageStatus" class="exercise-page-status"></span>
+            <button id="exerciseNext" class="exercise-page-button" type="button">Siguiente</button>
+          </footer>
+        </section>
+      </div>
     </div>
   </dialog>
 
@@ -1504,32 +1880,588 @@
       const STEPS = Array.from({ length: MAX_DECIMALS + 1 }, (_, index) => 10 ** (MAX_DECIMALS - index));
       const INITIAL = Object.freeze({ min: -5 * SCALE, max: 5 * SCALE });
       const LEVELS = Object.freeze({ 1: "décimas", 2: "centésimas", 3: "milésimas", 10: "10 decimales" });
-      const EXERCISES = Object.freeze({
-        orden: {
-          title: "Ejercicios de orden",
-          items: [
-            ["Si \\(a<b\\), explica por qué \\(a+c<b+c\\).", "Es una propiedad deducida de la definición del orden y la cerradura de \\(\\mathbb{R}^{+}\\) bajo la suma."],
-            ["Ordena \\(-1.7\\), \\(-1.07\\) y \\(0.17\\).", "\\(-1.7<-1.07<0.17\\). Entre negativos, el de mayor valor absoluto es menor."],
-            ["Si \\(0<a<b\\) y \\(c>0\\), compara \\(ac\\) y \\(bc\\).", "\\(ac<bc\\), porque multiplicar por un positivo conserva el orden."]
-          ]
-        },
-        potencias: {
-          title: "Ejercicios de potencias",
-          items: [
-            ["Simplifica \\(a^4a^7\\).", "\\(a^{11}\\). Se suman los exponentes de la misma base."],
-            ["Escribe \\(x^{-3}\\) sin exponente negativo.", "\\(x^{-3}=1/x^3\\), con \\(x\\ne0\\)."],
-            ["Reescribe \\(a^{3/2}\\) como radical.", "\\(a^{3/2}=\\sqrt{a^3}=(\\sqrt a)^3\\), para \\(a\\ge0\\)."]
-          ]
-        },
-        completitud: {
-          title: "Ejercicios de completitud",
-          items: [
-            ["Para \\(A=(0,1)\\), determina \\(\\sup A\\) e \\(\\inf A\\).", "\\(\\sup A=1\\) e \\(\\inf A=0\\), aunque ninguno pertenece a \\(A\\)."],
-            ["¿Por qué \\(\\mathbb{N}\\) no puede estar acotado superiormente en \\(\\mathbb{R}\\)?", "Por la propiedad arquimediana: para cada real existe un natural mayor."],
-            ["Da un racional situado entre \\(1.2\\) y \\(1.3\\).", "Por ejemplo \\(1.25\\). La densidad garantiza que existen infinitos."]
-          ]
-        }
+      const EXERCISE_TOPICS = Object.freeze({
+        simplificacion: "Simplificación",
+        modelacion: "Modelación",
+        despeje: "Despeje de variables",
+        potenciacion: "Potenciación",
+        completitud: "Completitud"
       });
+
+      const EXERCISE_LEVELS = Object.freeze({
+        inicial: "Inicial",
+        intermedio: "Intermedio",
+        avanzado: "Avanzado"
+      });
+
+      const EXERCISES = Object.freeze([
+        {
+          id: "sim-01",
+          topic: "simplificacion",
+          level: "inicial",
+          title: "Fracción compuesta numérica",
+          prompt: "Calcula el valor de la expresión.",
+          formula: "\\frac{\\frac{2}{3}+\\frac{1}{4}}{\\frac{3}{5}}"
+        },
+        {
+          id: "sim-02",
+          topic: "simplificacion",
+          level: "inicial",
+          title: "Cociente y suma de fracciones",
+          prompt: "Simplifica la expresión.",
+          formula: "\\frac{\\frac{3}{5}}{\\frac{2}{7}}+\\frac{1}{2}"
+        },
+        {
+          id: "sim-03",
+          topic: "simplificacion",
+          level: "inicial",
+          title: "Decimal periódico 72",
+          prompt: "Convierte el decimal periódico en una fracción irreducible.",
+          formula: "x=0.\\overline{72}"
+        },
+        {
+          id: "sim-04",
+          topic: "simplificacion",
+          level: "inicial",
+          title: "Decimal periódico 81",
+          prompt: "Convierte el decimal periódico en una fracción irreducible.",
+          formula: "x=0.\\overline{81}"
+        },
+        {
+          id: "sim-05",
+          topic: "simplificacion",
+          level: "inicial",
+          title: "Diferencia de expresiones lineales",
+          prompt: "Simplifica la expresión.",
+          formula: "\\frac{2x+3}{4}-\\frac{x-1}{2}"
+        },
+        {
+          id: "sim-06",
+          topic: "simplificacion",
+          level: "inicial",
+          title: "Fracción compuesta con variable",
+          prompt: "Simplifica la expresión.",
+          formula: "\\frac{\\frac{2x}{3}+\\frac{3x}{4}-\\frac{5}{6}}{\\frac{1}{2}}"
+        },
+        {
+          id: "sim-07",
+          topic: "simplificacion",
+          level: "intermedio",
+          title: "Expresión racional con productos",
+          prompt: "Simplifica la expresión.",
+          formula: "\\frac{\\frac{-2(3x-4)}{5}+\\frac{4}{7}}{\\frac{2x-1}{3}-\\frac{3(2x+5)}{9}}"
+        },
+        {
+          id: "sim-08",
+          topic: "simplificacion",
+          level: "intermedio",
+          title: "Fracción racional y decimal periódico",
+          prompt: "Simplifica la expresión.",
+          formula: "\\frac{\\frac{-3(2x+1)}{4}+\\frac{0.\\overline{3}}{2}}{\\frac{5}{6}\\cdot\\frac{-7x}{9}}"
+        },
+        {
+          id: "sim-09",
+          topic: "simplificacion",
+          level: "intermedio",
+          title: "Suma algebraica con decimal periódico",
+          prompt: "Simplifica la expresión.",
+          formula: "\\left(\\frac{3x-5}{4}-\\frac{2(2x-3)}{6}\\right)+\\frac{0.\\overline{5}}{7}"
+        },
+        {
+          id: "sim-10",
+          topic: "simplificacion",
+          level: "intermedio",
+          title: "Fracción racional anidada",
+          prompt: "Simplifica la expresión.",
+          formula: "\\frac{\\frac{-2(3x-4)}{5}+\\frac{1}{2}}{\\frac{3(2x+7)}{9}}"
+        },
+        {
+          id: "sim-11",
+          topic: "simplificacion",
+          level: "intermedio",
+          title: "Combinación de tres variables",
+          prompt: "Simplifica la expresión.",
+          formula: "\\frac{\\left(\\frac34+\\frac25\\right)x-\\left(\\frac78-\\frac3{10}\\right)y+\\frac56z}{\\frac9{12}x-\\frac{15}{20}y}"
+        },
+        {
+          id: "sim-12",
+          topic: "simplificacion",
+          level: "intermedio",
+          title: "Cociente de expresiones equivalentes",
+          prompt: "Simplifica la expresión.",
+          formula: "\\frac{\\frac{6x-5}{4}+\\frac{5-8x}{8}}{\\frac{15x-13}{8}-\\frac{6x+4}{16}}"
+        },
+        {
+          id: "sim-13",
+          topic: "simplificacion",
+          level: "intermedio",
+          title: "Operaciones numéricas anidadas",
+          prompt: "Simplifica la expresión.",
+          formula: "\\frac{\\frac53+\\frac{14}{12}-\\left(\\frac{17}{6}-\\frac98\\right)}{\\frac13\\left(\\frac12+\\frac19+\\left(\\frac{43}{18}-\\frac13\\right)\\right)}"
+        },
+        {
+          id: "sim-14",
+          topic: "simplificacion",
+          level: "avanzado",
+          title: "Fracción compleja con tres variables",
+          prompt: "Simplifica la expresión.",
+          formula: "\\frac{\\frac{x}{z-\\frac23}+\\frac{\\frac13y-\\frac13x}{z-\\frac23}}{\\frac{y+2}{\\frac32z-1}+\\frac{y+2x+4}{3z-2}}"
+        },
+        {
+          id: "sim-15",
+          topic: "simplificacion",
+          level: "avanzado",
+          title: "Cociente algebraico y producto",
+          prompt: "Simplifica la expresión.",
+          formula: "\\frac{\\frac{5a}{6}+\\frac{4b}{9}-\\frac{3c}{8}}{\\frac{2a}{3}-\\frac{b}{2}+\\frac{c}{4}}\\cdot\\frac{12}{ab}"
+        },
+        {
+          id: "sim-16",
+          topic: "simplificacion",
+          level: "avanzado",
+          title: "Expresión racional con p, q y r",
+          prompt: "Simplifica la expresión.",
+          formula: "\\frac{\\frac{7p}{3}-\\frac{5q}{4}+\\frac{6r}{5}}{\\frac{2p}{9}-\\frac{3q}{8}}-\\frac{15}{2pr}"
+        },
+        {
+          id: "sim-17",
+          topic: "simplificacion",
+          level: "avanzado",
+          title: "Expresión racional con m, n y p",
+          prompt: "Simplifica la expresión.",
+          formula: "\\left(\\frac{\\frac{5m}{4}+\\frac{7n}{6}-\\frac{9p}{5}}{\\frac{3m}{5}-\\frac{2n}{4}}\\cdot\\frac{15}{mn}\\right)-\\frac72"
+        },
+
+        {
+          id: "mod-01",
+          topic: "modelacion",
+          level: "inicial",
+          title: "Truco algebraico del ocho",
+          prompt: "Representa el procedimiento mediante una expresión algebraica y simplifícala.",
+          parts: [
+            "Piensa en un número.",
+            "Multiplícalo por 2.",
+            "Súmale 8.",
+            "Divide el resultado por 2.",
+            "Resta el número inicial."
+          ]
+        },
+        {
+          id: "mod-02",
+          topic: "modelacion",
+          level: "inicial",
+          title: "Truco algebraico del siete",
+          prompt: "Representa el procedimiento mediante una expresión algebraica y simplifícala.",
+          parts: [
+            "Piensa en un número.",
+            "Súmale 7.",
+            "Duplica el resultado.",
+            "Resta 4.",
+            "Divide el resultado por 2.",
+            "Resta el número inicial."
+          ]
+        },
+        {
+          id: "mod-03",
+          topic: "modelacion",
+          level: "inicial",
+          title: "Truco algebraico del doce",
+          prompt: "Representa el procedimiento mediante una expresión algebraica y simplifícala.",
+          parts: [
+            "Piensa en un número.",
+            "Multiplícalo por 3.",
+            "Súmale 12.",
+            "Divide el resultado por 3.",
+            "Resta el número inicial."
+          ]
+        },
+        {
+          id: "mod-04",
+          topic: "modelacion",
+          level: "intermedio",
+          title: "Truco algebraico de la edad",
+          prompt: "Representa el procedimiento mediante una expresión algebraica y simplifícala.",
+          parts: [
+            "Piensa en un número del 1 al 9.",
+            "Multiplícalo por 2 y suma 5.",
+            "Multiplica el resultado por 50.",
+            "Suma 1774 si ya cumpliste años; en caso contrario, suma 1773.",
+            "Resta tu año de nacimiento."
+          ]
+        },
+        {
+          id: "mod-05",
+          topic: "modelacion",
+          level: "inicial",
+          title: "Aumento y descuento sucesivos",
+          prompt: "El precio de una regla sube 20 % y después baja 20 %. Si inicialmente costaba 10 000 pesos, determina el precio final."
+        },
+        {
+          id: "mod-06",
+          topic: "modelacion",
+          level: "inicial",
+          title: "Partición porcentual de un rectángulo",
+          prompt: "Un rectángulo de área 100 mm² se divide en cuatro partes. La primera ocupa 15 % del área total, la segunda 30 % y la tercera 40 % del área de la primera. Determina el área de cada parte."
+        },
+        {
+          id: "mod-07",
+          topic: "modelacion",
+          level: "intermedio",
+          title: "Porcentajes encadenados de área",
+          prompt: "Un rectángulo de área 100 mm² se divide en cuatro partes. La primera ocupa 20 % del área total, la segunda 30 % de la primera y la tercera 180 % de la segunda. Determina el área de cada parte."
+        },
+        {
+          id: "mod-08",
+          topic: "modelacion",
+          level: "intermedio",
+          title: "Distancia en un plano",
+          prompt: "La distancia real entre dos puntos es 0.852 km. Determina la distancia en un plano a escala 1:10 000 y exprésala en centímetros."
+        },
+        {
+          id: "mod-09",
+          topic: "modelacion",
+          level: "intermedio",
+          title: "Distancia real desde una escala",
+          prompt: "En un plano a escala 1:250, dos puntos están separados 3.5 cm. Determina la distancia real y exprésala en yardas."
+        },
+        {
+          id: "mod-10",
+          topic: "modelacion",
+          level: "avanzado",
+          title: "Diseño de una escala",
+          prompt: "La distancia real entre dos puntos es 24.8 m. Propón una escala para que su distancia en el plano sea mayor que 5 dm y menor que 10 dm."
+        },
+        {
+          id: "mod-11",
+          topic: "modelacion",
+          level: "inicial",
+          title: "Conversión de unidades de área",
+          prompt: "El área de un rectángulo es 40 m². Expresa esta área en centímetros cuadrados y en pulgadas cuadradas."
+        },
+        {
+          id: "mod-12",
+          topic: "modelacion",
+          level: "intermedio",
+          title: "Área real a partir de un plano",
+          prompt: "El área de un rectángulo en un plano a escala 1:25 es 4 cm². Determina el área real y exprésala en m²."
+        },
+        {
+          id: "mod-13",
+          topic: "modelacion",
+          level: "avanzado",
+          title: "Herencia de los 35 camellos",
+          prompt: "Tres hermanos heredan 35 camellos en proporciones de 1/2, 1/3 y 1/9. Analiza algebraicamente el reparto de Beremiz al completar temporalmente 36 camellos.",
+          formula: "\\frac12+\\frac13+\\frac19",
+          parts: [
+            "Modifica las proporciones para que los tres hermanos reciban más de lo esperado y queden dos camellos para Beremiz.",
+            "Modifica las proporciones para que los tres reciban más de lo esperado, pero se pierda el camello añadido.",
+            "Modifica las proporciones para que sea imposible que los tres obtengan simultáneamente una ganancia."
+          ]
+        },
+        {
+          id: "mod-14",
+          topic: "modelacion",
+          level: "avanzado",
+          title: "Presupuesto de revestimientos",
+          prompt: "Una vivienda usa tres revestimientos. El precio de M2 es 15 % menor que el de M1 y el precio de M3 es 32 % mayor. La vivienda tiene una cocina, una sala, dos baños y tres habitaciones.",
+          formula: "\\begin{aligned}\\text{Baño: }&(M_1,M_2,M_3)=\\left(\\frac25,3,2+\\frac3{10}\\right)\\\\\\text{Cocina: }&(M_1,M_2,M_3)=\\left(3+\\frac7{10},9+\\frac26,1+\\frac45\\right)\\\\\\text{Sala: }&(M_1,M_2,M_3)=\\left(6+\\frac45,26+\\frac23,\\frac7{10}\\right)\\\\\\text{Habitación: }&(M_1,M_2,M_3)=\\left(9+\\frac{13}{20},10+\\frac56,1\\right)\\end{aligned}",
+          parts: [
+            "Si el precio de M1 es 3 dólares por unidad, determina el costo total.",
+            "Sea p el precio de M1 en COP. Determina el intervalo de p para que el costo total esté entre 70 y 120 millones de COP.",
+            "Si el precio de M1 es 3.45 gramos de oro por unidad, expresa el costo total en kilogramos de oro.",
+            "Calcula los metros cuadrados instalados de cada material, usando área(M1) = 5/4 área(M2), área(M3) = 2 m² y área(M2) = 10/6 área(M3)."
+          ]
+        },
+
+        {
+          id: "des-01",
+          topic: "despeje",
+          level: "inicial",
+          title: "Tasa de transmisión",
+          prompt: "Despeja la variable β.",
+          formula: "R_0=\\frac{\\beta S_0}{N(\\gamma+\\mu+\\delta)}"
+        },
+        {
+          id: "des-02",
+          topic: "despeje",
+          level: "inicial",
+          title: "Tasa de recuperación",
+          prompt: "Despeja la variable γ.",
+          formula: "R_0=\\frac{\\beta S_0}{N(\\gamma+\\mu+\\delta)}"
+        },
+        {
+          id: "des-03",
+          topic: "despeje",
+          level: "inicial",
+          title: "Altura en energía mecánica",
+          prompt: "Despeja la altura h.",
+          formula: "E_T=\\frac12mv^2+mgh+\\frac12kx^2+Q_{\\mathrm{pérdida}}"
+        },
+        {
+          id: "des-04",
+          topic: "despeje",
+          level: "inicial",
+          title: "Frecuencia en movimiento ondulatorio",
+          prompt: "Despeja la frecuencia f.",
+          formula: "v=f\\lambda+v_0+\\frac{F\\Delta t}{m}"
+        },
+        {
+          id: "des-05",
+          topic: "despeje",
+          level: "intermedio",
+          title: "Área en transferencia de calor",
+          prompt: "Despeja el área A.",
+          formula: "Q=\\frac{kA(T_1-T_2)t}{L}+\\varepsilon\\sigma A(T_1^4-T_2^4)t"
+        },
+        {
+          id: "des-06",
+          topic: "despeje",
+          level: "intermedio",
+          title: "Distancia en energía gravitacional",
+          prompt: "Despeja la distancia d.",
+          formula: "U=\\frac{Gm_1m_2}{d}+\\frac{kx^2}{2}-m_2gh"
+        },
+        {
+          id: "des-07",
+          topic: "despeje",
+          level: "intermedio",
+          title: "Temperatura de un gas real",
+          prompt: "Despeja la temperatura T.",
+          formula: "PV=nRT+a\\frac{n^2}{V}-\\frac{bnRT}{V}"
+        },
+        {
+          id: "des-08",
+          topic: "despeje",
+          level: "intermedio",
+          title: "Resistencia en paralelo",
+          prompt: "Despeja la resistencia R₃.",
+          formula: "\\frac1{R_T}=\\frac1{R_1}+\\frac1{R_2}+\\frac1{R_3}"
+        },
+        {
+          id: "des-09",
+          topic: "despeje",
+          level: "intermedio",
+          title: "Tasa de ataque",
+          prompt: "Despeja la tasa de ataque a.",
+          formula: "C=\\frac{aNP}{1+ahN}+mP+qP^2"
+        },
+        {
+          id: "des-10",
+          topic: "despeje",
+          level: "avanzado",
+          title: "Capacidad de carga con depredación",
+          prompt: "Despeja la capacidad de carga K.",
+          formula: "G=rN\\left(1-\\frac{N+\\alpha P}{K}\\right)-\\frac{aNP}{1+bN}"
+        },
+        {
+          id: "des-11",
+          topic: "despeje",
+          level: "intermedio",
+          title: "Concentración de sustrato",
+          prompt: "Despeja la concentración [S].",
+          formula: "v=\\frac{V_{\\max}[S]}{K_m\\left(1+\\frac{[I]}{K_i}\\right)+[S]}"
+        },
+        {
+          id: "des-12",
+          topic: "despeje",
+          level: "avanzado",
+          title: "Concentración del inhibidor",
+          prompt: "Despeja la concentración [I].",
+          formula: "v=\\frac{V_{\\max}[S]}{K_m\\left(1+\\frac{[I]}{K_i}\\right)+[S]}"
+        },
+        {
+          id: "des-13",
+          topic: "despeje",
+          level: "avanzado",
+          title: "Constante de inhibición",
+          prompt: "Despeja la constante Kᵢ.",
+          formula: "v=\\frac{V_{\\max}[S]}{K_m\\left(1+\\frac{[I]}{K_i}\\right)+[S]}"
+        },
+        {
+          id: "des-14",
+          topic: "despeje",
+          level: "avanzado",
+          title: "Capacidad de carga discreta",
+          prompt: "Despeja la capacidad de carga K.",
+          formula: "N_{t+1}=N_t+rN_t\\left(1-\\frac{N_t}{K}\\right)-H-\\frac{aN_tP_t}{1+bN_t}"
+        },
+        {
+          id: "des-15",
+          topic: "despeje",
+          level: "avanzado",
+          title: "Biomasa con absorción saturable",
+          prompt: "Despeja la variable N. El procedimiento conduce a una ecuación cuadrática.",
+          formula: "B=mN+\\frac{aN}{K+N}+C_0"
+        },
+        {
+          id: "des-16",
+          topic: "despeje",
+          level: "avanzado",
+          title: "Área de un humedal",
+          prompt: "Despeja el área A.",
+          formula: "Q=\\frac{kA(C_i-C_f)t}{L+\\alpha A}-R"
+        },
+        {
+          id: "des-17",
+          topic: "despeje",
+          level: "avanzado",
+          title: "Volumen de exportación",
+          prompt: "Despeja la cantidad X.",
+          formula: "G=\\frac{epX(1-\\tau)}{L+\\alpha X}-F"
+        },
+
+        {
+          id: "pot-01",
+          topic: "potenciacion",
+          level: "inicial",
+          title: "Valor de una potencia",
+          prompt: "Calcula el valor.",
+          formula: "2^5"
+        },
+        {
+          id: "pot-02",
+          topic: "potenciacion",
+          level: "inicial",
+          title: "Identificación de la base",
+          prompt: "Identifica la base de la expresión.",
+          formula: "7^3"
+        },
+        {
+          id: "pot-03",
+          topic: "potenciacion",
+          level: "inicial",
+          title: "Significado del exponente",
+          prompt: "Explica qué representa el exponente en la expresión.",
+          formula: "5^4"
+        },
+        {
+          id: "pot-04",
+          topic: "potenciacion",
+          level: "inicial",
+          title: "Producto de potencias",
+          prompt: "Simplifica la expresión.",
+          formula: "3^2\\cdot3^4"
+        },
+        {
+          id: "pot-05",
+          topic: "potenciacion",
+          level: "inicial",
+          title: "Cociente de potencias",
+          prompt: "Simplifica la expresión.",
+          formula: "\\frac{5^6}{5^2}"
+        },
+        {
+          id: "pot-06",
+          topic: "potenciacion",
+          level: "inicial",
+          title: "Potencia de una potencia",
+          prompt: "Simplifica la expresión.",
+          formula: "\\left(2^3\\right)^4"
+        },
+        {
+          id: "pot-07",
+          topic: "potenciacion",
+          level: "intermedio",
+          title: "Potencias recíprocas",
+          prompt: "Simplifica la expresión.",
+          formula: "\\left(\\frac34\\right)^3\\left(\\frac43\\right)^3"
+        },
+        {
+          id: "pot-08",
+          topic: "potenciacion",
+          level: "intermedio",
+          title: "Exponentes negativos y raíz cúbica",
+          prompt: "Simplifica la expresión.",
+          formula: "\\frac{(3^2\\cdot5^{-3}\\cdot2^4)^3}{\\sqrt[3]{8\\cdot25\\cdot27}}"
+        },
+        {
+          id: "pot-09",
+          topic: "potenciacion",
+          level: "intermedio",
+          title: "Potencia negativa de un producto",
+          prompt: "Simplifica la expresión.",
+          formula: "\\frac{(2^{-2}\\cdot3^4\\cdot5^{-1})^{-3}}{\\sqrt[4]{16\\cdot81\\cdot25}}"
+        },
+        {
+          id: "pot-10",
+          topic: "potenciacion",
+          level: "intermedio",
+          title: "Radicales con tres variables",
+          prompt: "Simplifica la expresión.",
+          formula: "\\frac{2^{-3}\\sqrt[3]{64x^6}\\sqrt[4]{81y^8}}{\\sqrt[6]{64z^{-12}}}"
+        },
+        {
+          id: "pot-11",
+          topic: "potenciacion",
+          level: "avanzado",
+          title: "Potencias de 2 y 3",
+          prompt: "Simplifica la expresión.",
+          formula: "\\frac{3^4(9^2\\cdot27^{-1})2^{-3}}{(3^2\\cdot2^{-2})27^{-1}}"
+        },
+        {
+          id: "pot-12",
+          topic: "potenciacion",
+          level: "avanzado",
+          title: "Potencias de 2, 4 y 5",
+          prompt: "Simplifica la expresión.",
+          formula: "\\frac{(4^3\\cdot5^2\\cdot2^{-4})(4^{-2}\\cdot5^{-3})}{(2^{-2}\\cdot5^{-1})^2}"
+        },
+        {
+          id: "pot-13",
+          topic: "potenciacion",
+          level: "avanzado",
+          title: "Radicales de una variable",
+          prompt: "Simplifica la expresión.",
+          formula: "\\frac{\\sqrt[3]{8x^6}\\sqrt[4]{16x^{-4}}\\sqrt[5]{32x^5}}{x^2}"
+        },
+        {
+          id: "pot-14",
+          topic: "potenciacion",
+          level: "avanzado",
+          title: "Exponentes racionales",
+          prompt: "Simplifica la expresión.",
+          formula: "\\frac{(27y^9)^{1/3}(81y^{-4})^{1/4}(y^6)^{1/2}}{y^{5/2}}"
+        },
+        {
+          id: "pot-15",
+          topic: "potenciacion",
+          level: "avanzado",
+          title: "Radicales y exponentes negativos",
+          prompt: "Simplifica la expresión.",
+          formula: "\\frac{\\sqrt[4]{16z^{-8}}\\sqrt[6]{64z^{12}}\\sqrt[3]{8z^{-3}}}{z^4}"
+        },
+        {
+          id: "pot-16",
+          topic: "potenciacion",
+          level: "avanzado",
+          title: "Radicales multivariables",
+          prompt: "Simplifica la expresión.",
+          formula: "\\frac{\\sqrt[3]{27a^6b^9}\\sqrt[4]{16a^{-4}c^8}\\sqrt[5]{32b^{10}c^{-5}}}{a^2b^{-3}c^4}"
+        },
+
+        {
+          id: "com-01",
+          topic: "completitud",
+          level: "inicial",
+          title: "Supremo e ínfimo",
+          prompt: "Para el conjunto A = (0, 1), determina sup A e inf A."
+        },
+        {
+          id: "com-02",
+          topic: "completitud",
+          level: "intermedio",
+          title: "Propiedad arquimediana",
+          prompt: "Justifica por qué el conjunto de los números naturales no está acotado superiormente en los reales."
+        },
+        {
+          id: "com-03",
+          topic: "completitud",
+          level: "inicial",
+          title: "Densidad de los racionales",
+          prompt: "Encuentra un número racional situado estrictamente entre 1.2 y 1.3."
+        }
+      ]);
+
       const $ = (selector) => document.querySelector(selector);
       const svg = $("#numberline");
       const content = $("#lineContent");
@@ -2054,11 +2986,171 @@
         requestAnimationFrame(frame);
       }
 
-      // Contenido complementario: ejercicios breves con respuesta desplegable.
+      // Biblioteca de ejercicios: filtrado, índice y navegación responsiva.
       function initExercises() {
         const dialog = $("#exerciseDialog");
-        const list = $("#exerciseList");
+        const dialogTitle = $("#dialogTitle");
+        const count = $("#exerciseCount");
+        const index = $("#exerciseIndex");
+        const contentPanel = $("#exerciseContent");
+        const view = $("#exerciseView");
+        const topicSelect = $("#exerciseTopic");
+        const levelSelect = $("#exerciseLevel");
+        const searchInput = $("#exerciseSearch");
+        const mobileSelect = $("#exerciseSelect");
+        const previousButton = $("#exercisePrevious");
+        const nextButton = $("#exerciseNext");
+        const pageStatus = $("#exercisePageStatus");
         const closeButton = $("#dialogClose");
+
+        const library = {
+          mode: "orden",
+          topic: "all",
+          level: "all",
+          query: "",
+          selectedId: null,
+          items: []
+        };
+
+        const modeTitles = {
+          orden: "Banco de ejercicios",
+          potencias: "Ejercicios de potenciación",
+          completitud: "Ejercicios de completitud"
+        };
+
+        const normalize = (value) => String(value || "")
+          .normalize("NFD")
+          .replace(/[\u0300-\u036f]/g, "")
+          .toLowerCase();
+
+        const itemsForMode = () => {
+          if (library.mode === "potencias") return EXERCISES.filter((item) => item.topic === "potenciacion");
+          if (library.mode === "completitud") return EXERCISES.filter((item) => item.topic === "completitud");
+          return EXERCISES.filter((item) => item.topic !== "completitud");
+        };
+
+        const searchableText = (item) => normalize([
+          item.title,
+          item.prompt,
+          item.formula,
+          EXERCISE_TOPICS[item.topic],
+          EXERCISE_LEVELS[item.level],
+          ...(item.parts || []),
+          ...(item.options || [])
+        ].join(" "));
+
+        const filteredItems = () => {
+          const query = normalize(library.query.trim());
+          return itemsForMode().filter((item) =>
+            (library.topic === "all" || item.topic === library.topic) &&
+            (library.level === "all" || item.level === library.level) &&
+            (!query || searchableText(item).includes(query))
+          );
+        };
+
+        const typesetExercise = () => {
+          if (!window.MathJax?.typesetPromise) return;
+          window.MathJax.typesetPromise([contentPanel]).catch(() => {});
+        };
+
+        const renderContent = () => {
+          const item = library.items.find((candidate) => candidate.id === library.selectedId);
+          const itemIndex = library.items.findIndex((candidate) => candidate.id === library.selectedId);
+
+          if (!item) {
+            contentPanel.innerHTML = '<div class="exercise-empty"><p>No hay ejercicios con estos filtros.</p></div>';
+            pageStatus.textContent = "0 / 0";
+            previousButton.disabled = true;
+            nextButton.disabled = true;
+            return;
+          }
+
+          const formula = item.formula
+            ? '<div class="exercise-formula">\\[' + item.formula + '\\]</div>'
+            : "";
+          const parts = item.parts?.length
+            ? '<ol class="exercise-parts" type="a">' + item.parts.map((part) => '<li>' + part + '</li>').join("") + '</ol>'
+            : "";
+          const options = item.options?.length
+            ? '<ol class="exercise-options" type="A">' + item.options.map((option) => '<li>' + option + '</li>').join("") + '</ol>'
+            : "";
+
+          if (window.MathJax?.typesetClear) window.MathJax.typesetClear([contentPanel]);
+          contentPanel.innerHTML =
+            '<article class="exercise-sheet">' +
+              '<header class="exercise-sheet-header">' +
+                '<p class="exercise-sheet-meta">' +
+                  '<span>' + EXERCISE_TOPICS[item.topic] + '</span>' +
+                  '<span>' + EXERCISE_LEVELS[item.level] + '</span>' +
+                  '<span>' + String(itemIndex + 1).padStart(2, "0") + ' / ' + String(library.items.length).padStart(2, "0") + '</span>' +
+                '</p>' +
+                '<h3 tabindex="-1">' + item.title + '</h3>' +
+              '</header>' +
+              '<div class="exercise-statement">' +
+                '<p>' + item.prompt + '</p>' +
+                formula +
+                parts +
+                options +
+              '</div>' +
+            '</article>';
+
+          pageStatus.textContent = (itemIndex + 1) + " / " + library.items.length;
+          previousButton.disabled = itemIndex <= 0;
+          nextButton.disabled = itemIndex < 0 || itemIndex >= library.items.length - 1;
+          mobileSelect.value = item.id;
+          typesetExercise();
+        };
+
+        const renderIndex = () => {
+          index.innerHTML = library.items.map((item, itemIndex) =>
+            '<li>' +
+              '<button class="exercise-index-button" type="button" data-exercise-id="' + item.id + '" aria-current="' + String(item.id === library.selectedId) + '">' +
+                '<span class="exercise-index-number">' + String(itemIndex + 1).padStart(2, "0") + '</span>' +
+                '<span class="exercise-index-copy">' +
+                  '<span class="exercise-index-title">' + item.title + '</span>' +
+                  '<span class="exercise-index-meta">' + EXERCISE_TOPICS[item.topic] + ' · ' + EXERCISE_LEVELS[item.level] + '</span>' +
+                '</span>' +
+              '</button>' +
+            '</li>'
+          ).join("");
+
+          mobileSelect.innerHTML = library.items.map((item, itemIndex) =>
+            '<option value="' + item.id + '">' + String(itemIndex + 1).padStart(2, "0") + '  ' + item.title + '</option>'
+          ).join("");
+        };
+
+        const selectExercise = (id, moveFocus = false) => {
+          if (!library.items.some((item) => item.id === id)) return;
+          library.selectedId = id;
+          index.querySelectorAll("[data-exercise-id]").forEach((button) => {
+            button.setAttribute("aria-current", String(button.dataset.exerciseId === id));
+          });
+          renderContent();
+          const activeButton = index.querySelector('[data-exercise-id="' + id + '"]');
+          activeButton?.scrollIntoView({ block: "nearest" });
+          view.scrollTop = 0;
+          if (moveFocus) contentPanel.querySelector("h3")?.focus({ preventScroll: true });
+        };
+
+        const renderLibrary = () => {
+          library.items = filteredItems();
+          if (!library.items.some((item) => item.id === library.selectedId)) {
+            library.selectedId = library.items[0]?.id || null;
+          }
+          count.textContent = library.items.length + " " + (library.items.length === 1 ? "ejercicio" : "ejercicios");
+          renderIndex();
+          renderContent();
+        };
+
+        const populateTopics = () => {
+          const topics = [...new Set(itemsForMode().map((item) => item.topic))];
+          topicSelect.innerHTML = [
+            '<option value="all">Todos los temas</option>',
+            ...topics.map((topic) => '<option value="' + topic + '">' + EXERCISE_TOPICS[topic] + '</option>')
+          ].join("");
+          topicSelect.value = library.topic;
+          topicSelect.disabled = topics.length === 1;
+        };
 
         const closeDialog = () => {
           if (!dialog.open) return;
@@ -2068,8 +3160,8 @@
           }
           window.gsap.to(".dialog-shell", {
             autoAlpha: 0,
-            scale: .97,
-            duration: .18,
+            scale: .985,
+            duration: .16,
             ease: "power2.in",
             overwrite: "auto",
             onComplete: () => {
@@ -2079,26 +3171,78 @@
           });
         };
 
+        const openLibrary = (mode) => {
+          library.mode = mode;
+          library.topic = mode === "potencias" ? "potenciacion" : mode === "completitud" ? "completitud" : "all";
+          library.level = "all";
+          library.query = "";
+          library.selectedId = null;
+          dialogTitle.textContent = modeTitles[mode] || modeTitles.orden;
+          levelSelect.value = "all";
+          searchInput.value = "";
+          populateTopics();
+          renderLibrary();
+          dialog.showModal();
+
+          if (window.gsap && !reducedMotion()) {
+            window.gsap.fromTo(".dialog-shell", { autoAlpha: 0, scale: .975, y: 10 }, {
+              autoAlpha: 1,
+              scale: 1,
+              y: 0,
+              duration: .32,
+              ease: "power3.out",
+              overwrite: "auto"
+            });
+          }
+          closeButton.focus();
+        };
+
         document.querySelectorAll("[data-exercise]").forEach((button) => {
-          button.addEventListener("click", () => {
-            const group = EXERCISES[button.dataset.exercise];
-            if (!group) return;
-            $("#dialogTitle").textContent = group.title;
-            list.innerHTML = group.items.map(([question, answer]) =>
-              `<li><p>${question}</p><details><summary>Ver respuesta</summary><p>${answer}</p></details></li>`
-            ).join("");
-            dialog.showModal();
-            if (window.gsap && !reducedMotion()) {
-              window.gsap.fromTo(".dialog-shell", { autoAlpha: 0, scale: .96, y: 12 }, {
-                autoAlpha: 1, scale: 1, y: 0, duration: .36, ease: "power3.out", overwrite: "auto"
-              });
-            }
-            if (window.MathJax?.typesetPromise) window.MathJax.typesetPromise([list]);
-            closeButton.focus();
-          });
+          button.addEventListener("click", () => openLibrary(button.dataset.exercise));
+        });
+
+        index.addEventListener("click", (event) => {
+          const button = event.target.closest("[data-exercise-id]");
+          if (button) selectExercise(button.dataset.exerciseId);
+        });
+
+        mobileSelect.addEventListener("change", () => selectExercise(mobileSelect.value));
+
+        topicSelect.addEventListener("change", () => {
+          library.topic = topicSelect.value;
+          library.selectedId = null;
+          renderLibrary();
+        });
+
+        levelSelect.addEventListener("change", () => {
+          library.level = levelSelect.value;
+          library.selectedId = null;
+          renderLibrary();
+        });
+
+        searchInput.addEventListener("input", () => {
+          library.query = searchInput.value;
+          library.selectedId = null;
+          renderLibrary();
+        });
+
+        previousButton.addEventListener("click", () => {
+          const position = library.items.findIndex((item) => item.id === library.selectedId);
+          if (position > 0) selectExercise(library.items[position - 1].id, true);
+        });
+
+        nextButton.addEventListener("click", () => {
+          const position = library.items.findIndex((item) => item.id === library.selectedId);
+          if (position >= 0 && position < library.items.length - 1) {
+            selectExercise(library.items[position + 1].id, true);
+          }
         });
 
         closeButton.addEventListener("click", closeDialog);
+        dialog.addEventListener("cancel", (event) => {
+          event.preventDefault();
+          closeDialog();
+        });
         dialog.addEventListener("click", (event) => {
           if (event.target === dialog) closeDialog();
         });
