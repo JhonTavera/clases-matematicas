@@ -3232,11 +3232,8 @@
           .replace(/[\u0300-\u036f]/g, "")
           .toLowerCase();
 
-        const itemsForMode = () => {
-          if (library.mode === "potencias") return EXERCISES.filter((item) => item.topic === "potenciacion");
-          if (library.mode === "completitud") return EXERCISES.filter((item) => item.topic === "completitud");
-          return EXERCISES.filter((item) => item.topic !== "completitud");
-        };
+        // Cada acceso elige el tema inicial, pero conserva disponible el banco completo.
+        const itemsForMode = () => EXERCISES;
 
         const searchableText = (item) => normalize([
           item.title,
