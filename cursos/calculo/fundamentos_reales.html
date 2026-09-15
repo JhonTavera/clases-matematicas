@@ -1231,6 +1231,41 @@
 
     .exercise-reading p { margin: 0; }
 
+    .exercise-facts {
+      max-width: 68ch;
+      margin: 1.35rem 0 1.8rem;
+      border-top: 1px solid rgba(237, 247, 241, .12);
+      border-bottom: 1px solid rgba(237, 247, 241, .12);
+    }
+
+    .exercise-fact {
+      margin: 0;
+      padding: .78rem 0;
+      display: grid;
+      grid-template-columns: minmax(130px, .38fr) minmax(0, 1fr);
+      gap: 1rem;
+    }
+
+    .exercise-fact + .exercise-fact { border-top: 1px solid rgba(237, 247, 241, .07); }
+
+    .exercise-fact dt {
+      color: var(--muted);
+      font-size: .77rem;
+      font-weight: 800;
+      letter-spacing: .04em;
+      text-transform: uppercase;
+    }
+
+    .exercise-fact dd {
+      margin: 0;
+      color: #d4e1dd;
+      font-variant-numeric: tabular-nums;
+    }
+
+    @media (max-width: 560px) {
+      .exercise-fact { grid-template-columns: 1fr; gap: .22rem; }
+    }
+
     .exercise-bibliography {
       max-width: 68ch;
       margin-top: 2.5rem;
@@ -1920,6 +1955,7 @@
         simplificacion: "Simplificación",
         modelacion: "Modelación",
         inecuaciones: "Intervalos e inecuaciones",
+        problemas: "Problemas",
         despeje: "Despeje de variables",
         potenciacion: "Potenciación",
         completitud: "Completitud"
@@ -2381,6 +2417,252 @@
             "Interpreta la relación entre el extremo superior y la tolerancia al riesgo."
           ]
         },
+
+        // Las soluciones de los problemas se conservan en data.solution y no se renderizan.
+        {
+                        "id": "pro-01",
+                        "topic": "problemas",
+                        "level": "avanzado",
+                        "title": "Los ahorros de una familia: ¿dólares o CDT?",
+                        "prompt": "Una familia dispone de $6.450.000, que necesitará dentro de un año para pagar estudios universitarios. Debe comparar el dinero final de dos alternativas.",
+                        "body": [
+                                "Defina las variables y su dominio, plantee las inecuaciones y justifique las transformaciones mediante propiedades del cuerpo ordenado de los números reales. Antes de dividir por una expresión, establezca su signo. Interprete el conjunto solución como una decisión económica y distinga entre desigualdades estrictas y no estrictas.",
+                                "El CDT digital del Banco Popular ofrece una tasa publicada de 11,15 % efectivo anual para inversiones entre $300.000 y $10.000.000 y plazos de 360 a 539 días. Amerikan Cash, sede Calle 122 de Bogotá, publica un precio de venta de $3.225 por dólar y un precio de compra de $3.160 por dólar.",
+                                "Para este ejercicio se calcula un año efectivo completo, con intereses del CDT pagados al vencimiento. Se aplica una retención del 4 % sobre los intereses, no sobre el capital. Los dólares se conservan en efectivo y no generan intereses. Se suponen operaciones sin GMF ni otros cobros adicionales y se compara el dinero disponible al finalizar el año, antes de cualquier ajuste posterior del impuesto de renta.",
+                                "La familia compra dólares al precio de venta de la empresa; cuando quiera venderlos, recibirá el precio de compra que esta ofrezca entonces. La tasa del CDT figura vigente desde el 8 de septiembre de 2026 y las cotizaciones de divisas pueden cambiar durante el día."
+                        ],
+                        "facts": [
+                                {
+                                        "label": "Capital disponible",
+                                        "value": "$6.450.000"
+                                },
+                                {
+                                        "label": "CDT",
+                                        "value": "11,15 % efectivo anual"
+                                },
+                                {
+                                        "label": "Dólar, venta",
+                                        "value": "$3.225"
+                                },
+                                {
+                                        "label": "Dólar, compra",
+                                        "value": "$3.160"
+                                },
+                                {
+                                        "label": "Retención",
+                                        "value": "4 % sobre los intereses"
+                                }
+                        ],
+                        "formula": "A=6\\,450\\,000,\\qquad r=0{,}1115,\\qquad p_v=3\\,225,\\qquad p_c=3\\,160",
+                        "parts": [
+                                "¿Cuántos dólares puede comprar la familia? ¿Cuánto perdería si los vendiera inmediatamente a la misma empresa?",
+                                "¿Cuánto dinero recibiría al finalizar el CDT, después de la retención?",
+                                "Si x representa los pesos que la empresa pagará por cada dólar dentro de un año, ¿para cuáles valores de x la alternativa de los dólares deja estrictamente más dinero que el CDT?",
+                                "Exprese ese umbral como un aumento porcentual respecto de los $3.225 pagados inicialmente y respecto de los $3.160 que la empresa ofrece hoy por comprar dólares. Explique por qué los porcentajes son distintos.",
+                                "Un familiar afirma: «Si el precio al que la empresa compra dólares sube el mismo 11,15 % del CDT, las dos alternativas darán lo mismo». ¿Es correcto?"
+                        ],
+                        "bibliography": "Datos consultados el 15 de septiembre de 2026: <a href=\"https://www.bancopopular.com.co/wps/portal/bancopopular/inicio/informacion-interes/tasas\" target=\"_blank\" rel=\"noopener noreferrer\">tasas del Banco Popular</a>, <a href=\"https://amerikancash.com/\" target=\"_blank\" rel=\"noopener noreferrer\">cotizaciones de Amerikan Cash</a> y <a href=\"https://www.davivienda.com/personas/inversiones/cdt\" target=\"_blank\" rel=\"noopener noreferrer\">información tributaria de CDT de Davivienda</a>. Los valores quedan fijados para resolver el ejercicio y no constituyen cotizaciones permanentes.",
+                        "solution": {
+                                "visibility": "hidden",
+                                "body": [
+                                        "La familia compra \\(\\frac{6\\,450\\,000}{3\\,225}=2\\,000\\) dólares.",
+                                        "Una venta inmediata produce $6.320.000; la pérdida es $130.000.",
+                                        "El CDT entrega \\(6\\,450\\,000[1+0{,}1115(1-0{,}04)]=7\\,140\\,408\\) pesos.",
+                                        "Con \\(x>0\\), \\(2\\,000x>7\\,140\\,408\\iff x>3\\,570{,}204\\). La división conserva el orden porque 2.000 es positivo.",
+                                        "El incremento debe superar el 10,704 % respecto de $3.225, o aproximadamente el 12,9811 % respecto de $3.160. Las bases de comparación son distintas.",
+                                        "Si la cotización de compra aumenta 11,15 %, pasa a $3.512,34. La familia recibiría $7.024.680, menos que con el CDT."
+                                ]
+                        }
+                },
+                {
+                        "id": "pro-02",
+                        "topic": "problemas",
+                        "level": "avanzado",
+                        "title": "Una tienda por internet: descuentos y rentabilidad",
+                        "prompt": "Una emprendedora de Ibagué vende paquetes de café por internet. Cada pedido contiene un paquete y se paga mediante una transacción con tarjeta.",
+                        "body": [
+                                "Defina las variables y su dominio, plantee las inecuaciones y justifique las transformaciones mediante propiedades del cuerpo ordenado de los números reales. Antes de dividir por una expresión, establezca su signo. Interprete el conjunto solución como una decisión económica y distinga entre desigualdades estrictas y no estrictas.",
+                                "Por pedido paga $36.000 al productor, $2.000 de empaque y $6.000 de envío. Sus costos fijos mensuales son $1.200.000 y puede atender como máximo 300 pedidos.",
+                                "Utiliza el plan avanzado agregador de Wompi: 2,65 % del valor de la transacción más $700, más IVA del 19 % sobre la comisión. Se supone que terminó cualquier promoción inicial, no hay devoluciones y la vendedora no recauda IVA sobre el producto; el IVA de la comisión constituye un costo para ella.",
+                                "La emprendedora exige una utilidad operativa de al menos el 15 % de sus ingresos por ventas, después de pagar todos los costos indicados y antes del impuesto de renta. Para competir no puede cobrar más de $60.000 por pedido."
+                        ],
+                        "facts": [
+                                {
+                                        "label": "Costo variable base",
+                                        "value": "$44.000 por pedido"
+                                },
+                                {
+                                        "label": "Costos fijos",
+                                        "value": "$1.200.000 mensuales"
+                                },
+                                {
+                                        "label": "Capacidad",
+                                        "value": "300 pedidos mensuales"
+                                },
+                                {
+                                        "label": "Pasarela",
+                                        "value": "2,65 % + $700, más IVA"
+                                },
+                                {
+                                        "label": "Margen exigido",
+                                        "value": "Al menos 15 % de los ingresos"
+                                },
+                                {
+                                        "label": "Precio máximo",
+                                        "value": "$60.000 por pedido"
+                                }
+                        ],
+                        "formula": "\\text{Comisión por pedido}=1{,}19(0{,}0265p+700)",
+                        "parts": [
+                                "Si cobra \\(p>0\\) pesos y vende \\(q\\) pedidos, construya expresiones para los ingresos, los costos y la utilidad. Plantee la condición del margen del 15 %.",
+                                "Si vende 300 pedidos, ¿cuál es el intervalo de precios que satisface simultáneamente el margen exigido y el límite competitivo?",
+                                "Si cobra $60.000, ¿cuántos pedidos debe vender como mínimo? ¿Podría alcanzar su objetivo si solo pudiera atender 250 pedidos?",
+                                "Le proponen una promoción a $54.000 por pedido. Un asesor afirma: «Aunque ganes menos por unidad, siempre podrás recuperar el margen del 15 % vendiendo más». Determine si esto sería posible incluso si desapareciera el límite de capacidad."
+                        ],
+                        "bibliography": "Datos consultados el 15 de septiembre de 2026: <a href=\"https://wompi.com/es/co/planes-tarifas/plan-avanzado-agregador\" target=\"_blank\" rel=\"noopener noreferrer\">tarifa del plan avanzado agregador de Wompi</a> e <a href=\"https://soporte.wompi.co/hc/es-419/articles/1500009288841--Qu%C3%A9-impuesto-me-cobra-la-Pasarela-Wompi-y-cu%C3%A1l-es-el-porcentaje\" target=\"_blank\" rel=\"noopener noreferrer\">IVA sobre la comisión</a>. Los demás valores son supuestos didácticos de un negocio verosímil.",
+                        "solution": {
+                                "visibility": "hidden",
+                                "body": [
+                                        "Dominio: \\(p>0\\), \\(q\\in\\{1,\\ldots,300\\}\\) y \\(p\\le60\\,000\\). La comisión por pedido es \\(1{,}19(0{,}0265p+700)=0{,}031535p+833\\).",
+                                        "Los modelos son \\(I=pq\\), \\(C=(44\\,833+0{,}031535p)q+1\\,200\\,000\\) y \\(U=(0{,}968465p-44\\,833)q-1\\,200\\,000\\).",
+                                        "Como \\(pq>0\\), el margen exige \\((0{,}818465p-44\\,833)q\\ge1\\,200\\,000\\).",
+                                        "Para \\(q=300\\), \\(p\\ge48\\,833/0{,}818465\\approx59\\,664{,}12736\\). El intervalo exacto es \\([48\\,833/0{,}818465,60\\,000]\\); en pesos enteros, de $59.665 a $60.000.",
+                                        "A \\(p=60\\,000\\), se requieren al menos 281 pedidos; una capacidad de 250 no basta.",
+                                        "A \\(p=54\\,000\\), resulta \\(-635{,}89q\\ge1\\,200\\,000\\), incompatible con \\(q>0\\). Vender más no permite alcanzar el margen."
+                                ]
+                        }
+                },
+                {
+                        "id": "pro-03",
+                        "topic": "problemas",
+                        "level": "avanzado",
+                        "title": "Comprar más para pagar menos: descuento por volumen",
+                        "prompt": "Un pequeño distribuidor de alimentos debe decidir cuántos kilogramos enteros de tomate comprar para una semana, entre 1 y 1.500 kg.",
+                        "body": [
+                                "Defina las variables y su dominio, plantee las inecuaciones y justifique las transformaciones mediante propiedades del cuerpo ordenado de los números reales. Antes de dividir por una expresión, establezca su signo. Interprete el conjunto solución como una decisión económica y distinga entre desigualdades estrictas y no estrictas.",
+                                "El proveedor cobra $2.200 por kilogramo en compras menores de 1.000 kg y $1.900 por kilogramo desde 1.000 kg. El descuento se aplica a todos los kilogramos del lote.",
+                                "El transporte, manejo y demás costos asignados al lote suman $250.000. El distribuidor dispone de $2.500.000 sin recurrir a crédito. Puede vender con certeza cualquier cantidad disponible hasta 900 kg a $3.200 por kilogramo; la venta puede incluir fracciones de kilogramo.",
+                                "Antes de la venta se deteriora una proporción \\(d\\) del lote, con \\(0{,}05\\le d\\le0{,}15\\). Los tomates deteriorados y los que excedan la demanda no generan ingresos ni tienen valor de recuperación. El distribuidor quiere asegurar una utilidad de al menos $450.000 aun en el extremo desfavorable del deterioro."
+                        ],
+                        "facts": [
+                                {
+                                        "label": "Compra",
+                                        "value": "Entre 1 y 1.500 kg enteros"
+                                },
+                                {
+                                        "label": "Precio por volumen",
+                                        "value": "$2.200/kg; desde 1.000 kg, $1.900/kg"
+                                },
+                                {
+                                        "label": "Costo del lote",
+                                        "value": "$250.000 adicionales"
+                                },
+                                {
+                                        "label": "Presupuesto",
+                                        "value": "$2.500.000"
+                                },
+                                {
+                                        "label": "Venta máxima",
+                                        "value": "900 kg a $3.200/kg"
+                                },
+                                {
+                                        "label": "Deterioro",
+                                        "value": "Entre 5 % y 15 %"
+                                },
+                                {
+                                        "label": "Utilidad mínima",
+                                        "value": "$450.000"
+                                }
+                        ],
+                        "formula": "C(q)=\\begin{cases}2\\,200q+250\\,000,&q<1\\,000,\\\\1\\,900q+250\\,000,&q\\ge1\\,000.\\end{cases}",
+                        "parts": [
+                                "Exprese el costo total y la cantidad vendida en función de \\(q\\) y \\(d\\). Distinga los casos necesarios.",
+                                "Justifique, mediante propiedades del orden, cuál es el valor de \\(d\\) que produce la menor utilidad para una compra fija.",
+                                "Determine todas las cantidades enteras de compra que cumplen simultáneamente el presupuesto y la utilidad mínima garantizada.",
+                                "¿Comprar 1.150 kg cumple ambas condiciones? ¿Por qué un lote puede caber en el presupuesto y, sin embargo, ser inconveniente?",
+                                "Entre las compras permitidas por el presupuesto, encuentre la que produce la mayor utilidad en el peor escenario. Justifique su respuesta sin derivadas."
+                        ],
+                        "bibliography": "Caso construido con supuestos didácticos de negocio verosímiles. Los valores no corresponden a cotizaciones de una empresa real.",
+                        "solution": {
+                                "visibility": "hidden",
+                                "body": [
+                                        "Dominio: \\(q\\in\\{1,\\ldots,1\\,500\\}\\), \\(d\\in[0{,}05,0{,}15]\\). La cantidad vendida es \\(V(q,d)=\\min\\{(1-d)q,900\\}\\) y \\(U(q,d)=3\\,200V(q,d)-C(q)\\).",
+                                        "Si \\(d_1\\le d_2\\), entonces \\((1-d_1)q\\ge(1-d_2)q\\) porque \\(q>0\\). Las operaciones posteriores conservan la comparación; por ello el peor escenario es \\(d=0{,}15\\).",
+                                        "El cambio por saturación de demanda ocurre en \\(q=18\\,000/17\\approx1\\,058{,}82353\\). Para cantidades enteras, \\(U_{\\mathrm{peor}}(q)=520q-250\\,000\\) si \\(q\\le999\\); \\(820q-250\\,000\\) si \\(1\\,000\\le q\\le1\\,058\\); y \\(2\\,630\\,000-1\\,900q\\) si \\(q\\ge1\\,059\\).",
+                                        "Las cantidades que cumplen presupuesto y utilidad mínima son \\(q\\in\\{1\\,000,1\\,001,\\ldots,1\\,147\\}\\).",
+                                        "Para 1.150 kg, el costo es $2.435.000 y la utilidad desfavorable es $445.000: cabe en el presupuesto, pero no alcanza la utilidad mínima.",
+                                        "La mejor compra entera es 1.059 kg, con una utilidad mínima de $617.900."
+                                ]
+                        }
+                },
+                {
+                        "id": "pro-04",
+                        "topic": "problemas",
+                        "level": "avanzado",
+                        "title": "Un pedido grande: anticipo y financiación",
+                        "prompt": "Un taller recibe una propuesta para fabricar 1.000 morrales por $60.000.000, con entrega y pago final a los 90 días.",
+                        "body": [
+                                "Defina las variables y su dominio, plantee las inecuaciones y justifique las transformaciones mediante propiedades del cuerpo ordenado de los números reales. Antes de dividir por una expresión, establezca su signo. Interprete el conjunto solución como una decisión económica y distinga entre desigualdades estrictas y no estrictas.",
+                                "Para ejecutar el pedido necesita disponer desde el inicio de $52.000.000. Esta cantidad incluye todos los costos de producción y entrega, pero excluye las comisiones, los cargos y los intereses del préstamo.",
+                                "El taller posee $15.000.000, pero debe mantener una reserva intocable de $5.000.000. El cliente puede entregar un anticipo de proporción \\(a\\), con \\(0\\le a\\le0{,}50\\). El saldo se paga al recibir el pedido.",
+                                "La financiación permite un capital máximo de $25.000.000, cobra una comisión inicial del 1,5 % del capital y un cargo fijo inicial de $150.000, ambos descontados del desembolso. El interés simple diario es 0,05 % del capital. El capital y los intereses se pagan al recibir el saldo del cliente.",
+                                "El taller pide únicamente lo necesario y exige una utilidad de al menos $7.000.000, después de todos los costos financieros y antes de renta. Los cargos indicados incluyen cualquier impuesto aplicable y no se consideran otros flujos durante la ejecución."
+                        ],
+                        "facts": [
+                                {
+                                        "label": "Contrato",
+                                        "value": "$60.000.000"
+                                },
+                                {
+                                        "label": "Costo operativo inicial",
+                                        "value": "$52.000.000"
+                                },
+                                {
+                                        "label": "Recursos utilizables",
+                                        "value": "$10.000.000"
+                                },
+                                {
+                                        "label": "Anticipo",
+                                        "value": "Entre 0 % y 50 %"
+                                },
+                                {
+                                        "label": "Cupo de crédito",
+                                        "value": "$25.000.000"
+                                },
+                                {
+                                        "label": "Comisión y cargo",
+                                        "value": "1,5 % del préstamo + $150.000"
+                                },
+                                {
+                                        "label": "Interés",
+                                        "value": "0,05 % simple diario"
+                                },
+                                {
+                                        "label": "Utilidad mínima",
+                                        "value": "$7.000.000"
+                                }
+                        ],
+                        "formula": "\\text{Desembolso neto}=L-0{,}015L-150\\,000",
+                        "parts": [
+                                "Determine el préstamo necesario en función de \\(a\\). ¿Por qué sería incorrecto igualarlo simplemente al faltante para cubrir los costos de producción?",
+                                "¿Cuál es el anticipo mínimo para ejecutar el pedido sin superar el cupo de crédito ni utilizar la reserva?",
+                                "Determine el intervalo de anticipos que, además, permite alcanzar la utilidad exigida. ¿Sería suficiente un anticipo del 30 %?",
+                                "Con un anticipo del 50 %, suponga que la entrega y el pago se retrasan hasta el día 120, sin cambiar los demás costos. ¿Se conserva la utilidad mínima?",
+                                "Bajo ese mismo anticipo, ¿cuál es el máximo número entero de días que puede transcurrir desde el desembolso hasta el pago para conservar la utilidad exigida?"
+                        ],
+                        "bibliography": "Caso construido con condiciones de financiación supuestas para fines didácticos. Los datos no constituyen una oferta de crédito real.",
+                        "solution": {
+                                "visibility": "hidden",
+                                "body": [
+                                        "En millones de pesos, los recursos propios utilizables son 10 y la ecuación de financiación es \\(10+60a+0{,}985L-0{,}15=52\\). Por tanto, \\(L=(42{,}15-60a)/0{,}985\\).",
+                                        "El cupo exige \\(L\\le25\\), de donde \\(a\\ge17{,}525/60=0{,}29208333\\ldots\\). El anticipo mínimo para respetar el cupo es 29,208333… %.",
+                                        "A 90 días, \\(U=7{,}85-0{,}06L\\). Exigir \\(U\\ge7\\) implica \\(L\\le14{,}166666\\ldots\\) y \\(a\\ge0{,}469930555\\ldots\\). El intervalo admisible es \\([0{,}469930555\\ldots,0{,}50]\\); con dos decimales porcentuales se requiere al menos 47,00 %.",
+                                        "Con anticipo del 30 %, el préstamo es aproximadamente $24.517.766,50: cabe en el cupo, pero la utilidad aproximada de $6.378.934 es insuficiente.",
+                                        "Con anticipo del 50 %, \\(L\\approx12{,}33502538\\) millones y \\(U(t)=7{,}85-(0{,}015+0{,}0005t)L\\). A 120 días, la utilidad es aproximadamente $6.924.873.",
+                                        "La condición \\(U(t)\\ge7\\) produce \\(t\\le107{,}81893\\). El plazo máximo entero es 107 días."
+                                ]
+                        }
+                },
 
         {
           id: "des-01",
@@ -3243,6 +3525,7 @@
           EXERCISE_TOPICS[item.topic],
           EXERCISE_LEVELS[item.level],
           ...(item.body || []),
+          ...(item.facts || []).flatMap((fact) => [fact.label, fact.value]),
           ...(item.parts || []),
           ...(item.options || [])
         ].join(" "));
@@ -3285,6 +3568,11 @@
           const body = item.body?.length
             ? '<div class="exercise-reading">' + item.body.map((paragraph) => '<p>' + paragraph + '</p>').join("") + '</div>'
             : "";
+          const facts = item.facts?.length
+            ? '<dl class="exercise-facts">' + item.facts.map((fact) =>
+                '<div class="exercise-fact"><dt>' + fact.label + '</dt><dd>' + fact.value + '</dd></div>'
+              ).join("") + '</dl>'
+            : "";
           const bibliography = item.bibliography
             ? '<footer class="exercise-bibliography"><h4>Bibliografía</h4><p>' + item.bibliography +
               (item.bibliographyUrl ? ' <a href="' + item.bibliographyUrl + '" target="_blank" rel="noopener noreferrer">Consulta digital</a>' : "") +
@@ -3305,6 +3593,7 @@
               '<div class="exercise-statement">' +
                 '<p>' + item.prompt + '</p>' +
                 body +
+                facts +
                 formula +
                 parts +
                 options +
