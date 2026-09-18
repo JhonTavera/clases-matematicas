@@ -2420,7 +2420,195 @@
 
         // Las soluciones de los problemas se conservan en data.solution y no se renderizan.
         {
+  "id": "pro-amb-01",
+  "topic": "problemas",
+  "context": "Ambiente",
+  "level": "avanzado",
+  "title": "Vasos reutilizables: reducir emisiones con un presupuesto de agua",
+  "prompt": "Analice el modelo, justifique las operaciones con inecuaciones e interprete el resultado en su contexto ambiental.",
+  "body": [
+    "Lee et al. (2025), sección 3.4, reportan aproximadamente <strong>72 g de CO₂ equivalente por servicio</strong> para vasos plásticos de un solo uso, <strong>63 g</strong> para vasos plásticos reutilizables y <strong>19 g</strong> para vasos personales tipo <em>tumbler</em>, bajo los escenarios de su análisis de ciclo de vida en Corea del Sur. Su inventario contempla <strong>0,35 L de agua por lavado</strong> del vaso plástico reutilizable y <strong>1 L</strong> para el vaso personal (tabla 1). Véase la bibliografía al final del ejercicio.",
+    "Los factores por servicio ya distribuyen los impactos de fabricación y demás etapas consideradas en el estudio. No son las emisiones de fabricar un vaso nuevo cada vez. El uso de CO₂ equivalente permite expresar conjuntamente emisiones de distintos gases de efecto invernadero.",
+    "Una campaña universitaria evalúa un bloque de <strong>100 servicios de bebida</strong>. Usará los factores del artículo como referencia, manteniendo sus respectivas condiciones de uso y lavado. Compara dos alternativas independientes: sustituir algunos servicios desechables por vasos plásticos reutilizables, o sustituirlos por vasos personales.",
+    "La campaña fija dos condiciones: reducir al menos <strong>10 %</strong> las emisiones frente a servir las 100 bebidas en vasos desechables, y utilizar como máximo <strong>30 L de agua para lavar los reutilizables</strong>. El número de servicios y estas metas son decisiones del ejercicio.",
+    "Para cada alternativa se propone:",
+    "\\[\nE(x)=72(100-x)+ex,\\qquad W(x)=wx.\n\\]",
+    "Aquí, \\(x\\) es el número entero de servicios sustituidos, entre 0 y 100; \\(E(x)\\) son las emisiones del bloque, en gramos de CO₂ equivalente; \\(e\\) es el factor de emisiones de la alternativa, en gramos por servicio; \\(W(x)\\) es el agua de lavado, en litros; y \\(w\\) es el agua por lavado. Para el plástico reutilizable, \\(e=63\\) y \\(w=0,35\\); para el vaso personal, \\(e=19\\) y \\(w=1\\). Se supone un lavado por servicio reutilizable."
+  ],
+  "parts": [
+    "Calcule las emisiones del escenario totalmente desechable y traduzca la meta del 10 % a una inecuación.",
+    "Determine todos los valores enteros de \\(x\\) que cumplen simultáneamente la meta de emisiones y el límite de agua, para cada alternativa.",
+    "Repita el análisis si la meta aumenta al 20 %, manteniendo los 30 L.",
+    "¿El agua de lavado calculada representa toda la huella hídrica del sistema? ¿Los factores por servicio permiten deducir directamente cuántas veces debe reutilizarse un vaso para compensar su fabricación?"
+  ],
+  "bibliography": "<strong>Lee, C., Lee, H., Jang, Y.-C., y Choi, K. (2025).</strong> Comparative life cycle GHG emissions of single-use plastic cups and reusable cups for beverages. <em>Environmental Engineering Research, 30</em>(5), 240722. <a href=\"https://doi.org/10.4491/eer.2024.722\" target=\"_blank\" rel=\"noopener noreferrer\">DOI y artículo</a> · <a href=\"https://www.eeer.org/upload/eer-2024-722.pdf\" target=\"_blank\" rel=\"noopener noreferrer\">Texto completo en PDF</a>. <strong>Localización utilizada:</strong> tabla 1, inventario de lavado; sección 3.4, emisiones aproximadas por uso. Los valores son propios de los escenarios del artículo.",
+  "solution": {
+    "visibility": "hidden",
+    "body": [
+      "El escenario inicial emite \\(72\\cdot100=7200\\) g de CO₂ equivalente. Reducir al menos un 10 % exige \\(E(x)\\le6480\\).",
+      "<strong>Plástico reutilizable:</strong>",
+      "\\[\n7200-9x\\le6480\n\\iff -9x\\le-720\n\\iff x\\ge80.\n\\]",
+      "Al dividir por \\(-9\\), se invierte la desigualdad. El límite de agua exige \\(0,35x\\le30\\), de donde \\(x\\le600/7\\approx85,714\\). Por tanto:",
+      "\\[\n\\boxed{x\\in\\{80,81,82,83,84,85\\}.}\n\\]",
+      "<strong>Vaso personal:</strong> la restricción de emisiones es \\(7200-53x\\le6480\\), equivalente a \\(x\\ge720/53\\approx13,585\\). La de agua es \\(x\\le30\\). Por tanto:",
+      "\\[\n\\boxed{x\\in\\{14,15,\\ldots,30\\}.}\n\\]",
+      "Con una reducción del <strong>20 %</strong>, el plástico reutilizable necesitaría \\(9x\\ge1440\\), es decir, \\(x\\ge160\\), imposible en 100 servicios. El vaso personal necesita \\(x\\ge1440/53\\approx27,170\\), por lo que son factibles <strong>28, 29 o 30 servicios</strong>.",
+      "El agua calculada corresponde únicamente al lavado operativo considerado, no al agua empleada en fabricar los vasos ni a toda su cadena de suministro. Tampoco puede obtenerse un punto de equilibrio en número de reutilizaciones con estos promedios: se necesitarían impactos de fabricación separados y escenarios coherentes de vida útil, retorno y lavado. No debe sumarse nuevamente la fabricación a factores que ya la incluyen."
+    ]
+  }
+},
+{
+  "id": "pro-amb-02",
+  "topic": "problemas",
+  "context": "Ambiente",
+  "level": "avanzado",
+  "title": "Compostaje universitario: ajustar humedad y prever lluvia",
+  "prompt": "Analice el modelo, justifique las operaciones con inecuaciones e interprete el resultado en su contexto ambiental.",
+  "body": [
+    "Bello, Ajao y Sadiku (2023), tabla 1, reportan humedades medias de <strong>64,23 % en residuos alimentarios</strong> y <strong>10,23 % en aserrín</strong>. En la sección 4.2 discuten el intervalo de <strong>50–60 %</strong> como rango deseable de humedad para compostaje. Se utilizarán esos valores medios para calcular una mezcla inicial. Véase la bibliografía al final del ejercicio.",
+    "El rango no garantiza por sí solo un compostaje satisfactorio: también importan la aireación, composición, temperatura y otras condiciones. La composición de una nueva partida debe medirse antes de aplicar estos resultados a una operación real.",
+    "Una universidad prepara una partida de <strong>100 kg de residuos alimentarios</strong> de composición equivalente a la reportada y puede agregar \\(x\\) kg de aserrín con la humedad del estudio. Tiene <strong>40 kg de aserrín disponibles</strong> y un recipiente que admite <strong>160 kg</strong> de mezcla.",
+    "Antes de que comience una descomposición apreciable, una lluvia podría incorporar entre <strong>0 y 20 kg de agua retenida</strong>. Para este cálculo inmediato se desprecia evaporación, escurrimiento y pérdida de materia seca. Las cantidades de la partida, disponibilidad, capacidad y lluvia son condiciones de planificación del ejercicio.",
+    "La fracción de humedad es:",
+    "\\[\nH(x,y)=\\frac{64,23+0,1023x+y}{100+x+y}.\n\\]",
+    "Aquí, \\(x\\) es la masa de aserrín añadido, en kg; \\(y\\) es la masa de agua retenida por lluvia, en kg, con \\(0\\le y\\le20\\); y \\(H(x,y)\\) es la fracción de agua respecto de la masa húmeda total, sin unidades. Los 64,23 kg son el agua inicial de los residuos, y \\(0,1023x\\) es el agua contenida en el aserrín. Para expresar \\(H\\) en porcentaje se multiplica por 100."
+  ],
+  "parts": [
+    "Sin lluvia, determine las cantidades de aserrín que dejan la humedad entre 50 y 60 %, respetando disponibilidad y capacidad.",
+    "Determine un único intervalo de cantidades que mantenga ese rango para <strong>cualquier</strong> incorporación de lluvia entre 0 y 20 kg.",
+    "Evalúe las decisiones de agregar 20 kg y 30 kg de aserrín.",
+    "Explique por qué verificar únicamente la humedad inmediatamente después de preparar la mezcla puede llevar a una decisión insuficiente."
+  ],
+  "bibliography": "<strong>Bello, H., Ajao, J. O., y Sadiku, N. A. (2023).</strong> Co-composting of sawdust with food waste: effects of physical properties on composting process and products quality. <em>Detritus, 23</em>, 3–15. <a href=\"https://doi.org/10.31025/2611-4135/2023.17276\" target=\"_blank\" rel=\"noopener noreferrer\">DOI</a> · <a href=\"https://digital.detritusjournal.com/articles/co-composting-of-sawdust-with-food-waste-effects-of-physical-properties-on-composting-process-and-pr/3526\" target=\"_blank\" rel=\"noopener noreferrer\">Página del artículo</a>. <strong>Localización utilizada:</strong> tabla 1, humedades de los materiales; sección 4.2, discusión del rango de humedad. Se usan las medias, no los términos «±» como si fueran límites absolutos de variación.",
+  "solution": {
+    "visibility": "hidden",
+    "body": [
+      "El denominador es positivo porque \\(x,y\\ge0\\). Por tanto, se puede multiplicar por él sin invertir las desigualdades.",
+      "<strong>Sin lluvia:</strong>",
+      "\\[\n0,50\\le\\frac{64,23+0,1023x}{100+x}\\le0,60.\n\\]",
+      "La cota inferior exige:",
+      "\\[\n50+0,50x\\le64,23+0,1023x\n\\iff 0,3977x\\le14,23.\n\\]",
+      "La cota superior exige:",
+      "\\[\n64,23+0,1023x\\le60+0,60x\n\\iff 4,23\\le0,4977x.\n\\]",
+      "Al intersectar con disponibilidad y capacidad:",
+      "\\[\n\\boxed{\\frac{4,23}{0,4977}\\le x\\le\\frac{14,23}{0,3977}}\n\\qquad(8,4991\\ldots\\le x\\le35,7807\\ldots\\text{ kg}).\n\\]",
+      "<strong>Con cualquier lluvia del intervalo:</strong> añadir agua pura aumenta la fracción de humedad, pues la mezcla inicial no es agua pura. La menor humedad ocurre con \\(y=0\\), y la mayor con \\(y=20\\). La cota inferior anterior se mantiene; la superior debe verificarse con la lluvia máxima:",
+      "\\[\n\\frac{84,23+0,1023x}{120+x}\\le0,60\n\\iff12,23\\le0,4977x.\n\\]",
+      "La capacidad en el peor caso exige \\(120+x\\le160\\), es decir, \\(x\\le40\\), igual al límite de disponibilidad. Por tanto:",
+      "\\[\n\\boxed{\\frac{12,23}{0,4977}\\le x\\le\\frac{14,23}{0,3977}}\n\\qquad(24,5730\\ldots\\le x\\le35,7807\\ldots\\text{ kg}).\n\\]",
+      "Si solo se agregan kilogramos enteros, sirven <strong>25 a 35 kg</strong>. Los extremos decimales mostrados son aproximaciones; las fracciones definen las cotas exactas del modelo.",
+      "Con <strong>20 kg</strong>, la humedad pasa de 55,23 % sin lluvia a aproximadamente 61,63 % con 20 kg de lluvia: no cumple en el segundo caso. Con <strong>30 kg</strong>, pasa de aproximadamente 51,77 % a 58,20 %: cumple en ambos extremos y, por tanto, en todo el intervalo de lluvia considerado."
+    ]
+  }
+},
+{
+  "id": "pro-amb-03",
+  "topic": "problemas",
+  "context": "Ambiente",
+  "level": "avanzado",
+  "title": "Cloruros: despejar un caudal que aparece dos veces",
+  "prompt": "Analice el modelo, justifique las operaciones con inecuaciones e interprete el resultado en su contexto ambiental.",
+  "body": [
+    "El documento técnico de la EPA <em>Ambient Water Quality Criteria for Chloride—1988</em>, en la <strong>página impresa 8 (página 15 del PDF), apartado “National Criteria”</strong>, propone, para cloruros disueltos asociados con sodio en agua dulce, dos condiciones que deben considerarse conjuntamente:",
+    "- El <strong>promedio de la concentración durante cuatro días</strong> no debe superar <strong>230 mg/L más de una vez cada tres años, en promedio</strong>.\n- El <strong>promedio de la concentración durante una hora</strong> no debe superar <strong>860 mg/L más de una vez cada tres años, en promedio</strong>.",
+    "Los cuatro días y la hora son <strong>periodos sobre los que se promedia la concentración</strong>; los tres años expresan la <strong>frecuencia media de excedencia de cada criterio</strong>. No se calcula un único promedio de concentración de tres años ni se indica que baste con medir una vez cada tres años. Véase la bibliografía al final del ejercicio.",
+    "Estos valores son referencias de protección de vida acuática con distinta duración de exposición; no representan dos mediciones de un río. Tampoco se presentan aquí como límites legales colombianos. En el ejercicio se usan deliberadamente como concentraciones de referencia para un ensayo de mezcla.",
+    "Un laboratorio de educación ambiental diseña un circuito piloto para mostrar cómo el caudal modifica la concentración de un contaminante conservativo. Prepara una corriente con cloruros a <strong>860 mg/L</strong> y la mezcla con agua desionizada, cuya concentración de cloruros se aproxima a <strong>0 mg/L</strong> en el modelo. El sistema recoge toda el agua de salida para gestionarla; no se plantea una descarga al ambiente.",
+    "La corriente de agua desionizada tiene caudal regulable \\(Q\\), entre <strong>20 y 40 L/h</strong>. El caudal de la corriente salina es \\(q\\ge0\\). El laboratorio quiere que la concentración mezclada no supere <strong>230 mg/L</strong>. Los caudales son parámetros de diseño, no caudales tomados de una investigación de campo.",
+    "Suponiendo mezcla completa, régimen estacionario, volúmenes aditivos y ausencia de reacción o pérdidas de cloruros:",
+    "\\[\nC=\\frac{QC_r+qC_e}{Q+q}.\n\\]",
+    "Aquí, \\(C\\) es la concentración de cloruros a la salida; \\(C_r\\) y \\(C_e\\) son las concentraciones de entrada del agua desionizada y de la solución salina, respectivamente, en mg/L; \\(Q\\) y \\(q\\) son sus caudales en L/h. El numerador suma masas de cloruros por hora, y el denominador suma litros por hora. Por eso el cociente queda en mg/L."
+  ],
+  "parts": [
+    "Explique qué ocurre si \\(C_e\\le C\\).\n",
+    "Para \\(C_r=0\\) y \\(C_e=860\\), encuentre el mayor \\(q\\) que permite \\(C\\le230\\) cuando \\(Q=40\\).\n",
+    "Determine el máximo caudal salino fijo que funciona para <strong>todo</strong> \\(Q\\in[20,40]\\).\n",
+    "Si se necesita operar con \\(q=10\\) L/h y \\(Q=20\\) L/h, ¿qué reducción porcentual mínima de la concentración salina de entrada se requiere, manteniendo ese caudal?\n",
+    "¿Mezclar con agua limpia elimina masa de cloruros? ¿Un resultado inferior a 230 mg/L demuestra por sí solo que cualquier descarga es legal y ecológicamente aceptable?"
+  ],
+  "bibliography": "<strong>United States Environmental Protection Agency (1988).</strong> <em>Ambient Water Quality Criteria for Chloride—1988</em>. EPA 440/5-88-001. <a href=\"https://19january2021snapshot.epa.gov/sites/static/files/2018-08/documents/chloride-aquatic-life-criteria-1988.pdf#page=15\" target=\"_blank\" rel=\"noopener noreferrer\">Documento técnico completo en el archivo de la EPA</a>. <strong>Localización utilizada:</strong> página impresa 8 (página 15 del PDF), apartado “National Criteria”, formulación del criterio para agua dulce: promedio de cuatro días de 230 mg/L y de una hora de 860 mg/L, sin excederse más de una vez cada tres años en promedio según el documento. Se conserva su alcance y no se afirma que constituya la normativa colombiana vigente.",
+  "solution": {
+    "visibility": "hidden",
+    "body": [
+      "<strong>a) Análisis de la condición \\(C_e\\le C\\).</strong> En el ensayo, \\(C_r=0&lt;C_e=860\\), \\(Q&gt;0\\) y \\(q\\ge0\\) es finito. Restando \\(C_e\\) a ambos lados del modelo y reduciendo a un denominador común:",
+      "\\[\nC-C_e=\\frac{QC_r+qC_e-C_e(Q+q)}{Q+q}\n=\\frac{Q(C_r-C_e)}{Q+q}.\n\\]",
+      "Aquí, \\(C-C_e\\) es la diferencia entre la concentración de salida y la de la corriente salina; las demás variables conservan las definiciones del enunciado. Como \\(Q&gt;0\\), \\(C_r-C_e&lt;0\\) y \\(Q+q&gt;0\\), el cociente es negativo. Por tanto:",
+      "\\[\n\\boxed{C&lt;C_e.}\n\\]",
+      "En consecuencia, <strong>la condición \\(C_e\\le C\\) es imposible para cualquier caudal salino finito bajo las condiciones del ensayo</strong>: la mezcla con una corriente de menor concentración queda por debajo de la concentración salina de entrada.",
+      "También puede verse despejando el caudal, que aparece tanto en el numerador como en el denominador del modelo. Multiplicamos por \\(Q+q&gt;0\\) y usamos distributividad:",
+      "\\[\nC(Q+q)=QC_r+qC_e\n\\iff q(C_e-C)=Q(C-C_r).\n\\]",
+      "Si \\(C\\ne C_e\\), obtenemos:",
+      "\\[\n\\boxed{q=\\frac{Q(C-C_r)}{C_e-C}.}\n\\]",
+      "En esta expresión, \\(q\\) es el caudal salino requerido para alcanzar la concentración de salida \\(C\\), dadas las concentraciones de entrada \\(C_r,C_e\\) y el caudal de agua limpia \\(Q\\).",
+      "- <strong>Si \\(C&gt;C_e\\)</strong>, el numerador es positivo y el denominador negativo, de modo que el despeje arroja \\(q&lt;0\\). Esto contradice el dominio físico del ensayo.\n- <strong>Si \\(C=C_e\\)</strong>, no se puede dividir por \\(C_e-C=0\\). Al volver a la ecuación anterior al despeje, resultaría \\(0=Q(C_e-C_r)&gt;0\\), una contradicción. No existe un caudal finito que logre esa igualdad. Con \\(Q\\) fijo, al aumentar \\(q\\) indefinidamente, \\(C\\) se aproxima a \\(C_e\\) por debajo.",
+      "La conclusión depende de que \\(C_r&lt;C_e\\). Para el modelo general con \\(Q&gt;0\\), la identidad de la diferencia muestra que, si \\(C_r=C_e\\), entonces \\(C=C_e\\) para cualquier \\(q\\ge0\\); y si \\(C_r&gt;C_e\\), entonces \\(C&gt;C_e\\) para todo \\(q\\) finito. Esos casos corresponden a entradas distintas de las del ensayo.",
+      "<strong>b) y c) Caudales admisibles.</strong>",
+      "Para los valores del ensayo:",
+      "\\[\n\\frac{860q}{Q+q}\\le230\n\\iff860q\\le230Q+230q\n\\iff630q\\le230Q.\n\\]",
+      "Por tanto:",
+      "\\[\n\\boxed{0\\le q\\le\\frac{23}{63}Q.}\n\\]",
+      "Con \\(Q=40\\), el máximo es \\(920/63\\approx14,6032\\) L/h. Para funcionar con cualquier caudal del intervalo, se usa el caso más restrictivo, \\(Q=20\\):",
+      "\\[\n\\boxed{q\\le\\frac{460}{63}\\approx7,3016\\text{ L/h}.}\n\\]",
+      "<strong>d) Reducción de la concentración de entrada.</strong> Sea \\(r\\) la fracción en que se reduce la concentración de entrada, con \\(0\\le r\\le1\\). La nueva concentración salina es \\(860(1-r)\\) mg/L. Se requiere:",
+      "\\[\n\\frac{10\\cdot860(1-r)}{20+10}\\le230\n\\iff8600(1-r)\\le6900\n\\iff r\\ge\\frac{17}{86}.\n\\]",
+      "La reducción mínima es aproximadamente <strong>19,77 %</strong>, calculada respecto de la concentración salina original. Es una exigencia de desempeño; el ejercicio no especifica una tecnología capaz de lograrla.",
+      "<strong>e) Interpretación ambiental.</strong> Diluir reduce concentración, pero no elimina la masa de cloruros aportada por hora. Además, comparar una concentración estacionaria con un valor técnico no sustituye evaluar duración, frecuencia, otros contaminantes, condiciones del ecosistema ni normativa aplicable. El promedio de cuatro días coincide con esta concentración estacionaria si las condiciones permanecen constantes durante ese periodo; lo mismo ocurre con el promedio de una hora si permanecen constantes durante esa hora. Para evaluar además la frecuencia de excedencia de cada criterio —no más de una vez cada tres años, en promedio— se necesita un historial temporal; una única mezcla de laboratorio no permite comprobarla."
+    ]
+  }
+},
+{
+  "id": "pro-amb-04",
+  "topic": "problemas",
+  "context": "Ambiente",
+  "level": "avanzado",
+  "title": "Restauración: dónde sembrar cuando la supervivencia depende del sitio",
+  "prompt": "Analice el modelo, justifique las operaciones con inecuaciones e interprete el resultado en su contexto ambiental.",
+  "body": [
+    "Álvarez-Aquino y Williams-Linera (2012) estudiaron <strong>960 plántulas de seis especies</strong> en cuatro sitios de bosque tropical seco de Veracruz, México. Tras dos años, reportaron supervivencias agregadas de <strong>60 % en el sitio 2</strong>, <strong>49 % en el sitio 3</strong>, <strong>29 % en el sitio 1</strong> y <strong>2 % en el sitio 4</strong>; véase la sección “Seedling survival”, página 346. Véase la bibliografía al final del ejercicio.",
+    "Son resultados de sitios concretos, no probabilidades universales de las especies ni efectos causales aislados del terreno. Para este problema se usan como tasas de referencia de tres escenarios de sitio, manteniendo una composición de especies comparable. El cálculo produce una proyección, no una garantía de individuos supervivientes.",
+    "Un equipo debe distribuir <strong>400 plántulas</strong> entre tres áreas de intervención. Para comparar alternativas, representa esas áreas mediante los escenarios de los sitios 2, 3 y 4 del estudio. El área correspondiente al sitio 2 admite como máximo <strong>200 plántulas</strong>, y la correspondiente al sitio 3, como máximo <strong>180</strong>. Las restantes deben ubicarse en el área representada por el sitio 4.",
+    "La meta inicial es proyectar al menos <strong>220 supervivientes a los dos años</strong>. El tamaño del proyecto, las capacidades y la meta son decisiones de planificación del ejercicio.",
+    "El modelo es:",
+    "\\[\nS(x,y)=0,60x+0,49y+0,02(400-x-y).\n\\]",
+    "Aquí, \\(x\\) e \\(y\\) son los números enteros de plántulas destinados a las áreas representadas por los sitios 2 y 3; \\(400-x-y\\) es la cantidad del área representada por el sitio 4; y \\(S(x,y)\\) es la cantidad proyectada de supervivientes. Los coeficientes son las fracciones de supervivencia observadas a dos años. Aunque las cantidades plantadas son enteras, una proyección puede tener parte decimal."
+  ],
+  "parts": [
+    "Escriba todas las restricciones y simplifique el modelo usando distributividad.",
+    "Determine si es posible alcanzar la meta de 220. Justifique mediante una cota superior válida para toda distribución factible.",
+    "Si la meta se ajusta a <strong>200</strong>, determine el menor número posible de plántulas que debe asignarse al área representada por el sitio 2 y encuentre una distribución que funcione.",
+    "Si se fijan \\(x=190\\) plántulas en esa área, determine todos los valores enteros de \\(y\\) que cumplen la meta de 200.",
+    "Explique por qué no basta con contar árboles sembrados para evaluar una restauración, y por qué estos porcentajes no deberían trasladarse automáticamente a otra región."
+  ],
+  "bibliography": "<strong>Álvarez-Aquino, C., y Williams-Linera, G. (2012).</strong> Seedling survival and growth of tree species: site condition and seasonality in tropical dry forest restoration. <em>Botanical Sciences, 90</em>(3), 341–351. <a href=\"https://doi.org/10.17129/botsci.395\" target=\"_blank\" rel=\"noopener noreferrer\">DOI</a> · <a href=\"https://www.scielo.org.mx/pdf/bs/v90n3/v90n3a9.pdf\" target=\"_blank\" rel=\"noopener noreferrer\">Texto completo en PDF</a>. <strong>Localización utilizada:</strong> página 346, sección “Seedling survival”, supervivencia agregada por sitio al cabo de dos años. Se utilizan los porcentajes del texto, redondeados tal como fueron publicados; las proyecciones aritméticas no añaden precisión empírica al estudio.",
+  "solution": {
+    "visibility": "hidden",
+    "body": [
+      "Las restricciones son:",
+      "\\[\nx,y\\in\\mathbb Z,\\qquad0\\le x\\le200,\\qquad0\\le y\\le180,\\qquad x+y\\le400.\n\\]",
+      "La última asegura que la cantidad destinada a la tercera área no sea negativa. En este caso ya se cumple por las dos capacidades, pues \\(x+y\\le380\\).",
+      "Por distributividad:",
+      "\\[\nS(x,y)=8+0,58x+0,47y.\n\\]",
+      "Ambos coeficientes son positivos. Multiplicando las cotas de capacidad por números positivos y sumando:",
+      "\\[\nS(x,y)\\le8+0,58(200)+0,47(180)=208,6.\n\\]",
+      "La cota se alcanza con \\(x=200\\), \\(y=180\\) y 20 plántulas en la tercera área. Por tanto, <strong>la meta de 220 es imposible bajo estas restricciones y este modelo</strong>.",
+      "Para alcanzar 200:",
+      "\\[\n0,58x+0,47y\\ge192.\n\\]",
+      "Como \\(y\\le180\\), una condición necesaria es:",
+      "\\[\n0,58x+0,47(180)\\ge192\n\\iff x\\ge\\frac{107,4}{0,58}=185,1724\\ldots\n\\]",
+      "Al exigir cantidades enteras, se obtiene \\(x\\ge186\\). Esta cota es alcanzable: con <strong>186 en la primera área, 180 en la segunda y 34 en la tercera</strong>, la proyección es:",
+      "\\[\n0,60(186)+0,49(180)+0,02(34)=200,48.\n\\]",
+      "Por tanto, el mínimo es <strong>186</strong>.",
+      "Si \\(x=190\\):",
+      "\\[\n0,58(190)+0,47y\\ge192\n\\iff y\\ge\\frac{81,8}{0,47}=174,0425\\ldots\n\\]",
+      "Al combinar integridad y capacidad:",
+      "\\[\n\\boxed{y\\in\\{175,176,177,178,179,180\\}.}\n\\]",
+      "El número sembrado mide esfuerzo inicial; la supervivencia posterior aporta información sobre establecimiento. Una evaluación ecológica también debe considerar diversidad, crecimiento, regeneración y condiciones del sitio. Aplicar tasas de Veracruz a otro proyecto requiere comprobar su comparabilidad y realizar seguimiento local; el modelo no determina qué especies deben introducirse en otra región."
+    ]
+  }
+},
+{
                         "id": "pro-01",
+                        "context": "Economía",
                         "topic": "problemas",
                         "level": "avanzado",
                         "title": "Los ahorros de una familia: ¿dólares o CDT?",
@@ -2476,6 +2664,7 @@
                 },
                 {
                         "id": "pro-02",
+                        "context": "Economía",
                         "topic": "problemas",
                         "level": "avanzado",
                         "title": "Una tienda por internet: descuentos y rentabilidad",
@@ -2534,6 +2723,7 @@
                 },
                 {
                         "id": "pro-03",
+                        "context": "Economía",
                         "topic": "problemas",
                         "level": "avanzado",
                         "title": "Comprar más para pagar menos: descuento por volumen",
@@ -2597,6 +2787,7 @@
                 },
                 {
                         "id": "pro-04",
+                        "context": "Economía",
                         "topic": "problemas",
                         "level": "avanzado",
                         "title": "Un pedido grande: anticipo y financiación",
@@ -3519,6 +3710,7 @@
 
         const searchableText = (item) => normalize([
           item.title,
+          item.context,
           item.prompt,
           item.formula,
           item.bibliography,
@@ -3585,6 +3777,7 @@
               '<header class="exercise-sheet-header">' +
                 '<p class="exercise-sheet-meta">' +
                   '<span>' + EXERCISE_TOPICS[item.topic] + '</span>' +
+                  (item.context ? '<span>' + item.context + '</span>' : '') +
                   '<span>' + EXERCISE_LEVELS[item.level] + '</span>' +
                   '<span>' + String(itemIndex + 1).padStart(2, "0") + ' / ' + String(library.items.length).padStart(2, "0") + '</span>' +
                 '</p>' +
@@ -3615,14 +3808,14 @@
                 '<span class="exercise-index-number">' + String(itemIndex + 1).padStart(2, "0") + '</span>' +
                 '<span class="exercise-index-copy">' +
                   '<span class="exercise-index-title">' + item.title + '</span>' +
-                  '<span class="exercise-index-meta">' + EXERCISE_TOPICS[item.topic] + ' · ' + EXERCISE_LEVELS[item.level] + '</span>' +
+                  '<span class="exercise-index-meta">' + EXERCISE_TOPICS[item.topic] + (item.context ? ' · ' + item.context : '') + ' · ' + EXERCISE_LEVELS[item.level] + '</span>' +
                 '</span>' +
               '</button>' +
             '</li>'
           ).join("");
 
           mobileSelect.innerHTML = library.items.map((item, itemIndex) =>
-            '<option value="' + item.id + '">' + String(itemIndex + 1).padStart(2, "0") + '  ' + item.title + '</option>'
+            '<option value="' + item.id + '">' + String(itemIndex + 1).padStart(2, "0") + '  ' + (item.context ? item.context + ' · ' : '') + item.title + '</option>'
           ).join("");
         };
 
