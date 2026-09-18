@@ -2421,6 +2421,7 @@
         // Las soluciones de los problemas se conservan en data.solution y no se renderizan.
         {
   "id": "pro-amb-01",
+  "backup": { "url": "bibliografia/lee-2025-vasos.pdf", "size": "0,82 MB", "license": "CC BY-NC 3.0", "licenseUrl": "https://creativecommons.org/licenses/by-nc/3.0/" },
   "topic": "problemas",
   "context": "Ambiente",
   "level": "avanzado",
@@ -2459,6 +2460,7 @@
 },
 {
   "id": "pro-amb-02",
+  "backup": { "url": "bibliografia/bello-2023-compostaje.pdf", "size": "0,64 MB", "license": "CC BY-NC-ND 4.0", "licenseUrl": "https://creativecommons.org/licenses/by-nc-nd/4.0/" },
   "topic": "problemas",
   "context": "Ambiente",
   "level": "avanzado",
@@ -2503,6 +2505,7 @@
 },
 {
   "id": "pro-amb-03",
+  "backup": { "url": "bibliografia/epa-1988-cloruros.pdf#page=15", "size": "2,31 MB", "license": "Documento federal de EE. UU.", "licenseUrl": "https://www.epa.gov/system/files/documents/2023-02/posting_copyrighted_works_on_epa_website_policy.pdf" },
   "topic": "problemas",
   "context": "Ambiente",
   "level": "avanzado",
@@ -2558,6 +2561,7 @@
 },
 {
   "id": "pro-amb-04",
+  "backup": { "url": "bibliografia/alvarez-2012-restauracion.pdf#page=6", "size": "12,13 MB", "license": "CC BY-NC 3.0", "licenseUrl": "https://creativecommons.org/licenses/by-nc/3.0/" },
   "topic": "problemas",
   "context": "Ambiente",
   "level": "avanzado",
@@ -3768,7 +3772,11 @@
           const bibliography = item.bibliography
             ? '<footer class="exercise-bibliography"><h4>Bibliografía</h4><p>' + item.bibliography +
               (item.bibliographyUrl ? ' <a href="' + item.bibliographyUrl + '" target="_blank" rel="noopener noreferrer">Consulta digital</a>' : "") +
-              '</p></footer>'
+              '</p>' +
+              (item.backup ? '<p style="margin-top:.85rem"><a href="' + item.backup.url + '" target="_blank" rel="noopener noreferrer">Copia de respaldo (PDF · ' + item.backup.size + ')</a>' +
+                ' · <a href="' + item.backup.licenseUrl + '" target="_blank" rel="noopener noreferrer">' + item.backup.license + '</a>' +
+                '<br><small>Documento íntegro, sin modificaciones. Copia conservada el 18/09/2026.</small></p>' : '') +
+              '</footer>'
             : "";
 
           if (window.MathJax?.typesetClear) window.MathJax.typesetClear([contentPanel]);
