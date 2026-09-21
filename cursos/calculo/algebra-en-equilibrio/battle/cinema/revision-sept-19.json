@@ -1,0 +1,74 @@
+{
+  "mordaza-arena": {
+    "source": "crab-arena.png",
+    "size": [
+      1024,
+      1536
+    ],
+    "bytes": 374348,
+    "sha256": "c0adb4958e8f00112d012cd474fc3384283774897c1fbf146c53cc0a3ea3db44"
+  },
+  "vortice-arena": {
+    "source": "squid-arena.png",
+    "size": [
+      1024,
+      1536
+    ],
+    "bytes": 458736,
+    "sha256": "27298afcffa4e47fbfe7eaa67e7c7ccb49fd712712e2baf29ee517a8a4929dfb"
+  },
+  "prisma-arena": {
+    "source": "mantis-arena.png",
+    "size": [
+      1024,
+      1536
+    ],
+    "bytes": 378552,
+    "sha256": "035d98b36b6d195c7218135d25ffc842896739e748687a9d114316c801161f57"
+  },
+  "vortice-body": {
+    "source": "squid-body-sheet.png",
+    "size": [
+      1536,
+      512
+    ],
+    "bytes": 249326,
+    "sha256": "f899e9a7506b1093aa53e8b9f476d22775c1175563af8837ef24be322ba64f6e"
+  },
+  "vortice-mouth": {
+    "source": "squid-mouth-sheet.png",
+    "size": [
+      2048,
+      512
+    ],
+    "bytes": 389064,
+    "sha256": "149bcf12b233c7f904071610f4f417f5b4276b8d088e2d197ffa04e36541c8d8"
+  },
+  "vortice-arm": {
+    "source": "squid-tentacle.png",
+    "size": [
+      1024,
+      48
+    ],
+    "bytes": 20524,
+    "sha256": "ba8dc85b35834b70ab8e512c9e99fb8e5b3428529407cc9fd9d61428ee8b812c"
+  },
+  "vortice-arm-damaged": {
+    "source": "squid-tentacle-damaged.png",
+    "size": [
+      1024,
+      48
+    ],
+    "bytes": 22456,
+    "sha256": "d7109b23b62c8f6d7462ac69bb723e0c98ea89c8428a27751028086b91a52931"
+  },
+  "mordaza-arm": {
+    "source": "crab-upper-arm.png",
+    "size": [
+      512,
+      173
+    ],
+    "bytes": 41226,
+    "sha256": "92f4fedd342d2bca0027e93bca4ceeb5d0f76e6d297d5c5ec45bdfd5f17028c0"
+  }
+}
