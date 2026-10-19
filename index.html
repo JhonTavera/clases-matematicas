@@ -241,6 +241,10 @@
     .pdf:hover { transform: translateY(-1px); border-color: color-mix(in srgb, var(--accent) 58%, var(--line)); background: var(--accent-soft); }
     .pdf a { flex: 1; text-decoration: none; color: var(--ink); word-break: break-word; font-weight: 560; }
     .pdf a:hover { color: var(--accent-hover); }
+    .pdf a.resource-button { display: inline-flex; align-items: center; justify-content: space-between; gap: 1rem; min-height: 48px; padding: .85rem 1.1rem; border: 1px solid var(--accent); border-radius: 12px; background: var(--accent); color: #fff; font-weight: 700; }
+    .pdf a.resource-button::after { content: "↗"; flex-shrink: 0; font-size: 1.3rem; }
+    .pdf a.resource-button:hover { background: var(--accent-hover); border-color: var(--accent-hover); color: #fff; }
+    .pdf a.resource-button:focus-visible { outline: 3px solid var(--ink); outline-offset: 4px; }
     .badge { flex: 0 0 auto; font-size: .7rem; font-weight: 800; letter-spacing: .055em; padding: .25rem .52rem; border-radius: 999px; background: var(--accent-soft); color: var(--accent-hover); }
 
     footer { text-align: center; font-size: .84rem; color: var(--muted); padding: 2.3rem 1rem 2.8rem; }
@@ -454,7 +458,7 @@
           { titulo: "Orden y completitud", archivo: "cursos/calculo/Orden_completitud.pdf" },
            { titulo: "Funciones", archivo: "cursos/calculo/funciones.html" },
            { titulo: "Funciones reales de variable real", archivo: "cursos/calculo/funciones_reales_variable_real.html" },
-          { titulo: "Limites", archivo: "cursos/calculo/limites.html" },
+          { titulo: "Límites de funciones reales", archivo: "cursos/calculo/limites.html", boton: true },
            { titulo: "Juego de límites", archivo: "cursos/calculo/juego-limites-leibniz/index.html" }
         ],
         "Ejercicios": [
@@ -596,6 +600,7 @@
     link.target = "_blank";
     link.rel = "noopener";
     link.textContent = item.titulo;
+    if (item.boton) link.classList.add("resource-button");
 
     const badge = document.createElement("span");
     badge.className = "badge";

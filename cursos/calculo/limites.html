@@ -1,743 +1,806 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Límites</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#07151c">
+  <meta name="color-scheme" content="dark">
+  <meta name="description" content="Límites de funciones reales: intuición, rigor, técnicas, continuidad y aplicaciones a economía y negocios. Laboratorios interactivos y ejercicios resueltos.">
+  <title>Límites | Aproximación, rigor y aplicaciones</title>
   <script>
     window.MathJax = {
-      tex: {
-        inlineMath: [['\\(','\\)']],
-        displayMath: [['\\[','\\]']]
-      },
-      chtml: {
-        scale: 1.08
-      }
+      tex: {inlineMath: [["\\(","\\)"]], displayMath: [["\\[","\\]"]]},
+      options: {skipHtmlTags: ["script","noscript","style","textarea","pre","code"]}
     };
   </script>
-  <script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
   <style>
-    :root {
-      --sky-0: #F7FBFF;
-      --sky-1: #EAF6FF;
-      --sky-2: #D7EFFC;
-      --sky-3: #C5EBF9;
-      --sky-4: #B6E3F4;
-      --sky-5: #A4D8ED;
-      --sky-line: #7FB9D7;
-      --sky-deep: #4E95C2;
-      --sky-shadow: #3C6FA7;
-
-      --board-green: #12E3AA;
-      --board-green-2: #11D4A5;
-      --board-green-3: #17BFA2;
-      --board-teal: #0E8F89;
-      --board-deep: #0A6268;
-      --board-dark: #06474C;
-
-      --surface: #FFFDF9;
-      --surface-soft: #F8FDFF;
-      --surface-green: #F0FBF6;
-      --surface-lilac: #F8F6FF;
-      --surface-note: #FFF6E7;
-
-      --desk-orange: #F08B2F;
-      --desk-orange-2: #E96D25;
-      --desk-orange-strong: #D95B1D;
-      --desk-amber: #F5B249;
-      --desk-yellow: #F6E08A;
-      --desk-cream: #FFF8EE;
-      --desk-shadow: #AA592D;
-      --lamp-cream: #FFF9F1;
-
-      --text: #1A1B49;
-      --text-soft: #4A4457;
-      --muted: #5C7282;
-      --line: #C8E0E7;
-      --line-strong: #A6CFD8;
-
-      --violet-shadow: #342F69;
-      --violet-soft: #7C5AA8;
-      --cyan-glow: #7CEEEE;
-
-      --shadow-card: 0 12px 0 rgba(60,111,167,0.06), 0 18px 34px rgba(52,47,105,0.14), 0 8px 22px rgba(78,149,194,0.14), 0 0 24px rgba(124,238,238,0.06);
-      --shadow-card-strong: 0 16px 0 rgba(60,111,167,0.08), 0 24px 42px rgba(52,47,105,0.18), 0 10px 30px rgba(14,143,137,0.16), 0 0 26px rgba(124,238,238,0.10);
-      --shadow-warm: 0 10px 0 rgba(170,89,45,0.08), 0 16px 30px rgba(240,139,47,0.18), 0 0 20px rgba(245,178,73,0.14);
-      --shadow-formula: 0 4px 12px rgba(240,139,47,0.05), 0 10px 18px rgba(245,178,73,0.06);
-
-      --radius-xl: 28px;
-      --radius-lg: 22px;
-      --radius-md: 16px;
-      --radius-sm: 12px;
-
-      --content-width: 980px;
-      --ui-font: "Segoe UI", Roboto, Arial, sans-serif;
-      --reading-font: Garamond, "Palatino Linotype", Palatino, Georgia, serif;
-    }
-
-    * { box-sizing: border-box; }
-
-    html { scroll-behavior: smooth; }
-
-    body {
-      margin: 0;
-      font-family: var(--reading-font);
-      background: linear-gradient(180deg,
-        var(--sky-0) 0%, var(--sky-0) 14%,
-        var(--sky-1) 14%, var(--sky-1) 28%,
-        var(--sky-2) 28%, var(--sky-2) 44%,
-        var(--sky-3) 44%, var(--sky-3) 62%,
-        var(--sky-4) 62%, var(--sky-4) 81%,
-        var(--sky-1) 81%, var(--sky-1) 100%);
-      color: var(--text);
-      line-height: 1.78;
-      position: relative;
-      font-size: 18px;
-    }
-
-    body::before {
-      content: "";
-      position: fixed;
-      inset: 0;
-      pointer-events: none;
-      z-index: 0;
-      background:
-        linear-gradient(118deg,
-          rgba(255,255,255,0.34) 0%, rgba(255,255,255,0.34) 13%,
-          transparent 13%, transparent 31%,
-          rgba(124,238,238,0.06) 31%, rgba(124,238,238,0.06) 41%,
-          transparent 41%, transparent 61%,
-          rgba(60,111,167,0.05) 61%, rgba(60,111,167,0.05) 70%,
-          transparent 70%, transparent 100%),
-        linear-gradient(24deg,
-          transparent 0%, transparent 58%,
-          rgba(255,255,255,0.16) 58%, rgba(255,255,255,0.16) 69%,
-          transparent 69%, transparent 100%);
-    }
-
-    h1, h2, h3, h4, h5, h6, .brand, nav a, details.block summary, .pill {
-      font-family: var(--ui-font);
-    }
-
-    p, li, .block-content, .section-head p {
-      font-size: 1.08rem;
-    }
-
-    header {
-      position: sticky;
-      top: 0;
-      z-index: 40;
-      background: rgba(225, 251, 242, 0.88);
-      backdrop-filter: blur(14px);
-      border-bottom: 1px solid rgba(127, 185, 215, 0.30);
-      box-shadow: 0 8px 20px rgba(52,47,105,0.08), inset 0 -1px 0 rgba(255,255,255,0.45);
-    }
-
-    .topbar {
-      max-width: var(--content-width);
-      margin: 0 auto;
-      padding: 14px 18px 16px;
-      display: flex;
-      flex-direction: column;
-      align-items: stretch;
-      gap: 12px;
-      position: relative;
-      z-index: 1;
-    }
-
-    .brand {
-      display: inline-flex;
-      align-items: center;
-      gap: 10px;
-      font-weight: 800;
-      font-size: 1.02rem;
-      letter-spacing: 0.2px;
-      color: var(--board-dark);
-    }
-
-    .brand::before {
-      content: "";
-      width: 12px;
-      height: 12px;
-      border-radius: 50%;
-      background: linear-gradient(180deg, var(--board-green), var(--board-teal));
-      box-shadow: 0 0 0 5px rgba(18,227,170,0.16);
-    }
-
-    nav {
-      display: flex;
-      gap: 10px;
-      overflow-x: auto;
-      padding: 7px;
-      border-radius: 18px;
-      scrollbar-width: none;
-      background: linear-gradient(180deg, #DFF8EC 0%, #DFF8EC 55%, #CBF3E1 55%, #CBF3E1 100%);
-      border: 1px solid rgba(127, 185, 215, 0.28);
-      box-shadow: 0 8px 18px rgba(78,149,194,0.10), inset 0 1px 0 rgba(255,255,255,0.55);
-    }
-
-    nav::-webkit-scrollbar { display: none; }
-
-    nav a {
-      flex: 0 0 auto;
-      text-decoration: none;
-      color: var(--text);
-      background: linear-gradient(180deg, rgba(255,255,255,0.90) 0%, rgba(255,255,255,0.90) 56%, rgba(238,248,245,0.98) 56%, rgba(238,248,245,0.98) 100%);
-      border-width: 1px;
-      border-style: solid;
-      border-color: rgba(127,185,215,0.40) rgba(127,185,215,0.28) rgba(10,98,104,0.12) rgba(127,185,215,0.28);
-      box-shadow: 0 6px 0 rgba(60,111,167,0.05), 0 10px 18px rgba(52,47,105,0.08);
-      padding: 10px 14px;
-      border-radius: 999px;
-      font-size: 0.94rem;
-      font-weight: 700;
-      transition: transform 0.22s ease, box-shadow 0.22s ease, background 0.22s ease, color 0.22s ease, border-color 0.22s ease;
-      white-space: nowrap;
-    }
-
-    nav a:hover,
-    nav a.is-active {
-      color: var(--board-dark);
-      background: linear-gradient(180deg, var(--board-green) 0%, var(--board-green) 56%, var(--board-green-3) 56%, var(--board-green-3) 100%);
-      border-color: rgba(10,98,104,0.36) rgba(10,98,104,0.24) rgba(10,98,104,0.40) rgba(10,98,104,0.24);
-      box-shadow: 0 8px 0 rgba(10,98,104,0.10), 0 16px 26px rgba(14,143,137,0.22), 0 0 22px rgba(18,227,170,0.18);
-      transform: translateY(-1px);
-    }
-
-    .page {
-      max-width: var(--content-width);
-      margin: 0 auto;
-      padding: 24px 18px 56px;
-      position: relative;
-      z-index: 1;
-    }
-
-    main {
-      display: grid;
-      gap: 22px;
-    }
-
-    .hero,
-    .card {
-      border-radius: var(--radius-xl);
-      overflow: hidden;
-      border: 1px solid rgba(166, 207, 216, 0.78);
-      background: linear-gradient(180deg, rgba(255,253,249,0.98) 0%, rgba(255,253,249,0.98) 68%, rgba(248,253,255,0.98) 68%, rgba(248,253,255,0.98) 100%);
-      box-shadow: var(--shadow-card);
-    }
-
-    .hero {
-      background: linear-gradient(180deg, rgba(255,253,249,0.98) 0%, rgba(255,253,249,0.98) 100%);
-      box-shadow: var(--shadow-card-strong);
-    }
-
-    .hero-title-band {
-      padding: 26px 24px 20px;
-      background: linear-gradient(122deg, #16E5AA 0%, #16E5AA 20%, #18D1A7 20%, #18D1A7 37%, #20C2A8 37%, #20C2A8 53%, #18A59D 53%, #18A59D 72%, #0F7F86 72%, #0F7F86 88%, #0A646A 88%, #0A646A 100%);
-      position: relative;
-      overflow: hidden;
-      box-shadow: inset 0 -1px 0 rgba(255,255,255,0.20);
-    }
-
-    .hero-title-band::before {
-      content: "";
-      position: absolute;
-      inset: 0;
-      background: linear-gradient(118deg, rgba(255,255,255,0.22) 0%, rgba(255,255,255,0.22) 10%, transparent 10%, transparent 29%, rgba(124,238,238,0.08) 29%, rgba(124,238,238,0.08) 38%, transparent 38%, transparent 100%);
-      pointer-events: none;
-    }
-
-    .hero-title-band h1 {
-      position: relative;
-      z-index: 1;
-      margin: 0;
-      font-size: clamp(2.3rem, 7vw, 4.3rem);
-      line-height: 0.98;
-      letter-spacing: -0.03em;
-      color: #F8FFFE;
-      text-shadow: 0 2px 0 rgba(10,98,104,0.18), 0 10px 22px rgba(52,47,105,0.18);
-    }
-
-    .hero-body {
-      display: grid;
-      gap: 18px;
-      padding: 22px 24px 24px;
-    }
-
-    .section-head {
-      padding: 22px 22px 0;
-    }
-
-    .section-head h2 {
-      margin: 0;
-      font-size: clamp(1.42rem, 4vw, 1.95rem);
-      line-height: 1.15;
-      color: var(--text);
-    }
-
-    .section-head p {
-      margin: 8px 0 0;
-      color: var(--muted);
-    }
-
-    .card-body {
-      padding: 18px 22px 22px;
-    }
-
-    .accordion {
-      display: grid;
-      gap: 14px;
-    }
-
-    details.block {
-      overflow: hidden;
-      border-radius: var(--radius-lg);
-      border: 1px solid rgba(166,207,216,0.82);
-      background: linear-gradient(180deg, rgba(255,253,249,0.98) 0%, rgba(255,253,249,0.98) 70%, rgba(248,253,255,0.98) 70%, rgba(248,253,255,0.98) 100%);
-      box-shadow: 0 10px 0 rgba(60,111,167,0.05), 0 18px 28px rgba(52,47,105,0.10), 0 8px 22px rgba(78,149,194,0.12);
-    }
-
-    details.block[open] {
-      box-shadow: var(--shadow-card-strong);
-    }
-
-    details.block summary {
-      list-style: none;
-      cursor: pointer;
-      padding: 16px 18px;
-      font-weight: 800;
-      color: var(--board-dark);
-      position: relative;
-      background: linear-gradient(180deg, rgba(18,227,170,0.14) 0%, rgba(18,227,170,0.14) 58%, rgba(255,255,255,0.88) 58%, rgba(255,255,255,0.88) 100%);
-    }
-
-    details.block summary::-webkit-details-marker { display: none; }
-
-    details.block summary::after {
-      content: "+";
-      position: absolute;
-      right: 18px;
-      top: 50%;
-      transform: translateY(-50%);
-      color: var(--desk-shadow);
-      font-size: 1.2rem;
-      font-weight: 900;
-    }
-
-    details[open].block summary::after {
-      content: "−";
-    }
-
-    .block-content {
-      padding: 0 18px 18px;
-      animation: fadeSlide 0.35s ease;
-    }
-
-    .math-box {
-      border: 2px solid var(--desk-yellow);
-      border-radius: 28px;
-      background: linear-gradient(180deg, var(--lamp-cream) 0%, var(--lamp-cream) 100%);
-      color: var(--desk-orange-strong);
-      padding: 18px 20px;
-      margin: 14px 0;
-      overflow-x: auto;
-      box-shadow: inset 0 0 0 2px rgba(245,178,73,0.12), var(--shadow-formula);
-      text-align: center;
-      font-size: 1.15rem;
-    }
-
-    .math-box mjx-container {
-      color: var(--desk-orange-strong) !important;
-      font-size: 130% !important;
-      margin: 0.15em auto !important;
-      text-align: center !important;
-    }
-
-    .pill-row {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 10px;
-      margin-top: 12px;
-    }
-
-    .pill {
-      padding: 10px 14px;
-      border-radius: 999px;
-      border: 1px solid rgba(166,207,216,0.86);
-      background: linear-gradient(180deg, #FFFDF9 0%, #FFFDF9 56%, #F0FBF6 56%, #F0FBF6 100%);
-      color: var(--text-soft);
-      box-shadow: 0 8px 0 rgba(60,111,167,0.04), 0 12px 20px rgba(52,47,105,0.08), 0 0 14px rgba(124,238,238,0.08);
-      font-weight: 700;
-      font-size: 0.95rem;
-    }
-
-    @keyframes fadeSlide {
-      from { opacity: 0; transform: translateY(-8px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
-
-    @media (min-width: 760px) {
-      .hero-title-band { padding: 30px 30px 22px; }
-      .hero-body { padding: 24px 30px 30px; }
-      .section-head { padding: 24px 28px 0; }
-      .card-body { padding-left: 28px; padding-right: 28px; }
-    }
+    :root{--bg:#07151c;--deep:#030b10;--surface:#0c2028;--surface2:#112b34;--ink:#edf7f1;--muted:#a9bcb8;--soft:#27434a;--accent:#65e6b4;--accent-ink:#062117;--blue:#8ebcf2;--amber:#e6b968;--ui:"Aptos","Segoe UI","Helvetica Neue",Arial,system-ui,sans-serif;--display:"Aptos Display","Helvetica Neue",Arial,system-ui,sans-serif;--math:"STIX Two Text","Cambria Math",Cambria,Georgia,serif;--page:min(1320px,calc(100% - 64px));--radius:24px}
+    *{box-sizing:border-box}html{scroll-behavior:smooth;background:var(--bg);scroll-padding-top:100px}body{margin:0;color:var(--ink);font:400 17px/1.7 var(--ui);background:radial-gradient(circle at 80% 3%,rgba(101,230,180,.07),transparent 35rem),linear-gradient(135deg,var(--deep),var(--bg) 50%,#0b2028);-webkit-font-smoothing:antialiased}
+    a{color:inherit;text-underline-offset:5px}button,input,select{font:inherit}button,select{color:inherit}button,a,input,select,summary{-webkit-tap-highlight-color:transparent}button{cursor:pointer}button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,summary:focus-visible{outline:2px solid var(--accent);outline-offset:5px}::selection{background:var(--accent);color:var(--accent-ink)}
+    .skip{position:fixed;top:-80px;left:20px;z-index:100;padding:12px;background:var(--accent);color:var(--accent-ink)}.skip:focus{top:12px}
+    .nav{position:fixed;z-index:40;top:14px;left:50%;transform:translateX(-50%);width:min(1400px,calc(100% - 36px));display:flex;align-items:center;justify-content:space-between;gap:16px;pointer-events:none}.nav>*{pointer-events:auto}
+    .brand{width:48px;height:48px;display:grid;place-items:center;border:1px solid var(--soft);border-radius:50%;background:rgba(7,21,28,.92);text-decoration:none;font:italic 700 23px var(--math)}
+    .nav-links{display:flex;padding:5px;border:1px solid var(--soft);border-radius:40px;background:rgba(7,21,28,.9);backdrop-filter:blur(16px)}.nav-links a{padding:8px 16px;color:var(--muted);font-size:14px;text-decoration:none}.nav-links a:hover{color:var(--accent)}
+    .nav-links button{padding:8px 16px;color:var(--accent);font-size:14px;border:0;border-radius:24px;background:#65e6b410}.nav-links button:hover{background:#65e6b425}.mobile-nav{display:none;position:relative}.mobile-nav summary{border:1px solid var(--soft);padding:8px 18px;border-radius:30px;background:var(--bg);cursor:pointer}.mobile-nav div{position:absolute;right:0;top:52px;width:210px;padding:12px;background:var(--surface);border:1px solid var(--soft);border-radius:16px;box-shadow:0 16px 40px #0007}.mobile-nav a,.mobile-nav button{display:block;padding:9px;text-decoration:none}.mobile-nav button{width:100%;border:0;background:none;text-align:left;color:var(--accent)}
+    .progress{width:72px;height:2px;background:var(--soft)}.progress span{display:block;height:100%;background:var(--accent);transform:scaleX(0);transform-origin:left}
+    .hero{position:relative;min-height:94svh;display:grid;place-items:center;text-align:center;overflow:hidden;isolation:isolate;padding:120px 20px 85px}.hero:before{content:"";position:absolute;z-index:-1;left:50%;top:50%;width:min(78vw,790px);aspect-ratio:1;border:1px solid #65e6b41e;border-radius:50%;transform:translate(-50%,-50%);box-shadow:0 0 0 9vw #65e6b406,0 0 0 18vw #65e6b404}
+    .hero:after{content:"";position:absolute;z-index:-2;inset:0;background:linear-gradient(#edf7f10a 1px,transparent 1px),linear-gradient(90deg,#edf7f10a 1px,transparent 1px);background-size:80px 80px;mask-image:radial-gradient(ellipse,#000,transparent 65%)}
+    .hero-symbol{font:500 clamp(8rem,23vw,23rem)/.85 var(--math);letter-spacing:-.065em;color:var(--accent);margin-left:-.06em}.hero-sub{font:400 clamp(1.25rem,3vw,2.4rem) var(--math);color:var(--muted);margin-top:1.25rem;letter-spacing:.03em}
+    .hero h1{font:600 clamp(1.25rem,2vw,1.8rem) var(--display);margin:2.8rem 0 .3rem;letter-spacing:.015em}.hero p{margin:0;color:var(--muted);font-size:16px}.hero .start{display:inline-block;margin-top:2rem;color:var(--accent);font-size:14px;text-decoration:none;border-bottom:1px solid var(--soft);padding-bottom:5px}
+    main{width:var(--page);margin:auto}.section{padding:clamp(5rem,10vw,9rem) 0}.section+.section{border-top:1px solid #edf7f116}.kicker{color:var(--accent);font-size:14px;font-weight:750;text-transform:uppercase;letter-spacing:.16em}
+    .head{margin-bottom:3rem}.head h2{max-width:15ch;margin:1.3rem 0 1.6rem;font:780 clamp(3rem,7.1vw,6.7rem)/.98 var(--display);letter-spacing:-.055em;overflow-wrap:normal}.lead{max-width:65ch;color:var(--muted);font-size:clamp(1.06rem,1.5vw,1.25rem)}
+    h3{font:720 clamp(1.45rem,2.3vw,2.1rem)/1.15 var(--display);letter-spacing:-.025em;margin:0 0 1.2rem}h4{font-size:1.05rem;margin:0 0 .75rem}p{margin:0 0 1.2rem}p:last-child{margin-bottom:0}strong{font-weight:700}small,.small{font-size:14px;color:var(--muted)}
+    .route{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:1px;background:var(--soft);border:1px solid var(--soft);border-radius:var(--radius);overflow:hidden;margin:2rem 0}.route a{display:block;padding:1.5rem 1.3rem;background:var(--bg);text-decoration:none}.route span{display:block;font-size:14px;color:var(--accent);margin-bottom:.65rem}.route a:hover{background:var(--surface2)}
+    .frame{border:1px solid #edf7f11d;border-radius:var(--radius);background:#030b1099;overflow:hidden}.pad{padding:clamp(1.4rem,4.5vw,3.5rem)}.grid2{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px}.grid3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:18px}.card{padding:clamp(1.4rem,3vw,2.4rem);border-radius:var(--radius);background:#112b3499;min-width:0}.card p{color:#cfddda}
+    .math{overflow-x:auto;overflow-y:hidden;padding:.6rem 0;font-family:var(--math);color:var(--accent)}.bigmath{font-size:clamp(1.2rem,2.6vw,1.85rem)}.band{margin:1.5rem 0;padding:1.3rem 1.5rem;border-left:2px solid var(--accent);background:#65e6b409}.band.warn{border-color:var(--amber)}.band p{color:#cfddda}
+    .eyebrow{display:block;margin-bottom:1.2rem;color:var(--accent);font-size:14px;font-weight:700;letter-spacing:.08em}.note{color:var(--muted);font-size:15px}.rule-list{padding-left:1.4rem;margin:1rem 0}.rule-list li+li{margin-top:.7rem}
+    .lab{border:1px solid var(--soft);border-radius:var(--radius);overflow:hidden;background:var(--deep)}.lab-toolbar{display:flex;flex-wrap:wrap;gap:10px;padding:22px;border-bottom:1px solid var(--soft);background:#0c202866}.pill,.button{min-height:44px;padding:9px 17px;border:1px solid var(--soft);border-radius:30px;background:transparent;font-size:15px}.pill:hover,.button:hover{border-color:var(--accent)}.pill[aria-pressed=true],.button.primary{background:var(--accent);color:var(--accent-ink);border-color:var(--accent)}.button.secondary{color:var(--blue)}
+    .lab-grid{display:grid;grid-template-columns:minmax(0,1.35fr) minmax(290px,.75fr)}.plot-side{padding:clamp(1rem,2.6vw,2rem);min-width:0}.controls-side{padding:clamp(1.4rem,3vw,2.5rem);border-left:1px solid var(--soft);background:#0c202844;min-width:0}
+    .plot-title{display:flex;gap:12px;justify-content:space-between;align-items:baseline;margin-bottom:1.1rem}.plot-title h3{font-size:1.4rem;margin:0}.plot-box{position:relative;min-height:370px;border-radius:16px;background:#030b10;overflow:hidden}.plot-box canvas{display:block;width:100%;height:390px}.legend{display:flex;flex-wrap:wrap;gap:8px 20px;padding-top:15px;font-size:14px;color:var(--muted)}.legend span{display:inline-flex;align-items:center;gap:8px}.line{width:23px;height:2px;display:inline-block;background:var(--accent)}.line.blue{background:var(--blue)}.line.amber{background:var(--amber)}.legend .dot{width:8px;height:8px;border:2px solid var(--amber);border-radius:50%}
+    #epsilonPlot{position:relative;z-index:1}.epsilon-band-feedback{position:absolute;inset:0;z-index:0;pointer-events:none;opacity:0}.epsilon-band-feedback.is-invalid{opacity:1}.epsilon-band{position:absolute;overflow:hidden}.epsilon-band:after{content:"";position:absolute;inset:-12px;background:repeating-linear-gradient(115deg,transparent 0 12px,#65e6b425 12px 24px)}.epsilon-band-vertical:after{background:repeating-linear-gradient(25deg,transparent 0 12px,#8ebcf22c 12px 24px)}.epsilon-band-feedback.is-invalid.in-view .epsilon-band:after{animation:epsilon-band-sway 1.6s ease-in-out infinite}.epsilon-band-feedback.is-invalid.in-view .epsilon-band-vertical:after{animation-direction:reverse}
+    @keyframes epsilon-band-sway{0%,100%{transform:translate(-5px,-2px);opacity:.45}50%{transform:translate(5px,2px);opacity:1}}
+    .epsilon-confetti{position:absolute;inset:0;z-index:2;pointer-events:none;overflow:hidden}.confetti-piece{position:absolute;left:50%;top:45%;width:7px;height:11px;border-radius:1px;will-change:transform,opacity}.epsilon-celebration{position:absolute;left:50%;bottom:18px;transform:translateX(-50%);width:max-content;max-width:calc(100% - 32px);padding:8px 15px;border:1px solid #65e6b477;border-radius:30px;background:#09261fee;color:var(--accent);font-size:14px;text-align:center}
+    @media print{.epsilon-band-feedback,.epsilon-confetti{display:none}}
+    .control{margin:1.6rem 0}.control label{display:block;color:var(--muted);font-size:15px;margin-bottom:8px}.control output{float:right;color:var(--ink);font-variant-numeric:tabular-nums}.control input[type=range]{width:100%;accent-color:var(--accent);height:30px;cursor:pointer}.control input[type=number],.control select{width:100%;padding:10px 12px;background:var(--bg);border:1px solid var(--soft);border-radius:10px;color:var(--ink)}
+    .readout{padding:16px;border:1px solid var(--soft);border-radius:14px;margin:1.2rem 0}.readout .value{font:600 clamp(1.5rem,3vw,2.25rem)/1.3 var(--math);color:var(--accent);overflow-wrap:anywhere}.readout p{font-size:15px;margin-top:.5rem}.status{padding:13px 15px;border-radius:12px;background:#65e6b410;color:var(--accent);font-size:15px}.status.warn{background:#e6b96810;color:var(--amber)}
+    .zoom-controls{display:flex;align-items:center;flex-wrap:wrap;gap:8px;margin:1rem 0}.zoom-controls output{font-size:14px;color:var(--muted);margin-left:auto}.button:disabled{opacity:.4;cursor:default}.proof-stack{display:grid;gap:20px}.proof-stack .theorem{min-width:0}.control[hidden]{display:none}
+    table{border-collapse:collapse;width:100%;font-size:15px;font-variant-numeric:tabular-nums}th{text-align:left;color:var(--muted);font-weight:600}td,th{padding:10px 8px;border-bottom:1px solid #edf7f111}td{color:var(--ink)}.table-wrap{overflow-x:auto}.table-caption{font-size:14px;color:var(--muted);margin:.75rem 0}
+    .accordion{border-top:1px solid var(--soft)}.accordion>details{border-bottom:1px solid var(--soft)}summary{cursor:pointer;list-style:none}summary::-webkit-details-marker{display:none}.accordion>details>summary{padding:1.65rem 0;display:flex;gap:1.2rem;align-items:baseline;font:700 clamp(1.25rem,2vw,1.7rem)/1.3 var(--display)}.accordion>details>summary .num{font:500 14px var(--ui);color:var(--accent);min-width:30px}.accordion>details>summary:after{content:"+";color:var(--accent);margin-left:auto;font:400 1.6rem var(--ui)}.accordion>details[open]>summary:after{content:"−"}.detail-body{padding:0 0 2rem 3.1rem;max-width:1050px}.detail-body p{max-width:78ch}
+    .solution{margin-top:1.5rem;border-top:1px solid var(--soft)}.solution>summary{padding:1rem 0 .2rem;color:var(--accent);font-size:15px}.solution>summary:before{content:"+ ";font-size:1.2rem}.solution[open]>summary:before{content:"− "}.solution>div{padding-top:1rem}.solution ol{padding-left:1.25rem}.solution li+li{margin-top:.55rem}
+    .theorem{min-width:0;padding:clamp(1.5rem,4vw,3rem);border:1px solid #65e6b445;border-radius:var(--radius);background:#65e6b409}.spaced{margin-top:2rem}.spaced-lg{margin-top:3.5rem}.steps{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:20px}.step{padding-top:1.3rem;border-top:1px solid var(--soft)}.step span{color:var(--accent);font-size:14px}
+    .exercise{padding:clamp(1.4rem,3vw,2.3rem);border:1px solid var(--soft);border-radius:20px;background:#0c202855;min-width:0}.exercise h3{font-size:1.5rem}.exercise .tag{display:flex;justify-content:space-between;gap:16px;color:var(--muted);font-size:14px;margin-bottom:1rem}.exercise .tag span:first-child{color:var(--accent)}
+    .quiz{padding:clamp(1.4rem,3vw,2.6rem);border-radius:20px;background:var(--surface)}.quiz fieldset{margin:0 0 1.4rem;padding:0;border:0}.quiz legend{font-size:1.2rem;font-weight:600;margin-bottom:1rem}.quiz label{display:flex;align-items:start;gap:10px;margin:.6rem 0}.quiz input{margin-top:8px;accent-color:var(--accent)}.quiz-result{margin-top:1rem;min-height:1.7rem}
+    .closing{padding:6rem 0;text-align:center}.closing p{font:750 clamp(2.2rem,5vw,4.5rem)/1.15 var(--display);letter-spacing:-.04em;max-width:20ch;margin:auto}.closing em{color:var(--accent);font-style:normal}footer{width:var(--page);margin:auto;padding:2rem 0 3rem;border-top:1px solid var(--soft);color:var(--muted);font-size:14px;display:flex;justify-content:space-between;gap:2rem;flex-wrap:wrap}footer p{max-width:68ch}footer a{color:var(--ink)}.noscript{padding:1rem;background:#e6b96819;color:var(--amber)}
+    .exercise-access{display:flex;align-items:center;justify-content:space-between;gap:20px;margin-top:2rem;padding-top:1.5rem;border-top:1px solid var(--soft)}.exercise-access p{margin:0}.exercise-access .button{flex-shrink:0}.exercise-modal-open{overflow:hidden}.exercise-dialog{width:min(1180px,calc(100% - 32px));max-width:none;max-height:90svh;margin:auto;padding:0;border:1px solid var(--soft);border-radius:24px;background:var(--bg);color:var(--ink);overflow:hidden;box-shadow:0 30px 100px #0008}.exercise-dialog[open]{display:flex;flex-direction:column}.exercise-dialog::backdrop{background:#02090ddb;backdrop-filter:blur(8px)}.exercise-dialog-head{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:24px 28px 18px;border-bottom:1px solid var(--soft)}.exercise-dialog-head h2{font:750 clamp(1.6rem,3vw,2.2rem)/1.1 var(--display);letter-spacing:-.03em;margin:0}.exercise-dialog-head .kicker{font-size:11px;margin-bottom:7px}.exercise-dialog-body{padding:24px 28px 32px;overflow-y:auto;overscroll-behavior:contain;min-height:0}.exercise-filters{display:grid;grid-template-columns:1.5fr 1fr auto;gap:16px;align-items:end;margin-bottom:24px}.exercise-filters .control{margin:0;min-width:0}.exercise-filters label{font-size:13px}.exercise-filters select{font-size:15px;min-height:44px}.exercise-count{font-size:14px;color:var(--muted);margin:0 0 10px}.exercise-dialog .exercise{background:#0c2028}.exercise-dialog .exercise[hidden],#exerciseEmpty[hidden],#compositionExerciseNote[hidden]{display:none}.difficulty{color:var(--accent);font-size:12px;border:1px solid #65e6b433;border-radius:30px;padding:2px 9px;white-space:nowrap}.exercise-dialog .tag{align-items:center;flex-wrap:wrap;font-size:12px}.exercise-dialog .solution>summary{min-height:44px}.exercise-dialog .quiz{margin:0;background:#0c2028}.exercise-dialog .quiz legend{font-size:1.5rem;line-height:1.3}.exercise-empty{padding:2rem;border:1px dashed var(--soft);border-radius:16px;color:var(--muted)}
+    .exercise-dialog-head{flex-shrink:0}.exercise-dialog-head .button{white-space:nowrap;flex-shrink:0}
+    .exercise-access{display:block;margin:0;padding:0 0 clamp(4rem,7vw,6rem);border-top:0}.exercise-access p{margin:1rem 0 0;text-align:center}.exercise-launch.button{display:flex;align-items:center;justify-content:space-between;gap:24px;width:100%;min-height:clamp(110px,12vw,164px);padding:clamp(24px,4vw,48px);border-radius:var(--radius);font:750 clamp(2rem,5.5vw,4.7rem)/1.1 var(--display);letter-spacing:-.045em;text-align:left}.exercise-launch.button:hover{background:#a0f1d1;border-color:#a0f1d1}
+    @media(max-width:740px){.exercise-access{align-items:start;flex-direction:column}.exercise-dialog{width:calc(100% - 16px);max-height:94svh;border-radius:18px}.exercise-dialog-head{padding:18px 16px}.exercise-dialog-body{padding:18px 16px}.exercise-filters{grid-template-columns:1fr;gap:12px}.exercise-count{margin:0}.exercise-dialog .grid2{grid-template-columns:1fr}}
+    mjx-container[display=true]{margin:.65em 0!important}mjx-container{max-width:100%}mjx-container:not([display=true]){overflow-x:auto;overflow-y:hidden;vertical-align:middle;padding-block:.12em}
+    @media(max-width:1050px){.lab-grid{grid-template-columns:1fr}.controls-side{border-left:0;border-top:1px solid var(--soft)}.grid3{grid-template-columns:1fr}.nav-links a{padding-inline:12px}.head h2{font-size:clamp(3rem,8vw,5.7rem)}}
+    @media(max-width:740px){:root{--page:calc(100% - 32px);--radius:19px}body{font-size:16px}.nav-links,.progress{display:none}.mobile-nav{display:block}.grid2,.steps{grid-template-columns:1fr}.route{grid-template-columns:repeat(2,minmax(0,1fr))}.hero{min-height:82svh}.hero-symbol{font-size:clamp(7.5rem,29vw,13rem)}.head h2{font-size:clamp(2.75rem,11vw,4.5rem)}.detail-body{padding-left:0}.plot-box{min-height:300px}.plot-box canvas{height:320px}.lab-toolbar{padding:14px;gap:8px}.pill{padding:8px 13px;font-size:14px}.section{padding-block:5rem}.route a{padding:1.1rem}.bigmath{font-size:1.2rem}.plot-title{align-items:start;flex-direction:column}.hero h1{margin-top:2rem}td,th{padding:8px 5px;font-size:14px}.closing{padding-block:4rem}}
+    @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}*,*:before,*:after{animation:none!important;transition:none!important}}
+    @media print{body{background:white;color:#111}.nav,.hero,.lab-toolbar,.control,.button,.closing,.skip{display:none}main,footer{width:100%}.section{padding:2rem 0}.head h2{font-size:32px}.frame,.card,.theorem,.lab,.exercise,.quiz{background:white;border:1px solid #aaa;break-inside:avoid}.math,.kicker,.eyebrow,.lead,p,td,th,.note,.small,small,.card p{color:#222}.lab-grid,.grid2,.grid3{display:block}.controls-side{border:0}.plot-box canvas{max-height:300px}.hero+main{margin-top:0}}
   </style>
 </head>
 <body>
-  <header>
-    <div class="topbar">
-      <div class="brand">Cálculo · Límites y continuidad</div>
-      <nav id="topnav">
-        <a href="#motivacion" class="is-active">1. Motivación</a>
-        <a href="#def-limite">2. Definición límite</a>
-        <a href="#def-continuidad">3. Definición continuidad</a>
-        <a href="#propiedades">4. Propiedades algebraicas</a>
-        <a href="#intercalacion">5. Intercalación</a>
-        <a href="#composicion">6. Límite de una composición</a>
-        <a href="#inversa">7. Continuidad de la inversa</a>
-        <a href="#especiales">8. Límites especiales</a>
-        <a href="#trigonometricas">9. Funciones trigonométricas</a>
-        <a href="#exp-log">10. Exponencial y logarítmica</a>
-      </nav>
-    </div>
+  <a class="skip" href="#ruta">Saltar al contenido</a>
+  <nav class="nav" aria-label="Navegación principal">
+    <a class="brand" href="#inicio" aria-label="Volver al inicio">lim</a>
+    <div class="nav-links"><a href="#idea">Concepto</a><a href="#laboratorio">Explorar</a><a href="#rigor">Rigor</a><a href="#calculo">Métodos</a><a href="#composicion">Composición</a><a href="#economia">Economía</a></div>
+    <details class="mobile-nav"><summary>Contenido</summary><div><a href="#ruta">Ruta de estudio</a><a href="#idea">Concepto</a><a href="#laboratorio">Laboratorio</a><a href="#rigor">Rigor</a><a href="#calculo">Métodos</a><a href="#infinito">Infinito</a><a href="#composicion">Composición</a><a href="#continuidad">Continuidad</a><a href="#economia">Economía</a></div></details>
+    <div class="progress" aria-hidden="true"><span id="progress"></span></div>
+  </nav>
+  <header class="hero" id="inicio">
+    <div><div class="hero-symbol" aria-hidden="true">lim</div><div class="hero-sub" aria-hidden="true">x → a</div><h1>Límites de funciones reales</h1><p>de variable real</p><a class="start" href="#ruta">Explorar el capítulo ↓</a></div>
   </header>
-
-  <div class="page">
-    <main>
-      <section class="hero" id="motivacion">
-        <div class="hero-title-band">
-          <h1>Límites</h1>
+  <main>
+    <noscript><p class="noscript">El contenido teórico se puede leer sin JavaScript. Actívalo para usar los laboratorios, las gráficas y el banco de ejercicios. Las fórmulas se muestran en notación LaTeX si el motor matemático no está disponible.</p></noscript>
+    <section class="section" id="ruta" aria-label="Contenido del capítulo">
+      <div class="head"><p class="lead">Estudiar un límite es precisar qué ocurre cerca de un punto, de una frontera o a largo plazo. Este capítulo conecta la intuición gráfica, la demostración y la interpretación de modelos.</p></div>
+      <div class="route">
+        <a href="#idea"><span>01 · Concepto</span>Valor y aproximación</a><a href="#laboratorio"><span>02 · Laboratorio</span>Existencia y laterales</a><a href="#rigor"><span>03 · Rigor</span>Épsilon y delta</a><a href="#calculo"><span>04 · Métodos</span>Calcular y justificar</a>
+        <a href="#infinito"><span>05 · Comportamiento</span>Infinito y asíntotas</a><a href="#composicion"><span>06 · Composición</span>Una función dentro de otra</a><a href="#continuidad"><span>07 · Continuidad</span>Conectar sin saltos</a><a href="#economia"><span>08 · Aplicaciones</span>Economía y negocios</a>
+      </div>
+      <div class="grid2"><p class="note"><strong>Antes de empezar.</strong> Maneja dominio, rango, factorización, desigualdades y funciones elementales. Para trigonometría, trabaja en radianes.</p><p class="note"><strong>Al terminar.</strong> Podrás decidir si existe un límite, justificarlo, reconocer cuándo un modelo es continuo y explicar qué representa su resultado y en qué unidades.</p></div>
+    </section>
+    <section class="section" id="idea">
+      <div class="head"><div class="kicker">01 · El concepto</div><h2>Cerca no es<br>igual a.</h2></div>
+      <div class="frame pad">
+        <div class="grid2">
+          <div><h3>¿Qué es un límite?</h3><p>Sea \(f:D\subseteq\mathbb R\to\mathbb R\) y sea \(a\) un punto de acumulación de \(D\): existen puntos del dominio distintos de \(a\) arbitrariamente próximos a él.</p><p>Decimos que \(f(x)\) tiende a \(L\) cuando \(x\) tiende a \(a\) si podemos hacer que \(f(x)\) esté tan cerca de \(L\) como queramos, tomando \(x\in D\) suficientemente cerca de \(a\), con \(x\ne a\).</p></div>
+          <div class="card"><div class="math bigmath">\[\lim_{x\to a}f(x)=L\]</div><p><strong>\(x\to a\):</strong> aproximación de la entrada.</p><p><strong>\(f(x)\to L\):</strong> aproximación de la salida.</p><p><strong>\(f(a)\):</strong> valor en el punto; puede ser distinto de \(L\) o no estar definido.</p></div>
         </div>
-        <div class="hero-body">
-          <details class="block" open>
-            <summary>Motivación</summary>
-            <div class="block-content">
-              <p>
-                La noción de límite permite describir qué ocurre con una función cuando la variable se aproxima a un punto, incluso si en ese punto la función no está definida o su valor no coincide con la tendencia.
-              </p>
-              <div class="math-box">
-                \[
-                \lim_{x\to a} f(x)=L
-                \]
-              </div>
+        <div class="band"><p>El límite describe un comportamiento local. Cambiar solamente \(f(a)\) no modifica el límite en \(a\).</p></div>
+        <div class="math">\[f(x)=\frac{x^2-1}{x-1}=x+1\quad(x\ne1),\qquad \lim_{x\to1}f(x)=2.\]</div>
+        <p class="note">La expresión original no está definida en \(1\). El hueco en \((1,2)\) no impide que exista el límite. La simplificación conserva la función cerca del punto, aunque no completa por sí sola su dominio.</p>
+      </div>
+      <div class="grid2 spaced">
+        <article class="card"><span class="eyebrow">DESDE LA IZQUIERDA</span><h3>\(x\to a^-\)</h3><p>Nos aproximamos con valores \(x&lt;a\). Estudiamos \(\lim_{x\to a^-}f(x)\).</p></article>
+        <article class="card"><span class="eyebrow">DESDE LA DERECHA</span><h3>\(x\to a^+\)</h3><p>Nos aproximamos con valores \(x&gt;a\). Estudiamos \(\lim_{x\to a^+}f(x)\).</p></article>
+      </div>
+      <div class="theorem spaced"><h3>Teorema (límites laterales)</h3><p>Si hay puntos del dominio arbitrariamente próximos a \(a\) por ambos lados, el límite bilateral finito existe exactamente cuando los dos límites laterales existen y son iguales:</p><div class="math">\[\lim_{x\to a}f(x)=L\iff\lim_{x\to a^-}f(x)=\lim_{x\to a^+}f(x)=L.\]</div><p class="note">En un extremo del dominio, como \(0\) para \(\sqrt{x}\), se estudia la aproximación permitida por el dominio; en este ejemplo, por la derecha.</p><details class="solution"><summary>Demostración</summary><div><p>Si existe el límite bilateral, su condición \(\varepsilon\)–\(\delta\) sigue siendo válida al restringir las entradas a \(x&lt;a\) o a \(x&gt;a\); por tanto, ambos límites laterales son \(L\).</p><p>Recíprocamente, dado \(\varepsilon&gt;0\), los límites laterales proporcionan \(\delta_-&gt;0\) y \(\delta_+&gt;0\). Toma \(\delta=\min\{\delta_-,\delta_+\}\). Si \(x\in D\) y \(0&lt;|x-a|&lt;\delta\), entonces \(x&lt;a\) o \(x&gt;a\). En cada caso, la garantía lateral correspondiente da \(|f(x)-L|&lt;\varepsilon\). Esta es la definición del límite bilateral.</p></div></details></div>
+    </section>
+    <section class="section" id="laboratorio">
+      <div class="head"><div class="kicker">02 · Laboratorio de aproximación</div><h2>Observa los<br>dos lados.</h2><p class="lead">Elige un caso y reduce la distancia al punto. Compara las salidas antes de decidir si existe un único límite.</p></div>
+      <div class="lab">
+        <div class="lab-toolbar" role="group" aria-label="Caso de límite"><button class="pill" data-case="hole" aria-pressed="true">Un hueco</button><button class="pill" data-case="jump" aria-pressed="false">Un salto</button><button class="pill" data-case="pole" aria-pressed="false">Sin cota</button><button class="pill" data-case="osc" aria-pressed="false">Oscilación</button></div>
+        <div class="lab-grid">
+          <div class="plot-side"><div class="plot-title"><h3 id="caseTitle">Un hueco, un límite</h3><span class="small" id="caseFormula">(x² − 1)/(x − 1), x ≠ 1</span></div><div class="plot-box"><canvas id="limitPlot" role="img" aria-label="Gráfica del límite seleccionado y puntos de aproximación desde ambos lados">Gráfica interactiva. La tabla contigua proporciona los valores numéricos.</canvas></div><div class="legend"><span><i class="line blue"></i>Izquierda</span><span><i class="line"></i>Derecha</span><span><i class="dot"></i>Punto excluido</span></div><p class="table-caption">Ventana fija: acercarse no equivale a cambiar la escala. Las curvas fuera de la ventana quedan recortadas.</p></div>
+          <div class="controls-side">
+            <h3>Acerca las entradas</h3><div class="control"><label for="distance">Distancia \(d\) a \(a\) <output id="distanceOut" for="distance">0,1000</output></label><input id="distance" type="range" min="0" max="1000" value="333" aria-label="Acercamiento al punto: aumenta para reducir la distancia"></div>
+            <button class="button primary" id="playLimit" aria-pressed="false">Animar acercamiento</button><button class="button spaced" id="resetLimit">Reiniciar</button>
+            <div class="table-wrap spaced"><table><caption class="table-caption">Valores actuales a igual distancia</caption><thead><tr><th scope="col">Lado</th><th scope="col">\(x\)</th><th scope="col">\(f(x)\)</th></tr></thead><tbody id="limitRows"></tbody></table></div>
+            <div class="readout"><div class="small">Conclusión</div><div class="value" id="caseConclusion">El límite es 2</div><p id="caseReason">Las dos salidas se aproximan a 2, aunque la función no esté definida en 1.</p></div>
+            <p class="note" id="caseCaution">Una gráfica y una tabla sugieren una respuesta. La igualdad f(x) = x + 1 para x ≠ 1 la justifica.</p>
+          </div>
+        </div>
+      </div>
+      <div class="band warn"><p><strong>Una muestra no es una demostración.</strong> En \(\sin(1/x)\), algunas entradas pequeñas pueden producir valores parecidos. Otras producen \(1\) o \(-1\), por muy cerca de cero que estén.</p></div>
+      <details class="solution"><summary>Demostrar que \(\sin(1/x)\) no tiene límite en cero</summary><div><p>Las sucesiones \(x_n=1/(\pi/2+2\pi n)\) y \(z_n=1/(3\pi/2+2\pi n)\) tienden a \(0\), pero \(\sin(1/x_n)=1\) y \(\sin(1/z_n)=-1\). No hay un único valor de aproximación, ni siquiera desde la derecha.</p></div></details>
+    </section>
+    <section class="section" id="rigor">
+      <div class="head"><div class="kicker">03 · La definición precisa</div><h2>Definición de límite.</h2><p class="lead">Épsilon fija el error permitido en la salida. Delta responde cuánto debemos controlar la entrada para garantizarlo.</p></div>
+      <div class="theorem"><h3>Definición \(\varepsilon\)–\(\delta\)</h3><p>Para \(a\) punto de acumulación del dominio \(D\),</p><div class="math bigmath">\[\lim_{x\to a}f(x)=L\]</div><p>significa que para todo \(\varepsilon&gt;0\) existe un \(\delta&gt;0\) tal que, para todo \(x\in D\),</p><div class="math bigmath">\[0&lt;|x-a|&lt;\delta\quad\Longrightarrow\quad|f(x)-L|&lt;\varepsilon.\]</div><p class="note">El orden importa: se elige \(\varepsilon\), se construye \(\delta\) y la garantía debe valer para todos los \(x\) admitidos. Delta puede depender de épsilon y del punto, pero no del \(x\) elegido después.</p></div>
+      <div class="lab spaced-lg">
+        <div class="lab-toolbar" role="group" aria-label="Ejemplo épsilon delta"><button class="pill" data-epsilon-case="linear" aria-pressed="true">Recta</button><button class="pill" data-epsilon-case="quadratic" aria-pressed="false">Parábola</button><button class="pill" data-epsilon-case="sine" aria-pressed="false">Seno</button><button class="pill" data-epsilon-case="jump" aria-pressed="false">Función a trozos</button></div>
+        <div class="lab-grid">
+          <div class="plot-side"><div class="plot-title"><h3>Haz encajar las dos bandas</h3></div><p id="epsilonModel" class="math">\(f(x)=2x+1,\quad a=2,\quad L=5\)</p><div class="zoom-controls" role="group" aria-label="Zoom del laboratorio"><button class="button" id="epsilonZoomOut" aria-label="Alejar gráfica">− Alejar</button><button class="button" id="epsilonZoomIn" aria-label="Acercar gráfica">+ Acercar</button><button class="button" id="epsilonZoomReset">Vista inicial</button><output id="epsilonZoomOutValue" aria-live="polite">Zoom 1×</output></div><div class="plot-box"><canvas id="epsilonPlot" role="img" aria-label="Bandas de tolerancia para el ejemplo seleccionado">La descripción del resultado y el contraejemplo aparecen junto a los controles.</canvas></div><div class="legend"><span><i class="line"></i>Salida: L ± ε</span><span><i class="line blue"></i>Entrada: a ± δ</span><span><i class="line amber"></i>Tramo bajo examen</span></div><p class="table-caption">Al cambiar el candidato L se desplaza la franja verde, sin mover la función ni los ejes. El zoom cambia solo la ventana, no ε ni δ: puedes alejar hasta 0,25× y acercar hasta 16×.</p></div>
+          <div class="controls-side"><p>Primero fija una tolerancia. Después ajusta \(\delta\) para que el tramo de la gráfica dentro de la banda vertical quepa en la banda horizontal.</p>
+            <div class="control" id="candidateControl" hidden><label for="epsilonCandidate">Candidato L <output for="epsilonCandidate" id="epsilonCandidateOut">0,0</output></label><input id="epsilonCandidate" type="range" min="-1" max="1" step="0.1" value="0"></div>
+            <div class="control"><label for="epsilon">Tolerancia ε <output for="epsilon" id="epsilonOut">0,80</output></label><input id="epsilon" type="range" min="0.05" max="1.50" step="0.05" value="0.80"></div>
+            <div class="control"><label for="delta">Distancia δ <output for="delta" id="deltaOut">0,600</output></label><input id="delta" type="range" min="0.001" max="2" step="0.001" value="0.60"></div>
+            <button class="button primary" id="chooseDelta">Elegir δ suficiente</button>
+            <div id="epsilonStatus" class="status spaced" role="status"></div><p id="epsilonWitness" class="note spaced"></p><p id="epsilonRule" class="note spaced"></p>
+          </div>
+        </div>
+      </div>
+      <div class="grid2 spaced">
+        <article class="card"><h3>Una prueba completa</h3><p>Dado \(\varepsilon&gt;0\), elegimos \(\delta=\varepsilon/2\). Si \(0&lt;|x-2|&lt;\delta\), entonces:</p><div class="math">\[|(2x+1)-5|=2|x-2|&lt;2\delta=\varepsilon.\]</div><p>Esto prueba \(\lim_{x\to2}(2x+1)=5\) para cualquier tolerancia, no solo para las del control.</p></article>
+        <article class="card"><h3>Cuando el error no es lineal</h3><p>Para \(\lim_{x\to1}x^2=1\), escribe \(|x^2-1|=|x-1||x+1|\). Si \(|x-1|&lt;1\), entonces \(|x+1|&lt;3\).</p><div class="math">\[\delta=\min\{1,\varepsilon/3\}\]</div><p>garantiza \(|x^2-1|&lt;3\delta\le\varepsilon\). La cota auxiliar controla el factor que todavía depende de \(x\).</p></article>
+      </div>
+      <div class="accordion spaced">
+        <details><summary><span class="num">+</span>Unicidad y criterio de Heine</summary><div class="detail-body"><p><strong>Unicidad.</strong> Si el límite finito existe, es único. Dos candidatos distintos \(L_1,L_2\) no pueden recibir simultáneamente todas las salidas en vecindades disjuntas; basta tomar \(\varepsilon=|L_1-L_2|/3\).</p><p><strong>¿Qué es una sucesión?</strong> Es una lista ordenada de números con una posición para cada número natural: \(x_1,x_2,x_3,\ldots\). El símbolo \(x_n\) representa el número que ocupa la posición \(n\). Los términos pueden repetirse y no tienen que ir siempre aumentando o disminuyendo. Por ejemplo, \(x_n=a+1/n\) produce \(a+1,a+1/2,a+1/3,\ldots\).</p><p>Decir que \(x_n\to a\) significa que, al avanzar suficientemente en la lista, todos los términos restantes quedan tan cerca de \(a\) como se quiera. Formalmente, para cada \(\eta&gt;0\) existe \(N\in\mathbb N\) tal que \(n\ge N\) implica \(|x_n-a|&lt;\eta\).</p><p><strong>Criterio de Heine.</strong> Si \(a\) es punto de acumulación de \(D\), entonces \(\lim_{x\to a}f(x)=L\) si y solo si, para toda sucesión \(x_n\in D\setminus\{a\}\) con \(x_n\to a\), se cumple \(f(x_n)\to L\).</p><p class="note">Dos sucesiones con límites de imagen distintos refutan la existencia. Una sola sucesión favorable no basta para probarla.</p><details class="solution"><summary>Demostración del criterio</summary><div><p>Si existe el límite, dado \(\varepsilon&gt;0\) elige su \(\delta\). Como \(x_n\to a\), para todo \(n\) suficientemente grande se tiene \(0&lt;|x_n-a|&lt;\delta\), luego \(|f(x_n)-L|&lt;\varepsilon\).</p><p>Para la recíproca, si fallara el límite, existiría \(\varepsilon_0&gt;0\) tal que, para cada \(n\), podríamos elegir \(x_n\in D\) con \(0&lt;|x_n-a|&lt;1/n\) y \(|f(x_n)-L|\ge\varepsilon_0\). Entonces \(x_n\to a\), pero \(f(x_n)\) no tiende a \(L\), contradiciendo la hipótesis secuencial.</p></div></details></div></details>
+      </div>
+    </section>
+    <section class="section" id="calculo">
+      <div class="head"><div class="kicker">04 · Propiedades y técnicas</div><h2>Propiedades de los límites.</h2><p class="lead">Primero identifica el dominio y prueba la sustitución cuando esté justificada. Si aparece una indeterminación, transforma la expresión sin alterar su comportamiento cerca del punto.</p></div>
+      <div class="grid3">
+        <article class="card"><h3>Álgebra de límites</h3><p>Si \(f(x)\to L\) y \(g(x)\to M\), con \(L,M\in\mathbb R\), entonces:</p><div class="math">\[\lim(\alpha f+\beta g)=\alpha L+\beta M\]\[\lim(fg)=LM\]</div><p class="note">\(\alpha,\beta\) son constantes reales y los límites se toman en el mismo punto.</p></article>
+        <article class="card"><h3>Cociente y composición</h3><div class="math">\[\lim\frac{f}{g}=\frac LM\quad(M\ne0)\]</div><p>Si \(g(x)\to M\) y \(F\) es continua en \(M\), entonces \(F(g(x))\to F(M)\), siempre que la composición esté definida cerca del punto.</p></article>
+        <article class="card"><h3>Comparación y encaje</h3><p>Si \(u(x)\le f(x)\le v(x)\) cerca de \(a\), salvo quizá en \(a\), y \(u,v\to L\), entonces \(f\to L\).</p><p class="note">También se conserva el orden entre límites finitos: \(f\le g\) implica \(L\le M\); una desigualdad estricta puede convertirse en igualdad.</p></article>
+      </div>
+      <div class="accordion spaced-lg">
+        <details open><summary><span class="num">01</span>Continuidad y sustitución directa</summary><div class="detail-body">
+          <div class="theorem"><h3>Definición · Función continua</h3><p>Sea \(f:D\subseteq\mathbb R\to\mathbb R\) y sea \(a\in D\). La función es <strong>continua en \(a\), respecto de su dominio</strong>, si toda tolerancia en la salida puede garantizarse mediante una cercanía suficiente en la entrada:</p><div class="math">\[\forall\varepsilon&gt;0\;\exists\delta&gt;0\;\forall x\in D:\quad |x-a|&lt;\delta\Longrightarrow |f(x)-f(a)|&lt;\varepsilon.\]</div><p>Es continua en \(D\) si lo es en cada punto de \(D\). Si \(a\) es punto de acumulación de \(D\), esto equivale a \(\lim_{x\to a,\,x\in D}f(x)=f(a)\). En un punto aislado, la condición se cumple automáticamente.</p><p class="note">Aquí se admite \(x=a\), a diferencia de la definición de límite. En los extremos del dominio solo cuentan las aproximaciones que permanecen en él.</p></div>
+          <div class="card spaced"><h3>Polinomios y funciones racionales</h3><p>Todo polinomio es continuo en \(\mathbb R\). Un cociente \(P/Q\) de polinomios es continuo en cada punto donde \(Q\ne0\).</p><details class="solution"><summary>Demostración</summary><div><p>Las constantes y la identidad son continuas. Para una potencia entera \(k\ge1\), si \(|x-a|&lt;1\), tomando \(M=|a|+1\), la factorización da</p><div class="math">\[|x^k-a^k|=|x-a|\left|\sum_{j=0}^{k-1}x^{k-1-j}a^j\right|\le kM^{k-1}|x-a|.\]</div><p>Si \(P(x)=\sum_{k=0}^{n}c_kx^k\), entonces \(|P(x)-P(a)|\le C|x-a|\), con \(C=\sum_{k=1}^{n}|c_k|kM^{k-1}\). Si \(C&gt;0\), sirve \(\delta=\min\{1,\varepsilon/C\}\); si \(C=0\), el polinomio es constante.</p><p>Para el cociente, fija \(q=|Q(a)|&gt;0\). La continuidad de \(Q\) asegura que, cerca de \(a\), \(|Q(x)|&gt;q/2\). En ese entorno,</p><div class="math">\[\left|\frac{P(x)}{Q(x)}-\frac{P(a)}{Q(a)}\right|\le\frac{2}{q}|P(x)-P(a)|+\frac{2|P(a)|}{q^2}|Q(x)-Q(a)|.\]</div><p>Las dos diferencias de la derecha se hacen tan pequeñas como se quiera por la continuidad ya probada de los polinomios. Por tanto, el cociente es continuo donde su denominador no se anula.</p></div></details></div>
+          <div class="card spaced"><h3>Raíces</h3><p>La raíz \(\sqrt[n]{x}\), con \(n\ge2\) entero, es continua en \([0,\infty)\) si \(n\) es par, y en \(\mathbb R\) si \(n\) es impar.</p><details class="solution"><summary>Demostración</summary><div><p>Para \(u,v\ge0\), supongamos \(u\ge v\). El binomio de \(u=v+(u-v)\) muestra que \(u^n-v^n\ge(u-v)^n\). Intercambiando \(u,v\) si hace falta, obtenemos</p><div class="math">\[|u-v|^n\le|u^n-v^n|,\qquad |\sqrt[n]{x}-\sqrt[n]{a}|\le|x-a|^{1/n}\quad(x,a\ge0).\]</div><p>Si \(n\) es par, todo \(x\) del dominio es no negativo y sirve \(\delta=\varepsilon^n\). Si \(n\) es impar y \(a&gt;0\), toma \(\delta=\min\{a/2,\varepsilon^n\}\) para asegurar además \(x&gt;0\). Para \(n\) impar y \(a&lt;0\), toma \(\delta=\min\{|a|/2,\varepsilon^n\}\): así \(x&lt;0\) y se aplica la cota a \(-x,-a\), usando \(\sqrt[n]{x}=-\sqrt[n]{-x}\). En \(a=0\), la igualdad \(|\sqrt[n]{x}|=|x|^{1/n}\) permite elegir \(\delta=\varepsilon^n\) en todo el dominio.</p></div></details></div>
+          <div class="card spaced"><h3>Funciones trigonométricas</h3><p>\(\sin x\) y \(\cos x\) son continuas en \(\mathbb R\). \(\tan,\cot,\sec\) y \(\csc\) son continuas en sus respectivos dominios.</p><details class="solution"><summary>Demostración</summary><div><p>La comparación entre cuerda y arco en la circunferencia unidad da \(|\sin t|\le|t|\) para \(t\) próximo a cero, medido en <strong>radianes</strong>. Usando las identidades de diferencia y las cotas \(|\sin s|,|\cos s|\le1\),</p><div class="math">\[|\sin(a+h)-\sin a|=2\left|\cos\left(a+\frac h2\right)\sin\frac h2\right|\le|h|,\]</div><div class="math">\[|\cos(a+h)-\cos a|=2\left|\sin\left(a+\frac h2\right)\sin\frac h2\right|\le|h|.\]</div><p>Por ejemplo, \(\delta=\min\{1,\varepsilon\}\) sirve para ambas funciones. Las otras cuatro son cocientes de estas funciones o de la constante 1; el mismo argumento de la cota del denominador del recuadro anterior prueba su continuidad donde el denominador es distinto de cero.</p></div></details></div>
+          <div class="card spaced"><h3>Exponenciales y logaritmos</h3><p>\(e^x\) y \(b^x\), con \(b&gt;0\), son continuas en \(\mathbb R\). \(\ln x\) y \(\log_bx\), con \(b&gt;0\), \(b\ne1\), son continuas en \((0,\infty)\).</p><details class="solution"><summary>Construcción de base y demostración, sin derivadas</summary><div><p>Para no usar de manera circular los límites que se demostrarán después, adoptamos como construcción de base</p><div class="math">\[E(x)=\sum_{n=0}^{\infty}\frac{x^n}{n!},\qquad e=E(1),\qquad e^x:=E(x).\]</div><p>Una serie es el límite de sus sumas parciales. Aquí la serie converge absolutamente para todo \(x\): a partir de un índice suficientemente grande, la razón entre dos términos absolutos consecutivos, \(|x|/(n+1)\), es a lo sumo \(1/2\); la cola queda acotada por una serie geométrica. Se usa la propiedad de las series absolutamente convergentes que permite agrupar términos y multiplicarlas mediante su producto de Cauchy. Con el binomio,</p><div class="math">\[E(x)E(y)=\sum_{n=0}^{\infty}\sum_{k=0}^{n}\frac{x^ky^{n-k}}{k!(n-k)!}=\sum_{n=0}^{\infty}\frac{(x+y)^n}{n!}=E(x+y).\]</div><p>Como \(E(0)=1\), se tiene \(E(x)E(-x)=1\), de modo que \(E(x)\ne0\). Además, \(E(x)=E(x/2)^2&gt;0\). Si \(h&gt;0\), la serie da \(E(h)&gt;1\), y por ello \(E(x+h)=E(x)E(h)&gt;E(x)\): \(E\) es estrictamente creciente.</p><p>Para \(|h|&lt;1\), la comparación con una serie geométrica proporciona</p><div class="math">\[|E(h)-1|\le\sum_{n=1}^{\infty}|h|^n=\frac{|h|}{1-|h|}.\]</div><p>Por tanto, \(E(h)\to1\) cuando \(h\to0\), y la identidad \(|E(a+h)-E(a)|=E(a)|E(h)-1|\) prueba continuidad en todo \(a\).</p><p>Para \(t\ge0\), \(E(t)\ge1+t\) y \(E(-t)=1/E(t)\le1/(1+t)\). De estas cotas, la continuidad y el teorema del valor intermedio —demostrado en la sección 07 sin usar exponenciales— se deduce que el rango de \(E\) es \((0,\infty)\). Definimos \(\ln\) como su inversa estrictamente creciente.</p><p>Para probar directamente la continuidad de la inversa, fija \(u&gt;0\), escribe \(a=\ln u\) y toma \(\varepsilon&gt;0\). Por la monotonía estricta,</p><div class="math">\[\delta=\min\{u-E(a-\varepsilon),\ E(a+\varepsilon)-u\}&gt;0.\]</div><p>Si \(v&gt;0\) y \(|v-u|&lt;\delta\), entonces \(E(a-\varepsilon)&lt;v&lt;E(a+\varepsilon)\). Aplicar la inversa creciente da \(|\ln v-\ln u|&lt;\varepsilon\). Finalmente, \(b^x=E(x\ln b)\) y \(\log_bx=\ln x/\ln b\); su continuidad se obtiene por composición y por multiplicación por una constante.</p><p class="note">La construcción por series y las reglas de series absolutamente convergentes son la base declarada de esta demostración. No se deducen del límite \((e^h-1)/h\), ni se usan derivadas o la regla de L’Hôpital.</p></div></details></div>
+          <div class="band spaced"><h4>Cuándo sustituir</h4><p>Si la expresión representa una función continua en el punto de aproximación y este es de acumulación de su dominio, el límite se obtiene evaluándola allí:</p><div class="math">\[\lim_{x\to a}f(x)=f(a).\]</div><p>Primero verifica el dominio. Por ejemplo, \(\lim_{x\to2}(x^3-4x+1)=1\), pero una fracción con denominador cero en el punto requiere otro argumento.</p></div>
+        </div></details>
+        <details><summary><span class="num">02</span>Factorizar una forma \(0/0\)</summary><div class="detail-body"><div class="math">\[\lim_{x\to3}\frac{x^2-9}{x-3}=\lim_{x\to3}(x+3)=6.\]</div><p>Se cancela el factor \(x-3\) solo para \(x\ne3\), que es precisamente lo que permite la definición de límite. \(0/0\) es una forma indeterminada, no un resultado.</p><p class="note">Contraste: \(\lim_{x\to0}x/x=1\), \(\lim_{x\to0}x^2/x=0\), pero \(x/x^2=1/x\) no tiene límite bilateral. Las tres sustituciones producen \(0/0\).</p></div></details>
+        <details><summary><span class="num">03</span>Racionalizar con el conjugado</summary><div class="detail-body"><div class="math">\[\lim_{h\to0}\frac{\sqrt{100+h}-10}{h}=\lim_{h\to0}\frac{1}{\sqrt{100+h}+10}=\frac1{20}.\]</div><p>Multiplicamos numerador y denominador por \(\sqrt{100+h}+10\). El numerador pasa a ser \(h\), cancelable para \(h\ne0\). Esta técnica mide cambios de productividad en modelos con rendimientos decrecientes.</p></div></details>
+        <details><summary><span class="num">04</span>Aplicar el teorema del encaje</summary><div class="detail-body"><p>Aunque \(\sin(1/x)\) no tiene límite en cero, la amplitud de \(x^2\sin(1/x)\) se hace pequeña. Para \(x\ne0\),</p><div class="math">\[-x^2\le x^2\sin(1/x)\le x^2.\]</div><p>Las dos cotas tienden a cero, por lo que \(\lim_{x\to0}x^2\sin(1/x)=0\). El límite procede del control de la amplitud, no de suprimir la oscilación.</p></div></details>
+        <details><summary><span class="num">05</span>Comparar términos dominantes al infinito</summary><div class="detail-body"><div class="math">\[\lim_{x\to+\infty}\frac{3x^2+2x-1}{x^2+5}= \lim_{x\to+\infty}\frac{3+2/x-1/x^2}{1+5/x^2}=3.\]</div><p>Para cocientes de polinomios: si el numerador tiene menor grado, el límite es cero; si tienen igual grado, es el cociente de los coeficientes principales. Si el numerador tiene mayor grado, analiza magnitud y signo; puede divergir y admitir una asíntota oblicua o polinómica.</p><div class="math">\[\lim_{x\to+\infty}\bigl(\sqrt{x^2+3x}-x\bigr)=\lim_{x\to+\infty}\frac{3}{\sqrt{1+3/x}+1}=\frac32.\]</div><p class="note">Aquí \(\infty-\infty\) se resuelve racionalizando. Recuerda que \(\sqrt{x^2}=|x|\), especialmente cuando \(x\to-\infty\).</p></div></details>
+        <details open><summary><span class="num">06</span>Límites especiales y sus demostraciones</summary><div class="detail-body">
+          <p>Los ángulos se miden en <strong>radianes</strong>. Todas las expresiones se consideran en su dominio y con \(x\ne0\). Las pruebas siguientes usan las propiedades de los límites, el teorema del encaje y la continuidad demostrada en la subsección 01; no usan derivadas.</p>
+          <article class="theorem spaced"><h3>Límite fundamental del seno</h3><div class="math bigmath">\[\lim_{x\to0}\frac{\sin x}{x}=1.\]</div><details class="solution"><summary>Demostración geométrica y por encaje</summary><div><p>En la circunferencia unidad, para \(0&lt;t&lt;\pi/2\), compara el área del triángulo inscrito, el sector de ángulo \(t\) y el triángulo exterior formado con la tangente. Sus áreas son, respectivamente, \(\sin t/2\), \(t/2\) y \(\tan t/2\). Luego</p><div class="math">\[\sin t\le t\le\tan t,\qquad \cos t\le\frac{\sin t}{t}\le1.\]</div><p>Como \(\cos t\to1\) por continuidad, el encaje da el límite 1 por la derecha. Si \(x&lt;0\), tomar \(t=-x&gt;0\) da \(\sin x/x=\sin t/t\); el límite por la izquierda es el mismo. Por el teorema de límites laterales, el límite bilateral es 1.</p><p class="note">La igualdad «área del sector = \(t/2\)» en el círculo unidad usa radianes; por eso la unidad angular es parte de la hipótesis.</p></div></details></article>
+          <article class="theorem spaced"><h3>Límite de la tangente</h3><div class="math bigmath">\[\lim_{x\to0}\frac{\tan x}{x}=1.\]</div><details class="solution"><summary>Demostración</summary><div><p>En un entorno de cero, \(\cos x\ne0\). Así,</p><div class="math">\[\frac{\tan x}{x}=\frac{\sin x}{x}\,\frac1{\cos x}\longrightarrow1\cdot1=1.\]</div><p>Se aplican el límite fundamental del seno, la continuidad de \(\cos\) y la propiedad del cociente con denominador de límite no nulo.</p></div></details></article>
+          <article class="theorem spaced"><h3>Límite del incremento del coseno</h3><div class="math bigmath">\[\lim_{x\to0}\frac{1-\cos x}{x^2}=\frac12.\]</div><details class="solution"><summary>Demostración</summary><div><p>La identidad \(1-\cos x=2\sin^2(x/2)\) transforma la expresión en</p><div class="math">\[\frac{1-\cos x}{x^2}=\frac12\left(\frac{\sin(x/2)}{x/2}\right)^2\longrightarrow\frac12.\]</div><p>El cambio \(u=x/2\) cumple \(u\to0\), por lo que se aplica el límite del seno. Como consecuencia, \((1-\cos x)/x=x\,(1-\cos x)/x^2\to0\).</p></div></details></article>
+          <article class="theorem spaced"><h3>Límite fundamental de la exponencial</h3><div class="math bigmath">\[\lim_{x\to0}\frac{e^x-1}{x}=1.\]</div><details class="solution"><summary>Demostración a partir de la construcción por series</summary><div><p>La construcción \(e^x=\sum_{n=0}^{\infty}x^n/n!\), justificada en la subsección 01, da para \(0&lt;|x|&lt;1\):</p><div class="math">\[|e^x-1-x|\le\sum_{n=2}^{\infty}\frac{|x|^n}{n!}\le\sum_{n=2}^{\infty}|x|^n=\frac{|x|^2}{1-|x|}.\]</div><p>Dividir por \(|x|\) produce una cota que tiende a cero:</p><div class="math">\[\left|\frac{e^x-1}{x}-1\right|\le\frac{|x|}{1-|x|}\longrightarrow0.\]</div><p>La estimación vale por ambos lados de cero y demuestra el límite sin introducir la derivada de la exponencial.</p></div></details></article>
+          <article class="theorem spaced"><h3>Límite del logaritmo natural</h3><div class="math bigmath">\[\lim_{x\to0}\frac{\ln(1+x)}x=1.\]</div><p class="note">Dominio de la expresión: \(x&gt;-1\), \(x\ne0\).</p><details class="solution"><summary>Demostración mediante la función inversa</summary><div><p>Haz \(h=\ln(1+x)\). Por continuidad del logaritmo, \(x\to0\) implica \(h\to0\). Además, \(e^h=1+x\), de modo que \(x=e^h-1\), y \(h\ne0\) cuando \(x\ne0\). Entonces</p><div class="math">\[\frac{\ln(1+x)}x=\frac{h}{e^h-1}=\frac1{(e^h-1)/h}\longrightarrow1.\]</div><p>El denominador del último cociente tiende a 1; por ello es legítimo tomar su recíproco.</p></div></details></article>
+          <article class="theorem spaced"><h3>Una potencia que converge a \(e\)</h3><div class="math bigmath">\[\lim_{x\to0}(1+x)^{1/x}=e.\]</div><p class="note">Dominio real usado: \(x&gt;-1\), \(x\ne0\). Para base positiva se define \(u^v=\exp(v\ln u)\).</p><details class="solution"><summary>Demostración mediante logaritmos</summary><div><p>La base \(1+x\) es positiva en un entorno de cero. Por la definición de potencia real,</p><div class="math">\[(1+x)^{1/x}=\exp\left(\frac{\ln(1+x)}x\right).\]</div><p>El exponente tiende a 1 por el resultado anterior. La continuidad de la exponencial permite pasar al límite: \(\exp(\ln(1+x)/x)\to\exp(1)=e\). La prueba es bilateral, no solo para \(x&gt;0\).</p></div></details></article>
+          <div class="card spaced"><h3>Usar la escala correcta</h3><p>Para constantes \(a,b\), con \(b\ne0\), los cambios de variable y las propiedades de los límites dan:</p><div class="math">\[\lim_{x\to0}\frac{\sin(ax)}{bx}=\frac ab,\qquad \lim_{x\to0}\frac{\ln(1+ax)}x=a,\qquad \lim_{x\to0}\frac{e^{ax}-1}x=a.\]</div><p>Por ejemplo, \(\ln(1+5x)/x=5\,\ln(1+5x)/(5x)\to5\). El argumento es válido en el dominio correspondiente; si \(a=0\), el numerador es idénticamente cero.</p><p class="note">En capitalización, con \(r\) fijo, \((1+r/n)^n\to e^r\) cuando \(n\to\infty\): si \(r\ne0\), toma \(x=r/n\) y escribe \((1+r/n)^n=\exp(r\,\ln(1+x)/x)\). Para \(r=0\), todos los términos valen 1. La base es positiva para \(n\) suficientemente grande.</p></div>
+        </div></details>
+      </div>
+      <details class="solution"><summary>¿Dónde entra la regla de L’Hôpital?</summary><div><p>Se estudia después de las derivadas. En un intervalo lateral adecuado, si \(f,g\) son derivables, \(g'\ne0\), el cociente presenta \(0/0\) o \(\infty/\infty\) y existe el límite de \(f'/g'\) —finito o infinito—, la regla permite concluir el mismo límite para \(f/g\). Deben cumplirse sus hipótesis.</p><p>No se aplica directamente a las otras formas. Tampoco conviene usarla para demostrar un límite fundamental si la derivada utilizada se obtuvo a partir de ese mismo límite.</p></div></details>
+    </section>
+    <section class="section" id="infinito">
+      <div class="head"><div class="kicker">05 · Infinito y asíntotas</div><h2>Límites infinitos y al infinito.</h2><p class="lead">Que la salida crezca sin límite y que la entrada se aleje indefinidamente son dos situaciones diferentes.</p></div>
+      <div class="grid2">
+        <article class="card"><h3>Límites infinitos en un punto</h3><div class="math">\[\lim_{x\to0}\frac1{x^2}=+\infty.\]</div><p>Para toda cota \(M&gt;0\) hay un \(\delta&gt;0\) tal que \(0&lt;|x|&lt;\delta\) implica \(1/x^2&gt;M\). Sirve \(\delta=1/\sqrt M\).</p><p>La notación \(+\infty\) expresa crecimiento sin cota. No es un límite real finito.</p><p class="note">En cambio, \(1/x\to-\infty\) por la izquierda y \(1/x\to+\infty\) por la derecha de cero.</p></article>
+        <article class="card"><h3>Límites cuando \(x\to+\infty\)</h3><div class="math">\[\lim_{x\to+\infty}\left(35+\frac{12000}{x}\right)=35.\]</div><p>Para todo \(\varepsilon&gt;0\) existe un umbral \(N\) tal que \(x\in D\), \(x&gt;N\) implica \(|f(x)-35|&lt;\varepsilon\). Aquí sirve \(N=12000/\varepsilon\).</p><p class="note">Para \(x\to-\infty\), se exige la aproximación cuando \(x&lt;-N\). El dominio debe permitir entradas arbitrariamente alejadas en esa dirección.</p></article>
+      </div>
+      <div class="grid3 spaced">
+        <article class="card"><span class="eyebrow">Asíntota vertical · \(x=a\)</span><p>Existe si al menos un límite lateral en \(a\) es \(+\infty\) o \(-\infty\).</p><div class="math">\[\frac1{x-2}:\quad x=2.\]</div></article>
+        <article class="card"><span class="eyebrow">Asíntota horizontal · \(y=L\)</span><p>Existe en una dirección si el límite allí es el número finito \(L\).</p><div class="math">\[\frac{2x+1}{x+1}\to2\quad(x\to+\infty).\]</div><p class="note">Una gráfica puede cruzar una asíntota horizontal.</p></article>
+        <article class="card"><span class="eyebrow">Asíntota oblicua · \(y=mx+b\)</span><p>Con \(m\ne0\), se exige \(f(x)-(mx+b)\to0\) en la dirección estudiada.</p><div class="math">\[\frac{x^2+1}{x}=x+\frac1x.\]</div><p class="note">La asíntota es \(y=x\), al alejarse en cualquiera de las dos direcciones.</p></article>
+      </div>
+      <div class="band warn spaced"><h4>Las indeterminaciones son señales para trabajar</h4><div class="math">\[\frac00,\quad\frac{\infty}{\infty},\quad0\cdot\infty,\quad\infty-\infty,\quad1^\infty,\quad0^0,\quad\infty^0.\]</div><p>Estas formas describen procesos de límite, no operaciones aritméticas con infinito. Tampoco dividas una desigualdad por una expresión de signo desconocido sin analizarlo.</p></div>
+      <div class="band"><p><strong>Jerarquía de crecimiento.</strong> Para \(p&gt;0\), \(a&gt;1\) y \(x\to+\infty\), \(\ln x/x^p\to0\) y \(x^p/a^x\to0\). Logaritmos, potencias y exponenciales crecen a escalas distintas. Estos resultados requieren justificación; se profundizan tras introducir derivadas.</p></div>
+    </section>
+<section class="section" id="composicion">
+      <div class="head">
+        <div class="kicker">06 · Composición</div>
+        <h2>Composición de límites.</h2>
+        <p class="lead">Una función transforma la entrada; otra recibe su resultado. Para pasar al límite, sigue ambas aproximaciones y comprueba que la segunda función admite los valores que produce la primera.</p>
+      </div>
+
+      <div class="theorem">
+        <h3>Primero \(f\), después \(g\)</h3>
+        <p>Sean \(f:D\to\mathbb R\) y \(g:E\to\mathbb R\). Su composición aplica \(f\) a la entrada \(x\) y después aplica \(g\) al resultado:</p>
+        <div class="math bigmath">\[(g\circ f)(x)=g(f(x)).\]</div>
+        <p>Su dominio exacto contiene únicamente las entradas para las que se pueden realizar los dos pasos:</p>
+        <div class="math">\[\operatorname{Dom}(g\circ f)=A=\{x\in D:f(x)\in E\}.\]</div>
+        <p>Si \(\operatorname{Ran}(f)\subseteq E\), la composición queda definida en todo \(D\). Si no se cumple esa inclusión, todavía puede estar definida en el subconjunto \(A\). Al estudiar su límite, \(x\) debe permanecer en \(A\), y un punto finito de aproximación debe ser de acumulación de ese dominio. Si \(x\to+\infty\) o \(x\to-\infty\), el dominio debe permitir entradas arbitrariamente alejadas en esa dirección.</p>
+        <div class="band"><p>El orden importa: \(g(f(x))\) y \(f(g(x))\) pueden tener expresiones, dominios y límites diferentes.</p></div>
+      </div>
+
+      <div class="head spaced-lg">
+        <h3>La regla de composición</h3>
+        <p class="lead">Supón que \(f(x)\to b\) cuando \(x\to a\) dentro del dominio \(A\) de la composición. El valor intermedio \(b\) puede ser real, \(+\infty\) o \(-\infty\). Las siguientes son tres condiciones suficientes para justificar el paso a la función exterior.</p>
+      </div>
+      <div class="grid2">
+        <article class="card">
+          <span class="eyebrow">CONDICIÓN 01 · EL VALOR INTERMEDIO ES INFINITO</span>
+          <h3>Seguir la dirección correcta</h3>
+          <p>Si \(f(x)\to+\infty\) y existe \(\lim_{y\to+\infty,\,y\in E}g(y)=\ell\), entonces \(g(f(x))\to\ell\). Lo mismo ocurre con \(-\infty\), usando el límite exterior en esa dirección.</p>
+          <div class="math">\[f(x)\to+\infty,\quad g(y)\to\ell\ (y\to+\infty)\quad\Longrightarrow\quad g(f(x))\to\ell.\]</div>
+          <p class="note">No se evalúa \(g(+\infty)\): se estudia su comportamiento para entradas que crecen sin cota. El resultado \(\ell\) puede ser finito o indicar divergencia hacia \(+\infty\) o \(-\infty\).</p>
+        </article>
+        <article class="card">
+          <span class="eyebrow">CONDICIÓN 02 · LA FUNCIÓN EXTERIOR ES CONTINUA</span>
+          <h3>Evaluar en el límite interior</h3>
+          <p>Si \(b\in E\) y \(g\) es continua en \(b\), respecto de su dominio, entonces:</p>
+          <div class="math">\[\lim_{\substack{x\to a\\x\in A}}g(f(x))=g(b).\]</div>
+          <p>Esta condición permite que \(f(x)=b\) para algunas entradas cercanas, e incluso para todas. La continuidad controla tanto los valores próximos a \(b\) como el propio valor \(g(b)\).</p>
+        </article>
+        <article class="card">
+          <span class="eyebrow">CONDICIÓN 03 · NO SE ALCANZA EL VALOR INTERMEDIO</span>
+          <h3>Usar un límite exterior perforado</h3>
+          <p>Si \(b\in\mathbb R\), existe \(\lim_{y\to b,\,y\in E}g(y)=\ell\) y \(f(x)\ne b\) para todas las entradas suficientemente cercanas a \(a\), salvo el propio \(a\), entonces:</p>
+          <div class="math">\[\lim_{\substack{x\to a\\x\in A}}g(f(x))=\ell.\]</div>
+          <p>Para \(a\) finito, la condición de no alcanzar \(b\) significa que existe \(\delta_0&gt;0\) tal que</p>
+          <div class="math">\[x\in A,\quad 0&lt;|x-a|&lt;\delta_0\quad\Longrightarrow\quad f(x)\ne b.\]</div>
+          <p class="note">Aquí \(g(b)\) puede no estar definida o ser distinta de \(\ell\). Si \(x\to+\infty\), la condición se exige para \(x\) suficientemente grande; los otros sentidos se adaptan de la misma manera.</p>
+        </article>
+        <article class="card">
+          <span class="eyebrow">LATERALES Y DOMINIO</span>
+          <h3>La salida decide desde qué lado</h3>
+          <p>Si, además de \(f(x)\to b\), se tiene \(f(x)&gt;b\) cerca del punto, basta conocer el límite exterior por la derecha. Si \(f(x)&lt;b\), se usa el de la izquierda.</p>
+          <div class="math">\[f(x)=x^2\to0^+\ (x\to0),\qquad \lim_{y\to0^+}\frac1y=+\infty.\]</div>
+          <p>Por tanto, \(1/f(x)=1/x^2\to+\infty\), aunque \(1/y\) no tenga límite bilateral en cero. Un límite bilateral en \(x\) puede producir una aproximación lateral en la variable intermedia.</p>
+        </article>
+      </div>
+      <details class="solution">
+        <summary>Demostración para un límite exterior finito</summary>
+        <div>
+          <p>Considera la condición 03, con \(a,b,\ell\) finitos. Dado \(\varepsilon&gt;0\), el límite de \(g\) proporciona \(\eta&gt;0\) tal que, para \(y\in E\),</p>
+          <div class="math">\[0&lt;|y-b|&lt;\eta\quad\Longrightarrow\quad|g(y)-\ell|&lt;\varepsilon.\]</div>
+          <p>Como \(f(x)\to b\), hay \(\delta_1&gt;0\) que garantiza \(|f(x)-b|&lt;\eta\) si \(x\in A\) y \(0&lt;|x-a|&lt;\delta_1\). Toma \(\delta=\min\{\delta_0,\delta_1\}\). Para esas entradas, \(f(x)\in E\) y \(f(x)\ne b\), por lo que podemos sustituir \(y=f(x)\):</p>
+          <div class="math">\[|g(f(x))-\ell|&lt;\varepsilon.\]</div>
+          <p>Esto prueba el límite de la composición. En la condición 02, la continuidad de \(g\) permite omitir \(0&lt;|y-b|\), y no se necesita evitar \(f(x)=b\). Para límites laterales o infinitos se emplean las correspondientes desigualdades de lado o de umbral.</p>
+        </div>
+      </details>
+      <div class="band warn">
+        <h4>Dos precauciones antes de sustituir</h4>
+        <p>Un límite exterior debe existir en la dirección que se utiliza. Si no existe, no se puede concluir automáticamente que la composición tampoco tenga límite: la función interior puede recorrer solamente un lado o un subconjunto del dominio exterior.</p>
+        <p>Tampoco basta con saber que \(f(x)\to b\) y que \(g(y)\) tiene límite en \(b\) si \(f\) alcanza \(b\) y \(g\) es discontinua allí. Por ejemplo, toma \(f(x)=0\) y \(g(0)=1\), con \(g(y)=0\) para \(y\ne0\). Aunque \(f(x)\to0\) y \(\lim_{y\to0}g(y)=0\), la composición es constantemente \(g(f(x))=1\). La fórmula que daría cero no es aplicable.</p>
+      </div>
+
+      <div class="head spaced-lg">
+        <h3>Cuatro ejemplos para seguir los dos pasos</h3>
+        <p class="lead">En cada caso, identifica la función interior, su aproximación y la condición que permite aplicar la función exterior.</p>
+      </div>
+      <div class="grid2">
+        <article class="card">
+          <span class="eyebrow">EJEMPLO 01 · VALOR INTERMEDIO INFINITO</span>
+          <h3>Una arcotangente acotada</h3>
+          <div class="math">\[\lim_{x\to1^+}\arctan\left(\frac{\sqrt{x-1}}{x-1}\right).\]</div>
+          <p class="note">Dominio: \(x&gt;1\). La raíz exige \(x\ge1\), y el denominador excluye \(1\).</p>
+          <details class="solution">
+            <summary>Ver solución razonada</summary>
+            <div>
+              <p>La función interior se simplifica para \(x&gt;1\):</p>
+              <div class="math">\[f(x)=\frac{\sqrt{x-1}}{x-1}=\frac1{\sqrt{x-1}}\longrightarrow+\infty.\]</div>
+              <p>La función exterior es \(g(y)=\arctan y\), cuyo límite cuando \(y\to+\infty\) es \(\pi/2\). Por la condición 01,</p>
+              <div class="math">\[\boxed{\lim_{x\to1^+}\arctan\left(\frac{\sqrt{x-1}}{x-1}\right)=\frac\pi2.}\]</div>
+              <p class="note">El resultado es un ángulo en radianes. Es un límite, aunque la arcotangente de un número real finito nunca valga exactamente \(\pi/2\).</p>
             </div>
           </details>
-
-          <details class="block" open>
-            <summary>Panorama del capítulo</summary>
-            <div class="block-content">
-              <p>
-                En esta página se organiza una ruta breve desde la idea intuitiva de aproximación hasta resultados de continuidad para funciones inversas, trigonométricas, exponenciales y logarítmicas.
-              </p>
-              <div class="pill-row">
-                <div class="pill">Aproximación</div>
-                <div class="pill">Continuidad</div>
-                <div class="pill">Teoremas básicos</div>
-                <div class="pill">Funciones elementales</div>
-              </div>
+        </article>
+        <article class="card">
+          <span class="eyebrow">EJEMPLO 02 · CONTINUIDAD EXTERIOR</span>
+          <h3>Logaritmo de una potencia</h3>
+          <div class="math">\[\lim_{x\to0}\ln\left((1+x)^{1/x}\right).\]</div>
+          <p class="note">Usamos la potencia real de base positiva: \(x&gt;-1\), \(x\ne0\). Su valor es positivo, por lo que el logaritmo está definido.</p>
+          <details class="solution">
+            <summary>Ver solución razonada</summary>
+            <div>
+              <p>El límite notable demostrado anteriormente da \((1+x)^{1/x}\to e\). Como \(\ln\) es continua en \(e&gt;0\), la condición 02 permite evaluar:</p>
+              <div class="math">\[\boxed{\lim_{x\to0}\ln\left((1+x)^{1/x}\right)=\ln e=1.}\]</div>
+              <p>También puede comprobarse con \(\ln((1+x)^{1/x})=\ln(1+x)/x\), cuyo límite es 1. Ambos procedimientos coinciden y son válidos por los dos lados de cero.</p>
             </div>
           </details>
-        </div>
-      </section>
+        </article>
+        <article class="card">
+          <span class="eyebrow">EJEMPLO 03 · LÍMITE EXTERIOR LATERAL</span>
+          <h3>El argumento se acerca a cero</h3>
+          <div class="math">\[\lim_{x\to+\infty}\ln\left(\frac{x}{x^2+1}\right).\]</div>
+          <p class="note">Dominio de la composición: \(x&gt;0\), porque el argumento del logaritmo debe ser positivo.</p>
+          <details class="solution">
+            <summary>Ver solución razonada</summary>
+            <div>
+              <p>El denominador siempre es positivo. Para \(x&gt;0\),</p>
+              <div class="math">\[f(x)=\frac{x}{x^2+1}=\frac{1/x}{1+1/x^2}\longrightarrow0^+.\]</div>
+              <p>La función interior no alcanza cero y se aproxima por la derecha. La condición 03, en su versión lateral, permite usar \(\lim_{y\to0^+}\ln y=-\infty\):</p>
+              <div class="math">\[\boxed{\lim_{x\to+\infty}\ln\left(\frac{x}{x^2+1}\right)=-\infty.}\]</div>
+              <p class="note">No se sustituye \(\ln0\), que no está definido. Se describe una salida que disminuye sin cota.</p>
+            </div>
+          </details>
+        </article>
+        <article class="card">
+          <span class="eyebrow">EJEMPLO 04 · SUSTITUCIÓN DIRECTA</span>
+          <h3>Una composición continua</h3>
+          <div class="math">\[\lim_{x\to0}\sin(x^2+\pi).\]</div>
+          <p class="note">Dominio: \(\mathbb R\). El polinomio interior y el seno son continuos.</p>
+          <details class="solution">
+            <summary>Ver solución razonada</summary>
+            <div>
+              <p>Primero, \(f(x)=x^2+\pi\to\pi\). Después, aplicamos la continuidad de \(g(y)=\sin y\) en \(\pi\):</p>
+              <div class="math">\[\boxed{\lim_{x\to0}\sin(x^2+\pi)=\sin\pi=0.}\]</div>
+              <p>Aunque \(f(x)\) se aproxima a \(\pi\) por arriba cuando \(x\ne0\), la continuidad exterior permite resolver el límite sin separar los lados.</p>
+            </div>
+          </details>
+        </article>
+      </div>
 
-      <section class="card" id="def-limite">
-        <div class="section-head">
-          <h2>2. Definición de límite</h2>
-          <p>La definición formal convierte la idea de cercanía en una afirmación precisa.</p>
-        </div>
-        <div class="card-body">
-          <div class="accordion">
-            <details class="block" open>
-              <summary>Idea central</summary>
-              <div class="block-content">
-                <p>
-                  Decir que \(f(x)\) tiende a \(L\) cuando \(x\) tiende a \(a\) significa que los valores de la función pueden hacerse tan cercanos a \(L\) como se quiera, haciendo \(x\) suficientemente cercano a \(a\), pero distinto de \(a\).
-                </p>
-              </div>
-            </details>
-            <details class="block" open>
-              <summary>Forma simbólica</summary>
-              <div class="block-content">
-                <div class="math-box">
-                  \[
-                  \forall \varepsilon>0\, \exists \delta>0 \text{ tal que si } 0<|x-a|<\delta, \text{ entonces } |f(x)-L|<\varepsilon.
-                  \]
-                </div>
-              </div>
-            </details>
+      <div class="head spaced-lg">
+        <h3>Cambiar de variable y poder volver</h3>
+        <p class="lead">En una composición sigues \(y=f(x)\). En un cambio de variable inverso eliges una nueva entrada \(t\) y escribes \(x=\varphi(t)\). El cambio debe representar todas las aproximaciones que intervienen en el límite original.</p>
+      </div>
+      <div class="theorem">
+        <h3>Una condición suficiente para una sustitución equivalente</h3>
+        <p>Para puntos finitos, toma intervalos \(I,J\), con \(t_0\in I\) y \(a\in J\), y una biyección continua \(\varphi:I\to J\) cuya inversa también sea continua, con \(\varphi(t_0)=a\). Exige, además, que \(J\) contenga todas las entradas del dominio original suficientemente próximas a \(a\), en el lado que se quiere estudiar.</p>
+        <p>Si \(H\) está definida en \(B\subseteq J\) cerca de \(a\), y \(a\) es punto de acumulación de \(B\), el dominio transformado es \(\varphi^{-1}(B)\). Con las aproximaciones correspondientes,</p>
+        <div class="math">\[\lim_{\substack{x\to a\\x\in B}}H(x)=\ell
+          \quad\Longleftrightarrow\quad
+          \lim_{\substack{t\to t_0\\\varphi(t)\in B}}H(\varphi(t))=\ell.\]</div>
+        <p>Una elección práctica es una función \(\varphi\) continua y estrictamente monótona en un intervalo: sobre su imagen tiene inversa continua. Si es creciente, conserva los lados; si es decreciente, los intercambia. Siempre comprueba qué parte del dominio cubre su imagen.</p>
+        <p class="note">Si alguno de los extremos es infinito, se trabaja con colas de intervalos en lugar de entornos finitos. Se verifican \(\varphi(t)\to a\) y \(\varphi^{-1}(x)\to t_0\) en las direcciones consideradas y se exige la misma cobertura. Por ejemplo, \(t=e^{-x}\) transforma \(x\to+\infty\) en \(t\to0^+\), con inversa \(x=-\ln t\).</p>
+        <details class="solution">
+          <summary>Por qué se necesitan las dos direcciones</summary>
+          <div>
+            <p>La continuidad de \(\varphi\) da \(t\to t_0\Rightarrow x=\varphi(t)\to a\). Su inyectividad asegura que \(t\ne t_0\Rightarrow x\ne a\). Esto permite trasladar un límite conocido de \(H\) a \(H\circ\varphi\).</p>
+            <p>Para recuperar el límite original a partir del transformado, escribe \(t=\varphi^{-1}(x)\). La cobertura del entorno y la continuidad de la inversa garantizan que toda entrada original cercana corresponde a un \(t\) cercano a \(t_0\). No se han descartado aproximaciones del límite que se quiere probar.</p>
+          </div>
+        </details>
+        <div class="band warn"><p>La mera inyectividad no sustituye estas condiciones. Por ejemplo, \(x=t^2\), restringido a \(t\ge0\), permite estudiar \(x\to0^+\); por sí solo no determina un límite bilateral en \(x=0\), porque no recorre valores negativos.</p></div>
+      </div>
+
+      <article class="card spaced">
+        <span class="eyebrow">EJEMPLO 05 · UN CAMBIO QUE ELIMINA DOS RAÍCES</span>
+        <h3>Elegir una potencia común</h3>
+        <div class="math bigmath">\[\lim_{x\to64}\frac{\sqrt[3]{x}-4}{\sqrt{x}-8}.\]</div>
+        <p class="note">Dominio: \(x\ge0\), \(x\ne64\). Cerca de 64 se pueden tomar valores a ambos lados.</p>
+        <details class="solution">
+          <summary>Ver solución con \(x=t^6\)</summary>
+          <div>
+            <p>El exponente 6 es múltiplo de 2 y de 3. Tomamos \(x=t^6\) con \(t&gt;0\), de modo que \(t=\sqrt[6]{x}\). La función \(t\mapsto t^6\) es continua y estrictamente creciente en \((0,\infty)\), y su inversa es continua. Por tanto, \(x\to64\) equivale a \(t\to2\), conservando ambos lados.</p>
+            <p>La restricción \(t&gt;0\) es importante: asegura \(\sqrt{t^6}=t^3\). Así,</p>
+            <div class="math">\[\frac{\sqrt[3]{x}-4}{\sqrt{x}-8}
+              =\frac{t^2-4}{t^3-8}
+              =\frac{(t-2)(t+2)}{(t-2)(t^2+2t+4)}
+              =\frac{t+2}{t^2+2t+4},\quad t\ne2.\]</div>
+            <p>El cociente simplificado es continuo en 2 y su denominador vale 12. Luego,</p>
+            <div class="math">\[\boxed{\lim_{x\to64}\frac{\sqrt[3]{x}-4}{\sqrt{x}-8}
+              =\frac{2+2}{2^2+2(2)+4}=\frac13.}\]</div>
+            <p class="note">No se requiere que \(t^6\) sea inyectiva en todo \(\mathbb R\). Basta la restricción positiva que representa el dominio cercano a 64.</p>
+          </div>
+        </details>
+      </article>
+      <div class="band spaced">
+        <h4>Antes de dar el último paso</h4>
+        <p>Identifica la función interior y la exterior, calcula el dominio de la composición y determina desde qué lado se aproxima el valor intermedio. Después cita la condición que justifica el paso al límite. Si cambias de variable, comprueba también que puedes volver sin perder entradas del límite original.</p>
+      </div>
+      <p class="note spaced">Definición y ejemplos adaptados de «Límites · Lección 8», páginas 1–3, del documento facilitado. Se explicitan el dominio y las hipótesis de cada sustitución.</p>
+    </section>
+    <section class="section" id="continuidad">
+      <div class="head"><div class="kicker">07 · Continuidad</div><h2>Propiedades de las funciones continuas</h2><p class="lead">La continuidad conserva operaciones y permite garantizar la existencia de valores, raíces y extremos. Cada enunciado indica sus hipótesis; abre su demostración para seguir el argumento.</p></div>
+      <div class="theorem"><h3>Continuidad relativa al dominio</h3><p>Una función \(f:D\subseteq\mathbb R\to\mathbb R\) es continua en \(c\in D\) si, para todo \(\varepsilon&gt;0\), existe \(\delta&gt;0\) tal que</p><div class="math">\[x\in D,\quad |x-c|&lt;\delta\quad\Longrightarrow\quad |f(x)-f(c)|&lt;\varepsilon.\]</div><p>Si \(c\) es un punto de acumulación de \(D\), esto equivale a \(\lim_{x\to c,\,x\in D}f(x)=f(c)\). En los extremos de un intervalo se usa el lado disponible; en un punto aislado, la condición se cumple automáticamente. Es continua en \(D\) si lo es en cada uno de sus puntos.</p></div>
+      <div class="grid2 spaced">
+        <article class="card"><span class="eyebrow">PROPIEDAD 01</span><h3>Operaciones y composición</h3><p>Si \(f,g:D\to\mathbb R\) son continuas en \(c\), entonces \(\alpha f+\beta g\), \(fg\) y \(|f|\) son continuas en \(c\). El cociente \(f/g\) también lo es si \(g(c)\ne0\), en su dominio. Si \(h:E\to\mathbb R\) es continua en \(f(c)\) y \(f(D)\subseteq E\), entonces \(h\circ f\) es continua en \(c\).</p><details class="solution"><summary>Demostración</summary><div><p>En un punto de acumulación, las leyes de límites dan los límites de la combinación lineal, del producto y del cociente; sus resultados son precisamente sus valores en \(c\). En un punto aislado la continuidad es automática. Además,</p><div class="math">\[\big||f(x)|-|f(c)|\big|\le |f(x)-f(c)|,\]</div><p>por lo que la continuidad de \(|f|\) se sigue directamente de la definición.</p><p>Para la composición, dado \(\varepsilon&gt;0\), la continuidad de \(h\) proporciona \(\eta&gt;0\) tal que \(u\in E\) y \(|u-f(c)|&lt;\eta\) implican \(|h(u)-h(f(c))|&lt;\varepsilon\). La continuidad de \(f\) proporciona \(\delta&gt;0\) para garantizar \(|f(x)-f(c)|&lt;\eta\). Sustituir \(u=f(x)\) prueba la afirmación.</p></div></details></article>
+        <article class="card"><span class="eyebrow">PROPIEDAD 02</span><h3>Criterio secuencial</h3><p>\(f:D\to\mathbb R\) es continua en \(c\in D\) si y solo si, para toda sucesión \((x_n)\) de puntos de \(D\) con \(x_n\to c\), se cumple \(f(x_n)\to f(c)\). Aquí se permite que \(x_n=c\).</p><details class="solution"><summary>Demostración</summary><div><p>Si \(f\) es continua, elige \(\delta\) para un \(\varepsilon&gt;0\). Como \(x_n\to c\), existe \(N\) tal que \(n\ge N\) implica \(|x_n-c|&lt;\delta\), y entonces \(|f(x_n)-f(c)|&lt;\varepsilon\).</p><p>Recíprocamente, si \(f\) no fuera continua, existiría \(\varepsilon_0&gt;0\) tal que, para cada \(n\ge1\), se podría elegir \(x_n\in D\) con \(|x_n-c|&lt;1/n\) y \(|f(x_n)-f(c)|\ge\varepsilon_0\). Esta sucesión tiende a \(c\), pero sus imágenes no tienden a \(f(c)\), contradiciendo la hipótesis.</p></div></details></article>
+        <article class="card"><span class="eyebrow">PROPIEDAD 03 · LEMA PARA BOLZANO</span><h3>Conservación local del signo</h3><p>Si \(f\) es continua en \(c\) y \(f(c)&gt;0\), existe un entorno de \(c\) donde \(f(x)&gt;0\) para todo \(x\) del dominio. Si \(f(c)&lt;0\), conserva localmente el signo negativo.</p><details class="solution"><summary>Demostración</summary><div><p>Toma \(\varepsilon=|f(c)|/2&gt;0\). La continuidad da \(\delta&gt;0\) tal que \(|f(x)-f(c)|&lt;|f(c)|/2\) cuando \(x\in D\) y \(|x-c|&lt;\delta\). Si \(f(c)&gt;0\), entonces \(f(x)&gt;f(c)/2&gt;0\); si \(f(c)&lt;0\), entonces \(f(x)&lt;f(c)/2&lt;0\).</p></div></details></article>
+        <article class="card"><span class="eyebrow">PROPIEDAD 04</span><h3>Acotación local</h3><p>Si \(f\) es continua en \(c\), existen \(\delta&gt;0\) y \(M&gt;0\) tales que \(|f(x)|\le M\) para todo \(x\in D\) con \(|x-c|&lt;\delta\). Esto no afirma que \(f\) esté acotada en todo su dominio.</p><details class="solution"><summary>Demostración</summary><div><p>Aplica la continuidad con \(\varepsilon=1\). En el entorno obtenido, la desigualdad triangular da</p><div class="math">\[|f(x)|\le |f(c)|+|f(x)-f(c)|&lt;|f(c)|+1.\]</div><p>Basta tomar \(M=|f(c)|+1\). Por ejemplo, \(f(x)=x\) es continua y localmente acotada en cada punto de \(\mathbb R\), pero no está acotada en \(\mathbb R\).</p></div></details></article>
+      </div>
+      <div class="head spaced-lg"><h3>Fundamentos del teorema del valor intermedio</h3><p class="lead">La continuidad por sí sola no explica la existencia de todos los valores intermedios: la prueba utiliza la completitud de los números reales.</p></div>
+      <div class="grid2">
+        <article class="theorem"><span class="eyebrow">FUNDAMENTO · AXIOMA</span><h3>Completitud de \(\mathbb R\)</h3><p>Todo conjunto no vacío \(S\subseteq\mathbb R\) acotado superiormente posee un supremo \(c=\sup S\): \(s\le c\) para cada \(s\in S\), y ninguna cantidad menor que \(c\) es cota superior de \(S\).</p><p class="note">Es una propiedad fundamental de \(\mathbb R\) que aquí se adopta como axioma. No se presenta como un teorema que pueda demostrarse a partir de la continuidad.</p></article>
+        <article class="theorem"><span class="eyebrow">LEMA 01</span><h3>Aproximación al supremo</h3><p>Si \(c=\sup S\), entonces para todo \(\eta&gt;0\) existe \(s\in S\) tal que \(c-\eta&lt;s\le c\).</p><details class="solution"><summary>Demostración</summary><div><p>Si no existiera tal \(s\), todos los elementos de \(S\) cumplirían \(s\le c-\eta\). Así, \(c-\eta\) sería una cota superior de \(S\) menor que \(c\), contradiciendo la definición de supremo. La desigualdad \(s\le c\) se cumple porque \(c\) es cota superior.</p></div></details></article>
+      </div>
+      <article class="theorem spaced"><span class="eyebrow">TEOREMA DE BOLZANO</span><h3>Un cambio de signo garantiza una raíz</h3><p>Sea \(a&lt;b\). Si \(f:[a,b]\to\mathbb R\) es continua y \(f(a)f(b)&lt;0\), existe \(c\in(a,b)\) tal que \(f(c)=0\).</p><details class="solution"><summary>Demostración mediante el supremo</summary><div><ol><li><strong>Conjunto y supremo.</strong> Supongamos \(f(a)&lt;0&lt;f(b)\); el otro caso se obtiene aplicando el argumento a \(-f\). Define \(S=\{x\in[a,b]:f(x)&lt;0\}\). Es no vacío porque \(a\in S\), y está acotado superiormente por \(b\). Por completitud existe \(c=\sup S\).</li><li><strong>El supremo es interior.</strong> Por conservación local del signo en \(a\), existe \(u\in(a,b)\) con \(f(u)&lt;0\); entonces \(c\ge u&gt;a\). Por el mismo lema en \(b\), puede elegirse \(\rho\in(0,b-a)\) tal que \(f(x)&gt;0\) si \(b-\rho&lt;x\le b\). Así, todo \(s\in S\) cumple \(s\le b-\rho\), y \(c\le b-\rho&lt;b\).</li><li><strong>No puede ser \(f(c)&lt;0\).</strong> El lema del signo daría un entorno de \(c\) con valores negativos. Como \(c&lt;b\), habría un \(x\in(c,b]\) suficientemente cercano a \(c\) con \(f(x)&lt;0\). Entonces \(x\in S\) y \(x&gt;c\), contradiciendo que \(c\) es cota superior.</li><li><strong>No puede ser \(f(c)&gt;0\).</strong> El lema del signo daría \(\eta&gt;0\) tal que \(f(x)&gt;0\) para \(x\in[a,b]\) con \(|x-c|&lt;\eta\). Por aproximación al supremo existe \(s\in S\) con \(c-\eta&lt;s\le c\). Esto implica a la vez \(f(s)&gt;0\) y \(f(s)&lt;0\), una contradicción.</li></ol><p>Descartados ambos signos, necesariamente \(f(c)=0\), con \(c\in(a,b)\).</p></div></details></article>
+      <article class="theorem spaced"><span class="eyebrow">TEOREMA DEL VALOR INTERMEDIO</span><h3>Se alcanza cada valor entre dos imágenes</h3><p>Si \(f:[a,b]\to\mathbb R\) es continua, alcanza todo número \(y\) comprendido entre \(f(a)\) y \(f(b)\): existe \(c\in[a,b]\) con \(f(c)=y\). Si \(y\) está estrictamente entre ambos valores, puede elegirse \(c\in(a,b)\).</p><details class="solution"><summary>Demostración formal</summary><div><p>Si \(y=f(a)\) o \(y=f(b)\), basta tomar \(c=a\) o \(c=b\). Esto también resuelve el caso \(f(a)=f(b)\), en el que el único valor comprendido entre ellos es ese valor común.</p><p>Si \(y\) está estrictamente entre \(f(a)\) y \(f(b)\), define \(g(x)=f(x)-y\). La propiedad de operaciones garantiza que \(g\) es continua en \([a,b]\). Además, \(g(a)g(b)=(f(a)-y)(f(b)-y)&lt;0\). Por el teorema de Bolzano existe \(c\in(a,b)\) tal que \(g(c)=0\), es decir, \(f(c)=y\).</p></div></details><div class="band"><p><strong>Existencia y unicidad son afirmaciones diferentes.</strong> El teorema garantiza al menos una solución. Si \(f\) es además estrictamente monótona, no puede tomar el mismo valor en dos puntos distintos y la solución es única.</p></div></article>
+      <article class="card spaced"><span class="eyebrow">NEGOCIOS · PUNTO DE EQUILIBRIO</span><p>La utilidad continua \(U(q)=40q-12000\), en unidades monetarias, satisface \(U(200)=-4000\) y \(U(400)=4000\). Bolzano garantiza un equilibrio entre 200 y 400 unidades. Aquí, \(U(300)=0\); es único porque \(U\) es estrictamente creciente.</p><p class="note">Se considera un modelo continuo del volumen. Cuando solo se admiten cantidades enteras, el teorema no garantiza que el equilibrio obtenido sea una cantidad entera; en este ejemplo sí lo es.</p></article>
+      <article class="theorem spaced"><span class="eyebrow">PROPIEDAD 05</span><h3>Continuidad de la función inversa</h3><p>Si \(I\) es un intervalo y \(f:I\to\mathbb R\) es continua y estrictamente monótona, entonces \(J=f(I)\) es un intervalo, existe \(f^{-1}:J\to I\) y esta inversa es continua.</p><details class="solution"><summary>Demostración</summary><div><p>La monotonía estricta da inyectividad; al usar \(J=f(I)\) como codominio, \(f\) es biyectiva. El teorema del valor intermedio aplicado entre cualesquiera dos puntos de \(I\) muestra que \(J\) es un intervalo.</p><p>Supongamos que \(f\) es creciente. Fija \(y_0=f(x_0)\) y \(\varepsilon&gt;0\). Si \(I\) contiene puntos a la izquierda de \(x_0\), por ser un intervalo podemos elegir \(x_-\in I\) con \(x_0-\varepsilon&lt;x_-&lt;x_0\); define \(d_-=y_0-f(x_-)&gt;0\). Si contiene puntos a la derecha, elige \(x_+\in I\) con \(x_0&lt;x_+&lt;x_0+\varepsilon\) y define \(d_+=f(x_+)-y_0&gt;0\).</p><p>Toma \(\delta\) como el mínimo de los \(d_-\), \(d_+\) que existan. Si no existe ninguno, \(I=\{x_0\}\) y la continuidad es inmediata. Para \(y\in J\) con \(|y-y_0|&lt;\delta\), la monotonía obliga a que \(f^{-1}(y)&gt;x_-\) y \(f^{-1}(y)&lt;x_+\) en los lados disponibles. En un lado no disponible, \(x_0\) ya es extremo de \(I\). En todos los casos, \(|f^{-1}(y)-x_0|&lt;\varepsilon\). Si \(f\) es decreciente, se aplica el resultado a \(-f\) y se compone su inversa con \(y\mapsto-y\).</p></div></details></article>
+      <div class="head spaced-lg"><h3>Consecuencias en intervalos cerrados y acotados</h3><p class="lead">El siguiente lema convierte la completitud en una herramienta para demostrar la existencia de extremos y una forma más fuerte de continuidad.</p></div>
+      <article class="theorem"><span class="eyebrow">LEMA 02 · BOLZANO–WEIERSTRASS</span><h3>Toda sucesión acotada tiene una subsucesión convergente</h3><p>Si todos los términos de \((x_n)\) pertenecen a \([a,b]\), existen índices \(n_1&lt;n_2&lt;\cdots\) y \(c\in[a,b]\) tales que \(x_{n_k}\to c\). Una subsucesión selecciona términos conservando su orden.</p><details class="solution"><summary>Demostración por bisección</summary><div><p>Si \(a=b\), todos los términos son iguales. Si \(a&lt;b\), divide \([a,b]\) en dos intervalos cerrados iguales y escoge uno que contenga términos correspondientes a infinitos índices. Repite dentro del intervalo escogido. Se obtienen intervalos encajados \(I_k=[a_k,b_k]\), cada uno con infinitos términos, cuya longitud es \((b-a)/2^k\).</p><p>La sucesión de extremos izquierdos es creciente y acotada. Por completitud existe \(c=\sup\{a_k:k\ge1\}\). Para cada \(k\), todos los \(a_j\) son menores o iguales que \(b_k\), por el encajamiento; por tanto \(a_k\le c\le b_k\). Elige sucesivamente \(n_k&gt;n_{k-1}\) con \(x_{n_k}\in I_k\), posible porque hay infinitos índices disponibles. Entonces</p><div class="math">\[|x_{n_k}-c|\le b_k-a_k=\frac{b-a}{2^k}\longrightarrow0.\]</div><p>Así, \(x_{n_k}\to c\) y \(c\in[a,b]\).</p></div></details></article>
+      <div class="grid2 spaced">
+        <article class="theorem"><span class="eyebrow">TEOREMA DE WEIERSTRASS</span><h3>Máximo y mínimo absolutos</h3><p>Si \(f:[a,b]\to\mathbb R\) es continua, existen \(u,v\in[a,b]\) tales que \(f(u)\le f(x)\le f(v)\) para todo \(x\in[a,b]\).</p><details class="solution"><summary>Demostración</summary><div><p><strong>Primero, la imagen es acotada.</strong> Si no lo fuera, para cada \(n\ge1\) podríamos elegir \(x_n\in[a,b]\) con \(|f(x_n)|&gt;n\). Bolzano–Weierstrass da una subsucesión \(x_{n_k}\to c\in[a,b]\). Por continuidad secuencial, \(f(x_{n_k})\to f(c)\), lo cual contradice \(|f(x_{n_k})|&gt;n_k\to\infty\).</p><p><strong>Después, se alcanzan las cotas.</strong> La imagen es no vacía y acotada; sea \(M=\sup f([a,b])\). Por aproximación al supremo, para cada \(n\) existe \(t_n\in[a,b]\) con \(M-1/n&lt;f(t_n)\le M\). Una subsucesión \(t_{n_k}\) converge a algún \(v\in[a,b]\). Sus imágenes convergen a \(M\) por las desigualdades y a \(f(v)\) por continuidad; la unicidad del límite da \(f(v)=M\). Aplicando lo mismo a \(-f\), se obtiene un mínimo de \(f\).</p></div></details><p class="note spaced">Las hipótesis importan: \(1/x\) en \((0,1]\) no tiene máximo; \(x\) en \((0,1)\) no alcanza ni su ínfimo 0 ni su supremo 1.</p></article>
+        <article class="theorem"><span class="eyebrow">TEOREMA DE HEINE–CANTOR</span><h3>Continuidad uniforme</h3><p>Si \(f:[a,b]\to\mathbb R\) es continua, entonces es uniformemente continua: para todo \(\varepsilon&gt;0\) existe \(\delta&gt;0\) que sirve simultáneamente para todos los puntos, en el sentido de que</p><div class="math">\[x,y\in[a,b],\quad |x-y|&lt;\delta\ \Longrightarrow\ |f(x)-f(y)|&lt;\varepsilon.\]</div><p class="note">La elección de \(\delta\) depende de \(\varepsilon\), pero no del punto del intervalo en el que se compare la función.</p><details class="solution"><summary>Demostración</summary><div><p>Supón que no es uniformemente continua. Negando la definición, existe \(\varepsilon_0&gt;0\) tal que, para cada \(n\ge1\), hay \(x_n,y_n\in[a,b]\) con \(|x_n-y_n|&lt;1/n\) y \(|f(x_n)-f(y_n)|\ge\varepsilon_0\).</p><p>Bolzano–Weierstrass proporciona \(x_{n_k}\to c\in[a,b]\). Como</p><div class="math">\[|y_{n_k}-c|\le |y_{n_k}-x_{n_k}|+|x_{n_k}-c|\longrightarrow0,\]</div><p>también \(y_{n_k}\to c\). La continuidad en \(c\) da \(f(x_{n_k})\to f(c)\) y \(f(y_{n_k})\to f(c)\). Por la desigualdad triangular, \(|f(x_{n_k})-f(y_{n_k})|\to0\), contradiciendo la cota inferior \(\varepsilon_0\).</p></div></details></article>
+      </div>
+      <div class="grid3 spaced-lg"><article class="card"><h3>Discontinuidad removible</h3><p>Existe un límite finito, pero el valor en el punto falta o no coincide. Se obtiene una extensión continua definiendo \(f(c)=L\).</p></article><article class="card"><h3>Discontinuidad de salto</h3><p>Los dos límites laterales son finitos y distintos. Cambiar un solo valor no elimina el salto.</p></article><article class="card"><h3>Infinita u oscilatoria</h3><p>Hay crecimiento sin cota o ausencia de un valor único por oscilación. No se repara cambiando solamente el valor en el punto.</p></article></div>
+    </section>
+    <section class="section" id="economia">
+      <div class="head"><div class="kicker">08 · Economía y negocios</div><h2>Ejemplos de límites.</h2><p class="lead">Cada resultado necesita una interpretación, unidades y supuestos. Los siguientes son modelos didácticos; sus parámetros permanecen constantes durante el análisis.</p></div>
+      <div class="lab">
+        <div class="lab-toolbar" role="group" aria-label="Modelo económico"><button class="pill" data-econ="average" aria-pressed="true">Costo medio</button><button class="pill" data-econ="interest" aria-pressed="false">Capitalización</button><button class="pill" data-econ="marginal" aria-pressed="false">Costo marginal</button></div>
+        <div class="lab-grid">
+          <div class="plot-side"><div class="plot-title"><h3 id="econTitle">Diluir el costo fijo</h3><span id="econUnits" class="small">q: unidades · C̄: u.m./unidad</span></div><div class="plot-box"><canvas id="econPlot" role="img" aria-label="Modelo económico seleccionado, valor actual y límite de referencia">Los valores del modelo se muestran también en el panel contiguo.</canvas></div><div class="legend"><span><i class="line"></i>Modelo</span><span><i class="line blue"></i>Límite de referencia</span><span><i class="line amber"></i>Valor seleccionado</span></div><p id="econPlotNote" class="table-caption"></p></div>
+          <div class="controls-side">
+            <div id="econFormula" class="math"></div><div class="control"><label for="econRange"><span id="econRangeLabel">Producción q</span><output id="econRangeOut" for="econRange"></output></label><input id="econRange" type="range" min="100" max="10000" step="100" value="1000"></div>
+            <button id="playEcon" class="button primary" aria-pressed="false">Animar modelo</button>
+            <div class="readout"><div id="econValueLabel" class="small">Valor actual</div><div id="econValue" class="value"></div><p id="econGap"></p></div>
+            <p id="econInterpretation"></p><p id="econAssumption" class="note spaced"></p>
           </div>
         </div>
-      </section>
-
-      <section class="card" id="def-continuidad">
-        <div class="section-head">
-          <h2>3. Definición de continuidad</h2>
-          <p>La continuidad enlaza el valor de la función con su comportamiento límite.</p>
-        </div>
-        <div class="card-body">
-          <div class="accordion">
-            <details class="block" open>
-              <summary>Idea central</summary>
-              <div class="block-content">
-                <p>
-                  Una función es continua en \(a\) cuando el límite al aproximarse a \(a\) existe y coincide con el valor de la función en ese punto.
-                </p>
-              </div>
-            </details>
-            <details class="block" open>
-              <summary>Condición básica</summary>
-              <div class="block-content">
-                <div class="math-box">
-                  \[
-                  \lim_{x\to a} f(x)=f(a)
-                  \]
-                </div>
-              </div>
-            </details>
-          </div>
-        </div>
-      </section>
-
-      <section class="card" id="propiedades">
-        <div class="section-head">
-          <h2>4. Propiedades algebraicas de los límites</h2>
-          <p>Los límites compatibles con suma, producto y cociente permiten calcular expresiones más complejas.</p>
-        </div>
-        <div class="card-body">
-          <div class="accordion">
-            <details class="block" open>
-              <summary>Reglas básicas</summary>
-              <div class="block-content">
-                <p>
-                  Si dos límites existen, entonces el límite de la suma es la suma de los límites, y el producto funciona de manera análoga. El cociente exige además que el límite del denominador no sea cero.
-                </p>
-              </div>
-            </details>
-            <details class="block" open>
-              <summary>Ejemplo simbólico</summary>
-              <div class="block-content">
-                <div class="math-box">
-                  \[
-                  \lim_{x\to a}(f(x)+g(x))=\lim_{x\to a}f(x)+\lim_{x\to a}g(x)
-                  \]
-                </div>
-              </div>
-            </details>
-          </div>
-        </div>
-      </section>
-
-      <section class="card" id="intercalacion">
-        <div class="section-head">
-          <h2>5. Teorema de intercalación</h2>
-          <p>Este teorema permite atrapar un límite entre dos funciones con la misma tendencia.</p>
-        </div>
-        <div class="card-body">
-          <div class="accordion">
-            <details class="block" open>
-              <summary>Enunciado breve</summary>
-              <div class="block-content">
-                <p>
-                  Si \(f(x)\leq g(x)\leq h(x)\) cerca de \(a\) y además \(\lim_{x\to a}f(x)=\lim_{x\to a}h(x)=L\), entonces \(\lim_{x\to a}g(x)=L\).
-                </p>
-              </div>
-            </details>
-            <details class="block" open>
-              <summary>Esquema</summary>
-              <div class="block-content">
-                <div class="math-box">
-                  \[
-                  f(x)\le g(x)\le h(x)
-                  \]
-                </div>
-              </div>
-            </details>
-          </div>
-        </div>
-      </section>
-
-      <section class="card" id="composicion">
-        <div class="section-head">
-          <h2>6. Límite de una composición</h2>
-          <p>La composición permite pasar límites a través de funciones continuas.</p>
-        </div>
-        <div class="card-body">
-          <div class="accordion">
-            <details class="block" open>
-              <summary>Idea central</summary>
-              <div class="block-content">
-                <p>
-                  Si \(g(x)\to b\) cuando \(x\to a\) y \(f\) es continua en \(b\), entonces \(f(g(x))\to f(b)\). Esta idea será útil para trabajar con funciones elementales.
-                </p>
-              </div>
-            </details>
-            <details class="block" open>
-              <summary>Expresión breve</summary>
-              <div class="block-content">
-                <div class="math-box">
-                  \[
-                  \lim_{x\to a} f(g(x)) = f\!\left(\lim_{x\to a} g(x)\right)
-                  \]
-                </div>
-              </div>
-            </details>
-          </div>
-        </div>
-      </section>
-
-      <section class="card" id="inversa">
-        <div class="section-head">
-          <h2>7. Continuidad de la inversa</h2>
-          <p>La función inversa conserva continuidad bajo hipótesis adecuadas de monotonicidad e invertibilidad.</p>
-        </div>
-        <div class="card-body">
-          <div class="accordion">
-            <details class="block" open>
-              <summary>Idea central</summary>
-              <div class="block-content">
-                <p>
-                  Si una función es continua y estrictamente monótona en un intervalo, entonces admite inversa y esa inversa también es continua en su imagen.
-                </p>
-              </div>
-            </details>
-            <details class="block" open>
-              <summary>Relación funcional</summary>
-              <div class="block-content">
-                <div class="math-box">
-                  \[
-                  f^{-1}(f(x))=x
-                  \]
-                </div>
-              </div>
-            </details>
-          </div>
-        </div>
-      </section>
-
-      <section class="card" id="especiales">
-        <div class="section-head">
-          <h2>8. Límites especiales</h2>
-          <p>Algunos límites aparecen una y otra vez y sirven como herramientas fundamentales.</p>
-        </div>
-        <div class="card-body">
-          <div class="accordion">
-            <details class="block" open>
-              <summary>Ejemplos básicos</summary>
-              <div class="block-content">
-                <p>
-                  Entre los límites especiales más conocidos están los asociados a funciones trigonométricas y a la construcción de la función exponencial.
-                </p>
-              </div>
-            </details>
-            <details class="block" open>
-              <summary>Modelo clásico</summary>
-              <div class="block-content">
-                <div class="math-box">
-                  \[
-                  \lim_{x\to 0} \frac{\sin x}{x}=1
-                  \]
-                </div>
-              </div>
-            </details>
-          </div>
-        </div>
-      </section>
-
-      <section class="card" id="trigonometricas">
-        <div class="section-head">
-          <h2>9. Continuidad de funciones trigonométricas</h2>
-          <p>Las funciones trigonométricas elementales son continuas en los puntos donde están definidas.</p>
-        </div>
-        <div class="card-body">
-          <div class="accordion">
-            <details class="block" open>
-              <summary>Idea central</summary>
-              <div class="block-content">
-                <p>
-                  La continuidad de seno y coseno permite estudiar con seguridad combinaciones, composiciones y nuevas funciones construidas a partir de ellas.
-                </p>
-              </div>
-            </details>
-            <details class="block" open>
-              <summary>Ejemplo breve</summary>
-              <div class="block-content">
-                <div class="math-box">
-                  \[
-                  \lim_{x\to a}\sin x = \sin a
-                  \]
-                </div>
-              </div>
-            </details>
-          </div>
-        </div>
-      </section>
-
-      <section class="card" id="exp-log">
-        <div class="section-head">
-          <h2>10. Continuidad de la exponencial y logarítmica</h2>
-          <p>Estas funciones cierran el recorrido hacia una familia amplia de funciones continuas.</p>
-        </div>
-        <div class="card-body">
-          <div class="accordion">
-            <details class="block" open>
-              <summary>Idea central</summary>
-              <div class="block-content">
-                <p>
-                  La función exponencial es continua en todo número real, mientras que la función logarítmica es continua en su dominio positivo.
-                </p>
-              </div>
-            </details>
-            <details class="block" open>
-              <summary>Expresiones básicas</summary>
-              <div class="block-content">
-                <div class="math-box">
-                  \[
-                  \lim_{x\to a} e^x = e^a,
-                  \qquad
-                  \lim_{x\to a} \ln(x)=\ln(a),\ a>0
-                  \]
-                </div>
-              </div>
-            </details>
-          </div>
-        </div>
-      </section>
-    </main>
-  </div>
-
+      </div>
+      <div class="accordion spaced-lg">
+        <details open><summary><span class="num">A</span>Costo medio: una asíntota no es una meta alcanzada</summary><div class="detail-body"><p>Con costo fijo \(12000\) u.m. y costo variable unitario \(35\) u.m./unidad, \(C(q)=12000+35q\), para \(q&gt;0\).</p><div class="math">\[\overline C(q)=\frac{C(q)}q=35+\frac{12000}q,\qquad\lim_{q\to+\infty}\overline C(q)=35.\]</div><p>El costo medio se aproxima a 35 desde arriba; no llega exactamente a 35 con producción finita. Para estar a menos de 2 u.m./unidad del límite se requiere \(12000/q&lt;2\), es decir, \(q&gt;6000\). Si las unidades son indivisibles, el mínimo es \(6001\).</p><p class="note">El modelo supone costo variable constante y omite restricciones de capacidad. Un límite teórico no demuestra que producir indefinidamente sea viable.</p></div></details>
+        <details><summary><span class="num">B</span>Descuento por volumen: un salto con significado comercial</summary><div class="detail-body"><p>Una empresa cobra 10 u.m. por unidad si se compran menos de 100, y 9 u.m. por unidad si se compran 100 o más. El descuento se aplica a <strong>todas</strong> las unidades del pedido.</p><div class="math">\[T(q)=\begin{cases}10q,&0\le q&lt;100,\\9q,&q\ge100.\end{cases}\]</div><div class="math">\[\lim_{q\to100^-}T(q)=1000,\qquad\lim_{q\to100^+}T(q)=900=T(100).\]</div><p>El límite bilateral no existe. El salto de la extensión continua revela el cambio de regla comercial. Para pedidos enteros, compara directamente: 99 unidades cuestan 990 u.m.; 100 cuestan 900 u.m.</p><p class="note">Si el descuento se aplicara solo a las unidades adicionales, sería otro modelo: \(T(q)=1000+9(q-100)\) para \(q\ge100\), que sí conecta de forma continua con \(10q\).</p></div></details>
+        <details><summary><span class="num">C</span>Capitalización: el paso al interés continuo</summary><div class="detail-body"><p>En un año, un capital \(P\) a tasa nominal anual \(r\), capitalizado \(n\) veces, produce \(A_n=P(1+r/n)^n\).</p><div class="math">\[\lim_{n\to\infty}A_n=Pe^r,\qquad 10000e^{0.08}\approx10832{,}87\ \text{u.m.}\]</div><p>La tasa efectiva anual límite es \(e^{0.08}-1\approx8{,}3287\%\). Con una capitalización anual se obtienen \(10800\) u.m.; aumentar la frecuencia acerca el monto a un valor finito, no a riqueza ilimitada.</p><p class="note">Aquí \(n\) es entero: es un límite de sucesión. La gráfica puede usar su extensión continua como guía. Se omiten comisiones, impuestos, inflación y variaciones de tasa.</p></div></details>
+        <details><summary><span class="num">D</span>El costo marginal nace de un límite</summary><div class="detail-body"><p>Sea \(C(q)=500+20q+0.02q^2\), medido en u.m. Cerca de \(q=100\):</p><div class="math">\[\frac{C(100+h)-C(100)}h=24+0.02h\quad(h\ne0).\]</div><div class="math">\[\lim_{h\to0}\frac{C(100+h)-C(100)}h=24\ \text{u.m./unidad}.\]</div><p>El costo marginal es una tasa instantánea de cambio. Aproxima el costo de una unidad adicional: aquí \(C(101)-C(100)=24.02\) u.m., que no es exactamente 24.</p><p class="note">Para \(h&lt;0\) se examina una reducción de producción. En productos indivisibles, el límite pertenece a una extensión continua del modelo; las decisiones finales usan cantidades factibles.</p></div></details>
+      </div>
+      <div class="band warn"><p><strong>Dominio económico.</strong> Una cantidad producida puede ser entera o no negativa. Antes de interpretar un límite, comprueba qué aproximaciones admite el contexto. Un umbral fijo no es punto de acumulación de los enteros; los límites locales requieren un modelo continuo.</p></div>
+    </section>
+    <div class="exercise-access" id="practica"><button type="button" class="button primary exercise-launch" id="exerciseLaunch" data-open-exercises="all" aria-haspopup="dialog" aria-controls="ejercicios"><span>Ejercicios</span><span aria-hidden="true">↗</span></button><p class="note">Elige un tema y un nivel: básico, intermedio o avanzado.</p></div>
+  </main>
+  <dialog class="exercise-dialog" id="ejercicios" aria-labelledby="exerciseDialogTitle">
+    <header class="exercise-dialog-head"><div><div class="kicker">Practicar · Justificar · Comprobar</div><h2 id="exerciseDialogTitle">Ejercicios</h2></div><button type="button" class="button" id="closeExercises" aria-label="Cerrar ejercicios">Cerrar ×</button></header>
+    <div class="exercise-dialog-body">
+      <p class="note">Elige un tema y un nivel. Resuelve antes de desplegar la solución; justifica el dominio y la condición que permite cada paso.</p>
+      <div class="exercise-filters">
+        <div class="control"><label for="exerciseTopic">Tema</label><select id="exerciseTopic"><option value="all">Todos los temas</option><option value="algebra">Álgebra de límites</option><option value="especiales">Límites especiales</option><option value="infinito">Límites al infinito</option><option value="continuidad">Continuidad</option><option value="rigor">Definición ε–δ</option><option value="oscilacion">Oscilación y encaje</option><option value="economia">Economía y negocios</option><option value="composicion">Composición de límites</option></select></div>
+        <div class="control"><label for="exerciseLevel">Dificultad</label><select id="exerciseLevel"><option value="all">Todos los niveles</option><option value="basico">Básico</option><option value="intermedio">Intermedio</option><option value="avanzado">Avanzado</option></select></div>
+        <p id="exerciseCount" class="exercise-count" role="status" aria-live="polite">46 ejercicios</p>
+      </div>
+      <details class="solution" id="compositionExerciseNote" hidden><summary>Convenciones para los ejercicios de composición</summary><div><p>Los 35 ejercicios de composición proceden de «Límites · Lección 8», páginas 3–4, del PDF facilitado. Conservan su numeración. En cada solución se explicitan los lados permitidos por el dominio real.</p><p>Los ángulos están en radianes; las potencias reales de base positiva se definen mediante la exponencial y el logaritmo. Usamos \(\operatorname{arcsec}u=\arccos(1/u)\), \(\operatorname{arccsc}u=\arcsin(1/u)\) para \(|u|\ge1\), y \(\operatorname{arccot}u\in(0,\pi)\). Un acercamiento unilateral impuesto por el dominio no equivale a afirmar que existen ambos límites laterales.</p></div></details>
+      <p class="exercise-empty" id="exerciseEmpty" hidden>No hay ejercicios con esta combinación. Prueba otro nivel o selecciona todos los temas.</p>
+      <div class="grid2 spaced" id="exerciseGrid">
+        <article class="exercise" id="ejercicio-01" data-topic="algebra continuidad" data-level="basico"><div class="tag"><span>01 · Álgebra · Continuidad</span><span class="difficulty">Básico</span></div><h3>Un límite sin valor</h3><p>Calcula \(\lim_{x\to2}(x^2+x-6)/(x-2)\). ¿Qué valor debes asignar en \(x=2\) para obtener continuidad?</p><details class="solution"><summary>Pista y solución</summary><div><p>Factoriza \(x^2+x-6=(x-2)(x+3)\). Para \(x\ne2\), el cociente es \(x+3\). El límite vale \(5\); la extensión continua se obtiene asignando \(f(2)=5\).</p></div></details></article>
+        <article class="exercise" id="ejercicio-02" data-topic="infinito economia" data-level="intermedio"><div class="tag"><span>02 · Infinito · Negocios</span><span class="difficulty">Intermedio</span></div><h3>¿Cuándo estamos cerca?</h3><p>\(C(q)=18000+42q\) u.m., \(q&gt;0\). Halla el límite de \(\overline C(q)\) al infinito y el menor \(q\) entero para que el costo medio difiera del límite en menos de \(1.5\) u.m./unidad.</p><details class="solution"><summary>Pista y solución</summary><div><p>\(\overline C(q)=42+18000/q\to42\) u.m./unidad. La condición \(18000/q&lt;1.5\) equivale a \(q&gt;12000\). El mínimo entero es <strong>12001</strong>. La desigualdad es estricta.</p></div></details></article>
+        <article class="exercise" id="ejercicio-03" data-topic="algebra economia" data-level="intermedio"><div class="tag"><span>03 · Álgebra · Economía</span><span class="difficulty">Intermedio</span></div><h3>Rendimientos decrecientes</h3><p>La producción diaria es \(Q(L)=80\sqrt L\), con \(L\) horas de trabajo al día. Calcula \(\lim_{h\to0}[Q(100+h)-Q(100)]/h\) e interpreta.</p><details class="solution"><summary>Pista y solución</summary><div><div class="math">\[\frac{80(\sqrt{100+h}-10)}h=\frac{80}{\sqrt{100+h}+10}\to4.\]</div><p>La productividad marginal a ese nivel es \(4\) unidades por hora adicional de trabajo. Localmente, un pequeño aumento de horas genera aproximadamente cuatro veces ese aumento en producción.</p></div></details></article>
+        <article class="exercise" id="ejercicio-04" data-topic="continuidad economia" data-level="basico"><div class="tag"><span>04 · Continuidad · Negocios</span><span class="difficulty">Básico</span></div><h3>Diseñar una tarifa continua</h3><p>Para volumen continuo \(q\), una tarifa es \(T(q)=12q\) si \(0\le q&lt;50\), y \(T(q)=10q+k\) si \(q\ge50\). Encuentra \(k\) para que sea continua en 50.</p><details class="solution"><summary>Pista y solución</summary><div><p>El límite izquierdo es \(600\); el derecho y \(T(50)\) valen \(500+k\). Deben coincidir: <strong>\(k=100\) u.m.</strong> Así no hay salto en el total cobrado.</p></div></details></article>
+        <article class="exercise" id="ejercicio-05" data-topic="especiales economia" data-level="intermedio"><div class="tag"><span>05 · Límites especiales · Finanzas</span><span class="difficulty">Intermedio</span></div><h3>Frecuencia creciente</h3><p>Un capital de \(5000\) u.m. se invierte durante un año a tasa nominal anual del \(6\%\), capitalizada \(n\) veces. Calcula el monto límite y su tasa efectiva anual.</p><details class="solution"><summary>Pista y solución</summary><div><div class="math">\[5000\left(1+\frac{0.06}{n}\right)^n\to5000e^{0.06}\approx5309.18.\]</div><p>La tasa efectiva límite es \(e^{0.06}-1\approx6.1837\%\). La ganancia es aproximadamente \(309.18\) u.m. antes de costos e impuestos.</p></div></details></article>
+        <article class="exercise" id="ejercicio-06" data-topic="algebra economia" data-level="intermedio"><div class="tag"><span>06 · Álgebra · Economía</span><span class="difficulty">Intermedio</span></div><h3>Instantáneo y discreto</h3><p>\(C(q)=1000+30q+0.05q^2\) u.m. Calcula el cociente incremental en \(q=80\), su límite y el costo exacto de pasar de 80 a 81 unidades.</p><details class="solution"><summary>Pista y solución</summary><div><div class="math">\[\frac{C(80+h)-C(80)}h=38+0.05h\to38.\]</div><p>El costo marginal es \(38\) u.m./unidad. El incremento exacto de costo es \(C(81)-C(80)=38.05\) u.m. La diferencia procede del término cuadrático.</p></div></details></article>
+        <article class="exercise" id="ejercicio-07" data-topic="rigor" data-level="intermedio"><div class="tag"><span>07 · Definición ε–δ</span><span class="difficulty">Intermedio</span></div><h3>Construir una garantía</h3><p>Demuestra con la definición que \(\lim_{x\to4}(3x-2)=10\). Da una elección de \(\delta\) para \(\varepsilon=0.06\).</p><details class="solution"><summary>Pista y solución</summary><div><p>\(|(3x-2)-10|=3|x-4|\). Para todo \(\varepsilon&gt;0\), elige \(\delta=\varepsilon/3\). Entonces \(0&lt;|x-4|&lt;\delta\) implica error menor que \(\varepsilon\). Para \(0.06\), sirve <strong>\(\delta=0.02\)</strong>.</p></div></details></article>
+        <article class="exercise" id="ejercicio-08" data-topic="oscilacion" data-level="avanzado"><div class="tag"><span>08 · Oscilación y encaje</span><span class="difficulty">Avanzado</span></div><h3>Oscilar no siempre impide converger</h3><p>Compara los límites de \(\sin(1/x)\) y de \(x\sin(1/x)\) cuando \(x\to0\). Justifica ambos.</p><details class="solution"><summary>Pista y solución</summary><div><p>El primero no existe: dos sucesiones hacia cero producen imágenes 1 y −1. Para el segundo, \(|x\sin(1/x)|\le|x|\to0\). Por encaje, el límite es <strong>0</strong>.</p></div></details></article>
+        <article class="exercise" id="ejercicio-09" data-topic="continuidad economia" data-level="avanzado"><div class="tag"><span>09 · Continuidad · Negocios</span><span class="difficulty">Avanzado</span></div><h3>Existencia antes de resolver</h3><p>La utilidad es \(U(q)=-0.01q^2+50q-40000\) u.m. Demuestra que hay un equilibrio en \((500,1500)\) y encuéntralo. ¿Es el único en todo \(q\ge0\)?</p><details class="solution"><summary>Pista y solución</summary><div><p>\(U(500)=-17500\) y \(U(1500)=12500\). Como \(U\) es continua, existe una raíz en ese intervalo. Factorizando:</p><div class="math">\[U(q)=-0.01(q-1000)(q-4000).\]</div><p>El equilibrio del intervalo es <strong>1000 unidades</strong>. Hay otro en 4000: el cambio de signo no garantizaba unicidad global.</p></div></details></article>
+        <article class="exercise" id="ejercicio-10" data-topic="infinito economia" data-level="intermedio"><div class="tag"><span>10 · Infinito · Negocios</span><span class="difficulty">Intermedio</span></div><h3>Un mercado con techo</h3><p>Un modelo de ingreso mensual es \(R(s)=120000s/(s+300)\) u.m., donde \(s\ge0\) es gasto publicitario mensual en u.m. Halla el límite al infinito y el gasto mínimo que alcanza al menos el 90% del techo.</p><details class="solution"><summary>Pista y solución</summary><div><p>\(R(s)\to120000\) u.m. al mes, porque \(s/(s+300)\to1\). La condición \(s/(s+300)\ge0.9\) equivale a \(0.1s\ge270\), así que <strong>\(s\ge2700\) u.m. mensuales</strong>.</p><p>Este es un techo de ingreso del modelo, no de utilidad. Para decidir el gasto óptimo habría que incorporar costos.</p></div></details></article>
+        <article class="exercise" id="ejercicio-11" data-topic="continuidad" data-level="basico"><div class="tag"><span>11 · Continuidad</span><span class="difficulty">Básico</span></div><form class="quiz" id="quiz">
+        <fieldset><legend>Valor, límite y continuidad</legend><p>Una función satisface \(f(2)=9\) y \(\lim_{x\to2}f(x)=4\). ¿Cuál afirmación es correcta?</p><label><input type="radio" name="answer" value="a">El límite no existe porque \(f(2)\ne4\).</label><label><input type="radio" name="answer" value="b">El límite existe y la discontinuidad se elimina definiendo \(f(2)=4\).</label><label><input type="radio" name="answer" value="c">La función es continua porque \(f(2)\) está definida.</label></fieldset>
+        <button type="submit" class="button primary">Comprobar respuesta</button><p id="quizResult" class="quiz-result" role="status"></p>
+      </form></article>
+        <article class="exercise" id="pdf-1" data-topic="composicion" data-level="avanzado"><div class="tag"><span>PDF · 1 · Composición</span><span class="difficulty">Avanzado</span></div><h3>Indeterminaciones potenciales y logaritmos</h3><p>Si el límite de una función potencial-exponencial \(f(x)^{g(x)}\) presenta una de las formas indeterminadas \(1^{\pm\infty}\), \(0^0\) o \((+\infty)^0\), se utiliza \(f^g=e^{g\ln f}\). Demuestra que los tres casos se reducen a una indeterminación de tipo \(0\cdot\infty\), estudiando \(g\ln f\). Indica en cada caso la condición que permite calcular el límite de la composición \(\ln f\).</p><details class="solution"><summary>Ver solución razonada</summary><div><p>Supongamos \(f(x)&gt;0\) en el dominio considerado cerca del punto de aproximación: así están definidos \(\ln f(x)\) y la potencia real \(f(x)^{g(x)}=\exp(g(x)\ln f(x))\).</p><ol><li><strong>Forma \(1^{\pm\infty}\).</strong> Si \(f(x)\to1\) y \(g(x)\to\pm\infty\), la continuidad de \(\ln\) en \(1\) da \(\ln f(x)\to0\). Por tanto, \(g(x)\ln f(x)\) tiene forma \((\pm\infty)\cdot0\). No hace falta exigir \(f(x)\ne1\), porque la función exterior es continua en \(1\).</li><li><strong>Forma \(0^0\).</strong> Si \(f(x)\to0^+\) y \(g(x)\to0\), entonces \(\ln f(x)\to-\infty\). Se usa el límite lateral \(\lim_{u\to0^+}\ln u=-\infty\); la condición \(f(x)&gt;0\) asegura la aproximación dentro del dominio del logaritmo. El producto tiene forma \(0\cdot(-\infty)\).</li><li><strong>Forma \((+\infty)^0\).</strong> Si \(f(x)\to+\infty\) y \(g(x)\to0\), entonces \(\ln f(x)\to+\infty\), por \(\lim_{u\to+\infty}\ln u=+\infty\). El producto tiene forma \(0\cdot(+\infty)\).</li></ol><p>Estas son formas indeterminadas, no reglas de multiplicación. Una vez calculado \(H=\lim g(x)\ln f(x)\), la continuidad de la exponencial da \(\lim f(x)^{g(x)}=e^H\) si \(H\in\mathbb R\). Si \(H=+\infty\), el resultado es \(+\infty\); si \(H=-\infty\), es \(0\). La forma inicial por sí sola no determina la respuesta.</p></div></details></article>
+        <article class="exercise" id="pdf-2a" data-topic="composicion" data-level="basico"><div class="tag"><span>PDF · 2a · Composición</span><span class="difficulty">Básico</span></div><h3>Una potencia decreciente</h3><p>Calcula e indica la condición para aplicar el límite de una composición.</p><div class="math">\[\lim_{x\to+\infty}\arctan\!\left(\frac{(1+x)^{-x}}{x^2}\right).\]</div><details class="solution"><summary>Ver solución razonada</summary><div><p>Para \(x\ge1\), \(0&lt;(1+x)^{-x}\le1\); por tanto, \(0&lt;(1+x)^{-x}/x^2\le1/x^2\to0\). El argumento pertenece al dominio \(\mathbb R\) de \(\arctan\), que es continua en 0. En consecuencia, el límite es <strong>\(0\)</strong>.</p></div></details></article>
+        <article class="exercise" id="pdf-2b" data-topic="composicion" data-level="intermedio"><div class="tag"><span>PDF · 2b · Composición</span><span class="difficulty">Intermedio</span></div><h3>Potencia dentro del coseno</h3><p>Calcula el límite; el exponente \(x\) afecta a la fracción, dentro del coseno.</p><div class="math">\[\lim_{x\to+\infty}\cos\!\left[\left(\frac{x}{2x+7}\right)^x\right].\]</div><details class="solution"><summary>Ver solución razonada</summary><div><p>Para \(x&gt;0\), \(0&lt;x/(2x+7)&lt;1/2\), así que \(0&lt;(x/(2x+7))^x\le(1/2)^x\to0\). No es una indeterminación \(1^\infty\): la base tiende a \(1/2\). La función exterior \(\cos\) está definida y es continua en 0; por composición, el resultado es <strong>\(1\)</strong>.</p></div></details></article>
+        <article class="exercise" id="pdf-2c" data-topic="composicion" data-level="basico"><div class="tag"><span>PDF · 2c · Composición</span><span class="difficulty">Básico</span></div><h3>Exponenciales al menos infinito</h3><div class="math">\[\lim_{x\to-\infty}\cos(4^x-5^x).\]</div><details class="solution"><summary>Ver solución razonada</summary><div><p>Como \(4,5&gt;1\), ambas exponenciales tienden a 0 cuando \(x\to-\infty\). Entonces \(4^x-5^x\to0\). La función exterior \(\cos\) es continua en 0 y admite todos los valores del argumento, por lo que el límite es <strong>\(\cos0=1\)</strong>.</p></div></details></article>
+        <article class="exercise" id="pdf-2d" data-topic="composicion" data-level="intermedio"><div class="tag"><span>PDF · 2d · Composición</span><span class="difficulty">Intermedio</span></div><h3>Logaritmo de un cociente</h3><div class="math">\[\lim_{x\to+\infty}\ln\!\left(\frac{1+\ln(x^x)}{\ln x}\right).\]</div><details class="solution"><summary>Ver solución razonada</summary><div><p>Para \(x&gt;1\), \(x^x&gt;0\), \(\ln(x^x)=x\ln x\), y el argumento exterior es</p><div class="math">\[\frac{1+x\ln x}{\ln x}=x+\frac1{\ln x}\longrightarrow+\infty.\]</div><p>Es positivo en ese entorno, de modo que la composición está definida. Se aplica el límite de la función exterior \(\ln t\to+\infty\) cuando \(t\to+\infty\), y se obtiene <strong>\(+\infty\)</strong>.</p></div></details></article>
+        <article class="exercise" id="pdf-2e" data-topic="composicion" data-level="intermedio"><div class="tag"><span>PDF · 2e · Composición</span><span class="difficulty">Intermedio</span></div><h3>Cotangente por la izquierda</h3><div class="math">\[\lim_{x\to2^-}\cot(\pi x).\]</div><details class="solution"><summary>Ver solución razonada</summary><div><p>Escribe \(u=\pi(x-2)\). Entonces \(u\to0^-\), y la periodicidad da \(\cot(\pi x)=\cot u\). Como \(\sin u/u\to1\) y \(\cos u\to1\),</p><div class="math">\[\cot u=\frac{\cos u}{\sin u/u}\,\frac1u\longrightarrow-\infty.\]</div><p>El resultado es <strong>\(-\infty\)</strong>. La exterior tiene un polo, por lo que no se evalúa por continuidad: se usa su límite lateral, y el argumento se aproxima por la izquierda sin tomar el valor del polo.</p></div></details></article>
+        <article class="exercise" id="pdf-2f" data-topic="composicion" data-level="basico"><div class="tag"><span>PDF · 2f · Composición</span><span class="difficulty">Básico</span></div><h3>Cociente dentro del seno</h3><div class="math">\[\lim_{x\to-\infty}\sin\!\left(\frac{3x+2}{2x^2+1}\right).\]</div><details class="solution"><summary>Ver solución razonada</summary><div><p>Dividir numerador y denominador entre \(x^2\) muestra que</p><div class="math">\[\frac{3x+2}{2x^2+1}=\frac{3/x+2/x^2}{2+1/x^2}\longrightarrow0.\]</div><p>El denominador original es siempre positivo. La función exterior \(\sin\) está definida para todo argumento real y es continua en 0; el límite es <strong>\(0\)</strong>.</p></div></details></article>
+        <article class="exercise" id="pdf-2g" data-topic="composicion" data-level="intermedio"><div class="tag"><span>PDF · 2g · Composición</span><span class="difficulty">Intermedio</span></div><h3>Dos raíces y un valor absoluto</h3><div class="math">\[\lim_{x\to+\infty}\left|\sqrt{x-\sqrt x}-\sqrt{x+\sqrt x}\right|.\]</div><details class="solution"><summary>Ver solución razonada</summary><div><p>Para \(x\ge1\), ambas raíces son reales y la primera no supera a la segunda. Al retirar el valor absoluto y racionalizar,</p><div class="math">\[\left|\sqrt{x-\sqrt x}-\sqrt{x+\sqrt x}\right|=\frac{2\sqrt x}{\sqrt{x+\sqrt x}+\sqrt{x-\sqrt x}}=\frac{2}{\sqrt{1+1/\sqrt x}+\sqrt{1-1/\sqrt x}}.\]</div><p>Los argumentos de las raíces tienden a 1 dentro de su dominio; la raíz es continua allí y el denominador tiende a 2, distinto de cero. El resultado es <strong>\(1\)</strong>.</p></div></details></article>
+        <article class="exercise" id="pdf-2h" data-topic="composicion" data-level="intermedio"><div class="tag"><span>PDF · 2h · Composición</span><span class="difficulty">Intermedio</span></div><h3>Logaritmo cerca de cero</h3><div class="math">\[\lim_{x\to+\infty}\ln\!\left(\frac{1+e^{-x}}x\right).\]</div><details class="solution"><summary>Ver solución razonada</summary><div><p>Para \(x&gt;0\), el argumento es positivo, y \((1+e^{-x})/x\to0^+\). La función exterior cumple \(\lim_{t\to0^+}\ln t=-\infty\). La dirección positiva del argumento es la condición que permite esta composición; el resultado es <strong>\(-\infty\)</strong>. No se sustituye \(\ln0\), que no está definido.</p></div></details></article>
+        <article class="exercise" id="pdf-2i" data-topic="composicion" data-level="intermedio"><div class="tag"><span>PDF · 2i · Composición</span><span class="difficulty">Intermedio</span></div><h3>Cotangente por la derecha</h3><div class="math">\[\lim_{x\to(\pi/2)^+}\cot(2x).\]</div><details class="solution"><summary>Ver solución razonada</summary><div><p>Con \(u=2x-\pi\), se tiene \(u\to0^+\) y \(\cot(2x)=\cot u\). Como \(\cos u/(\sin u/u)\to1\),</p><div class="math">\[\cot u=\frac{\cos u}{\sin u/u}\,\frac1u\longrightarrow+\infty.\]</div><p>El límite es <strong>\(+\infty\)</strong>. La composición usa el límite lateral derecho de la cotangente en un polo, no continuidad en ese punto; para \(x&gt;\pi/2\) suficientemente próximo, el argumento evita los polos.</p></div></details></article>
+        <article class="exercise" id="pdf-2j" data-topic="composicion" data-level="basico"><div class="tag"><span>PDF · 2j · Composición</span><span class="difficulty">Básico</span></div><h3>Simplificar antes de componer</h3><div class="math">\[\lim_{x\to0}\sin\!\left(\frac{x^2-\pi x}{2x}\right).\]</div><details class="solution"><summary>Ver solución razonada</summary><div><p>Para \(x\ne0\), el cociente se simplifica a \((x-\pi)/2\), que tiende a \(-\pi/2\). La igualdad vale en un entorno perforado de 0, suficiente para calcular el límite. Como \(\sin\) es continua en \(-\pi/2\), el resultado es <strong>\(-1\)</strong>.</p></div></details></article>
+        <article class="exercise" id="pdf-2k" data-topic="composicion" data-level="intermedio"><div class="tag"><span>PDF · 2k · Composición</span><span class="difficulty">Intermedio</span></div><h3>Potencia dentro del arcocoseno</h3><div class="math">\[\lim_{x\to+\infty}\arccos\!\left[(\ln x)^{1-x}\right].\]</div><details class="solution"><summary>Ver solución razonada</summary><div><p>Para \(x&gt;e\), el argumento pertenece a \((0,1)\) y puede escribirse como</p><div class="math">\[(\ln x)^{1-x}=\exp\bigl((1-x)\ln(\ln x)\bigr)\longrightarrow0^+,\]</div><p>porque \((1-x)\ln(\ln x)\to-\infty\). La composición real está definida en ese entorno, y \(\arccos\) es continua en 0. El límite es <strong>\(\pi/2\)</strong>.</p></div></details></article>
+        <article class="exercise" id="pdf-2l" data-topic="composicion" data-level="intermedio"><div class="tag"><span>PDF · 2l · Composición</span><span class="difficulty">Intermedio</span></div><h3>Logaritmo de una potencia</h3><div class="math">\[\lim_{x\to+\infty}\ln\!\left[\left(1-\frac1x\right)^{x^3}\right].\]</div><details class="solution"><summary>Ver solución razonada</summary><div><p>Para \(x&gt;1\), la base es positiva y se puede pasar el exponente delante del logaritmo. Tomando \(t=-1/x\to0^-\),</p><div class="math">\[\ln\!\left[\left(1-\frac1x\right)^{x^3}\right]=x^3\ln(1-1/x)=-x^2\,\frac{\ln(1+t)}t\longrightarrow-\infty,\]</div><p>pues \(\ln(1+t)/t\to1\). Por tanto, el resultado es <strong>\(-\infty\)</strong>. Equivalentemente, el argumento positivo del logaritmo tiende a \(0^+\), y la exterior tiene límite \(-\infty\) por esa dirección.</p></div></details></article>
+        <article class="exercise" id="pdf-2m" data-topic="composicion" data-level="avanzado"><div class="tag"><span>PDF · 2m · Composición</span><span class="difficulty">Avanzado</span></div><h3>Determinar el lado del polo</h3><div class="math">\[\lim_{x\to0^-}\tan\!\left(\frac{\pi-x}{x+2}\right).\]</div><details class="solution"><summary>Ver solución razonada</summary><div><p>El argumento tiende a \(\pi/2\), pero es esencial determinar por qué lado. Para \(x&lt;0\) suficientemente próximo a 0,</p><div class="math">\[\frac{\pi-x}{x+2}-\frac\pi2=-\frac{(\pi+2)x}{2(x+2)}&gt;0.\]</div><p>Así, el argumento se aproxima a \(\pi/2\) por la derecha, donde \(\tan t\to-\infty\). La composición está definida en un entorno lateral perforado y utiliza ese límite lateral de la exterior. El resultado es <strong>\(-\infty\)</strong>.</p></div></details></article>
+        <article class="exercise" id="pdf-2n" data-topic="composicion" data-level="intermedio"><div class="tag"><span>PDF · 2n · Composición</span><span class="difficulty">Intermedio</span></div><h3>Una diferencia que crece</h3><div class="math">\[\lim_{x\to+\infty}\ln\!\left(x-\sqrt[3]{x^2-5}\right).\]</div><details class="solution"><summary>Ver solución razonada</summary><div><p>Para \(x\ge8\), \(0\le\sqrt[3]{x^2-5}\le x^{2/3}\), de modo que</p><div class="math">\[x-\sqrt[3]{x^2-5}\ge x-x^{2/3}=x(1-x^{-1/3})\ge\frac x2\longrightarrow+\infty.\]</div><p>El argumento es positivo en ese entorno y tiende a \(+\infty\). Se aplica \(\ln t\to+\infty\) cuando \(t\to+\infty\); el resultado es <strong>\(+\infty\)</strong>.</p></div></details></article>
+        <article class="exercise" id="pdf-2ñ" data-topic="composicion" data-level="intermedio"><div class="tag"><span>PDF · 2ñ · Composición</span><span class="difficulty">Intermedio</span></div><h3>Dos límites del arcotangente</h3><div class="math">\[\lim_{x\to0}\arctan\!\left(\frac1x\right).\]</div><details class="solution"><summary>Ver solución razonada</summary><div><p>El dominio es \(\mathbb R\setminus\{0\}\), que permite acercarse por ambos lados. Por la izquierda, \(1/x\to-\infty\); por la derecha, \(1/x\to+\infty\). Aplicando los límites de la función exterior,</p><div class="math">\[\lim_{x\to0^-}\arctan(1/x)=-\frac\pi2,\qquad \lim_{x\to0^+}\arctan(1/x)=\frac\pi2.\]</div><p>Los laterales son distintos: <strong>el límite bilateral no existe</strong>. No puede aplicarse una única composición bilateral porque la función interior no tiene un solo límite.</p></div></details></article>
+        <article class="exercise" id="pdf-2o" data-topic="composicion" data-level="intermedio"><div class="tag"><span>PDF · 2o · Composición</span><span class="difficulty">Intermedio</span></div><h3>Una frontera del dominio</h3><p>Calcula el límite respecto del dominio real de la expresión.</p><div class="math">\[\lim_{x\to1}\ln\!\left(\frac{x}{x-1}\right).\]</div><details class="solution"><summary>Ver solución razonada</summary><div><p>El logaritmo exige \(x/(x-1)&gt;0\), por lo que el dominio es \((-\infty,0)\cup(1,\infty)\). Cerca de 1 solo hay puntos del dominio por la derecha. Al tomar \(x\to1^+\),</p><div class="math">\[\frac{x}{x-1}=1+\frac1{x-1}\longrightarrow+\infty,\qquad \ln\!\left(\frac{x}{x-1}\right)\longrightarrow+\infty.\]</div><p>El límite <strong>relativo al dominio es \(+\infty\)</strong>. La composición utiliza argumentos positivos que tienden a \(+\infty\). No hay aproximación real por la izquierda de 1 dentro del dominio; esto no constituye dos límites laterales distintos.</p></div></details></article>
+        <article class="exercise" id="pdf-2p" data-topic="composicion" data-level="avanzado"><div class="tag"><span>PDF · 2p · Composición</span><span class="difficulty">Avanzado</span></div><h3>Arcocosecante y dominio real</h3><p>Usa \(\operatorname{arccsc}u=\arcsin(1/u)\), con \(|u|\ge1\), e interpreta el límite respecto del dominio real.</p><div class="math">\[\lim_{x\to0}\operatorname{arccsc}\!\left(\frac{\sqrt{x^2-3x}}x\right).\]</div><details class="solution"><summary>Ver solución razonada</summary><div><p>La raíz exige \(x\le0\) o \(x\ge3\), y además \(x\ne0\). Para \(x\ge3\), el argumento tiene módulo menor que 1 y la arcocosecante no es real. Para \(x&lt;0\), su módulo es \(\sqrt{1-3/x}&gt;1\). El dominio de la composición es, por tanto, \((-\infty,0)\).</p><p>Al tomar \(x\to0^-\),</p><div class="math">\[\operatorname{arccsc}\!\left(\frac{\sqrt{x^2-3x}}x\right)=\arcsin\!\left(\frac{x}{\sqrt{x^2-3x}}\right)=\arcsin\!\left(-\frac1{\sqrt{1-3/x}}\right)\longrightarrow0.\]</div><p>El argumento de \(\arcsin\) pertenece a \((-1,0)\) y tiende a 0, donde la exterior es continua. El límite <strong>relativo al dominio es \(0\)</strong>; únicamente se permite aproximación por la izquierda.</p></div></details></article>
+        <article class="exercise" id="pdf-2q" data-topic="composicion" data-level="intermedio"><div class="tag"><span>PDF · 2q · Composición</span><span class="difficulty">Intermedio</span></div><h3>Dos lados de la tangente</h3><div class="math">\[\lim_{x\to2}\tan\!\left(\frac\pi x\right).\]</div><details class="solution"><summary>Ver solución razonada</summary><div><p>El argumento tiende a \(\pi/2\), un polo de la tangente. Para \(x&lt;2\) suficientemente próximo, \(\pi/x&gt;\pi/2\); para \(x&gt;2\), \(\pi/x&lt;\pi/2\). La función está definida a ambos lados en un entorno perforado de 2. Por los límites laterales de la exterior,</p><div class="math">\[\lim_{x\to2^-}\tan(\pi/x)=-\infty,\qquad \lim_{x\to2^+}\tan(\pi/x)=+\infty.\]</div><p><strong>El límite bilateral no existe</strong>, ni siquiera como un único infinito con signo. Que el argumento tienda a un número no permite evaluar la exterior en un punto donde no está definida.</p></div></details></article>
+        <article class="exercise" id="pdf-3a" data-topic="composicion" data-level="basico"><div class="tag"><span>PDF · 3a · Composición</span><span class="difficulty">Básico</span></div><h3>Diferencia de logaritmos al infinito</h3><p>Calcula el límite. Si utilizas composición, indica la condición que se cumple.</p><div class="math">\[\lim_{x\to+\infty}\bigl[\ln(x^3)-\ln(x+7)\bigr].\]</div><details class="solution"><summary>Ver solución razonada</summary><div><p>El dominio real es \(x&gt;0\). Por las propiedades del logaritmo,</p><div class="math">\[\ln(x^3)-\ln(x+7)=\ln\!\left(\frac{x^3}{x+7}\right)=\ln\!\left(\frac{x^2}{1+7/x}\right).\]</div><p>El argumento es positivo y tiende a \(+\infty\). Como \(\lim_{u\to+\infty}\ln u=+\infty\), el límite es \(\boxed{+\infty}\). Se combina primero la diferencia; restar directamente dos infinitos no es válido.</p></div></details></article>
+        <article class="exercise" id="pdf-3b" data-topic="composicion" data-level="intermedio"><div class="tag"><span>PDF · 3b · Composición</span><span class="difficulty">Intermedio</span></div><h3>Arcocotangente con exponente oscilante</h3><p>Calcula el límite, usando \(\operatorname{arccot}:\mathbb R\to(0,\pi)\).</p><div class="math">\[\lim_{x\to+\infty}\operatorname{arccot}\!\left(x^{\,3+\sin x}\right).\]</div><details class="solution"><summary>Ver solución razonada</summary><div><p>La potencia real está definida para \(x&gt;0\). Aunque \(\sin x\) no tiene límite al infinito, \(2\le3+\sin x\le4\). Para \(x\ge1\),</p><div class="math">\[x^2\le x^{3+\sin x}\le x^4.\]</div><p>Así, el argumento tiende a \(+\infty\). Con el rango elegido, \(\lim_{u\to+\infty}\operatorname{arccot}u=0\). La composición está definida y el límite es \(\boxed{0}\), con valores positivos.</p></div></details></article>
+        <article class="exercise" id="pdf-3c" data-topic="composicion" data-level="intermedio"><div class="tag"><span>PDF · 3c · Composición</span><span class="difficulty">Intermedio</span></div><h3>Cociente de logaritmos</h3><p>Calcula el límite e indica las condiciones de las composiciones empleadas.</p><div class="math">\[\lim_{x\to+\infty}\frac{\ln(x-1)}{\ln x}.\]</div><details class="solution"><summary>Ver solución razonada</summary><div><p>El dominio es \(x&gt;1\), donde \(\ln x&gt;0\). Escribimos</p><div class="math">\[\frac{\ln(x-1)}{\ln x}=1+\frac{\ln(1-1/x)}{\ln x}.\]</div><p>Como \(1-1/x\to1\) por valores positivos, la continuidad de \(\ln\) en \(1\) da \(\ln(1-1/x)\to0\). Además, \(\ln x\to+\infty\), por lo que el segundo término tiende a \(0\). El límite es \(\boxed{1}\).</p></div></details></article>
+        <article class="exercise" id="pdf-3d" data-topic="composicion" data-level="avanzado"><div class="tag"><span>PDF · 3d · Composición</span><span class="difficulty">Avanzado</span></div><h3>Arcosecante de una potencia variable</h3><p>Calcula el límite relativo al dominio real, interpretando la potencia como \(a^b=e^{b\ln a}\) para \(a&gt;0\), y usando \(\operatorname{arcsec}u=\arccos(1/u)\).</p><div class="math">\[\lim_{x\to1}\operatorname{arcsec}\!\left((\ln x)^{\,1/(1-x)}\right).\]</div><details class="solution"><summary>Ver solución razonada</summary><div><p>La potencia exige \(\ln x&gt;0\), es decir, \(x&gt;1\). Para que la arcosecante sea real también se necesita que su argumento positivo sea al menos \(1\); el dominio completo con esta convención es \((1,e]\). Por tanto, la aproximación a \(1\) es implícitamente por la derecha.</p><p>Sea \(u(x)=(\ln x)^{1/(1-x)}\). Entonces</p><div class="math">\[\ln u(x)=\frac{\ln(\ln x)}{1-x}\longrightarrow+\infty\qquad(x\to1^+),\]</div><p>pues el numerador tiende a \(-\infty\) y el denominador a \(0^-\). Así, \(u(x)\to+\infty\) y \(1/u(x)\to0^+\). La continuidad de \(\arccos\) en \(0\) permite concluir</p><div class="math">\[\operatorname{arcsec}u(x)=\arccos(1/u(x))\longrightarrow\boxed{\frac\pi2}.\]</div></div></details></article>
+        <article class="exercise" id="pdf-3e" data-topic="composicion" data-level="intermedio"><div class="tag"><span>PDF · 3e · Composición</span><span class="difficulty">Intermedio</span></div><h3>Tangente cerca de su asíntota</h3><p>Calcula el límite lateral.</p><div class="math">\[\lim_{\substack{x\to\pi\\x&lt;\pi}}\frac{x-\pi}{\tan(x/2)}.\]</div><details class="solution"><summary>Ver solución razonada</summary><div><p>Para \(x&lt;\pi\) suficientemente próximo a \(\pi\), la tangente está definida y no es cero. Podemos escribir</p><div class="math">\[\frac{x-\pi}{\tan(x/2)}=(x-\pi)\frac{\cos(x/2)}{\sin(x/2)}.\]</div><p>Las funciones seno y coseno son continuas; sus argumentos tienden a \(\pi/2\), y el denominador seno tiende a \(1\ne0\). El producto tiende a \(0\cdot0=0\), por lo que el límite es \(\boxed{0}\). No se evalúa \(\tan(\pi/2)\), que no está definida.</p></div></details></article>
+        <article class="exercise" id="pdf-3f" data-topic="composicion" data-level="intermedio"><div class="tag"><span>PDF · 3f · Composición</span><span class="difficulty">Intermedio</span></div><h3>Una diferencia logarítmica multiplicada por x</h3><p>Calcula el límite e indica la condición de la composición logarítmica.</p><div class="math">\[\lim_{x\to+\infty}x\bigl[\ln(x-3)-2\ln x\bigr].\]</div><details class="solution"><summary>Ver solución razonada</summary><div><p>El dominio real es \(x&gt;3\). Al combinar los logaritmos,</p><div class="math">\[x\bigl[\ln(x-3)-2\ln x\bigr]=x\ln\!\left(\frac{x-3}{x^2}\right).\]</div><p>El argumento es positivo y tiende a \(0^+\); por el límite lateral del logaritmo, su logaritmo tiende a \(-\infty\). Multiplicarlo por \(x\to+\infty\) da \(\boxed{-\infty}\). También lo verifica la comparación \(0&lt;(x-3)/x^2&lt;1/x\), de donde la expresión es menor que \(-x\ln x\to-\infty\).</p></div></details></article>
+        <article class="exercise" id="pdf-3g" data-topic="composicion" data-level="intermedio"><div class="tag"><span>PDF · 3g · Composición</span><span class="difficulty">Intermedio</span></div><h3>Un logaritmo cuyo dominio impone el lado</h3><p>Calcula el límite relativo al dominio real.</p><div class="math">\[\lim_{x\to1}\frac{\ln(x^2-x)}{1-x}.\]</div><details class="solution"><summary>Ver solución razonada</summary><div><p>El logaritmo exige \(x^2-x&gt;0\), es decir, \(x&lt;0\) o \(x&gt;1\). Cerca de \(1\), solo se permite \(x&gt;1\): el límite escrito es relativo al dominio y corresponde a \(x\to1^+\).</p><p>Con \(t=x-1\to0^+\),</p><div class="math">\[\frac{\ln(x^2-x)}{1-x}=-\frac{\ln(t(1+t))}{t}.\]</div><p>El argumento \(t(1+t)\to0^+\), por lo que \(-\ln(t(1+t))\to+\infty\); además, \(1/t\to+\infty\). El resultado es \(\boxed{+\infty}\).</p></div></details></article>
+        <article class="exercise" id="pdf-3h" data-topic="composicion" data-level="intermedio"><div class="tag"><span>PDF · 3h · Composición</span><span class="difficulty">Intermedio</span></div><h3>Logaritmo de una base oscilante elevada a x</h3><p>Calcula el límite; no supongas que \(\cos x\) tiene límite cuando \(x\to+\infty\).</p><div class="math">\[\lim_{x\to+\infty}\ln\!\left((5+\cos x)^x\right).\]</div><details class="solution"><summary>Ver solución razonada</summary><div><p>La base cumple \(4\le5+\cos x\le6\), de modo que la potencia y su logaritmo están definidos para todo \(x\in\mathbb R\). Usamos</p><div class="math">\[\ln\!\left((5+\cos x)^x\right)=x\ln(5+\cos x).\]</div><p>Para \(x&gt;0\), esta expresión es al menos \(x\ln4\), que tiende a \(+\infty\). Por comparación, el límite es \(\boxed{+\infty}\). La oscilación de la base no impide la divergencia, porque permanece uniformemente por encima de \(1\).</p></div></details></article>
+        <article class="exercise" id="pdf-3i" data-topic="composicion" data-level="avanzado"><div class="tag"><span>PDF · 3i · Composición</span><span class="difficulty">Avanzado</span></div><h3>Arcosecante y raíz cuadrada al infinito negativo</h3><p>Calcula el límite usando \(\operatorname{arcsec}u=\arccos(1/u)\).</p><div class="math">\[\lim_{x\to-\infty}\operatorname{arcsec}\!\left(\sqrt{4x^2-x}+x\right).\]</div><details class="solution"><summary>Ver solución razonada</summary><div><p>Para \(x&lt;0\), \(\sqrt{x^2}=|x|=-x\). Por eso el argumento se escribe</p><div class="math">\[u(x)=(-x)\left(\sqrt{4-1/x}-1\right).\]</div><p>El primer factor tiende a \(+\infty\), y el segundo a \(1&gt;0\); así, \(u(x)\to+\infty\). Para \(x&lt;-1\), la raíz es real y \(u(x)\ge-x&gt;1\), por lo que la composición pertenece al dominio de la arcosecante. Finalmente, \(1/u(x)\to0^+\), y la continuidad de \(\arccos\) en \(0\) da \(\boxed{\pi/2}\).</p></div></details></article>
+        <article class="exercise" id="pdf-3j" data-topic="composicion" data-level="intermedio"><div class="tag"><span>PDF · 3j · Composición</span><span class="difficulty">Intermedio</span></div><h3>Arcocosecante y cociente de raíces</h3><p>Calcula el límite usando \(\operatorname{arccsc}u=\arcsin(1/u)\).</p><div class="math">\[\lim_{x\to4}\operatorname{arccsc}\!\left(\frac{\sqrt{x-3}-1}{\sqrt{x}-2}\right).\]</div><details class="solution"><summary>Ver solución razonada</summary><div><p>Para \(x\ge3\) y \(x\ne4\), racionalizar ambas diferencias permite cancelar \(x-4\):</p><div class="math">\[\frac{\sqrt{x-3}-1}{\sqrt{x}-2}=\frac{(x-4)/(\sqrt{x-3}+1)}{(x-4)/(\sqrt{x}+2)}=\frac{\sqrt{x}+2}{\sqrt{x-3}+1}\longrightarrow2.\]</div><p>El último cociente es mayor que \(1\) en ese dominio, así que la arcocosecante es real. Como \(4\) es interior del dominio de las raíces, la aproximación es por ambos lados. La continuidad de \(\operatorname{arccsc}\) en \(2\) da \(\boxed{\arcsin(1/2)=\pi/6}\).</p></div></details></article>
+        <article class="exercise" id="pdf-4a" data-topic="composicion" data-level="basico"><div class="tag"><span>PDF · 4a · Composición</span><span class="difficulty">Básico</span></div><h3>Cambio de variable exponencial</h3><p>Calcula mediante un cambio de variable adecuado.</p><div class="math">\[\lim_{x\to+\infty}\frac{e^x+e^{-x}}{e^x-e^{-x}}.\]</div><details class="solution"><summary>Ver solución razonada</summary><div><p>El denominador solo se anula en \(x=0\), fuera de la región que se estudia. Toma \(t=e^{-x}\); cuando \(x\to+\infty\), \(t\to0^+\), y el cambio es invertible mediante \(x=-\ln t\). Multiplicando numerador y denominador por \(e^{-x}\),</p><div class="math">\[\frac{e^x+e^{-x}}{e^x-e^{-x}}=\frac{1+t^2}{1-t^2}\longrightarrow\boxed{1}.\]</div><p>La función racional final es continua en \(t=0\), pues su denominador vale \(1\).</p></div></details></article>
+        <article class="exercise" id="pdf-4b" data-topic="composicion" data-level="basico"><div class="tag"><span>PDF · 4b · Composición</span><span class="difficulty">Básico</span></div><h3>Dos escalas exponenciales</h3><p>Calcula mediante un cambio de variable adecuado.</p><div class="math">\[\lim_{x\to+\infty}\frac{e^x+8e^{2x}}{e^x+4e^{2x}}.\]</div><details class="solution"><summary>Ver solución razonada</summary><div><p>El denominador es positivo para todo \(x\in\mathbb R\). Con \(t=e^{-x}\to0^+\), cambio invertible por \(x=-\ln t\), dividimos entre \(e^{2x}\):</p><div class="math">\[\frac{e^x+8e^{2x}}{e^x+4e^{2x}}=\frac{t+8}{t+4}\longrightarrow\boxed{2}.\]</div><p>La expresión en \(t\) es continua en \(0\), porque \(t+4\to4\ne0\).</p></div></details></article>
+        <article class="exercise" id="pdf-4c" data-topic="composicion" data-level="basico"><div class="tag"><span>PDF · 4c · Composición</span><span class="difficulty">Básico</span></div><h3>Raíz cúbica y diferencia de cubos</h3><p>Calcula mediante un cambio de variable adecuado.</p><div class="math">\[\lim_{x\to1}\frac{1-\sqrt[3]{x}}{1-x}.\]</div><details class="solution"><summary>Ver solución razonada</summary><div><p>La expresión está definida para \(x\in\mathbb R\setminus\{1\}\). Toma \(t=\sqrt[3]{x}\to1\), con inversa \(x=t^3\). Para \(t\ne1\),</p><div class="math">\[\frac{1-t}{1-t^3}=\frac1{1+t+t^2}\longrightarrow\boxed{\frac13}.\]</div><p>La cancelación se realiza en un entorno perforado; el denominador simplificado tiende a \(3\ne0\).</p></div></details></article>
+        <article class="exercise" id="pdf-4d" data-topic="composicion" data-level="basico"><div class="tag"><span>PDF · 4d · Composición</span><span class="difficulty">Básico</span></div><h3>Raíz cuarta y factorización</h3><p>Calcula mediante un cambio de variable adecuado.</p><div class="math">\[\lim_{x\to1}\frac{1-\sqrt[4]{x}}{1-x}.\]</div><details class="solution"><summary>Ver solución razonada</summary><div><p>El dominio real es \([0,+\infty)\setminus\{1\}\); cerca de \(1\), admite aproximaciones por ambos lados. Con \(t=\sqrt[4]{x}\to1\), \(t\ge0\) y \(x=t^4\),</p><div class="math">\[\frac{1-t}{1-t^4}=\frac1{1+t+t^2+t^3}\longrightarrow\boxed{\frac14}.\]</div><p>La igualdad vale para \(t\ne1\), y la expresión simplificada es continua en \(1\).</p></div></details></article>
+        <article class="exercise" id="pdf-4e" data-topic="composicion" data-level="intermedio"><div class="tag"><span>PDF · 4e · Composición</span><span class="difficulty">Intermedio</span></div><h3>Una raíz de índice n</h3><p>Sea \(n\) un entero positivo. Calcula mediante un cambio de variable adecuado.</p><div class="math">\[\lim_{x\to1}\frac{1-\sqrt[n]{x}}{1-x}.\]</div><details class="solution"><summary>Ver solución razonada</summary><div><p>Si \(n\) es par, la raíz exige \(x\ge0\); si es impar, está definida para todo real. En ambos casos, un entorno de \(1\) pertenece al dominio, salvo \(x=1\) por el denominador.</p><p>Toma \(t=\sqrt[n]{x}\to1\), usando la rama real que es positiva cerca de \(1\), y \(x=t^n\). La identidad de diferencia de potencias da, para \(t\ne1\),</p><div class="math">\[\frac{1-t}{1-t^n}=\frac1{\displaystyle\sum_{k=0}^{n-1}t^k}\longrightarrow\boxed{\frac1n}.\]</div><p>La suma contiene \(n\) términos que tienden a \(1\). Para \(n=1\), la suma es \(1\) y la misma fórmula da el resultado correcto.</p></div></details></article>
+        <article class="exercise" id="pdf-4f" data-topic="composicion" data-level="intermedio"><div class="tag"><span>PDF · 4f · Composición</span><span class="difficulty">Intermedio</span></div><h3>Unificar una raíz cúbica y una cuadrada</h3><p>Calcula mediante un cambio de variable adecuado.</p><div class="math">\[\lim_{x\to2}\frac{\sqrt[3]{x-1}-1}{\sqrt{x-1}-1}.\]</div><details class="solution"><summary>Ver solución razonada</summary><div><p>El dominio es \([1,+\infty)\setminus\{2\}\), por lo que cerca de \(2\) se permite aproximación por ambos lados. Elige \(t=\sqrt[6]{x-1}\to1\), con inversa \(x=1+t^6\) para \(t\ge0\). Entonces \(\sqrt[3]{x-1}=t^2\) y \(\sqrt{x-1}=t^3\). Para \(t\ne1\),</p><div class="math">\[\frac{t^2-1}{t^3-1}=\frac{(t-1)(t+1)}{(t-1)(t^2+t+1)}=\frac{t+1}{t^2+t+1}\longrightarrow\boxed{\frac23}.\]</div><p>La expresión final es continua en \(t=1\), pues su denominador vale \(3\).</p></div></details></article>
+      </div>
+    </div>
+  </dialog>
+  <footer><div><p>Cálculo · Límites de funciones reales de variable real</p><p>Modelos y ejercicios didácticos. u.m. = unidades monetarias.</p></div><div><p>Lecturas complementarias · OpenStax, Calculus Volume 1</p><p><a href="https://openstax.org/books/calculus-volume-1/pages/2-2-the-limit-of-a-function" target="_blank" rel="noopener noreferrer">Concepto de límite</a> · <a href="https://openstax.org/books/calculus-volume-1/pages/2-5-the-precise-definition-of-a-limit" target="_blank" rel="noopener noreferrer">Definición precisa</a> · <a href="https://openstax.org/books/calculus-volume-1/pages/2-4-continuity" target="_blank" rel="noopener noreferrer">Continuidad</a></p></div></footer>
   <script>
-    (() => {
-      const links = [...document.querySelectorAll('#topnav a')];
-      const sections = links
-        .map(link => document.querySelector(link.getAttribute('href')))
-        .filter(Boolean);
-
-      const activateLink = (id) => {
-        links.forEach(link => {
-          link.classList.toggle('is-active', link.getAttribute('href') === `#${id}`);
-        });
-      };
-
-      links.forEach(link => {
-        link.addEventListener('click', () => {
-          const id = link.getAttribute('href').slice(1);
-          activateLink(id);
-        });
+  (function () {
+    "use strict";
+    const $ = id => document.getElementById(id);
+    const colors = {green:"#65e6b4", blue:"#8ebcf2", amber:"#e6b968", ink:"#edf7f1", muted:"#a9bcb8", grid:"#17313a"};
+    const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
+    const format = (n, digits=3) => new Intl.NumberFormat("es-CO", {minimumFractionDigits:digits, maximumFractionDigits:digits}).format(n);
+    const math = node => {
+      if (window.MathJax && window.MathJax.typesetPromise) window.MathJax.typesetPromise([node]).catch(()=>{});
+    };
+    function setup(canvas, bounds, xLabel="x", yLabel="y") {
+      const width = Math.max(240, canvas.clientWidth), height = canvas.clientHeight || 390;
+      const dpr = Math.min(window.devicePixelRatio || 1, 2);
+      canvas.width = Math.round(width*dpr); canvas.height = Math.round(height*dpr);
+      const ctx = canvas.getContext("2d"); ctx.setTransform(dpr,0,0,dpr,0,0);
+      const detailedY = Math.max(Math.abs(bounds[2]),Math.abs(bounds[3]))>=1000 && bounds[3]-bounds[2]<1000;
+      const pad = {l:detailedY?76:(width<450?48:61),r:20,t:30,b:48};
+      const [xmin,xmax,ymin,ymax] = bounds, pw=width-pad.l-pad.r, ph=height-pad.t-pad.b;
+      const X=x=>pad.l+(x-xmin)/(xmax-xmin)*pw, Y=y=>height-pad.b-(y-ymin)/(ymax-ymin)*ph;
+      ctx.clearRect(0,0,width,height);
+      function line(x1,y1,x2,y2,color,dash=[],lw=1) {
+        ctx.save();ctx.strokeStyle=color;ctx.lineWidth=lw;ctx.setLineDash(dash);ctx.beginPath();ctx.moveTo(X(x1),Y(y1));ctx.lineTo(X(x2),Y(y2));ctx.stroke();ctx.restore();
+      }
+      function tick(v,step){
+        if(Math.abs(v)<1e-10)return"0";
+        const compact=Math.abs(v)>=1000 && step>=1000,scale=compact?1000:1;
+        const precision=Math.min(4,((step/scale).toFixed(6).replace(/0+$/,"").split(".")[1]||"").length);
+        return new Intl.NumberFormat("es-CO",{maximumFractionDigits:precision}).format(v/scale)+(compact?"k":"");
+      }
+      ctx.font="12px Segoe UI, sans-serif";ctx.fillStyle=colors.muted;
+      for(let i=0;i<=4;i++){
+        const x=xmin+(xmax-xmin)*i/4, y=ymin+(ymax-ymin)*i/4;
+        line(x,ymin,x,ymax,colors.grid);line(xmin,y,xmax,y,colors.grid);
+        ctx.textAlign="center";ctx.fillText(tick(x,(xmax-xmin)/4),X(x),height-pad.b+23);
+        ctx.textAlign="right";ctx.fillText(tick(y,(ymax-ymin)/4),pad.l-9,Y(y)+4);
+      }
+      if(ymin<=0&&ymax>=0)line(xmin,0,xmax,0,"#65817e");
+      if(xmin<=0&&xmax>=0)line(0,ymin,0,ymax,"#65817e");
+      ctx.textAlign="right";ctx.fillStyle=colors.ink;ctx.fillText(xLabel,width-pad.r,height-8);
+      ctx.textAlign="left";ctx.fillText(yLabel,pad.l,17);
+      function clipped(fn){ctx.save();ctx.beginPath();ctx.rect(pad.l,pad.t,pw,ph);ctx.clip();fn();ctx.restore();}
+      function curve(fn,color=colors.green,start=xmin,end=xmax,lw=2.3,n=900){
+        clipped(()=>{ctx.strokeStyle=color;ctx.lineWidth=lw;ctx.beginPath();let previous=null;
+          for(let i=0;i<=n;i++){const x=start+(end-start)*i/n,y=fn(x);if(y===null||!Number.isFinite(y)){previous=null;continue;}const px=X(x),py=Y(y);if(previous===null||Math.abs(py-previous)>ph*1.3)ctx.moveTo(px,py);else ctx.lineTo(px,py);previous=py;}ctx.stroke();});
+      }
+      function point(x,y,color=colors.amber,open=false,r=5){
+        if(y<ymin||y>ymax||x<xmin||x>xmax)return;
+        ctx.beginPath();ctx.arc(X(x),Y(y),r,0,Math.PI*2);ctx.fillStyle=open?"#030b10":color;ctx.fill();ctx.strokeStyle=color;ctx.lineWidth=2;ctx.stroke();
+      }
+      function band(x1,y1,x2,y2,color){clipped(()=>{ctx.fillStyle=color;ctx.fillRect(X(x1),Y(y2),X(x2)-X(x1),Y(y1)-Y(y2));});}
+      return {ctx,X,Y,line,curve,point,band,clipped,xmin,xmax,ymin,ymax};
+    }
+    const cases={
+      hole:{title:"Un hueco, un límite",formula:"(x² − 1)/(x − 1), x ≠ 1",a:1,fn:x=>x+1,bounds:[-1,3,-.5,4.5],conclusion:"El límite es 2",reason:"Las dos salidas se aproximan a 2, aunque la función no esté definida en 1.",caution:"La tabla sugiere la respuesta. La igualdad f(x) = x + 1 para x ≠ 1 la justifica."},
+      jump:{title:"Un salto en la tarifa",formula:"T(q) = 10q si q < 100; 9q si q ≥ 100",a:100,fn:x=>x<100?10*x:9*x,bounds:[98,102,870,1030],conclusion:"No existe el límite bilateral",reason:"Por la izquierda el total tiende a 1000 u.m.; por la derecha, a 900 u.m. El descuento se aplica a todas las unidades.",caution:"Se grafica una extensión continua del volumen. Para pedidos enteros, se comparan cantidades factibles."},
+      pole:{title:"La salida crece sin cota",formula:"f(x) = 1/x², x ≠ 0",a:0,fn:x=>x===0?null:1/(x*x),bounds:[-2,2,-1,15],conclusion:"Límite: +∞",reason:"Ambos lados crecen sin cota. No existe un límite real finito; +∞ describe esa divergencia.",caution:"Los puntos salen de la ventana al crecer. Consulta la tabla: que desaparezcan de la gráfica no significa que la función deje de existir."},
+      osc:{title:"Cada vez más oscilaciones",formula:"f(x) = sin(1/x), x ≠ 0",a:0,fn:x=>Math.abs(x)<.006?null:Math.sin(1/x),bounds:[-1,1,-1.4,1.4],conclusion:"El límite no existe",reason:"Hay sucesiones hacia cero con imágenes 1 y otras con imágenes −1. Las oscilaciones no se amortiguan.",caution:"La franja |x| < 0,006 se omite en la curva: una pantalla finita no resuelve infinitas oscilaciones. La tabla usa sin(1/x) sin ese recorte."}
+    };
+    let selected="hole",limitFrame=0,limitStart=null;
+    function drawLimit(){
+      const c=cases[selected],d=Math.pow(10,-3*Number($("distance").value)/1000),a=c.a;
+      const fn=selected==="osc"?(x=>Math.sin(1/x)):c.fn;
+      const left=a-d,right=a+d,lv=fn(left),rv=fn(right);
+      $("distanceOut").textContent=format(d,4);
+      $("limitRows").innerHTML='<tr><th scope="row">Izquierda</th><td>'+format(left,4)+'</td><td>'+format(lv,4)+'</td></tr><tr><th scope="row">Derecha</th><td>'+format(right,4)+'</td><td>'+format(rv,4)+'</td></tr>';
+      const p=setup($("limitPlot"),c.bounds,selected==="jump"?"q":"x",selected==="jump"?"T(q)":"f(x)");
+      if(selected==="jump"){p.curve(x=>10*x,colors.green,98,100);p.curve(x=>9*x,colors.green,100,102);p.point(100,1000,colors.amber,true,6);p.point(100,900,colors.green,false,5);}
+      else if(selected==="hole"){p.curve(c.fn);p.line(-1,2,3,2,colors.blue,[5,6]);p.point(1,2,colors.amber,true,6);}
+      else if(selected==="pole"){p.curve(c.fn,colors.green,-2,-.015);p.curve(c.fn,colors.green,.015,2);p.line(0,-1,0,15,colors.amber,[4,5]);}
+      else{p.curve(c.fn,colors.green,-1,-.006,1.8,1500);p.curve(c.fn,colors.green,.006,1,1.8,1500);}
+      p.clipped(()=>{p.line(left,p.ymin,left,Math.min(p.ymax,lv),colors.blue,[3,5]);p.line(right,p.ymin,right,Math.min(p.ymax,rv),colors.green,[3,5]);});
+      p.point(left,lv,colors.blue);p.point(right,rv,colors.green);
+      $("limitPlot").setAttribute("aria-label",c.title+". Distancia "+format(d,4)+". Salida izquierda "+format(lv,4)+", derecha "+format(rv,4)+". "+c.conclusion+".");
+    }
+    function stopLimit(){cancelAnimationFrame(limitFrame);limitFrame=0;limitStart=null;$("playLimit").textContent="Animar acercamiento";$("playLimit").setAttribute("aria-pressed","false");}
+    function setCase(key){
+      stopLimit();selected=key;const c=cases[key];
+      document.querySelectorAll("[data-case]").forEach(b=>b.setAttribute("aria-pressed",String(b.dataset.case===key)));
+      $("caseTitle").textContent=c.title;$("caseFormula").textContent=c.formula;$("caseConclusion").textContent=c.conclusion;$("caseReason").textContent=c.reason;$("caseCaution").textContent=c.caution;
+      $("distance").value=333;drawLimit();
+    }
+    document.querySelectorAll("[data-case]").forEach(b=>b.addEventListener("click",()=>setCase(b.dataset.case)));
+    $("distance").addEventListener("input",()=>{stopLimit();drawLimit();});
+    $("resetLimit").addEventListener("click",()=>{stopLimit();$("distance").value=0;drawLimit();});
+    $("playLimit").addEventListener("click",()=>{
+      if(limitFrame){stopLimit();return;}
+      if(reduceMotion.matches){$("distance").value=1000;drawLimit();return;}
+      $("distance").value=0;$("playLimit").textContent="Pausar animación";$("playLimit").setAttribute("aria-pressed","true");
+      function step(t){if(limitStart===null)limitStart=t;const v=Math.min(1000,(t-limitStart)/12);$("distance").value=v;drawLimit();if(v<1000)limitFrame=requestAnimationFrame(step);else stopLimit();}
+      limitFrame=requestAnimationFrame(step);
+    });
+    const epsilonCases={
+      linear:{a:2,L:5,fn:x=>2*x+1,half:[1.3,2.6],formula:"\\(f(x)=2x+1,\\quad a=2,\\quad L=5\\)",rule:"Recta: la garantía equivale a 2δ ≤ ε. La igualdad es válida porque las fronteras |x − a| = δ están excluidas."},
+      quadratic:{a:1,L:1,fn:x=>x*x,half:[2.4,4.2],formula:"\\(f(x)=x^2,\\quad a=1,\\quad L=1\\)",rule:"Parábola: la garantía equivale a 2δ + δ² ≤ ε. El botón elige δ ≤ √(1 + ε) − 1, redondeando hacia abajo para preservar la garantía."},
+      sine:{a:0,L:0,fn:Math.sin,half:[3.5,1.6],formula:"\\(f(x)=\\sin x,\\quad a=0,\\quad L=0\\)",rule:"Seno: |sin x| ≤ |x| da una elección suficiente δ ≤ ε. Si δ ≤ π/2, basta sin δ ≤ ε; si δ > π/2, se necesita ε > 1, pues el intervalo ya contiene puntos con |sin x| = 1."},
+      jump:{a:0,L:0,fn:x=>x<0?-1:1,half:[2,2.5],formula:"\\(f(x)=\\begin{cases}-1,&x<0,\\\\1,&x\\ge0.\\end{cases}\\quad a=0\\)",rule:"No hay límite: para cualquier candidato real L, al menos una de las distancias |−1 − L| y |1 − L| es ≥ 1. La tolerancia ε = 1 falla para todo δ > 0. Una tolerancia grande que sí funcione no demuestra la existencia del límite."}
+    };
+    let epsilonSelected="linear",epsilonZoom=1,epsilonLastValid=null,epsilonConfettiTimer=0;
+    const epsilonBandFeedback=document.createElement("div"),epsilonConfetti=document.createElement("div");
+    epsilonBandFeedback.id="epsilonBandFeedback";epsilonBandFeedback.className="epsilon-band-feedback";epsilonBandFeedback.setAttribute("aria-hidden","true");
+    epsilonBandFeedback.innerHTML='<span id="epsilonBandHorizontal" class="epsilon-band"></span><span id="epsilonBandVertical" class="epsilon-band epsilon-band-vertical"></span>';
+    epsilonConfetti.id="epsilonConfetti";epsilonConfetti.className="epsilon-confetti";epsilonConfetti.setAttribute("aria-hidden","true");
+    $("epsilonPlot").parentElement.append(epsilonBandFeedback,epsilonConfetti);
+    function stopEpsilonConfetti(){
+      clearTimeout(epsilonConfettiTimer);epsilonConfettiTimer=0;
+      epsilonConfetti.getAnimations({subtree:true}).forEach(animation=>animation.cancel());
+      epsilonConfetti.replaceChildren();
+    }
+    function celebrateEpsilon(){
+      stopEpsilonConfetti();
+      if(reduceMotion.matches||document.hidden)return;
+      const width=epsilonConfetti.clientWidth,height=epsilonConfetti.clientHeight;
+      const palette=[colors.green,colors.blue,colors.amber,colors.ink,"#b9a0ef"];
+      const fragment=document.createDocumentFragment(),particles=[];
+      for(let i=0;i<64;i++){
+        const piece=document.createElement("span");piece.className="confetti-piece";
+        piece.style.backgroundColor=palette[i%palette.length];
+        if(i%3===0){piece.style.borderRadius="50%";piece.style.height="7px";}
+        fragment.append(piece);particles.push(piece);
+      }
+      const badge=document.createElement("span");badge.className="epsilon-celebration";badge.textContent="¡Encaja para esta tolerancia!";
+      fragment.append(badge);epsilonConfetti.append(fragment);
+      particles.forEach(piece=>{
+        const x=(Math.random()-.5)*width*.95,up=45+Math.random()*height*.42,spin=(Math.random()-.5)*900;
+        piece.animate([
+          {transform:"translate(0,0) rotate(0deg)",opacity:0,offset:0},
+          {opacity:1,offset:.08},
+          {transform:"translate("+x*.65+"px,"+-up+"px) rotate("+spin*.35+"deg)",opacity:1,offset:.32},
+          {transform:"translate("+x+"px,"+height*.7+"px) rotate("+spin+"deg)",opacity:0,offset:1}
+        ],{duration:1600+Math.random()*500,delay:Math.random()*100,easing:"linear",fill:"both"});
       });
-
-      const observer = new IntersectionObserver((entries) => {
-        const visible = entries
-          .filter(entry => entry.isIntersecting)
-          .sort((a, b) => b.intersectionRatio - a.intersectionRatio);
-        if (visible.length) activateLink(visible[0].target.id);
-      }, {
-        rootMargin: '-25% 0px -55% 0px',
-        threshold: [0.15, 0.3, 0.5, 0.7]
+      epsilonConfettiTimer=setTimeout(stopEpsilonConfetti,2300);
+    }
+    function updateEpsilonFeedback(p,a,L,eps,delta,valid,userAdjustment){
+      // El relleno decorativo se mueve dentro de fronteras matemáticas fijas.
+      function place(id,left,top,right,bottom){
+        const node=$(id);node.style.left=left+"px";node.style.top=top+"px";
+        node.style.width=Math.max(0,right-left)+"px";node.style.height=Math.max(0,bottom-top)+"px";
+      }
+      const clampY=y=>Math.max(p.ymin,Math.min(p.ymax,y)),clampX=x=>Math.max(p.xmin,Math.min(p.xmax,x));
+      place("epsilonBandHorizontal",p.X(p.xmin),p.Y(clampY(L+eps)),p.X(p.xmax),p.Y(clampY(L-eps)));
+      place("epsilonBandVertical",p.X(clampX(a-delta)),p.Y(p.ymax),p.X(clampX(a+delta)),p.Y(p.ymin));
+      epsilonBandFeedback.classList.toggle("is-invalid",!valid);
+      if(!valid)stopEpsilonConfetti();
+      else if(userAdjustment&&epsilonLastValid===false)celebrateEpsilon();
+      epsilonLastValid=valid;
+    }
+    function epsilonState(){
+      const c=epsilonCases[epsilonSelected],eps=Number($("epsilon").value),delta=Number($("delta").value),L=epsilonSelected==="jump"?Number($("epsilonCandidate").value):c.L;
+      let valid=false,witness=null;
+      if(epsilonSelected==="linear"){valid=2*delta<=eps+1e-12;if(!valid)witness=c.a+(eps/2+delta)/2;}
+      else if(epsilonSelected==="quadratic"){valid=2*delta+delta*delta<=eps+1e-12;if(!valid)witness=c.a+(eps/(Math.sqrt(1+eps)+1)+delta)/2;}
+      else if(epsilonSelected==="sine"){
+        valid=delta<=Math.PI/2?Math.sin(delta)<=eps+1e-12:eps>1;
+        if(!valid)witness=eps<1?(Math.asin(eps)+Math.min(delta,Math.PI/2))/2:Math.PI/2;
+      }else{
+        valid=Math.max(Math.abs(-1-L),Math.abs(1-L))<eps;
+        if(!valid)witness=Math.abs(-1-L)>=eps?-delta/2:delta/2;
+      }
+      return {c,eps,delta,L,valid,witness};
+    }
+    function drawEpsilon(userAdjustment=false){
+      const {c,eps,delta,L,valid,witness}=epsilonState(),a=c.a;
+      const hx=c.half[0]/epsilonZoom,hy=c.half[1]/epsilonZoom;
+      $("epsilonOut").textContent=format(eps,2);$("deltaOut").textContent=format(delta,3);
+      $("epsilonCandidateOut").textContent=format(L,1);
+      $("epsilonZoomOutValue").textContent="Zoom "+format(epsilonZoom,epsilonZoom<1?2:0)+"×";
+      $("epsilonZoomIn").disabled=epsilonZoom>=16;$("epsilonZoomOut").disabled=epsilonZoom<=.25;
+      // La ventana usa la referencia fija del ejemplo; solo la banda sigue al candidato L.
+      const p=setup($("epsilonPlot"),[a-hx,a+hx,c.L-hy,c.L+hy]);
+      p.band(p.xmin,L-eps,p.xmax,L+eps,"#65e6b41a");p.band(a-delta,p.ymin,a+delta,p.ymax,"#8ebcf21c");
+      p.clipped(()=>{
+        p.line(p.xmin,L-eps,p.xmax,L-eps,colors.green,[5,4]);p.line(p.xmin,L+eps,p.xmax,L+eps,colors.green,[5,4]);
+        p.line(a-delta,p.ymin,a-delta,p.ymax,colors.blue,[5,4]);p.line(a+delta,p.ymin,a+delta,p.ymax,colors.blue,[5,4]);
+        p.line(p.xmin,L,p.xmax,L,"#65e6b455",[2,5]);p.line(a,p.ymin,a,p.ymax,"#8ebcf255",[2,5]);
       });
-
-      sections.forEach(section => observer.observe(section));
-    })();
+      if(epsilonSelected==="jump"){
+        p.curve(()=>-1,"#68847e",p.xmin,0);p.curve(()=>1,"#68847e",0,p.xmax);
+        p.curve(()=>-1,colors.amber,-delta,0,3.5);p.curve(()=>1,colors.amber,0,delta,3.5);
+        p.point(0,-1,colors.amber,true);p.point(0,1,colors.ink,false);
+      }else{p.curve(c.fn,"#68847e");p.curve(c.fn,colors.amber,a-delta,a+delta,3.5);p.point(a,L,colors.ink,true);}
+      p.point(a-delta,c.fn(a-delta),colors.amber,true);p.point(a+delta,c.fn(a+delta),colors.amber,true);
+      $("epsilonStatus").className="status spaced"+(valid?"":" warn");
+      $("epsilonStatus").dataset.valid=String(valid);
+      $("epsilonStatus").textContent=valid?
+        "¡Bien! Garantía válida para esta tolerancia: todas las entradas con 0 < |x − a| < δ cumplen |f(x) − L| < ε.":
+        epsilonSelected==="jump"?"Ningún δ positivo sirve para este L y esta tolerancia: una rama queda fuera de la banda o en su frontera.":
+        "Este δ no sirve: hay una entrada permitida cuyo error alcanza o supera la tolerancia.";
+      if(valid){
+        $("epsilonWitness").textContent=epsilonSelected==="jump"?"La banda admite ambas ramas con este ε, pero al exigir ε = 1 la condición falla para cualquier candidato L. El límite no existe.":"Una comprobación para este ε no es toda la demostración. La regla siguiente permite justificar las elecciones para cualquier ε positivo.";
+      }else{
+        const error=Math.abs(c.fn(witness)-L),visible=witness>=p.xmin&&witness<=p.xmax&&c.fn(witness)>=p.ymin&&c.fn(witness)<=p.ymax;
+        p.point(witness,c.fn(witness),colors.amber,false,6);
+        $("epsilonWitness").textContent="Contraejemplo: x = "+format(witness,6)+". Distancia a a: "+format(Math.abs(witness-a),6)+" < δ. Error: "+format(error,6)+" ≥ ε."+(visible?"":" Aleja la vista para localizarlo.");
+      }
+      $("epsilonRule").textContent=c.rule;
+      $("epsilonPlot").setAttribute("aria-label","Ejemplo "+epsilonSelected+". Épsilon "+format(eps,2)+", delta "+format(delta,3)+", candidato L "+format(L,1)+". "+(valid?"Garantía válida para esta tolerancia.":"La garantía falla; hay un contraejemplo.")+" Zoom "+epsilonZoom+".");
+      updateEpsilonFeedback(p,a,L,eps,delta,valid,userAdjustment);
+    }
+    function setEpsilonCase(key){
+      stopEpsilonConfetti();epsilonLastValid=null;
+      epsilonSelected=key;epsilonZoom=1;$("epsilon").value=.8;$("delta").value=.6;$("epsilonCandidate").value=0;
+      document.querySelectorAll("[data-epsilon-case]").forEach(b=>b.setAttribute("aria-pressed",String(b.dataset.epsilonCase===key)));
+      $("candidateControl").hidden=key!=="jump";$("chooseDelta").textContent=key==="jump"?"Fijar ε = 0,5":"Elegir δ suficiente";
+      if(window.MathJax&&window.MathJax.typesetClear)window.MathJax.typesetClear([$("epsilonModel")]);
+      $("epsilonModel").textContent=epsilonCases[key].formula;math($("epsilonModel"));drawEpsilon();
+    }
+    document.querySelectorAll("[data-epsilon-case]").forEach(b=>b.addEventListener("click",()=>setEpsilonCase(b.dataset.epsilonCase)));
+    ["epsilon","delta","epsilonCandidate"].forEach(id=>$(id).addEventListener("input",()=>drawEpsilon(true)));
+    $("chooseDelta").addEventListener("click",()=>{
+      const eps=Number($("epsilon").value);
+      if(epsilonSelected==="jump"){$("epsilon").value=.5;drawEpsilon(true);return;}
+      const raw=epsilonSelected==="linear"?eps/2:epsilonSelected==="quadratic"?eps/(Math.sqrt(1+eps)+1):Math.min(eps,1);
+      $("delta").value=Math.max(.001,Math.floor(raw*1000+1e-10)/1000);drawEpsilon(true);
+    });
+    $("epsilonZoomIn").addEventListener("click",()=>{epsilonZoom=Math.min(16,epsilonZoom*2);drawEpsilon();});
+    $("epsilonZoomOut").addEventListener("click",()=>{epsilonZoom=Math.max(.25,epsilonZoom/2);drawEpsilon();});
+    $("epsilonZoomReset").addEventListener("click",()=>{epsilonZoom=1;drawEpsilon();});
+    let econSelected="average",econFrame=0,econStart=null;
+    const econ={
+      average:{title:"Diluir el costo fijo",units:"q: unidades · C̄: u.m./unidad",formula:"\\[\\overline C(q)=35+\\frac{12000}{q}\\]",label:"Producción q",min:100,max:10000,step:100,value:1000,fn:q=>35+12000/q,limit:35,bounds:[0,10000,25,160],xLabel:"q",yLabel:"C̄(q)",digits:2,unit:" u.m./unidad",interpretation:"El costo fijo se reparte entre más unidades. El costo medio se aproxima a 35 desde arriba.",assumption:"Se mantienen fijos los parámetros. No se modelan capacidad limitada ni cambios en el costo variable.",plotNote:"La curva se dibuja para q ≥ 100; q = 0 no pertenece al dominio del costo medio."},
+      interest:{title:"Más frecuencia, un límite finito",units:"n: capitalizaciones/año · A: u.m.",formula:"\\[A_n=10000\\left(1+\\frac{0.08}{n}\\right)^n\\]",label:"Capitalizaciones n",min:1,max:365,step:1,value:12,fn:n=>10000*Math.exp(n*Math.log1p(.08/n)),limit:10000*Math.exp(.08),bounds:[1,365,10796,10838],xLabel:"n",yLabel:"Aₙ",digits:2,unit:" u.m.",interpretation:"Al aumentar la frecuencia, el monto de un año se aproxima a 10000e⁰·⁰⁸ ≈ 10832,87 u.m.",assumption:"Tasa nominal anual 8%; sin comisiones ni impuestos. El control selecciona únicamente frecuencias enteras.",plotNote:"Los puntos representan n entero. La línea tenue es una extensión continua que ayuda a seguir la tendencia."},
+      marginal:{title:"Del incremento a la tasa local",units:"h: unidades · cociente: u.m./unidad",formula:"\\[\\frac{C(100+h)-C(100)}h=24+0.02h\\]",label:"Acercamiento de h a cero",min:0,max:1000,step:1,value:400,fn:h=>24+.02*h,limit:24,bounds:[-50,50,22.8,25.2],xLabel:"h",yLabel:"ΔC / h",digits:4,unit:" u.m./unidad",interpretation:"Los cocientes por ambos lados tienden a 24 u.m./unidad. Es el costo marginal en q = 100.",assumption:"C(q) = 500 + 20q + 0,02q². Se usa una extensión continua; el incremento exacto de 100 a 101 unidades es 24,02 u.m.",plotNote:"El cociente original no está definido en h = 0. El hueco marca su límite: 24."}
+    };
+    function econValue(){return econSelected==="marginal"?50*Math.pow(10,-4*Number($("econRange").value)/1000):Number($("econRange").value);}
+    function drawEcon(){
+      const c=econ[econSelected],x=econValue(),value=c.fn(x),gap=value-c.limit,p=setup($("econPlot"),c.bounds,c.xLabel,c.yLabel);
+      p.line(p.xmin,c.limit,p.xmax,c.limit,colors.blue,[6,5],1.5);
+      if(econSelected==="average")p.curve(c.fn,colors.green,100,10000);
+      else if(econSelected==="interest"){p.curve(c.fn,"#65e6b477");for(let n=1;n<=365;n++)p.point(n,c.fn(n),colors.green,false,n<12?2.5:1.2);}
+      else{p.curve(c.fn);p.point(0,24,colors.amber,true,6);p.point(-x,c.fn(-x),colors.blue);}
+      p.line(x,p.ymin,x,value,colors.amber,[3,5]);p.point(x,value,colors.amber,false,6);
+      $("econRangeOut").textContent=econSelected==="marginal"?"h = ±"+format(x,4):format(x,0);
+      $("econValue").textContent=format(value,c.digits)+c.unit;
+      $("econValueLabel").textContent=econSelected==="marginal"?"Cociente para h positivo":"Valor actual";
+      $("econGap").textContent=econSelected==="marginal"?"Para h negativo: "+format(c.fn(-x),4)+". Distancia al límite por cada lado: "+format(Math.abs(gap),4)+".":"Distancia al límite: "+format(Math.abs(gap),4)+c.unit+".";
+      $("econPlot").setAttribute("aria-label",c.title+". "+c.label+": "+format(x,4)+". Valor "+format(value,4)+c.unit+". Límite "+format(c.limit,4)+c.unit+".");
+    }
+    function stopEcon(){cancelAnimationFrame(econFrame);econFrame=0;econStart=null;$("playEcon").textContent="Animar modelo";$("playEcon").setAttribute("aria-pressed","false");}
+    function setEcon(key){
+      stopEcon();econSelected=key;const c=econ[key],range=$("econRange");
+      document.querySelectorAll("[data-econ]").forEach(b=>b.setAttribute("aria-pressed",String(b.dataset.econ===key)));
+      $("econTitle").textContent=c.title;$("econUnits").textContent=c.units;
+      if(window.MathJax&&window.MathJax.typesetClear)window.MathJax.typesetClear([$("econFormula")]);
+      $("econFormula").textContent=c.formula;math($("econFormula"));
+      $("econRangeLabel").textContent=c.label;range.min=c.min;range.max=c.max;range.step=c.step;range.value=c.value;
+      $("econInterpretation").textContent=c.interpretation;$("econAssumption").textContent=c.assumption;$("econPlotNote").textContent=c.plotNote;
+      drawEcon();
+    }
+    document.querySelectorAll("[data-econ]").forEach(b=>b.addEventListener("click",()=>setEcon(b.dataset.econ)));
+    $("econRange").addEventListener("input",()=>{stopEcon();drawEcon();});
+    $("playEcon").addEventListener("click",()=>{
+      if(econFrame){stopEcon();return;}
+      const c=econ[econSelected];
+      if(reduceMotion.matches){$("econRange").value=c.max;drawEcon();return;}
+      $("playEcon").textContent="Pausar animación";$("playEcon").setAttribute("aria-pressed","true");
+      function step(t){if(econStart===null)econStart=t;const f=Math.min(1,(t-econStart)/10000);$("econRange").value=c.min+Math.round((c.max-c.min)*f/c.step)*c.step;drawEcon();if(f<1)econFrame=requestAnimationFrame(step);else stopEcon();}
+      econFrame=requestAnimationFrame(step);
+    });
+    const exerciseDialog=$("ejercicios");
+    let exerciseOpener=null;
+    function filterExercises(){
+      const topic=$("exerciseTopic").value,level=$("exerciseLevel").value;
+      const cards=exerciseDialog.querySelectorAll(".exercise");let visible=0;
+      cards.forEach(card=>{
+        const show=(topic==="all"||card.dataset.topic.split(" ").includes(topic))&&(level==="all"||card.dataset.level===level);
+        card.hidden=!show;if(show)visible++;
+      });
+      $("exerciseCount").textContent=visible+" de "+cards.length+" ejercicios";
+      $("exerciseEmpty").hidden=visible!==0;
+      $("compositionExerciseNote").hidden=topic!=="composicion"&&topic!=="all";
+    }
+    function openExercises(topic="all",opener=null){
+      exerciseOpener=opener||document.activeElement;
+      $("exerciseTopic").value=topic;$("exerciseLevel").value="all";filterExercises();
+      document.querySelector(".mobile-nav").removeAttribute("open");
+      stopLimit();stopEcon();stopEpsilonConfetti();epsilonBandFeedback.classList.remove("in-view");
+      if(!exerciseDialog.open)exerciseDialog.showModal();
+      document.body.classList.add("exercise-modal-open");
+      exerciseDialog.querySelector(".exercise-dialog-body").scrollTop=0;
+      $("exerciseTopic").focus();
+    }
+    document.querySelectorAll("[data-open-exercises]").forEach(button=>button.addEventListener("click",()=>openExercises(button.dataset.openExercises,button)));
+    $("exerciseTopic").addEventListener("change",filterExercises);$("exerciseLevel").addEventListener("change",filterExercises);
+    $("closeExercises").addEventListener("click",()=>exerciseDialog.close());
+    exerciseDialog.addEventListener("click",event=>{if(event.target!==exerciseDialog)return;const r=exerciseDialog.getBoundingClientRect();if(event.clientX<r.left||event.clientX>r.right||event.clientY<r.top||event.clientY>r.bottom)exerciseDialog.close();});
+    exerciseDialog.addEventListener("close",()=>{
+      document.body.classList.remove("exercise-modal-open");
+      const mobileMenu=exerciseOpener&&exerciseOpener.closest(".mobile-nav");
+      if(mobileMenu&&!mobileMenu.open)mobileMenu.querySelector("summary").focus({preventScroll:true});
+      else if(exerciseOpener&&exerciseOpener.isConnected&&exerciseOpener.getClientRects().length)exerciseOpener.focus({preventScroll:true});
+      const r=$("epsilonPlot").getBoundingClientRect();epsilonBandFeedback.classList.toggle("in-view",!document.hidden&&r.bottom>0&&r.top<innerHeight);
+    });
+    if(location.hash==="#ejercicios")openExercises();
+    $("quiz").addEventListener("submit",e=>{
+      e.preventDefault();const selectedAnswer=new FormData(e.currentTarget).get("answer");
+      $("quizResult").textContent=!selectedAnswer?"Elige una respuesta antes de comprobar.":selectedAnswer==="b"?"Correcto. El límite depende de las entradas cercanas a 2. Cambiar f(2) a 4 elimina la discontinuidad removible.":"Revisa la diferencia entre el valor en el punto y el límite. El límite sí existe; la continuidad exige además que coincida con f(2).";
+      $("quizResult").style.color=selectedAnswer==="b"?colors.green:colors.amber;
+    });
+    document.querySelectorAll(".mobile-nav a").forEach(a=>a.addEventListener("click",()=>a.closest("details").removeAttribute("open")));
+    function progress(){const total=document.documentElement.scrollHeight-window.innerHeight;$("progress").style.transform="scaleX("+(total>0?Math.min(1,Math.max(0,window.scrollY/total)):0)+")";}
+    window.addEventListener("scroll",progress,{passive:true});
+    document.addEventListener("visibilitychange",()=>{if(document.hidden){stopLimit();stopEcon();stopEpsilonConfetti();epsilonBandFeedback.classList.remove("in-view");}else{const r=$("epsilonPlot").getBoundingClientRect();epsilonBandFeedback.classList.toggle("in-view",!exerciseDialog.open&&r.bottom>0&&r.top<innerHeight);}});
+    if("IntersectionObserver" in window){new IntersectionObserver(entries=>{const visible=entries[0].isIntersecting&&!document.hidden&&!exerciseDialog.open;epsilonBandFeedback.classList.toggle("in-view",visible);if(!visible)stopEpsilonConfetti();}).observe($("epsilonPlot"));}else epsilonBandFeedback.classList.add("in-view");
+    if("IntersectionObserver" in window){const observer=new IntersectionObserver(entries=>{entries.forEach(entry=>{if(!entry.isIntersecting){if(entry.target.id==="limitPlot")stopLimit();if(entry.target.id==="econPlot")stopEcon();}});});observer.observe($("limitPlot"));observer.observe($("econPlot"));}
+    let resizeTimer;window.addEventListener("resize",()=>{clearTimeout(resizeTimer);resizeTimer=setTimeout(()=>{drawLimit();drawEpsilon();drawEcon();progress();},100);});
+    if(reduceMotion.addEventListener)reduceMotion.addEventListener("change",()=>{stopLimit();stopEcon();stopEpsilonConfetti();});
+    setCase("hole");setEpsilonCase("linear");setEcon("average");progress();
+    window.addEventListener("load",()=>{drawLimit();drawEpsilon();drawEcon();progress();});
+  })();
   </script>
 </body>
 </html>
