@@ -1,0 +1,210 @@
+<!doctype html><html lang="es"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>OpenStax 16.3 — Internal Rate of Return (IRR) Method</title><style>body{max-width:900px;margin:2rem auto;padding:0 1rem;font:18px/1.6 system-ui,sans-serif;color:#172722;background:#fbfdfb}a{color:#175f49}header{padding-bottom:1rem;border-bottom:2px solid #b8d3c7}aside{padding:1rem;background:#edf5ef;font-size:.9em}table{border-collapse:collapse;width:100%;overflow-wrap:anywhere}td,th{border:1px solid #abbfb7;padding:.4rem}math{font-size:1.1em}figure{border:1px solid #b8d3c7;padding:1rem}.equation{font-family:serif;font-size:1.2em;overflow-x:auto}.archive-note{font-size:.85em;color:#456055}pre{white-space:pre-wrap}</style><header><h1>OpenStax 16.3 — Internal Rate of Return (IRR) Method</h1><p>Julie Dahlquist y Rainford Knight (2022), <em>Principles of Finance</em>, OpenStax / Rice University.</p><p><a href="https://openstax.org/books/principles-finance/pages/16-3-internal-rate-of-return-irr-method">Sección original</a> · <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a></p><p>Access for free at <a href="https://openstax.org/books/principles-finance/pages/1-why-it-matters">https://openstax.org/books/principles-finance/pages/1-why-it-matters</a></p><aside>Copia docente no comercial del texto, tablas y fórmulas de esta sección, consultada el 2026-10-24. Se retiraron navegación, scripts e imágenes; estas últimas se señalan por su texto alternativo. No se incluyen logos ni marcas. Las ecuaciones MathML se conservan para lectura sin conexión. Esta selección y presentación se ofrecen bajo CC BY-NC-SA 4.0. No implica respaldo de OpenStax.</aside></header><main><div data-type="page" id="page_d3625624-4efc-4379-a4cc-8a69f7e32e1c" class="chapter-content-module" data-book-content="true"><h2 data-type="document-title" id="page_d3625624-4efc-4379-a4cc-8a69f7e32e1c_titlecreatedbycookbook" data-rex-keep="true"><span class="os-number">16.3</span>
+<span class="os-divider"> </span>
+<span data-type="" itemprop="" class="os-text">Internal Rate of Return (IRR) Method</span>
+</h2>
+    
+    <section data-depth="1" class="learning-objectives" id="sect-00001"><h3 data-type="title">Learning Outcomes</h3>
+    <p id="para-00001">By the end of this section, you will be able to:</p>
+    <ul id="list-00001">
+    <li>Define internal rate of return (IRR).</li>
+    <li>Calculate internal rate of return.</li>
+    <li>List advantages and disadvantages of using the internal rate of return method.</li>
+    </ul>
+    </section>
+    
+    <section data-depth="1" id="sect-00002"><h3 data-type="title">Internal Rate of Return (IRR) Calculation</h3>
+    <p id="para-00002">The <span data-type="term" id="term-00001" group-by="i">internal rate of return (IRR)</span> is the discount rate that sets the present value of the cash inflows equal to the present value of the cash outflows. In considering whether Sam’s Sporting Goods should purchase the embroidery machine, the IRR method approaches the time value of money problem from a slightly different angle. Instead of using the company’s cost of attracting funds for the discount rate and solving for NPV, as we did in the first NPV equation, we set NPV equal to zero and solve for the discount rate to find the IRR:</p>
+    <div data-type="equation" id="eq-00001"><math display="block"><semantics><mrow><mi>NPV</mi><mo>=</mo><mfrac><mrow><mo>$</mo><mn>2,000</mn></mrow><msup><mfenced><mrow><mn>1</mn><mo> </mo><mo>+</mo><mo> </mo><mi>i</mi></mrow></mfenced><mn>1</mn></msup></mfrac><mo>+</mo><mfrac><mrow><mo>$</mo><mn>4,000</mn></mrow><mrow><mo>(</mo><msup><mrow><mn>1</mn><mo> </mo><mo>+</mo><mo> </mo><mi>i</mi><mo>)</mo></mrow><mn>2</mn></msup></mrow></mfrac><mo>+</mo><mfrac><mrow><mo>$</mo><mn>5,000</mn></mrow><msup><mfenced><mrow><mn>1</mn><mo> </mo><mo>+</mo><mo> </mo><mi>i</mi></mrow></mfenced><mn>3</mn></msup></mfrac><mo>+</mo><mfrac><mrow><mo>$</mo><mn>5,000</mn></mrow><msup><mfenced><mrow><mn>1</mn><mo> </mo><mo>+</mo><mo> </mo><mi>i</mi></mrow></mfenced><mn>4</mn></msup></mfrac><mo>+</mo><mfrac><mrow><mo>$</mo><mn>5,000</mn></mrow><msup><mfenced><mrow><mn>1</mn><mo> </mo><mo>+</mo><mo> </mo><mi>i</mi></mrow></mfenced><mn>5</mn></msup></mfrac><mo>+</mo><mfrac><mrow><mo>$</mo><mn>5,000</mn></mrow><msup><mfenced><mrow><mn>1</mn><mo> </mo><mo>+</mo><mo> </mo><mi>i</mi></mrow></mfenced><mn>6</mn></msup></mfrac><mo>-</mo><mo>$</mo><mn>16,000</mn><mo>=</mo><mn>0</mn></mrow><annotation-xml encoding="MathML-Content"><mi>NPV</mi><mo>=</mo><mfrac><mrow><mo>$</mo><mn>2,000</mn></mrow><msup><mfenced><mrow><mn>1</mn><mo> </mo><mo>+</mo><mo> </mo><mi>i</mi></mrow></mfenced><mn>1</mn></msup></mfrac><mo>+</mo><mfrac><mrow><mo>$</mo><mn>4,000</mn></mrow><mrow><mo>(</mo><msup><mrow><mn>1</mn><mo> </mo><mo>+</mo><mo> </mo><mi>i</mi><mo>)</mo></mrow><mn>2</mn></msup></mrow></mfrac><mo>+</mo><mfrac><mrow><mo>$</mo><mn>5,000</mn></mrow><msup><mfenced><mrow><mn>1</mn><mo> </mo><mo>+</mo><mo> </mo><mi>i</mi></mrow></mfenced><mn>3</mn></msup></mfrac><mo>+</mo><mfrac><mrow><mo>$</mo><mn>5,000</mn></mrow><msup><mfenced><mrow><mn>1</mn><mo> </mo><mo>+</mo><mo> </mo><mi>i</mi></mrow></mfenced><mn>4</mn></msup></mfrac><mo>+</mo><mfrac><mrow><mo>$</mo><mn>5,000</mn></mrow><msup><mfenced><mrow><mn>1</mn><mo> </mo><mo>+</mo><mo> </mo><mi>i</mi></mrow></mfenced><mn>5</mn></msup></mfrac><mo>+</mo><mfrac><mrow><mo>$</mo><mn>5,000</mn></mrow><msup><mfenced><mrow><mn>1</mn><mo> </mo><mo>+</mo><mo> </mo><mi>i</mi></mrow></mfenced><mn>6</mn></msup></mfrac><mo>-</mo><mo>$</mo><mn>16,000</mn><mo>=</mo><mn>0</mn></annotation-xml></semantics></math><div class="os-equation-number">
+  <span class="os-number">16.3</span>
+</div>
+</div>
+    <p id="para-00003">The IRR is the discount rate at which the NPV profile graph crosses the horizontal axis. If the IRR is greater than the cost of capital, a project should be accepted. If the IRR is less than the cost of capital, a project should be rejected. The NPV profile graph for the embroidery machine crossed the horizontal axis at 14%. Therefore, if Sam’s Sporting Goods can attract capital for less than 14%, the IRR exceeds the cost of capital and the embroidery machine should be purchased. However, if it costs Sam’s more than 14% to attract capital, the embroidery machine should not be purchased.</p>
+    <p id="para-00004">In other words, a company wants to accept projects that have an IRR that exceed the company’s cost of attracting funds. The cash flow from these projects will be great enough to cover the cost of attracting money from investors in addition to the other costs of the project. A company should reject any project that has an IRR less than the company’s cost of attracting funds; the cash flows from such a project are not enough to compensate the investors for the use of their funds.</p>
+    <p id="para-00005">Calculating IRR without a financial calculator is an arduous, time-consuming process that requires trial and error to find the discount rate that makes NPV exactly equal zero. Your calculator uses the same type of trial-and-error iterative process, but because it uses an automated process, it can do so much more quickly than you can. A problem that might require 30 minutes of detailed mathematical calculations by hand can be completed in a matter of seconds with the assistance of a financial calculator.</p>
+    <p id="para-00006">All the information your calculator needs to calculate IRR is the value of each cash flow and the time period in which it occurs. To calculate IRR, begin by entering the cash flows for the project, just as you do for the NPV calculation (see <a href="https://openstax.org/books/principles-finance/pages/16-3-internal-rate-of-return-irr-method#table-00001" class="autogenerated-content" aria-label="View Table 16.7">Table 16.7</a>). After these cash flows are entered, simply compute IRR in the final step.</p>
+    <div class="os-table" id="table-00001"><table data-summary="Some cells are left blank for visual design purposes." data-id="table-00001"><colgroup><col data-width="0*"><col data-width="5*"><col data-width="3*"><col data-width="2*"><col data-width="0*"></colgroup><thead>
+    <tr>
+    <th data-align="center" scope="col">Step</th>
+    <th data-align="center" scope="col">Description</th>
+    <th data-align="center" scope="col">Enter</th>
+    <th colspan="2" data-align="center" scope="colgroup">Display</th>
+    </tr>
+    </thead><tbody>
+    <tr>
+    <td data-align="center">1</td>
+    <td data-align="left">Select cash flow worksheet</td>
+    <td data-align="left"><span class="primary-function">CF</span></td>
+    <td data-align="left">CF0</td>
+    <td data-align="right">XXXX</td>
+    </tr>
+    <tr>
+    <td data-align="center">2</td>
+    <td data-align="left">Clear the cash flow worksheet</td>
+    <td data-align="left"><span class="primary-function">2ND</span> <span class="secondary-function">[CLR WORK</span>]</td>
+    <td data-align="left">CF0</td>
+    <td data-align="right">0</td>
+    </tr>
+    <tr>
+    <td data-align="center">3</td>
+    <td data-align="left">Enter initial cash flow</td>
+    <td data-align="left">16000 <span class="primary-function">+/-</span> <span class="primary-function">ENTER</span></td>
+    <td data-align="left">CF0 =</td>
+    <td data-align="right">-16,000.00</td>
+    </tr>
+    <tr>
+    <td data-align="center">4</td>
+    <td data-align="left">Enter cash flow for the first year</td>
+    <td data-align="left">↓     2000 <span class="primary-function">ENTER</span></td>
+    <td data-align="left">C01 =</td>
+    <td data-align="right">2,000.00</td>
+    </tr>
+    <tr>
+    <td data-align="center"> </td>
+    <td data-align="left"> </td>
+    <td data-align="left">↓</td>
+    <td data-align="left">F01 =</td>
+    <td data-align="right">1.0</td>
+    </tr>
+    <tr>
+    <td data-align="center">5</td>
+    <td data-align="left">Enter cash flow for the second year</td>
+    <td data-align="left">↓     4000 <span class="primary-function">ENTER</span></td>
+    <td data-align="left">C02 =</td>
+    <td data-align="right">4,000.00</td>
+    </tr>
+    <tr>
+    <td data-align="center"> </td>
+    <td data-align="left"> </td>
+    <td data-align="left">↓</td>
+    <td data-align="left">F02 =</td>
+    <td data-align="right">1.0</td>
+    </tr>
+    <tr>
+    <td data-align="center">6</td>
+    <td data-align="left">Enter cash flow for the third year</td>
+    <td data-align="left">↓     5000 <span class="primary-function">ENTER</span></td>
+    <td data-align="left">C03 =</td>
+    <td data-align="right">5,000.00</td>
+    </tr>
+    <tr>
+    <td data-align="center"> </td>
+    <td data-align="left"> </td>
+    <td data-align="left">↓</td>
+    <td data-align="left">F03 =</td>
+    <td data-align="right">1.0</td>
+    </tr>
+    <tr>
+    <td data-align="center">7</td>
+    <td data-align="left">Enter cash flow for the fourth year</td>
+    <td data-align="left">↓     5000 <span class="primary-function">ENTER</span></td>
+    <td data-align="left">C04 =</td>
+    <td data-align="right">5,000.00</td>
+    </tr>
+    <tr>
+    <td data-align="center"> </td>
+    <td data-align="left"> </td>
+    <td data-align="left">↓</td>
+    <td data-align="left">F04 =</td>
+    <td data-align="right">1.0</td>
+    </tr>
+    <tr>
+    <td data-align="center">8</td>
+    <td data-align="left">Enter cash flow for the fifth year</td>
+    <td data-align="left">↓     5000 <span class="primary-function">ENTER</span></td>
+    <td data-align="left">C05 =</td>
+    <td data-align="right">5,000.00</td>
+    </tr>
+    <tr>
+    <td data-align="center"> </td>
+    <td data-align="left"> </td>
+    <td data-align="left">↓</td>
+    <td data-align="left">F05 =</td>
+    <td data-align="right">1.0</td>
+    </tr>
+    <tr>
+    <td data-align="center">9</td>
+    <td data-align="left">Enter cash flow for the sixth year</td>
+    <td data-align="left">↓     5000 <span class="primary-function">ENTER</span></td>
+    <td data-align="left">C06 =</td>
+    <td data-align="right">5,000.00</td>
+    </tr>
+    <tr>
+    <td data-align="center"> </td>
+    <td data-align="left"> </td>
+    <td data-align="left">↓</td>
+    <td data-align="left">F06 =</td>
+    <td data-align="right">1.0</td>
+    </tr>
+    <tr>
+    <td data-align="center">10</td>
+    <td data-align="left">Compute IRR</td>
+    <td data-align="left"><span class="primary-function">IRR</span> <span class="primary-function">CPT</span></td>
+    <td data-align="left">IRR =</td>
+    <td data-align="right">14.09</td>
+    </tr>
+    </tbody></table><div class="os-caption-container">
+  <span class="os-title-label">Table </span>
+  <span class="os-number">16.7</span>
+  <span class="os-divider"> </span>
+<span class="os-title" data-type="title">Calculator Steps for IRR</span>
+
+  <span class="os-divider"> </span>
+</div>
+</div>
+    </section>
+    
+    <section data-depth="1" id="sect-00003"><h3 data-type="title">Advantages</h3>
+    <p id="para-00007">The primary advantage of using the IRR method is that it is easy to interpret and explain. Investors like to speak in terms of annual percentage returns when evaluating investment possibilities.</p>
+    </section>
+    
+    <section data-depth="1" id="sect-00004"><h3 data-type="title">Disadvantages</h3>
+    <p id="para-00008">One disadvantage of using IRR is that it can be tedious to calculate. We knew the IRR was about 14% for the embroidery machine project because we had previously calculated the NPV for several discount rates. The IRR is about, but not exactly, 14%, because NPV is not exactly equal to zero (just very close to zero) when we use 14% as the discount rate. Before the prevalence of financial calculators and spreadsheets, calculating the exact IRR was difficult and time-consuming. With today’s technology, this is no longer a major consideration. Later in this chapter, we will look at how to use a spreadsheet to do these calculations.</p>
+    <p id="para-00009"><strong>No Single Mathematical Solution.</strong> Another disadvantage of using the IRR method is that there may not be a single mathematical solution to an IRR problem. This can happen when negative cash flows occur in more than one period in the project. Suppose your company is considering building a facility for an upcoming Olympic competition. The construction cost would be $350 million. The facility would be used for one year and generate cash inflows of $950 million. Then, the following year, your company would be required to convert the facility into a public park area for the city, which is expected to cost $620 million. Placing these cash flows in a timeline results in the following (<a href="https://openstax.org/books/principles-finance/pages/16-3-internal-rate-of-return-irr-method#table-00002" class="autogenerated-content" aria-label="View Table 16.8">Table 16.8</a>):</p>
+    <div class="os-table os-timeline-table-container" id="table-00002"><table data-summary=" " class="timeline-table" data-id="table-00002"><thead>
+    <tr>
+    <th data-align="center" scope="col">Year</th>
+    <th data-align="center" scope="col">0</th>
+    <th data-align="center" scope="col">1</th>
+    <th data-align="center" scope="col">2</th>
+    </tr>
+    </thead><tbody>
+    <tr>
+    <td data-align="center">Cash Flow ($Millions)</td>
+    <td data-align="center">(350)</td>
+    <td data-align="center">950</td>
+    <td data-align="center">(620)</td>
+    </tr>
+    </tbody></table><div class="os-caption-container">
+  <span class="os-title-label">Table </span>
+  <span class="os-number">16.8</span>
+  <span class="os-divider"> </span>
+  <span class="os-divider"> </span>
+</div>
+</div>
+    <p id="para-00010">The NPV profile for this project looks like <a href="https://openstax.org/books/principles-finance/pages/16-3-internal-rate-of-return-irr-method#fig-00001" class="autogenerated-content" aria-label="View Figure 16.3">Figure 16.3</a>. The NPV is negative at low interest rates, becomes positive at higher interest rates, and then turns negative again as the interest rate continues to rise. Because the NPV profile line crosses the horizontal axis twice, there are two IRRs. In other words, there are two interest rates at which NPV equals zero.</p>
+    <div class="os-figure" id="fig-00001"><figure data-id="fig-00001" class="scaled-down ui-has-child-figcaption">
+    <span data-type="media" data-alt="Net present value graph for a project with two IRRs. It shows that the NPV is negative at low-interest rates, and becomes positive at higher interest rates. The NPV then turns negative again as the interest rate continues to rise. Because the NPV profile line crosses the horizontal axis twice, there are two IRRs."></span>
+    <figcaption class="os-caption-container">
+  <span class="os-title-label">Figure </span>
+<span class="os-number">16.3</span>
+<span class="os-divider"> </span>
+<span class="os-title" data-type="title">NPV Profile Graph for a Project with Two IRRs</span>
+
+  
+  
+</figcaption></figure></div>
+    <p id="para-00011"><strong>Reinvestment Rate Assumption.</strong> The IRR assumes that the cash flows are reinvested at the internal rate of return when they are received. This is a disadvantage of the IRR method. The firm may not be able to find any other projects with returns equal to a high-IRR project, so the company may not be able to reinvest at the IRR.</p>
+    <p id="para-00012">The reinvestment rate assumption becomes problematic when a company has several acceptable projects and is attempting to rank the projects. We will look more closely at the issues that can arise when considering mutually exclusive projects later in this chapter. If a company is simply deciding whether to accept a single project, the reinvestment assumption limitation is not relevant.</p>
+    <p id="para-00013"><strong>Overlooking Differences in Scale.</strong> Another disadvantage of using the IRR method to choose among various acceptable projects is that it ignores differences in scale. The IRR converts the cash flows to percentages and ignores differences in the size or scale of projects. Issues that occur when comparing projects of different scales are covered later in this chapter.</p>
+    </section>
+    
+    
+    
+    
+    
+    
+    
+    
+  </div>
+  
+</main></html>

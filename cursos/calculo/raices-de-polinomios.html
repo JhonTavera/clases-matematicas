@@ -1,0 +1,868 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#07151c"><meta name="description" content="16 problemas de modelación con raíces de polinomios: geometría, economía y medio ambiente. Pistas y respuestas numéricas.">
+<title>Raíces de polinomios · Ejercicios de cálculo</title>
+<script>window.MathJax={tex:{inlineMath:[["\\(","\\)"]],displayMath:[["\\[","\\]"]]},options:{skipHtmlTags:["script","noscript","style","textarea","pre","code"]}};</script>
+<script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+<style>
+:root{color-scheme:dark;--bg:#07151c;--deep:#030b10;--surface:#0c2028;--ink:#edf7f1;--muted:#a6b8b4;--soft:#27434a;--accent:#65e6b4;--accent-ink:#062117;--blue:#8ebcf2;--radius:22px;--ui:"Aptos","Segoe UI","Helvetica Neue",Arial,system-ui,sans-serif}
+*{box-sizing:border-box}html{scroll-behavior:smooth;scroll-padding-top:85px;background:var(--bg)}body{margin:0;min-width:320px;color:var(--ink);font-family:var(--ui);line-height:1.7;background:radial-gradient(circle at 80% 0,rgba(101,230,180,.09),transparent 35rem),linear-gradient(135deg,var(--deep),var(--bg) 55%,#0b2028)}a{color:var(--accent);text-underline-offset:4px}a:hover{color:var(--ink)}a:focus-visible,summary:focus-visible{outline:2px solid var(--accent);outline-offset:5px;border-radius:4px}::selection{background:var(--accent);color:var(--accent-ink)}
+.top-nav{position:sticky;top:0;z-index:10;display:flex;justify-content:space-between;gap:1rem;padding:1rem max(20px,calc((100vw - 1140px)/2));background:rgba(7,21,28,.95);backdrop-filter:blur(15px);border-bottom:1px solid rgba(237,247,241,.1);font-size:.85rem}.top-nav a{text-decoration:none;font-weight:750}.top-nav span{color:var(--muted)}main,footer{width:min(1140px,calc(100% - 36px));margin:auto}header{padding:5rem 0 3rem}.kicker{color:var(--accent);font-size:.75rem;font-weight:800;letter-spacing:.16em;text-transform:uppercase}h1{font-size:clamp(3rem,8vw,6.4rem);line-height:.97;letter-spacing:-.065em;max-width:11ch;margin:1.3rem 0 1.8rem}header>p{color:var(--muted);font-size:1.1rem;max-width:72ch}h2{font-size:clamp(1.8rem,4vw,3rem);line-height:1.15;letter-spacing:-.035em}h3{line-height:1.25}p{margin:.8rem 0}li+li{margin-top:.5rem}
+.instructions,.sources{padding:clamp(1.2rem,3vw,2rem);border:1px solid var(--soft);border-radius:var(--radius);background:var(--surface)}.instructions p:first-child{margin-top:0}.instructions p:last-child{margin-bottom:0}.instructions strong{color:var(--accent)}.instructions p{color:#cfdfd9}
+.category-nav{display:flex;flex-wrap:wrap;gap:.6rem;margin:2rem 0 0}.category-nav a{padding:.6rem 1rem;border:1px solid var(--soft);border-radius:999px;text-decoration:none;font-size:.9rem}.category-nav a:hover{border-color:var(--accent)}.problem-group{padding-top:3.5rem}.group-head{display:flex;align-items:baseline;gap:1rem;flex-wrap:wrap;border-bottom:1px solid var(--soft);margin-bottom:1.5rem}.group-head h2{margin-bottom:1rem}.group-head span{color:var(--muted);font-size:.85rem}
+.problem{margin:0 0 1.4rem;border:1px solid rgba(237,247,241,.12);border-radius:var(--radius);overflow:hidden;background:rgba(12,32,40,.85)}.problem-header{padding:clamp(1.2rem,3vw,2rem);padding-bottom:.6rem;display:grid;grid-template-columns:3rem 1fr;gap:1rem;align-items:start}.number{display:grid;place-items:center;min-width:3rem;min-height:3rem;border-radius:50%;background:rgba(101,230,180,.1);border:1px solid rgba(101,230,180,.2);color:var(--accent);font-weight:800}.problem-header h3{margin:.2rem 0;font-size:clamp(1.3rem,2.6vw,1.8rem);letter-spacing:-.025em}.problem-body{padding:0 clamp(1.2rem,3vw,2rem) 1rem;color:#d7e4df}.problem-body>p:first-child{margin-top:.3rem}.problem-body ol{list-style:lower-alpha;padding-left:1.5rem}.problem-body li{padding-left:.2rem}.problem-body ul{padding-left:1.4rem}.problem-body strong{color:var(--ink)}.problem-body table,.answer-content table{display:block;max-width:100%;overflow-x:auto;border-collapse:collapse;margin:1rem 0;font-size:.92rem}.problem-body th,.problem-body td,.answer-content th,.answer-content td{padding:.7rem .9rem;border-bottom:1px solid var(--soft);vertical-align:top;text-align:left}.problem-body th{color:var(--accent)}
+.problem-tools{padding:0 clamp(1.2rem,3vw,2rem) clamp(1.2rem,3vw,2rem);display:grid;gap:.7rem}.tool{border:1px solid var(--soft);border-radius:14px;background:rgba(3,11,16,.28)}.tool>summary{cursor:pointer;font-weight:750;padding:.8rem 1rem;color:var(--accent)}.tool.answer>summary{color:var(--blue)}.hint-content,.answer-content{padding:0 1rem 1rem;color:#d0dfd8}.hint-content ol,.answer-content ul{padding-left:1.3rem}.answer-content li{margin-top:.35rem}.hint-content p:first-child,.answer-content p:first-child{margin-top:0}.hint-note{font-size:.83rem;color:var(--muted)}mjx-container[display="true"]{max-width:100%;overflow-x:auto;overflow-y:hidden;padding:.5rem 0}mjx-container{color:inherit}.source-note{color:var(--muted);font-size:.85rem}.sources{margin:4rem 0}.sources h2{margin-top:0}.source{padding:1.1rem 0;border-top:1px solid var(--soft)}.source h3{margin:.3rem 0}.source p{color:#c8d8d1}.source a{font-size:.92rem}.source small{color:var(--muted)}footer{padding:2rem 0 3rem;border-top:1px solid var(--soft);color:var(--muted);font-size:.84rem}
+@media(max-width:600px){header{padding-top:3rem}.top-nav{font-size:.78rem;padding:1rem}.top-nav span{display:none}.problem-header{grid-template-columns:2.4rem 1fr;gap:.75rem}.number{min-width:2.4rem;min-height:2.4rem}.problem-body,.problem-tools{font-size:.96rem}.category-nav a{font-size:.82rem}h1{letter-spacing:-.05em}}
+@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
+@media print{html,body{background:white;color:black}.top-nav,.category-nav{display:none}main,footer{width:100%}header{padding:1rem 0}h1{font-size:2.8rem}.problem{background:white;border:1px solid #aaa;break-inside:auto}.problem-header,.number,.problem-body,.problem-body strong,.instructions p,.source p,.hint-content,.answer-content{color:black}.problem-body{font-size:10pt}.sources,.instructions{background:white}.number{background:none}.problem-tools{display:none}a{color:black}.sources{break-before:page}}
+.sr-number{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}</style>
+</head><body>
+<nav class="top-nav" aria-label="Navegación"><a href="funciones_reales_variable_real.html#ejercicios">← Funciones reales de variable real</a><span>Prof. Jhon Fredy Tavera Bucurú</span><a href="#indice">Índice</a></nav>
+<main><header id="indice"><div class="kicker">Ejercicios · Cálculo</div><h1>Raíces de polinomios.</h1><p>De una situación a una ecuación. Modela, calcula las raíces y decide cuáles responden al problema.</p>
+<nav class="category-nav" aria-label="Grupos de problemas"><a href="#geometria">01–09 · Geometría</a><a href="#economia">10–13 · Negocios</a><a href="#ambiente">14–16 · Medio ambiente</a><a href="#fuentes">Bibliografía y copias</a></nav></header>
+<section class="instructions" aria-label="Indicaciones"><p><strong>Antes de usar la calculadora:</strong> dibuja si hace falta, define las variables y sus unidades, y construye la ecuación desde los datos. Escribe el dominio y revisa las condiciones antes de eliminar denominadores o elevar al cuadrado.</p><p>Usa una calculadora gráfica para localizar las raíces reales. Comprueba las candidatas en las relaciones originales y justifica los redondeos. Las pistas orientan la modelación; las respuestas muestran resultados finales sin procedimiento.</p><p class="source-note">Las dimensiones, presupuestos y metas son condiciones de los proyectos planteados. Los modelos especializados tienen fuentes al final. Los problemas geométricos de agrimensura y construcción se inspiran en el estilo del <em>Shushu Jiuzhang</em>; los enunciados creados aquí no se atribuyen al tratado. El bambú introduce una ecuación que se simplifica a grado uno.</p></section>
+<section class="problem-group" id="geometria" aria-labelledby="group-geometria"><div class="group-head"><h2 id="group-geometria">Geometría</h2><span>Mediciones, áreas y volúmenes</span></div><article class="problem" id="bambu" aria-labelledby="title-bambu">
+<div class="problem-header"><span class="number" aria-hidden="true">01</span><h3 id="title-bambu"><span class="sr-number">1. </span>El bambú quebrado</h3></div>
+<div class="problem-body"><p>Una caña de bambú de 10 pies de altura se ha quebrado por el viento. Su extremo superior toca el suelo a una distancia de 3 pies de la base del tallo. El jardinero necesita saber a qué altura del tallo se produjo la fractura para poder podar la parte dañada.</p>
+<p>Suponga que el suelo es horizontal, que la parte inferior sigue vertical y que la parte superior permanece recta y unida al punto de fractura.</p>
+<ol type="a"><li>Dibuje la situación y defina la altura de la fractura. Exprese la longitud de la parte inclinada y establezca el dominio físico.</li><li>Construya una ecuación con ayuda de la figura, simplifíquela y encuentre su raíz. ¿Qué grado tiene la ecuación después de simplificar?</li><li>Indique la altura a la que se produjo la fractura y verifique que las dos partes suman los 10 pies originales.</li></ol></div>
+<div class="problem-tools"><details class="tool hints"><summary>Pistas para modelar</summary><div class="hint-content"><ol><li>La parte vertical, el tramo horizontal del suelo y la parte inclinada forman un triángulo rectángulo.</li><li>La suma de las longitudes de las dos partes de la caña sigue siendo 10 pies. Aplique Pitágoras y simplifique antes de clasificar la ecuación.</li></ol></div></details>
+<details class="tool answer"><summary>Comprobar respuesta final</summary><div class="answer-content"><p>Altura de la fractura: \(4{,}55\) pies. Parte inclinada: \(5{,}45\) pies. Grado de la ecuación simplificada: \(1\).</p></div></details></div></article><article class="problem" id="franja-vegetal" aria-labelledby="title-franja-vegetal">
+<div class="problem-header"><span class="number" aria-hidden="true">02</span><h3 id="title-franja-vegetal"><span class="sr-number">2. </span>Una franja vegetal: ¿qué ancho permite el presupuesto?</h3></div>
+<div class="problem-body"><p>En un parque hay una plazoleta rectangular de <span
+class="math inline">\(12\)</span> m por <span
+class="math inline">\(8\)</span> m. Se quiere rodearla por sus cuatro
+lados con una franja vegetal de ancho uniforme. Las cuatro piezas de
+franja que quedan en las esquinas deben ser <strong>cuadrados</strong>,
+sin redondeos: el borde exterior conserva cuatro ángulos rectos. Si se
+llama <span class="math inline">\(x\)</span> al ancho añadido a cada
+lado en dirección horizontal e <span class="math inline">\(y\)</span> al
+añadido a cada lado en dirección vertical, cada esquina mide <span
+class="math inline">\(x\)</span> por <span
+class="math inline">\(y\)</span>; por tanto, la condición de esquinas
+cuadradas obliga a que <span class="math inline">\(x=y\)</span>. El
+rectángulo exterior disponible mide <span
+class="math inline">\(18\)</span> m por <span
+class="math inline">\(14\)</span> m y está centrado respecto de la
+plazoleta. Esta intervención busca aumentar la superficie vegetada; no
+se supone que el área, por sí sola, determine su capacidad de
+infiltración.</p>
+<p>La cotización del proyecto incluye:</p>
+<ul>
+<li><p><span class="math inline">\(\$1\,800\,000\)</span> por
+preparación y movilización, independientemente del ancho.</p></li>
+<li><p><span class="math inline">\(\$12\,000\)</span> por cada metro
+cuadrado de superficie vegetal nueva.</p></li>
+<li><p><span class="math inline">\(\$35\,000\)</span> por metro de borde
+instalado en todo el perímetro <em>exterior</em> de la franja. No se
+cobra borde junto a la plazoleta.</p></li>
+</ul>
+<p>El presupuesto es <span class="math inline">\(\$5\,600\,000\)</span>.
+Las tarifas incluyen todos los costos considerados para esta
+intervención.</p>
+<ol>
+<li><p>Dibuje la plazoleta y las cuatro esquinas cuadradas. Antes de
+imponer <span class="math inline">\(x=y\)</span>, obtenga el largo y el
+ancho exteriores y calcule su semiperímetro (suma del largo y el ancho)
+y su perímetro completo. Después use un solo ancho <span
+class="math inline">\(x\)</span>, establezca su dominio geométrico y
+construya el área nueva y el costo total. El borde se cobra por el
+perímetro completo.</p></li>
+<li><p>Modele la condición de gastar exactamente el presupuesto.
+Determine todas las raíces reales de la ecuación y explique cuáles
+corresponden a una obra posible.</p></li>
+<li><p>¿Cuántos metros cuadrados nuevos se obtienen con la solución
+admisible?</p></li>
+<li><p>La obra solo admite anchos especificados en centímetros enteros.
+¿Cuál es el mayor ancho que no supera el presupuesto? Un contratista
+propone redondear a <span class="math inline">\(2{,}70\)</span> m: ¿cabe
+su propuesta en el presupuesto? Justifique comparando los costos, no
+solo los anchos.</p></li>
+</ol></div>
+<div class="problem-tools"><details class="tool hints"><summary>Pistas para modelar</summary><div class="hint-content"><ol><li>Separe el rectángulo de la plazoleta del rectángulo exterior. La superficie nueva excluye la plazoleta original.</li><li>Cada esquina tiene lados iguales. El borde exterior recorre dos largos y dos anchos; el semiperímetro es solamente la suma de un largo y un ancho.</li><li>Sume el costo fijo, el costo por superficie nueva y el costo por todo el contorno. Compruebe el presupuesto después de redondear.</li></ol></div></details>
+<details class="tool answer"><summary>Comprobar respuesta final</summary><div class="answer-content"><p>Raíces para el ancho: \(-18{,}53144934\) y \(2{,}69811600\) m. Ancho admisible: \(2{,}69811600\) m; superficie vegetal nueva: \(137{,}04395994\,\mathrm{m^2}\).</p><p>Ancho máximo en centímetros enteros: \(2{,}69\) m; costo: $5.591.732,80. Con \(2{,}70\) m, costo: $5.601.920; exceso: $1.920.</p></div></details></div></article><article class="problem" id="lamina-deposito" aria-labelledby="title-lamina-deposito">
+<div class="problem-header"><span class="number" aria-hidden="true">03</span><h3 id="title-lamina-deposito"><span class="sr-number">3. </span>Reutilizar una lámina: dos depósitos con la misma capacidad</h3></div>
+<div class="problem-body"><p>Una huerta quiere fabricar un depósito abierto para almacenar agua de
+riego. Dispone de una lámina rectangular reutilizada de <span
+class="math inline">\(2{,}40\)</span> m por <span
+class="math inline">\(1{,}80\)</span> m. En cada esquina se corta un
+cuadrado del mismo tamaño; después se doblan verticalmente los cuatro
+lados y se sellan las uniones. Desprecie el espesor, los dobleces y la
+pérdida de volumen por el sellado.</p>
+<p>El depósito debe tener una capacidad geométrica de <span
+class="math inline">\(550\)</span> litros. Recuerde que <span
+class="math inline">\(1000\)</span> litros equivalen a <span
+class="math inline">\(1\,\mathrm{m^3}\)</span>.</p>
+<ol>
+<li><p>Defina el lado <span class="math inline">\(x\)</span> de los
+cuadrados cortados, determine su dominio y construya la ecuación
+correspondiente a la capacidad solicitada.</p></li>
+<li><p>Calcule todas las raíces reales. Para cada una, calcule el largo,
+el ancho y la altura resultantes. ¿Por qué no basta con verificar que el
+producto de las tres dimensiones sea positivo?</p></li>
+<li><p>Si dos diseños geométricamente válidos tienen la misma capacidad,
+¿cuál requiere retirar menos material? Cuantifique el área retirada en
+cada uno.</p></li>
+<li><p>Por accesibilidad, la altura del depósito no puede superar <span
+class="math inline">\(0{,}45\)</span> m. Seleccione el diseño que cumple
+esta condición. Si su corte se redondea al centímetro más cercano, ¿se
+conserva una capacidad de al menos <span
+class="math inline">\(550\)</span> litros? Proponga una medida en
+centímetros enteros que sí cumpla y verifíquela.</p></li>
+</ol></div>
+<div class="problem-tools"><details class="tool hints"><summary>Pistas para modelar</summary><div class="hint-content"><ol><li>El lado de cada cuadrado cortado se convierte en la altura del depósito. En cada dirección de la base se pierden dos cortes.</li><li>Convierta litros a metros cúbicos antes de igualar el volumen. Una raíz válida debe producir tres dimensiones positivas.</li><li>Compare los cuatro cuadrados retirados y revise de nuevo el volumen cuando el corte se especifique en centímetros enteros.</li></ol></div></details>
+<details class="tool answer"><summary>Comprobar respuesta final</summary><div class="answer-content"><p>Raíces: \(0{,}19324645\), \(0{,}50907886\) y \(1{,}39767468\) m; las dos primeras son geométricamente admisibles.</p><div class="table-wrap"><table><thead><tr><th>Altura/corte (m)</th><th>Largo (m)</th><th>Ancho (m)</th><th>Área retirada (m²)</th></tr></thead><tbody><tr><td>0,19324645</td><td>2,01350709</td><td>1,41350709</td><td>0,14937677</td></tr><tr><td>0,50907886</td><td>1,38184227</td><td>0,78184227</td><td>1,03664515</td></tr></tbody></table></div><p>Diseño seleccionado: corte \(0{,}19324645\) m. Con corte de \(0{,}19\) m: \(544{,}996\) L, insuficientes. Corte de \(0{,}20\) m: \(560\) L; altura: \(0{,}20\) m.</p></div></details></div></article><article class="problem" id="parcela" aria-labelledby="title-parcela">
+<div class="problem-header"><span class="number" aria-hidden="true">04</span><h3 id="title-parcela"><span class="sr-number">4. </span>Una parcela medida desde fuera de su lindero</h3></div>
+<div class="problem-body"><p>Una parcela rectangular tiene un área de <span
+class="math inline">\(840\,\mathrm{m^2}\)</span>. Uno de sus lados está
+junto a un camino recto. Se sabe que ese lado es el más largo de la
+parcela, o igual al otro.</p>
+<p>Llame <span class="math inline">\(A\)</span> y <span
+class="math inline">\(B\)</span> a los extremos del lado junto al
+camino, y <span class="math inline">\(D\)</span> al vértice que se
+obtiene al avanzar desde <span class="math inline">\(A\)</span> por el
+lado perpendicular al camino. El cuarto vértice es <span
+class="math inline">\(C\)</span>, opuesto a <span
+class="math inline">\(A\)</span>. Un observador se sitúa en <span
+class="math inline">\(P\)</span>, sobre la prolongación de <span
+class="math inline">\(BA\)</span> más allá de <span
+class="math inline">\(A\)</span>, a <span
+class="math inline">\(5\)</span> m de <span
+class="math inline">\(A\)</span>. Desde <span
+class="math inline">\(P\)</span> hasta <span
+class="math inline">\(C\)</span> se miden <span
+class="math inline">\(58\)</span> m en línea recta. Todos los puntos se
+consideran en un terreno horizontal.</p>
+<ol>
+<li><p>Dibuje la situación. Defina <span
+class="math inline">\(L=AB\)</span> y <span
+class="math inline">\(w=AD\)</span>, en metros, y utilice el área para
+expresar una dimensión en función de la otra. Escriba las restricciones
+que impone conocer cuál lado es el más largo.</p></li>
+<li><p>Utilice el teorema de Pitágoras en un triángulo apropiado y
+construya una ecuación polinómica con una sola incógnita. Antes de
+eliminar denominadores, justifique por qué son distintos de
+cero.</p></li>
+<li><p>Calcule todas las raíces reales y recupere las dimensiones
+correspondientes. Explique por qué dos soluciones con dimensiones
+positivas no representan necesariamente dos respuestas a este problema.
+Verifique la solución seleccionada usando el área y la distancia
+originales.</p></li>
+</ol></div>
+<div class="problem-tools"><details class="tool hints"><summary>Pistas para modelar</summary><div class="hint-content"><ol><li>Use el área para expresar una dimensión como un cociente en términos de la otra. Identifique cuál de las dos debe ser mayor.</li><li>El desplazamiento paralelo al camino desde el observador hasta el vértice opuesto incluye los 5 m exteriores y el lado del terreno. Aplique Pitágoras.</li><li>Después de calcular las raíces, reconstruya ambas dimensiones y compruebe la orientación que fija el enunciado.</li></ol></div></details>
+<details class="tool answer"><summary>Comprobar respuesta final</summary><div class="answer-content"><p>Raíces para \(w\): \(-57{,}18496182\), \(-13{,}68940191\), \(16{,}61043625\) y \(54{,}26392747\) m.</p><p>Dimensiones seleccionadas: lado junto al camino \(L=50{,}57061640\) m; lado perpendicular \(w=16{,}61043625\) m. Área: \(840\,\mathrm{m^2}\); distancia desde el observador: \(58\) m.</p></div></details></div></article><article class="problem" id="estanque" aria-labelledby="title-estanque">
+<div class="problem-header"><span class="number" aria-hidden="true">05</span><h3 id="title-estanque"><span class="sr-number">5. </span>Excavar un estanque sin perder el espacio del fondo</h3></div>
+<div class="problem-body"><p>Se proyecta un estanque con abertura superior cuadrada de <span
+class="math inline">\(12\)</span> m por lado y fondo horizontal también
+cuadrado. Las paredes serán planas y, por seguridad del terreno, cada
+una se desplazará horizontalmente <span
+class="math inline">\(0{,}50\)</span> m hacia el centro del estanque por
+cada metro de descenso vertical. Las secciones paralelas al fondo son
+cuadrados y tienen el mismo centro. El volumen geométrico que se desea
+excavar es de <span
+class="math inline">\(260\,\mathrm{m^3}\)</span>.</p>
+<p>Desprecie el espesor de cualquier revestimiento. Puede usar que una
+pirámide tiene volumen igual a un tercio del producto del área de su
+base por su altura. Las dimensiones y la pendiente de las paredes son
+condiciones del proyecto.</p>
+<ol>
+<li><p>Defina la profundidad <span class="math inline">\(h\)</span>, en
+metros, y construya una expresión para el lado del fondo. Establezca el
+dominio físico. Prolongue mentalmente las paredes hasta que se
+encuentren en un vértice: ¿qué altura tendría la pirámide completa cuya
+base es la abertura?</p></li>
+<li><p>Obtenga el volumen excavado restando dos pirámides semejantes y
+construya una ecuación polinómica para la profundidad. Calcule sus
+raíces reales y seleccione las admisibles. Determine el lado del fondo
+que produciría la capacidad solicitada.</p></li>
+<li><p>Posteriormente se exige un fondo útil de al menos <span
+class="math inline">\(10\)</span> m por lado para instalar un equipo.
+¿Es compatible esta exigencia con los <span
+class="math inline">\(260\,\mathrm{m^3}\)</span>, conservando la
+abertura y la pendiente de las paredes? Determine la mayor capacidad
+geométrica compatible con la nueva exigencia y cuantifique la capacidad
+que faltaría.</p></li>
+</ol></div>
+<div class="problem-tools"><details class="tool hints"><summary>Pistas para modelar</summary><div class="hint-content"><ol><li>Por cada metro de profundidad, cada una de dos paredes opuestas avanza hacia el centro. Dibuje una sección por el eje del estanque.</li><li>Prolongue las paredes hasta el vértice: el espacio excavado es la diferencia entre una pirámide grande y otra semejante que queda debajo del fondo.</li><li>La condición de fondo útil limita la profundidad. Compruebe si la raíz del volumen solicitado sigue dentro de ese nuevo límite.</li></ol></div></details>
+<details class="tool answer"><summary>Comprobar respuesta final</summary><div class="answer-content"><p>Profundidad para \(260\,\mathrm{m^3}\): \(h=2{,}17642770\) m, única raíz real. Lado del fondo: \(9{,}82357230\) m.</p><p>Con fondo de al menos \(10\) m por lado: profundidad máxima \(2\) m; volumen máximo \(242{,}66666667\,\mathrm{m^3}\); déficit \(17{,}33333333\,\mathrm{m^3}\).</p></div></details></div></article><article class="problem" id="rampa" aria-labelledby="title-rampa">
+<div class="problem-header"><span class="number" aria-hidden="true">06</span><h3 id="title-rampa"><span class="sr-number">6. </span>Una rampa de tierra: volumen, pendiente y espacio disponible</h3></div>
+<div class="problem-body"><p>Una obra dispone de <span
+class="math inline">\(500\,\mathrm{m^3}\)</span> de tierra suelta para
+construir una rampa recta de acceso a una plataforma cuya altura todavía
+puede ajustarse. La tierra pierde un <span
+class="math inline">\(15\,\%\)</span> de su volumen al compactarse; no
+se consideran otras pérdidas. Se quiere utilizar inicialmente todo el
+material disponible.</p>
+<p>La rampa comienza a la altura del terreno y sube de manera uniforme:
+por cada <span class="math inline">\(12\)</span> m horizontales se eleva
+<span class="math inline">\(1\)</span> m. La superficie de paso tiene
+<span class="math inline">\(3{,}20\)</span> m de ancho a lo largo de
+toda la rampa. En cada sección transversal, los taludes laterales se
+desplazan horizontalmente <span class="math inline">\(1{,}50\)</span> m
+por cada metro de altura. Por tanto, las secciones transversales son
+trapecios, salvo la inicial, de altura cero. El terreno original es
+horizontal y los bordes de la rampa son rectos.</p>
+<p>Para calcular el volumen puede utilizar la fórmula prismoidal exacta
+para esta geometría: <span
+class="math display">\[V=\frac{\ell}{6}\left(A_0+4A_m+A_1\right).\]</span>
+Aquí <span class="math inline">\(V\)</span> es el volumen compactado en
+<span class="math inline">\(\mathrm{m^3}\)</span>; <span
+class="math inline">\(\ell\)</span> es la longitud horizontal en m;
+<span class="math inline">\(A_0\)</span> y <span
+class="math inline">\(A_1\)</span> son las áreas de las secciones
+inicial y final, y <span class="math inline">\(A_m\)</span> es el área
+de la sección situada a mitad de la longitud, todas en <span
+class="math inline">\(\mathrm{m^2}\)</span>.</p>
+<ol>
+<li><p>Defina la altura final <span
+class="math inline">\(h&gt;0\)</span>, en metros, y exprese la longitud
+de la rampa en función de <span class="math inline">\(h\)</span>.
+Construya el área de una sección cuya altura sea <span
+class="math inline">\(u\)</span>, indicando cómo se obtiene su base
+mayor. Determine las áreas inicial, media y final.</p></li>
+<li><p>Convierta el material suelto en volumen compactado. A partir de
+la fórmula prismoidal, construya una ecuación polinómica cuya raíz
+permita dimensionar la rampa usando todo el material. Calcule las raíces
+reales e indique la altura, la longitud y el ancho de la base al
+final.</p></li>
+<li><p>La obra debe caber en un corredor de <span
+class="math inline">\(40\)</span> m de longitud y <span
+class="math inline">\(13\)</span> m de ancho. ¿Es posible usar todo el
+material manteniendo la forma propuesta? Si no lo es, determine la mayor
+altura compatible con el corredor y cuánta tierra suelta quedaría sin
+utilizar.</p></li>
+</ol></div>
+<div class="problem-tools"><details class="tool hints"><summary>Pistas para modelar</summary><div class="hint-content"><ol><li>Convierta primero los 500 m³ de tierra suelta a volumen compactado. La pendiente vincula la altura final con la longitud horizontal.</li><li>En una sección transversal, el ancho de la base aumenta por ambos taludes. En la sección central, la altura es la mitad de la altura final.</li><li>Use la fórmula prismoidal con esas tres áreas. Luego compruebe por separado la longitud y la anchura máximas del corredor.</li></ol></div></details>
+<details class="tool answer"><summary>Comprobar respuesta final</summary><div class="answer-content"><p>Volumen compactado disponible: \(425\,\mathrm{m^3}\). Usando todo: altura \(3{,}30089836\) m; longitud \(39{,}61078031\) m; ancho final \(13{,}10269508\) m; no cabe en el corredor.</p><p>En el corredor: altura máxima \(3{,}26666667\) m; longitud \(39{,}20\) m; ancho \(13\) m; volumen compactado \(414{,}03911111\,\mathrm{m^3}\); tierra suelta sin utilizar \(12{,}89516340\,\mathrm{m^3}\).</p></div></details></div></article><article class="problem" id="varas-cruzadas" aria-labelledby="title-varas-cruzadas">
+<div class="problem-header"><span class="number" aria-hidden="true">07</span><h3 id="title-varas-cruzadas"><span class="sr-number">7. </span>Medir un canal mediante dos varas cruzadas</h3></div>
+<div class="problem-body"><p>Durante la construcción de un canal rectangular, todavía seco, se
+quiere determinar su ancho interior sin tender una cinta horizontal
+entre sus paredes. En una misma sección transversal se colocan dos varas
+rígidas cruzadas. El fondo es horizontal y las paredes son
+verticales.</p>
+<p>La primera vara mide <span class="math inline">\(8\)</span> m y va
+desde el pie de la pared izquierda hasta un punto de la pared derecha.
+La segunda mide <span class="math inline">\(10\)</span> m y va desde el
+pie de la pared derecha hasta un punto de la pared izquierda. El cruce
+de ambas varas queda a <span class="math inline">\(2{,}60\)</span> m
+sobre el fondo. Desprecie el espesor de las varas y de los apoyos; las
+varas no sobresalen más allá de sus puntos de contacto con las
+paredes.</p>
+<p>El maestro de obra quiere saber si una compuerta prefabricada de
+<span class="math inline">\(7\)</span> m de ancho, que puede recortarse,
+alcanzaría para cubrir el ancho interior del canal.</p>
+<ol>
+<li><p>Dibuje la sección. Llame <span class="math inline">\(w\)</span>
+al ancho del canal, <span class="math inline">\(u\)</span> a la altura
+del extremo superior de la vara de <span
+class="math inline">\(8\)</span> m y <span
+class="math inline">\(v\)</span> a la del extremo superior de la vara de
+<span class="math inline">\(10\)</span> m. Llame <span
+class="math inline">\(z\)</span> a la distancia horizontal desde la
+pared izquierda hasta el cruce. Todas las longitudes se expresan en
+metros. Escriba las restricciones geométricas y utilice triángulos
+semejantes para relacionar estas cuatro cantidades con la altura medida
+del cruce.</p></li>
+<li><p>Aplique el teorema de Pitágoras a cada vara. Combine sus
+relaciones con las obtenidas por semejanza para eliminar <span
+class="math inline">\(w\)</span>, <span class="math inline">\(v\)</span>
+y <span class="math inline">\(z\)</span>, hasta construir una ecuación
+polinómica solo en <span class="math inline">\(u\)</span>. Antes de
+eliminar cualquier denominador, explique cuándo puede ser cero y si ese
+valor está permitido por la figura.</p></li>
+<li><p>Calcule todas las raíces reales con la calculadora gráfica. Para
+cada una, intente reconstruir las alturas y el ancho; descarte las que
+contradigan la posición de las varas. Compruebe la solución admisible
+usando las longitudes originales.</p></li>
+<li><p>Decida si la compuerta alcanza. Si se especifica su ancho en
+centímetros enteros y debe cubrir como mínimo el ancho calculado, ¿cuál
+es la medida mínima que debe tener después de recortarla?</p></li>
+</ol></div>
+<div class="problem-tools"><details class="tool hints"><summary>Pistas para modelar</summary><div class="hint-content"><ol><li>Compare, por semejanza, el triángulo completo de cada vara con el que queda entre su pie y el punto de cruce.</li><li>Las dos distancias horizontales desde el cruce hasta las paredes suman el ancho del canal. Combine esa suma con las proporciones obtenidas.</li><li>Pitágoras permite relacionar el ancho con cada altura. Una altura superior debe quedar por encima del cruce de 2,60 m.</li></ol></div></details>
+<details class="tool answer"><summary>Comprobar respuesta final</summary><div class="answer-content"><p>Raíces reales para \(u\): \(4{,}05614445510\) y \(1{,}83833622076\) m. Solución admisible: \(u=4{,}05614445510\) m; \(v=7{,}24239655367\) m; \(z=4{,}42002428581\) m.</p><p>Ancho del canal: \(6{,}89548346089\) m. Compuerta de 7 m: suficiente. Medida mínima en centímetros enteros: \(6{,}90\) m.</p></div></details></div></article><article class="problem" id="silo" aria-labelledby="title-silo">
+<div class="problem-header"><span class="number" aria-hidden="true">08</span><h3 id="title-silo"><span class="sr-number">8. </span>Un silo con cubierta cónica y una cantidad fija de lámina</h3></div>
+<div class="problem-body"><p>Una cooperativa proyecta un silo formado por un cilindro circular
+recto y una cubierta cónica que comparte con el cilindro la misma base
+circular. La altura vertical de la cubierta será <span
+class="math inline">\(1{,}50\)</span> m. La capacidad geométrica
+interior, contando tanto el cilindro como el cono, debe ser <span
+class="math inline">\(280\,\mathrm{m^3}\)</span>.</p>
+<p>Hay exactamente <span
+class="math inline">\(210\,\mathrm{m^2}\)</span> de lámina para
+construir la pared curva del cilindro y la cubierta del cono. La base
+inferior será una losa existente y no consume lámina. Desprecie
+espesores, traslapos, recortes y aberturas. La capacidad indicada es un
+volumen geométrico, no una afirmación sobre la cantidad de grano que
+podría almacenarse con seguridad en una operación real.</p>
+<p>El terreno disponible es una plataforma circular de <span
+class="math inline">\(10\)</span> m de diámetro, y la altura total de la
+construcción no puede superar <span class="math inline">\(12\)</span>
+m.</p>
+<p>Para el modelo puede emplear las siguientes relaciones geométricas:
+<span class="math display">\[V_{\mathrm{cil}}=\pi r^2H,\qquad
+V_{\mathrm{cono}}=\frac13\pi r^2h,\qquad
+A_{\mathrm{pared}}=2\pi rH,\qquad
+A_{\mathrm{cubierta}}=\pi r\ell.\]</span> Aquí <span
+class="math inline">\(r\)</span> es el radio común; <span
+class="math inline">\(H\)</span>, la altura de la pared cilíndrica;
+<span class="math inline">\(h\)</span>, la altura vertical del cono; y
+<span class="math inline">\(\ell\)</span>, la distancia inclinada del
+vértice del cono a su borde circular. Las longitudes se expresan en
+metros, las áreas en <span class="math inline">\(\mathrm{m^2}\)</span> y
+los volúmenes en <span class="math inline">\(\mathrm{m^3}\)</span>.</p>
+<ol>
+<li><p>Dibuje una sección vertical que pase por el eje del silo. Exprese
+<span class="math inline">\(\ell\)</span> en función de <span
+class="math inline">\(r\)</span> y utilice la capacidad solicitada para
+expresar <span class="math inline">\(H\)</span> también en función de
+<span class="math inline">\(r\)</span>. Determine el dominio geométrico
+antes de aplicar las restricciones de la plataforma.</p></li>
+<li><p>Construya la ecuación correspondiente al uso de toda la lámina.
+Aísle la expresión con raíz cuadrada y transforme la ecuación en una
+polinómica. Indique el grado resultante y conserve la condición de signo
+que debe cumplirse <em>antes</em> de elevar al cuadrado.</p></li>
+<li><p>Calcule todas las raíces reales del polinomio. Reconstruya y
+verifique cada candidato en la ecuación original de superficie. ¿Cuántos
+diseños de radio y altura positivos cumplen simultáneamente la capacidad
+y el área de lámina?</p></li>
+<li><p>Entre esos diseños, determine cuáles caben en la plataforma y
+respetan la altura máxima. Entregue las dimensiones del diseño que puede
+construirse y explique por qué resolver solamente el polinomio habría
+podido conducir a una elección incorrecta.</p></li>
+</ol></div>
+<div class="problem-tools"><details class="tool hints"><summary>Pistas para modelar</summary><div class="hint-content"><ol><li>La altura vertical del cono es conocida; su longitud inclinada se obtiene con Pitágoras. La capacidad total permite despejar la altura del cilindro.</li><li>La lámina solo cubre la pared curva y el techo. Sustituya la altura despejada en esa suma de superficies.</li><li>Aísle la raíz cuadrada y conserve su condición de signo antes de elevar al cuadrado. Verifique los candidatos en la superficie original y en las restricciones del terreno.</li></ol></div></details>
+<details class="tool answer"><summary>Comprobar respuesta final</summary><div class="answer-content"><p>Raíces reales del radio: \(-8{,}78775831\), \(2{,}35278550\), \(2{,}97559846\) y \(6{,}80909301\) m.</p><div class="table-wrap"><table><thead><tr><th>Radio válido (m)</th><th>Altura cilíndrica (m)</th><th>Altura total (m)</th><th>Diámetro (m)</th></tr></thead><tbody><tr><td>2,97559846</td><td>9,56605985</td><td>11,06605985</td><td>5,95119692</td></tr><tr><td>6,80909301</td><td>1,42233745</td><td>2,92233745</td><td>13,61818601</td></tr></tbody></table></div><p>Diseño seleccionado por la plataforma: radio \(2{,}97559846\) m y altura cilíndrica \(9{,}56605985\) m. Capacidad: \(280\,\mathrm{m^3}\); lámina: \(210\,\mathrm{m^2}\).</p></div></details></div></article><article class="problem" id="ciudad-amurallada" aria-labelledby="title-ciudad-amurallada">
+<div class="problem-header"><span class="number" aria-hidden="true">09</span><h3 id="title-ciudad-amurallada"><span class="sr-number">9. </span>La ciudad circular y el árbol visible</h3></div>
+<div class="problem-body"><p>Una antigua ciudad amurallada tiene forma circular, con una puerta en cada punto cardinal. Un árbol se encuentra a 3 <i>li</i> directamente al norte de la puerta Norte. Si una persona sale por la puerta Sur y camina 9 <i>li</i> hacia el Este, en ese momento el árbol se alinea con la muralla y se hace visible. Para los ingenieros que deben restaurar la muralla, es crucial conocer sus dimensiones. <strong>¿Cuál es el diámetro de la ciudad?</strong></p>
+<p>Para el modelo, la muralla se considera una circunferencia en planta y la alineación significa que la recta de visión desde la persona hasta el árbol es <strong>tangente</strong> a esa circunferencia. La persona camina hacia el Este en línea recta, sobre la prolongación de la tangente horizontal en la puerta Sur. Se ignoran las alturas de árbol y muralla; todas las distancias se expresan en la misma unidad <i>li</i>, sin convertirla a kilómetros.</p>
+<ol type="a"><li>Dibuje el centro, las puertas Norte y Sur, el árbol y la posición final de la persona. Defina una incógnita positiva para el radio o el diámetro.</li><li>Construya una ecuación a partir de la tangencia y las distancias dadas; transfórmela en una ecuación polinómica. Si eleva al cuadrado o elimina factores, conserve las condiciones del dominio.</li><li>Calcule las raíces reales y decida cuáles describen una ciudad posible. Indique el diámetro y compruebe la tangencia en su dibujo o mediante las relaciones originales.</li></ol></div>
+<div class="problem-tools"><details class="tool hints"><summary>Pistas para modelar</summary><div class="hint-content"><ol><li>El árbol, el centro y las puertas Norte y Sur quedan en una misma recta vertical. La posición final de la persona está 9 li al Este de la puerta Sur.</li><li>El radio al punto donde la línea de visión toca la muralla es perpendicular a esa línea. Puede combinar triángulos rectángulos y semejanza; también puede usar coordenadas.</li><li>Si usa coordenadas, la distancia del centro a la recta de visión debe coincidir con el radio. No acepte longitudes negativas ni factores descartados sin revisar el dominio.</li></ol></div></details>
+<details class="tool answer"><summary>Comprobar respuesta final</summary><div class="answer-content"><p>Diámetro de la ciudad: \(9\) <i>li</i>. Radio: \(4{,}5\) <i>li</i>.</p></div></details></div></article></section><section class="problem-group" id="economia" aria-labelledby="group-economia"><div class="group-head"><h2 id="group-economia">Economía y negocios</h2><span>Productividad, inventarios, crédito e inversión</span></div><article class="problem" id="equipos" aria-labelledby="title-equipos">
+<div class="problem-header"><span class="number" aria-hidden="true">10</span><h3 id="title-equipos"><span class="sr-number">10. </span>Tres equipos para ejecutar un contrato</h3></div>
+<div class="problem-body"><p>Una empresa debe instalar puestos desmontables para una feria. Tres
+equipos independientes, A, B y C, pueden realizar por separado todo el
+trabajo. El equipo B tarda tres días más que A, y C tarda ocho días más
+que A. Una prueba de planificación indica que, si los tres trabajan
+juntos desde el comienzo, completan el contrato en seis días.</p>
+<p>Se supone que cada equipo mantiene una productividad constante, que
+sus aportes se suman y que no se interfieren al trabajar juntos. El pago
+se calcula proporcionalmente al tiempo trabajado, admitiendo fracciones
+de día. Las tarifas son $390.000 por día para A, $280.000 para B y
+$180.000 para C. Solo hay un equipo disponible de cada tipo. La entrega
+debe ocurrir en un máximo de nueve días y el presupuesto para los
+equipos es de $5.100.000.</p>
+<ol>
+<li><p>Defina el tiempo <span class="math inline">\(x\)</span> que tarda
+A trabajando solo. Exprese qué fracción del trabajo realiza cada equipo
+en un día y construya la ecuación de la prueba conjunta. Indique el
+dominio de <span class="math inline">\(x\)</span>.</p></li>
+<li><p>Transforme esa ecuación en una polinómica, calcule todas sus
+raíces reales y determine los tiempos individuales posibles.</p></li>
+<li><p>Para cada contratación ABC, AB, AC y BC, determine el tiempo para
+completar el trabajo y el costo correspondiente.</p></li>
+<li><p>¿Cuál de esas cuatro alternativas cumple simultáneamente plazo y
+presupuesto? Explique por qué elegir el equipo con la menor tarifa
+diaria no resuelve por sí solo la decisión.</p></li>
+</ol></div>
+<div class="problem-tools"><details class="tool hints"><summary>Pistas para modelar</summary><div class="hint-content"><ol><li>Considere todo el contrato como una unidad. Si un equipo tarda un cierto número de días, ¿qué fracción de esa unidad termina en un día?</li><li>Los equipos trabajan al mismo tiempo: sume sus aportes diarios y multiplique por los seis días de la prueba. Registre qué valores no pueden aparecer en los denominadores.</li><li>Para cada contratación, obtenga primero el tiempo conjunto y luego multiplíquelo por la suma de sus tarifas diarias. Compruebe plazo y presupuesto por separado.</li></ol></div></details>
+<details class="tool answer"><summary>Comprobar respuesta final</summary><div class="answer-content"><p>Tiempo individual: A, \(14{,}89805643\) días; B, \(17{,}89805643\) días; C, \(22{,}89805643\) días.</p><p>Raíces reales para \(x\): \(14{,}89805643\), \(-6{,}38400943\), \(-1{,}51404700\).</p><div class="table-scroll"><table><thead><tr><th>Contratación</th><th>Tiempo (días)</th><th>Costo</th></tr></thead><tbody><tr><td>ABC</td><td>6</td><td>$5.100.000,00</td></tr><tr><td>AB</td><td>8,13042252</td><td>$5.447.383,09</td></tr><tr><td>AC</td><td>9,02570426</td><td>$5.144.651,43</td></tr><tr><td>BC</td><td>10,04582734</td><td>$4.621.080,58</td></tr></tbody></table></div><p>Contratación que cumple ambas condiciones: <strong>ABC</strong>.</p></div></details></div></article><article class="problem" id="inventario" aria-labelledby="title-inventario">
+<div class="problem-header"><span class="number" aria-hidden="true">11</span><h3 id="title-inventario"><span class="sr-number">11. </span>¿Qué merma puede soportar un inventario?</h3></div>
+<div class="problem-body"><p>Un almacén compra <span class="math inline">\(1000\)</span> kg de un
+grano alimentario a $4.000 por kilogramo. El costo total de
+almacenamiento, inspección y disposición de pérdidas durante los cuatro
+meses siguientes es $500.000. No recibe nuevas mercancías.</p>
+<p>Al finalizar cada mes se inspecciona primero el inventario: una
+fracción <span class="math inline">\(d\)</span> de la masa que había al
+comenzar ese mes se considera no apta y se retira sin ingreso de
+recuperación. Inmediatamente después, el almacén vende <span
+class="math inline">\(200\)</span> kg aptos a $6.000 por kilogramo. Se
+usa la misma fracción de merma en los cuatro meses, con <span
+class="math inline">\(0\le d&lt;1\)</span>. Las ventas de <span
+class="math inline">\(200\)</span> kg deben poder realizarse en cada
+mes; una cantidad negativa no representa inventario admisible.</p>
+<p>Después de la venta habitual del cuarto mes, todo el inventario apto
+que todavía queda se liquida a $4.000 por kilogramo. El almacén quiere
+una utilidad contable de al menos $600.000, después de los costos
+indicados. Las cantidades y precios son condiciones del caso y no una
+estimación para un almacén real ni un estudio de deterioro de un
+producto identificado.</p>
+<ol>
+<li><p>Sea <span class="math inline">\(R_t\)</span> la masa que queda
+después de la venta habitual del mes <span
+class="math inline">\(t\)</span>, con <span
+class="math inline">\(R_0=1000\)</span>. Construya la relación entre los
+inventarios de dos meses consecutivos. Exprese <span
+class="math inline">\(R_1,R_2,R_3,R_4\)</span> en función de <span
+class="math inline">\(d\)</span>. Respete el orden: inspección, pérdida
+y venta.</p></li>
+<li><p>A partir de ingresos y costos, determine cuánto inventario <span
+class="math inline">\(R_4\)</span> debe quedar para alcanzar exactamente
+la utilidad exigida. Explique por qué el ingreso de la liquidación no
+debe contarse como si se vendieran nuevamente los <span
+class="math inline">\(800\)</span> kg ya despachados.</p></li>
+<li><p>Use <span class="math inline">\(q=1-d\)</span>, la fracción que
+sobrevive a cada inspección, para modelar una ecuación polinómica.
+Calcule sus raíces reales y compruebe el inventario de los cuatro meses
+para cada candidata.</p></li>
+<li><p>Determine la mayor merma mensual que permite alcanzar la meta.
+¿Una merma del <span class="math inline">\(5\,\%\)</span> sería
+tolerable? Si el porcentaje se comunica con dos decimales, ¿debe
+informarse <span class="math inline">\(4{,}89\,\%\)</span> o <span
+class="math inline">\(4{,}90\,\%\)</span> como máximo permitido?
+Justifique la elección.</p></li>
+</ol></div>
+<div class="problem-tools"><details class="tool hints"><summary>Pistas para modelar</summary><div class="hint-content"><ol><li>En cada mes quite primero la merma del inventario que había al comenzar y después reste la venta de 200 kg. Repita la misma regla cuatro veces.</li><li>Las cuatro ventas habituales ya suman 800 kg. Separe su ingreso del ingreso por liquidar únicamente lo que queda al final.</li><li>Encuentre el inventario final necesario para alcanzar la utilidad exacta y use la fracción que sobrevive a cada inspección. Compruebe todos los meses, no solo el último.</li></ol></div></details>
+<details class="tool answer"><summary>Comprobar respuesta final</summary><div class="answer-content"><p>Inventario final requerido: \(75\) kg.</p><p>Raíces reales para \(q\): \(0{,}951067354344\) y \(-0{,}646937517890\).</p><p>Merma mensual máxima: \(4{,}8932645656\,\%\). Máximo comunicado con dos decimales: \(4{,}89\,\%\).</p><p>Inventarios después de cada venta: \(751{,}06735434\), \(514{,}31564163\), \(289{,}14881658\) y \(75\) kg.</p><p>Con merma del \(5\,\%\): \(72{,}53125\) kg finales y utilidad de <strong>$590.125</strong>; no alcanza la meta.</p></div></details></div></article><article class="problem" id="credito" aria-labelledby="title-credito">
+<div class="problem-header"><span class="number" aria-hidden="true">12</span><h3 id="title-credito"><span class="sr-number">12. </span>Descubrir la tasa de un crédito a partir de sus cuotas</h3></div>
+<div class="problem-body"><p>Un negocio recibe hoy un préstamo de $30.000.000. El contrato
+establece cinco pagos mensuales iguales de $6.400.000, el primero al
+terminar el primer mes y el último al terminar el quinto. No hay
+comisión inicial, seguros, pagos adicionales ni cargos por
+administración. El capital entregado coincide con el desembolso
+recibido.</p>
+<p>Durante cada mes, antes de efectuar el pago, el saldo pendiente
+aumenta en una misma proporción <span class="math inline">\(i\)</span>,
+que es la tasa de interés efectiva mensual. Después se descuenta la
+cuota de ese mes. El quinto pago extingue exactamente la deuda.
+Considere tasas <span class="math inline">\(i\ge0\)</span>. Estos son
+términos propuestos para el ejercicio, no una oferta de una entidad
+financiera.</p>
+<p><strong>Cómo calcular una cuota cuando se conoce la tasa.</strong> Al
+pagar una cuota mensual, una parte cubre los intereses del mes y el
+resto reduce la deuda. Como la deuda va disminuyendo después de cada
+pago, en los meses siguientes se calculan intereses sobre un saldo
+menor.</p>
+<p>Para un préstamo de <span class="math inline">\(P\)</span> pesos, una
+tasa efectiva mensual <span class="math inline">\(i&gt;0\)</span> y
+<span class="math inline">\(n\)</span> cuotas iguales pagadas al final
+de cada mes, la cuota <span class="math inline">\(M\)</span> es <span
+class="math display">\[M=P\,\frac{i(1+i)^n}{(1+i)^n-1}.\]</span> Aquí
+<span class="math inline">\(P\)</span> es el dinero recibido al
+comienzo; <span class="math inline">\(i\)</span> es la tasa mensual como
+proporción (<span class="math inline">\(0{,}02\)</span> significa <span
+class="math inline">\(2\,\%\)</span>); <span
+class="math inline">\(n\)</span> es el número de pagos mensuales; y
+<span class="math inline">\(M\)</span> es el valor de cada cuota, en
+pesos. Si la tasa es cero, cada cuota es simplemente <span
+class="math inline">\(P/n\)</span>. La fórmula supone que no existen los
+cargos adicionales excluidos en este contrato.</p>
+<p><strong>Ejemplo numérico.</strong> Si se recibieran <span
+class="math inline">\(\$30.000.000\)</span>, se pactaran cinco cuotas y
+la tasa fuera del <span class="math inline">\(2\,\%\)</span> mensual, la
+fórmula daría una cuota de aproximadamente <span
+class="math inline">\(\$6.364.751{,}82\)</span>. Al terminar el primer
+mes se deben los 30 millones más <span
+class="math inline">\(\$600.000\)</span> de intereses. Al pagar la
+primera cuota quedan aproximadamente <span
+class="math inline">\(\$24.235.248{,}18\)</span> de deuda. Durante el
+segundo mes, el <span class="math inline">\(2\,\%\)</span> se calcula
+sobre ese saldo: aproximadamente <span
+class="math inline">\(\$484.704{,}96\)</span>. Después de la segunda
+cuota quedan <span class="math inline">\(\$18.355.201{,}32\)</span>. Si
+se repite el proceso usando la cuota sin redondear, la quinta deja el
+saldo en cero; en una operación en centavos puede ajustarse la última
+por redondeo.</p>
+<p>En el ejemplo se conocía la tasa y se calculó la cuota. En el
+contrato del problema se conoce la cuota de <span
+class="math inline">\(\$6.400.000\)</span> y se pide encontrar qué tasa
+hace que los cinco pagos cancelen exactamente la deuda. Puede construir
+esa condición siguiendo los saldos mes a mes.</p>
+<ol>
+<li><p>Exprese en millones de pesos el saldo inmediatamente después de
+cada pago. Sea <span class="math inline">\(B_t\)</span> el saldo después
+del pago <span class="math inline">\(t\)</span>, con <span
+class="math inline">\(B_0=30\)</span>. Construya la regla entre dos
+saldos consecutivos y la condición final.</p></li>
+<li><p>Use <span class="math inline">\(x=1+i\)</span> para construir una
+ecuación polinómica y determine su grado y dominio. Calcule todas las
+raíces reales y seleccione las que describen un crédito
+permitido.</p></li>
+<li><p>Un comerciante suma las cuotas, resta el capital y divide ese
+exceso entre cinco meses y entre el capital original. Afirma que así
+obtiene la tasa mensual del crédito. Compare ese resultado con su
+solución y explique qué ignora acerca del saldo pendiente.</p></li>
+<li><p>Verifique los cinco saldos con la tasa encontrada. Si la tasa
+fuera del <span class="math inline">\(2\,\%\)</span> mensual, ¿las cinco
+cuotas de $6.400.000 extinguirían exactamente la deuda? Finalmente,
+calcule la tasa efectiva anual equivalente, entendida como la proporción
+en que crecería un saldo sin pagos al aplicar la misma tasa mensual
+durante doce meses.</p></li>
+</ol></div>
+<div class="problem-tools"><details class="tool hints"><summary>Pistas para modelar</summary><div class="hint-content"><ol><li>Empiece con el saldo de 30 millones. En cada mes aplique el crecimiento por intereses al saldo anterior y después reste 6,4 millones.</li><li>Llame a la suma de uno y la tasa una nueva variable. Escriba los saldos de los cinco meses sin sustituir un valor numérico para esa variable.</li><li>La condición buscada es que el saldo después del quinto pago sea cero. Al comparar tasas, revise los saldos pendientes de cada mes y la fecha de cada pago.</li></ol></div></details>
+<details class="tool answer"><summary>Comprobar respuesta final</summary><div class="answer-content"><p>Única raíz real para \(x\): \(1{,}021905829943\).</p><p>Tasa efectiva mensual: \(2{,}1905829943\,\%\). Tasa efectiva anual equivalente: \(29{,}6971764810\,\%\).</p><p>Resultado del cálculo simplificado del comerciante: \(1{,}333333\ldots\,\%\) mensual.</p><p>Saldos después de cada pago, en millones de pesos: \(24{,}25717490\), \(18{,}38854845\), \(12{,}39136486\), \(6{,}26280799\), \(0\).</p><p>Con tasa del \(2\,\%\), la quinta cuota exacta sería <strong>$6.216.567,07</strong>; pagar $6.400.000 excedería el saldo en <strong>$183.432,93</strong>.</p></div></details></div></article><article class="problem" id="van" aria-labelledby="title-van">
+<div class="problem-header"><span class="number" aria-hidden="true">13</span><h3 id="title-van"><span class="sr-number">13. </span>Una inversión ambiental: ¿puede haber dos tasas de equilibrio?</h3></div>
+<div class="problem-body"><p>Una empresa evalúa instalar temporalmente una planta de
+aprovechamiento de materiales en un terreno arrendado. Al terminar el
+contrato debe retirar las instalaciones y restaurar el predio. Para el
+proyecto se plantean los siguientes flujos <em>netos</em>, en millones
+de pesos:</p>
+<div class="center">
+<table>
+<thead>
+<tr class="header">
+<th style="text-align: center;">Momento</th>
+<th style="text-align: right;">Flujo</th>
+<th style="text-align: left;">Descripción</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: center;">Hoy</td>
+<td style="text-align: right;"><span
+class="math inline">\(-100\)</span></td>
+<td style="text-align: left;">Instalación y puesta en marcha.</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">Final del año 1</td>
+<td style="text-align: right;"><span
+class="math inline">\(145\)</span></td>
+<td style="text-align: left;">Cobros del contrato y ventas, menos costos
+del año.</td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;">Final del año 2</td>
+<td style="text-align: right;"><span
+class="math inline">\(16\)</span></td>
+<td style="text-align: left;">Cobros menos costos del año.</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">Final del año 3</td>
+<td style="text-align: right;"><span
+class="math inline">\(47\)</span></td>
+<td style="text-align: left;">Cobros y venta de equipos, menos costos
+del año.</td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;">Final del año 4</td>
+<td style="text-align: right;"><span
+class="math inline">\(-118\)</span></td>
+<td style="text-align: left;">Retiro de instalaciones y restauración del
+predio.</td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>Un flujo positivo es dinero recibido y uno negativo es dinero pagado.
+No deben agregarse nuevamente los costos ya incluidos en estos
+flujos.</p>
+<p>Para comparar dinero de distintos momentos se adopta el método del
+valor actual neto (VAN) del libro citado en la bibliografía. Un flujo
+<span class="math inline">\(F\)</span> al final del año <span
+class="math inline">\(t\)</span> tiene hoy el valor <span
+class="math display">\[\frac{F}{(1+i)^t}.\]</span> Aquí <span
+class="math inline">\(F\)</span> se expresa en millones de pesos, <span
+class="math inline">\(t\)</span> es el número de años transcurridos e
+<span class="math inline">\(i\)</span> es la tasa anual de descuento
+como proporción (por ejemplo, <span
+class="math inline">\(i=0{,}08\)</span> significa <span
+class="math inline">\(8\,\%\)</span>). El VAN suma los valores actuales
+de todos los flujos, incluido el inicial. Un VAN positivo significa que
+el proyecto supera la rentabilidad exigida con esa tasa. Una tasa que
+hace VAN igual a cero se llama tasa interna de retorno. Considere
+solamente tasas no negativas.</p>
+<p><strong>Un ejemplo para entender el VAN.</strong> Suponga que la
+rentabilidad anual de referencia es del <span
+class="math inline">\(10\,\%\)</span>. Cien millones disponibles hoy se
+convertirían en 110 millones al terminar un año y en 121 millones al
+terminar dos años. Por eso, recibir 121 millones dentro de dos años
+tiene hoy el mismo valor financiero que disponer de 100 millones: para
+regresar al presente se divide 121 entre <span
+class="math inline">\((1{,}10)^2\)</span>. Para un cobro de 121 y una
+inversión inicial de 100, el VAN al <span
+class="math inline">\(10\,\%\)</span> es cero. Si el cobro fuera 130, su
+valor de hoy sería <span class="math inline">\(130/(1{,}10)^2\)</span>,
+y al restarle los 100 invertidos quedaría un VAN positivo. Cada flujo
+del proyecto se traslada al presente de esta misma manera, conservando
+su signo; un pago futuro se descuenta también, pero se suma como
+cantidad negativa.</p>
+<ol>
+<li><p>Construya el VAN del proyecto. Explique por qué sumar
+directamente los cinco flujos equivale a un caso particular de la
+comparación.</p></li>
+<li><p>Introduzca <span class="math inline">\(x=1+i\)</span> y construya
+una ecuación polinómica para hallar las tasas de equilibrio. Determine
+el dominio de <span class="math inline">\(x\)</span>.</p></li>
+<li><p>Calcule todas las raíces reales, determine cuáles producen tasas
+admisibles y expréselas como porcentajes anuales.</p></li>
+<li><p>Evalúe el VAN para tasas del <span
+class="math inline">\(8\,\%\)</span>, <span
+class="math inline">\(20\,\%\)</span> y <span
+class="math inline">\(40\,\%\)</span>. ¿En cuáles de esos escenarios se
+supera la rentabilidad exigida?</p></li>
+<li><p>Un asesor solo encuentra la tasa positiva más alta y concluye:
+«Como es mayor que el <span class="math inline">\(8\,\%\)</span>,
+debemos aceptar el proyecto». Evalúe la conclusión. ¿Qué papel desempeña
+el egreso final?</p></li>
+</ol></div>
+<div class="problem-tools"><details class="tool hints"><summary>Pistas para modelar</summary><div class="hint-content"><ol><li>Dibuje una línea de tiempo y conserve el signo de cada flujo. Traslade cada cantidad al momento inicial usando su año correspondiente.</li><li>La tasa de equilibrio hace que la suma de valores actuales sea cero. Sustituya uno más la tasa por una nueva variable y elimine los denominadores dentro de su dominio.</li><li>Busque todas las raíces reales: un desembolso tardío puede generar más de una tasa admisible. Evalúe también el valor actual neto en las tres tasas solicitadas.</li></ol></div></details>
+<details class="tool answer"><summary>Comprobar respuesta final</summary><div class="answer-content"><p>Raíces reales para \(x\): \(1{,}10473029\) y \(1{,}34191297\).</p><p>Tasas de equilibrio: \(10{,}473029\,\%\) y \(34{,}191297\,\%\) anuales.</p><div class="table-scroll"><table><thead><tr><th>Tasa</th><th>VAN (millones de pesos)</th></tr></thead><tbody><tr><td>8 %</td><td>−1,446727</td></tr><tr><td>20 %</td><td>2,237654</td></tr><tr><td>40 %</td><td>−1,853394</td></tr></tbody></table></div><p>Entre las tres tasas evaluadas, el VAN es positivo únicamente al <strong>20 %</strong>. Al 8 %, el proyecto no alcanza la rentabilidad exigida.</p></div></details></div></article></section><section class="problem-group" id="ambiente" aria-labelledby="group-ambiente"><div class="group-head"><h2 id="group-ambiente">Medio ambiente</h2><span>Poblaciones, química del agua y escorrentía</span></div><article class="problem" id="biomasa" aria-labelledby="title-biomasa">
+<div class="problem-header"><span class="number" aria-hidden="true">14</span><h3 id="title-biomasa"><span class="sr-number">14. </span>Aprovechamiento de una población: una cuota para tres temporadas</h3></div>
+<div class="problem-body"><p>Una asociación estudia cuántos kilogramos de peces de una misma
+especie podría capturar al final de cada temporada en un estanque. La
+<strong>población</strong> es el conjunto de peces de esa especie que
+vive allí. Se la llama <strong>aprovechable</strong> porque se está
+evaluando su captura para uso o venta; esa palabra no significa que
+cualquier cuota sea aceptable. La <strong>biomasa</strong> es el peso
+total de esos peces vivos: por ejemplo, 100 peces de 2 kg representan
+200 kg de biomasa. El problema trabaja con ese peso total, no con el
+número de peces.</p>
+<p>Inicialmente hay <span class="math inline">\(400\)</span> kg. Para
+explorar el escenario, se adopta una capacidad de referencia de <span
+class="math inline">\(1000\)</span> kg. Cuanto más cerca esté la biomasa
+de esa capacidad, menos espacio y recursos quedan para el crecimiento.
+Las cifras son parámetros de planificación, no mediciones atribuidas a
+una especie del artículo de referencia.</p>
+<p>El equipo utiliza esta regla práctica en cada temporada, siempre en
+el mismo orden:</p>
+<ul>
+<li><p>Anota cuántos kilogramos de peces hay al comenzar la
+temporada.</p></li>
+<li><p>Calcula cuánto falta para llegar a 1000 kg y qué porcentaje de
+esa capacidad representa el faltante.</p></li>
+<li><p>Calcula el 80 % del peso inicial de los peces y conserva de esa
+cantidad el porcentaje del paso anterior. El resultado es el aumento
+neto de biomasa previsto para esa temporada, después de los nacimientos,
+el crecimiento y la mortalidad natural incorporados en esta
+regla.</p></li>
+<li><p>Suma ese aumento al peso inicial y, al final, retira <span
+class="math inline">\(h\)</span> kg mediante captura. Lo que queda pasa
+a ser el peso inicial de la temporada siguiente.</p></li>
+</ul>
+<p><strong>Ejemplo de aplicación de la regla.</strong> Si se comienza
+con 400 kg, faltan 600 kg para llegar a 1000: queda libre el 60 % de la
+capacidad de referencia. El 80 % de 400 kg es 320 kg, y el 60 % de 320
+kg es 192 kg. Antes de la captura se proyectan, entonces, 592 kg.
+Después se retira la cuota acordada. En la temporada siguiente deben
+repetirse todos los pasos con el peso que haya quedado; no se añaden
+siempre los mismos 192 kg.</p>
+<p>Se repite la <strong>misma cuota</strong> durante tres temporadas y
+se desea terminar la tercera con <span
+class="math inline">\(500\)</span> kg. La cuota debe ser no negativa, no
+puede extraerse más de lo disponible, y la biomasa que queda en cada una
+de las tres temporadas debe estar entre 0 y 1000 kg. La estructura de la
+regla se adapta del modelo de población de Eraud et al. (2021), sin dar
+por calibrado el escenario para estos peces.</p>
+<ol>
+<li><p>Sea <span class="math inline">\(N_t\)</span> la biomasa, en kg,
+que queda al terminar la temporada <span
+class="math inline">\(t\)</span>, con <span
+class="math inline">\(N_0=400\)</span>. Construya la regla que relaciona
+<span class="math inline">\(N_{t+1}\)</span>, <span
+class="math inline">\(N_t\)</span> y <span
+class="math inline">\(h\)</span>, y obtenga expresiones para <span
+class="math inline">\(N_1\)</span>, <span
+class="math inline">\(N_2\)</span> y <span
+class="math inline">\(N_3\)</span>.</p></li>
+<li><p>Modele la meta final y explique por qué se obtiene una ecuación
+de grado cuatro en <span class="math inline">\(h\)</span>, aunque la
+regla de cada temporada sea cuadrática en la biomasa.</p></li>
+<li><p>Para facilitar la gráfica, utilice <span
+class="math inline">\(z=h/1000\)</span>, que expresa la cuota en miles
+de kg. Calcule las raíces reales y verifique la trayectoria completa de
+cada cuota obtenida. Seleccione las admisibles.</p></li>
+<li><p>Si la cuota se fija en kilogramos enteros y la meta es terminar
+con <em>al menos</em> <span class="math inline">\(500\)</span> kg,
+compare los dos enteros cercanos a la cuota admisible y decida cuál
+cumple.</p></li>
+<li><p>Con la cuota continua seleccionada, construya la ecuación de una
+biomasa de equilibrio: una biomasa que se mantendría igual tras una
+temporada completa. Calcule sus raíces y compárelas con la biomasa
+inicial. ¿Comprobar tres temporadas demuestra por sí solo sostenibilidad
+indefinida?</p></li>
+</ol>
+<p class="source-note">Modelo de referencia: Eraud et al. (2021), adaptado al escenario de biomasa descrito. <a href="#fuentes">Consultar la bibliografía.</a></p></div>
+<div class="problem-tools"><details class="tool hints"><summary>Pistas para modelar</summary><div class="hint-content"><ol><li>Después de calcular el aumento de una temporada, súmalo a la biomasa de inicio y resta la captura. La temporada siguiente comienza con ese resultado, no con los 400 kg originales.</li><li>Escribe primero la biomasa que queda en la primera temporada. Repite la misma regla con esa expresión para obtener la segunda y, después, la tercera. Impón la meta solo al terminar la tercera.</li><li>Revisa todas las biomasas intermedias para cada raíz. Una cuota que satisface la igualdad final puede haber producido antes un peso negativo. Para el equilibrio, exige que el peso final de una temporada coincida con su peso inicial.</li></ol></div></details>
+<details class="tool answer"><summary>Comprobar respuesta final</summary><div class="answer-content"><ul>
+<li>Grado de la ecuación en la cuota: <strong>4</strong>.</li>
+<li>Raíces reales para la cuota: \(h\approx162{,}32391471\) kg y \(h\approx-3042{,}48094617\) kg. Cuota admisible: <strong>\(162{,}32391471\) kg por temporada</strong>.</li>
+<li>Raíces reales en la escala \(z\): \(0{,}16232391471\) y \(-3{,}04248094617\).</li>
+<li>Biomasas con la cuota admisible, al terminar las temporadas 1, 2 y 3: <strong>\(429{,}67608529\), \(463{,}39580820\) y \(500\) kg</strong>.</li>
+<li>Biomasas para la cuota descartada: \(3634{,}48094617\), \(-983{,}01474917\) y \(500\) kg.</li>
+<li>Cuota entera de \(162\) kg: biomasa final \(501{,}04780288\) kg. Cuota de \(163\) kg: \(497{,}81000490\) kg. De esas dos, cumple <strong>\(162\) kg</strong>.</li>
+<li>Biomasas de equilibrio: <strong>\(282{,}98593\) y \(717{,}01407\) kg</strong>. La biomasa inicial es \(400\) kg.</li>
+</ul></div></details></div></article><article class="problem" id="carbonato" aria-labelledby="title-carbonato">
+<div class="problem-header"><span class="number" aria-hidden="true">15</span><h3 id="title-carbonato"><span class="sr-number">15. </span>Agua con dióxido de carbono: un balance que determina la acidez</h3></div>
+<div class="problem-body"><p>Un laboratorio prepara agua desionizada con carbono inorgánico
+disuelto y la mantiene en un recipiente cerrado, <em>sin fase
+gaseosa</em>, a <span class="math inline">\(25\,^{\circ}\mathrm
+C\)</span>. Se fija una concentración total de carbono inorgánico de
+<span class="math inline">\(T=5{,}00\times10^{-4}\)</span> mol/L. Se
+supone una solución ideal diluida, sin otras sales, sólidos ni ácidos.
+No se pretende representar con esta composición el agua de cualquier
+río.</p>
+<p>El carbono se distribuye entre una forma neutra, bicarbonato y
+carbonato. Para este cálculo se utilizan las siguientes cantidades
+numéricas de concentración, todas en mol/L:</p>
+<ul>
+<li><p><span class="math inline">\(A\)</span>: dióxido de carbono acuoso
+más ácido carbónico, agrupados como <span
+class="math inline">\(\mathrm{H_2CO_3^*}\)</span>.</p></li>
+<li><p><span class="math inline">\(B\)</span>: bicarbonato, <span
+class="math inline">\(\mathrm{HCO_3^-}\)</span>.</p></li>
+<li><p><span class="math inline">\(D\)</span>: carbonato, <span
+class="math inline">\(\mathrm{CO_3^{2-}}\)</span>.</p></li>
+<li><p><span class="math inline">\(H\)</span>: iones hidrógeno, <span
+class="math inline">\(\mathrm{H^+}\)</span>; <span
+class="math inline">\(W\)</span>: iones hidróxido, <span
+class="math inline">\(\mathrm{OH^-}\)</span>.</p></li>
+</ul>
+<p>El material de Penn State citado en la bibliografía proporciona las
+relaciones de equilibrio y sus constantes. En la aproximación ideal
+adoptada, se escribe: <span
+class="math display">\[\frac{HB}{A}=K_1,\qquad \frac{HD}{B}=K_2,\qquad
+HW=K_w,\]</span> <span class="math display">\[K_1=10^{-6{,}35},\qquad
+K_2=10^{-10{,}33},\qquad K_w=10^{-14}.\]</span> Las constantes se usan
+con concentraciones expresadas en mol/L y el estado estándar de <span
+class="math inline">\(1\)</span> mol/L. Se añaden dos balances del
+sistema: <span class="math display">\[A+B+D=T,\qquad H=B+2D+W.\]</span>
+El primero conserva carbono y el segundo iguala cargas positivas y
+negativas. El factor 2 cuenta las dos cargas negativas del carbonato.
+Estas relaciones son todos los conocimientos químicos necesarios.</p>
+<p><strong>Ruta de trabajo algebraica.</strong> Para responder no
+necesita explicar las reacciones ni diseñar un experimento: trate <span
+class="math inline">\(A,B,D,H,W\)</span> como cinco números desconocidos
+que deben cumplir simultáneamente las cinco igualdades dadas. Las
+constantes <span class="math inline">\(K_1,K_2,K_w,T\)</span> ya son
+conocidas. El objetivo es reducir el sistema a una ecuación en <span
+class="math inline">\(H\)</span>.</p>
+<ol>
+<li><p>En la primera relación, multiplique por <span
+class="math inline">\(A\)</span> y despeje <span
+class="math inline">\(B\)</span>. En la segunda, despeje <span
+class="math inline">\(D\)</span> y sustituya en ella la expresión
+obtenida para <span class="math inline">\(B\)</span>. En la tercera,
+despeje <span class="math inline">\(W\)</span>. Debe quedar <span
+class="math inline">\(B\)</span> en términos de <span
+class="math inline">\(A,H\)</span>, <span
+class="math inline">\(D\)</span> en términos de <span
+class="math inline">\(A,H\)</span>, y <span
+class="math inline">\(W\)</span> en términos de <span
+class="math inline">\(H\)</span>.</p></li>
+<li><p>Sustituya las expresiones de <span
+class="math inline">\(B\)</span> y <span
+class="math inline">\(D\)</span> en <span
+class="math inline">\(A+B+D=T\)</span>. Todos los términos del miembro
+izquierdo contienen <span class="math inline">\(A\)</span>: sáquelo como
+factor común y despeje <span class="math inline">\(A\)</span>. Reescriba
+el resultado como un solo cociente de polinomios en <span
+class="math inline">\(H\)</span>, multiplicando numerador y denominador
+por <span class="math inline">\(H^2\)</span>.</p></li>
+<li><p>Use la expresión anterior de <span
+class="math inline">\(A\)</span> para escribir también <span
+class="math inline">\(B\)</span> y <span
+class="math inline">\(D\)</span> únicamente en términos de <span
+class="math inline">\(H\)</span>. Sustituya esas dos expresiones y la de
+<span class="math inline">\(W\)</span> en la igualdad <span
+class="math inline">\(H=B+2D+W\)</span>. ¿Cuántas incógnitas
+quedan?</p></li>
+<li><p>Identifique los denominadores que aparecen y justifique que son
+positivos cuando <span class="math inline">\(H&gt;0\)</span>.
+Multiplique para eliminarlos, distribuya los productos, agrupe potencias
+iguales y escriba un polinomio igual a cero. Indique el grado de ese
+polinomio.</p></li>
+<li><p>Para introducirlo en la calculadora, haga el cambio de escala
+<span class="math inline">\(H=10^{-6}x\)</span>, usando valores
+numéricos de concentración en mol/L. Esto significa que <span
+class="math inline">\(x\)</span> mide la concentración en micromoles por
+litro. Sustituya, divida toda la ecuación por <span
+class="math inline">\(10^{-24}\)</span> y calcule las raíces reales.
+Ajuste el zoom cerca de cero para localizar raíces pequeñas.</p></li>
+<li><p>Recuerde que <span class="math inline">\(H\)</span> es una
+concentración <em>positiva</em>. Descarte las raíces incompatibles con
+esa condición y convierta la solución seleccionada a mol/L.</p></li>
+<li><p>Sustituya el valor positivo de <span
+class="math inline">\(H\)</span> en sus fórmulas para recuperar <span
+class="math inline">\(A,B,D,W\)</span>. Calcule los dos miembros de cada
+una de las cinco igualdades originales y compruebe que coinciden
+aproximadamente. Use varias cifras: <span
+class="math inline">\(D\)</span> y <span
+class="math inline">\(W\)</span> pueden ser mucho menores que las otras
+cantidades.</p></li>
+<li><p>El laboratorio informa el resultado mediante el número <span
+class="math inline">\(\mathrm{pH}=-\log_{10}(H/(1\,\mathrm{mol/L}))\)</span>.
+Calcule ese número con la calculadora. Para interpretar el resultado,
+use esta regla a <span class="math inline">\(25\,^{\circ}\mathrm
+C\)</span>: pH menor que 7, medio ácido; pH igual a 7, neutro; pH mayor
+que 7, básico. Por último, compare <span
+class="math inline">\(H\)</span> con <span
+class="math inline">\(T\)</span>: ¿son iguales en la solución?</p></li>
+</ol>
+<p class="source-note">Relaciones y constantes de referencia: Penn State, CE 574, ejemplo 1.1. <a href="#fuentes">Consultar la bibliografía.</a></p></div>
+<div class="problem-tools"><details class="tool hints"><summary>Pistas para modelar</summary><div class="hint-content"><ol><li>Sigue los despejes en el orden de las preguntas. En el balance de carbono, después de sustituir, los tres sumandos contienen la misma variable A: factorízala antes de despejar.</li><li>Al llegar a una sola igualdad en H, usa un denominador común. Conserva las constantes con todos sus dígitos durante las operaciones; redondear una constante pequeña a cero cambia el problema.</li><li>El cambio de escala permite ver la raíz positiva sin trabajar directamente con una concentración del orden de las cienmilésimas. Las raíces cercanas a cero requieren una segunda ventana gráfica.</li></ol></div></details>
+<details class="tool answer"><summary>Comprobar respuesta final</summary><div class="answer-content"><ul>
+<li>Incógnitas que quedan después de las sustituciones: <strong>1</strong>. Grado del polinomio: <strong>4</strong>.</li>
+<li>Raíces reales en la escala \(x\): \(14{,}7233427581\), \(-15{,}1699128083\), \(-1{,}04598931\times10^{-4}\) y \(-8{,}94300034\times10^{-6}\).</li>
+<li>Concentración admisible: <strong>\(H\approx1{,}47233428\times10^{-5}\) mol/L</strong>.</li>
+<li>Otras concentraciones: \(A\approx4{,}85277383\times10^{-4}\), \(B\approx1{,}47225700\times10^{-5}\), \(D\approx4{,}67710593\times10^{-11}\) y \(W\approx6{,}79193588\times10^{-10}\) mol/L.</li>
+<li>Valor común de los dos miembros en las primeras tres igualdades: aproximadamente \(4{,}46683592\times10^{-7}\), \(4{,}67735141\times10^{-11}\) y \(10^{-14}\), respectivamente. En el balance de carbono: \(5{,}00\times10^{-4}\); en el de cargas: \(1{,}47233428\times10^{-5}\).</li>
+<li><strong>pH \(\approx4{,}831994\): medio ácido.</strong></li>
+<li>Comparación final: \(H\approx0{,}0000147233\) mol/L y \(T=0{,}0005000000\) mol/L.</li>
+</ul></div></details></div></article><article class="problem" id="manning" aria-labelledby="title-manning">
+<div class="problem-header"><span class="number" aria-hidden="true">16</span><h3 id="title-manning"><span class="sr-number">16. </span>Un canal de escorrentía: geometría, caudal y mantenimiento</h3></div>
+<div class="problem-body"><p>Se proyecta un canal trapezoidal para desviar escorrentía de una zona
+susceptible a erosión. Su fondo horizontal tendrá <span
+class="math inline">\(0{,}60\)</span> m de ancho. Cada talud se desplaza
+horizontalmente <span class="math inline">\(1{,}5\)</span> m por cada
+metro vertical. El fondo desciende <span
+class="math inline">\(0{,}10\)</span> m por cada <span
+class="math inline">\(100\)</span> m de recorrido. El caudal de diseño
+es <span class="math inline">\(0{,}80\,\mathrm{m^3/s}\)</span>.</p>
+<p>Se aproxima el movimiento por flujo uniforme y estacionario en un
+tramo recto, sin infiltración. La FAO utiliza la fórmula de Manning para
+la velocidad. Al multiplicar por el área transversal, se obtiene: <span
+class="math display">\[Q=\frac1n A R^{2/3}S^{1/2},\qquad R=\frac
+AP.\]</span> Aquí <span class="math inline">\(Q\)</span> es el caudal en
+<span class="math inline">\(\mathrm{m^3/s}\)</span>; <span
+class="math inline">\(A\)</span>, el área de la sección ocupada por agua
+en <span class="math inline">\(\mathrm{m^2}\)</span>; <span
+class="math inline">\(P\)</span>, la longitud del fondo y los taludes en
+contacto con agua en m; <span class="math inline">\(R\)</span>, el radio
+hidráulico en m; y <span class="math inline">\(S\)</span>, la pendiente
+longitudinal en m/m. <span class="math inline">\(n\)</span> es el
+coeficiente de rugosidad de Manning, con unidades <span
+class="math inline">\(\mathrm{s/m^{1/3}}\)</span> en esta forma SI de la
+ecuación. La superficie libre no forma parte de <span
+class="math inline">\(P\)</span>.</p>
+<p>Para hierba corta y pocas malezas se adopta <span
+class="math inline">\(n=0{,}024\)</span>, de la tabla 37 de la FAO. Las
+dimensiones, el caudal y el resguardo siguientes son condiciones del
+proyecto.</p>
+<ol>
+<li><p>Dibuje la sección transversal. Defina la profundidad de agua
+<span class="math inline">\(y&gt;0\)</span>, construya <span
+class="math inline">\(A(y)\)</span> y <span
+class="math inline">\(P(y)\)</span> y convierta la pendiente del texto a
+m/m. Use el teorema de Pitágoras para las longitudes
+inclinadas.</p></li>
+<li><p>Sustituya en Manning y construya una ecuación polinómica para
+<span class="math inline">\(y\)</span>. Determine su grado <em>antes de
+expandir</em>. Puede conservar productos y potencias al introducirla en
+la calculadora.</p></li>
+<li><p>Calcule las raíces reales y seleccione las físicamente
+admisibles. Compruebe la solución en la fórmula original, no solo en el
+polinomio.</p></li>
+<li><p>La distancia vertical entre el agua y el borde superior del canal
+(bordo libre o resguardo) debe ser de al menos <span
+class="math inline">\(0{,}20\)</span> m. ¿Cuál es la profundidad total
+mínima que debe construirse si se especifica en centímetros
+enteros?</p></li>
+<li><p>Finalmente se construye una profundidad total de <span
+class="math inline">\(0{,}95\)</span> m. La maleza aumenta y la
+rugosidad pasa a <span class="math inline">\(n=0{,}040\)</span>, valor
+que la FAO asocia con mantenimiento deficiente y malezas densas en la
+profundidad de flujo. Modele la nueva profundidad de agua y determine si
+todavía se cumple el resguardo. Si no se cumple, calcule el máximo
+caudal que podría conducirse respetándolo.</p></li>
+</ol>
+<p class="source-note">Modelo y rugosidades de referencia: FAO, capítulo 8, sección 8.2 y tabla 37. <a href="#fuentes">Consultar la bibliografía.</a></p></div>
+<div class="problem-tools"><details class="tool hints"><summary>Pistas para modelar</summary><div class="hint-content"><ol><li>Descompón el trapecio en un rectángulo y dos triángulos. El perímetro en contacto con el agua incluye el fondo y los dos taludes; no incluye la superficie libre.</li><li>Sustituye el radio hidráulico en la fórmula de Manning y reúne las potencias del área. Elevar al cubo permite eliminar los exponentes fraccionarios. Determina el grado antes de desarrollar todos los productos.</li><li>Comprueba la profundidad elegida en la fórmula original. Para el mantenimiento, cambia únicamente la rugosidad; para respetar el bordo libre, resta primero ese resguardo de la profundidad construida.</li></ol></div></details>
+<details class="tool answer"><summary>Comprobar respuesta final</summary><div class="answer-content"><ul>
+<li>Pendiente longitudinal: <strong>\(S=0{,}001\)</strong>, equivalente al \(0{,}10\,\%\). Grado resultante: <strong>10</strong>.</li>
+<li>Raíces reales iniciales: \(y\approx-1{,}12231826\) m y \(y\approx0{,}7065029243\) m. Profundidad admisible de agua: <strong>\(0{,}7065029243\) m</strong>.</li>
+<li>Caudal verificado: \(0{,}80\,\mathrm{m^3/s}\).</li>
+<li>Profundidad total mínima: \(0{,}9065029243\) m; especificada en centímetros enteros: <strong>\(0{,}91\) m</strong>.</li>
+<li>Con \(n=0{,}040\): profundidad del agua \(0{,}8890018335\) m y bordo libre \(0{,}0609981665\) m, menor que los \(0{,}20\) m exigidos.</li>
+<li>Profundidad máxima de agua conservando el bordo libre en el canal de \(0{,}95\) m: \(0{,}75\) m. Caudal máximo con la nueva rugosidad: <strong>\(0{,}5474144588\,\mathrm{m^3/s}\)</strong>.</li>
+</ul></div></details></div></article></section><section class="sources" id="fuentes" aria-labelledby="sources-title"><h2 id="sources-title">Bibliografía y copias de consulta</h2><p>Fuentes de los modelos y del contexto histórico. Las copias y fichas ocupan aproximadamente 210 KB y conservan su atribución y alcance.</p><article class="source" id="fuente-openstax-16-2-van"><h3>OpenStax 16.2 — Net Present Value (NPV) Method</h3><p>Julie Dahlquist; Rainford Knight (2022).</p><p><a href="https://openstax.org/books/principles-finance/pages/16-2-net-present-value-npv-method" target="_blank" rel="noopener noreferrer">Fuente original ↗</a> · <a href="bibliografia/raices/openstax-16-2-van.html">Consultar la copia guardada</a></p><small>copia de sección, sin imágenes ni scripts. CC BY-NC-SA 4.0. Consulta: 24 de octubre de 2026.</small></article><article class="source" id="fuente-openstax-16-3-tir"><h3>OpenStax 16.3 — Internal Rate of Return (IRR) Method</h3><p>Julie Dahlquist; Rainford Knight (2022).</p><p><a href="https://openstax.org/books/principles-finance/pages/16-3-internal-rate-of-return-irr-method" target="_blank" rel="noopener noreferrer">Fuente original ↗</a> · <a href="bibliografia/raices/openstax-16-3-tir.html">Consultar la copia guardada</a></p><small>copia de sección, sin imágenes ni scripts. CC BY-NC-SA 4.0. Consulta: 24 de octubre de 2026.</small></article><article class="source" id="fuente-openstax-8-3-amortizacion"><h3>OpenStax 8.3 — Loan Amortization</h3><p>Julie Dahlquist; Rainford Knight (2022).</p><p><a href="https://openstax.org/books/principles-finance/pages/8-3-loan-amortization" target="_blank" rel="noopener noreferrer">Fuente original ↗</a> · <a href="bibliografia/raices/openstax-8-3-amortizacion.html">Consultar la copia guardada</a></p><small>copia de sección, sin imágenes ni scripts. CC BY-NC-SA 4.0. Consulta: 24 de octubre de 2026.</small></article><article class="source" id="fuente-penn-state-carbonatos"><h3>1.0 Aqueous complexation reactions</h3><p>Li Li; The Pennsylvania State University.</p><p><a href="https://courses.ems.psu.edu/ce574/node/854" target="_blank" rel="noopener noreferrer">Fuente original ↗</a> · <a href="bibliografia/raices/penn-state-carbonatos.html">Consultar la copia guardada</a></p><small>copia del artículo, sin navegación. CC BY-NC-SA 4.0. Consulta: 24 de octubre de 2026.</small></article><article class="source" id="fuente-eraud-2021"><h3>popharvest: An R package to assess the sustainability of harvesting regimes of bird populations</h3><p>Cyril Eraud; Tiphaine Devaux; Alexandre Villers; Fred A. Johnson; Charlotte Francesiaz (2021).</p><p><a href="https://doi.org/10.1002/ece3.8212" target="_blank" rel="noopener noreferrer">Fuente original ↗</a> · <a href="bibliografia/raices/eraud-2021-ficha.html">Consultar la ficha guardada</a></p><p><a href="bibliografia/raices/eraud-2021-popharvest.xml" download>Descargar texto íntegro del artículo (XML, 105 KB)</a></p><small>XML JATS íntegro y ficha propia. CC BY 4.0. Consulta: 24 de octubre de 2026.</small></article><article class="source" id="fuente-fao-manning"><h3>Water Transport Structures, sección 8.2 y tabla 37</h3><p>FAO.</p><p><a href="https://www.fao.org/fishery/docs/CDrom/FAO_Training/FAO_Training/General/x6708e/x6708e08.htm" target="_blank" rel="noopener noreferrer">Fuente original ↗</a> · <a href="bibliografia/raices/fao-manning-ficha.html">Consultar la ficha guardada</a></p><small>ficha docente propia; no copia íntegra. Texto original del sitio: condiciones FAO para docencia y usos no comerciales con atribución; ficha de redacción propia. Consulta: 24 de octubre de 2026.</small></article><article class="source" id="fuente-qin-jiushao"><h3>Qin Jiushao</h3><p>J. J. O’Connor; E. F. Robertson; University of St Andrews.</p><p><a href="https://mathshistory.st-andrews.ac.uk/Biographies/Qin_Jiushao/" target="_blank" rel="noopener noreferrer">Fuente original ↗</a> · <a href="bibliografia/raices/qin-jiushao-ficha.html">Consultar la ficha guardada</a></p><small>ficha histórica propia; no copia de la página. No se confirmó licencia abierta de la página original; no se redistribuye. Consulta: 24 de octubre de 2026.</small></article><p class="source-note">Las copias de OpenStax y Penn State omiten imágenes y navegación. El artículo de Eraud se conserva en XML. Para la FAO y MacTutor se guardan fichas propias que documentan las relaciones o el contexto utilizados, junto al enlace original; no son copias completas de esas páginas.</p></section></main><footer>Prof. Jhon Fredy Tavera Bucurú · 2026 · <a href="funciones_reales_variable_real.html#ejercicios">Volver a ejercicios de funciones</a></footer></body></html>

@@ -162,6 +162,18 @@
       .plot-panel{min-height:480px;padding:12px}.plot-wrap{min-height:340px}.detail-panel{padding:1.6rem}.operation-grid{grid-template-columns:1fr}.operation-card{min-height:240px}.transform-plot,.transform-plot canvas{min-height:320px}}
     @media(max-width:520px){.term-grid,.transform-rules{grid-template-columns:1fr}.term{min-height:190px;border-right:0;border-bottom:1px solid rgba(237,247,241,.08)}.transform-rule{min-height:160px;border-right:0;border-bottom:1px solid rgba(237,247,241,.08)}.property-row{grid-template-columns:1fr;gap:.4rem}.plot-note,footer,.plot-legend{flex-direction:column}}
     @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}*,*:before,*:after{animation-duration:.01ms!important;transition-duration:.01ms!important}[data-reveal]{opacity:1;transform:none}}
+
+    /* Acceso al banco de ejercicios */
+    .exercises-section{padding-top:3rem;padding-bottom:7rem}
+    .exercise-menu{max-width:840px;margin:auto;border:1px solid var(--soft);border-radius:var(--radius);background:var(--surface)}
+    .exercise-menu>summary{padding:1.6rem 2rem;cursor:pointer;font-size:1.35rem;font-weight:800;list-style:none;display:flex;justify-content:space-between;align-items:center}
+    .exercise-menu>summary::-webkit-details-marker{display:none}
+    .exercise-menu>summary::after{content:'+';color:var(--accent);font-size:1.8rem;line-height:1}
+    .exercise-menu[open]>summary::after{content:'−'}
+    .exercise-menu>summary:focus-visible{outline:2px solid var(--accent);outline-offset:4px;border-radius:var(--radius)}
+    .exercise-topic{display:block;margin:0 1rem 1rem;padding:1.4rem;border-radius:16px;border:1px solid rgba(101,230,180,.2);background:rgba(101,230,180,.04);text-decoration:none}
+    .exercise-topic:hover{background:rgba(101,230,180,.09);border-color:var(--accent)}
+    .exercise-topic strong{display:block;color:var(--accent);font-size:1.15rem}.exercise-topic span{display:block;margin-top:.5rem;color:var(--muted);font-size:.9rem}
   </style>
 </head>
 <body>
@@ -302,6 +314,16 @@
       </div>
     </section>
     <section class="closing"><p data-reveal>Una función no es sólo una fórmula.<br>Es una manera de <strong>ver el cambio.</strong></p></section>
+
+    <section class="section exercises-section" aria-label="Práctica de funciones">
+      <details class="exercise-menu" id="ejercicios">
+        <summary>Ejercicios</summary>
+        <a class="exercise-topic" href="raices-de-polinomios.html">
+          <strong>Raíces de polinomios <span aria-hidden="true" style="display:inline;color:inherit">↗</span></strong>
+          <span>16 problemas de modelación: geometría, negocios y medio ambiente. Pistas y respuestas para comprobar tu trabajo.</span>
+        </a>
+      </details>
+    </section>
   </main>
   <footer><span>© <span id="year"></span> · Funciones reales</span><a href="../../index.html">Volver al curso</a></footer>
   <script>
@@ -401,4 +423,5 @@
   </script>
 </body>
 </html>
+
 
