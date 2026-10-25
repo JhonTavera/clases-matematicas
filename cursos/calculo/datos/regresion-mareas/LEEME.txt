@@ -1,0 +1,18 @@
+EXTRACTO DOCENTE: NIVEL DEL MAR EN BUENAVENTURA
+Fuente: DIMAR, CECOLDO / CCCP. Serie temporal con control de calidad de la estación CP01BUEM32.
+DOI: https://doi.org/10.26640/cecoldo.dataset_00567
+Metadatos: https://cecoldo.dimar.mil.co/geonetwork/srv/spa/catalog.search#/metadata/34b64f9e-9dfa-4e35-b4ad-508f5055c9f7
+Original: https://cecoldo.dimar.mil.co/geonetwork/srv/api/records/34b64f9e-9dfa-4e35-b4ad-508f5055c9f7/attachments/EMAR_NM_2024_CP01BUEM32_QC.txt
+Consulta y descarga: 25 de octubre de 2026.
+Licencia original y del extracto: CC BY-NC-SA 4.0
+https://creativecommons.org/licenses/by-nc-sa/4.0/deed.es
+Elaboración del extracto: Prof. Jhon Fredy Tavera Bucurú, material docente.
+
+Intervalo: 2024-01-01 00:00:00 a 2024-01-04 00:00:00 (UTC-5), extremos incluidos.
+25 mediciones instantáneas, una cada tres horas. Todas tienen QF=1 (bueno).
+Transformaciones: selección del intervalo y conversión de fecha-hora en horas desde el inicio. No se cambian las alturas, no se interpolan ni se promedian datos.
+Columnas: tiempo_h (horas), nivel_m (metros, referencia de la estación).
+Separador: tabulación. Decimal: punto. Primera fila: encabezados.
+Regresión inicial: t=0 a t=48, 17 filas. Validación: t=51 a t=72, 8 filas.
+SHA256 del archivo original descargado: 60877341a630a7b57735d88487ccdb87b7feb50e9467169b640912b6396883fc
+Este archivo no contiene resultados del ajuste. Las series de DIMAR pueden actualizarse.
