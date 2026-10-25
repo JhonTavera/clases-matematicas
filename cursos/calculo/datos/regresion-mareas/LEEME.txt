@@ -13,6 +13,15 @@ Intervalo: 2024-01-01 00:00:00 a 2024-01-04 00:00:00 (UTC-5), extremos incluidos
 Transformaciones: selección del intervalo y conversión de fecha-hora en horas desde el inicio. No se cambian las alturas, no se interpolan ni se promedian datos.
 Columnas: tiempo_h (horas), nivel_m (metros, referencia de la estación).
 Separador: tabulación. Decimal: punto. Primera fila: encabezados.
-Regresión inicial: t=0 a t=48, 17 filas. Validación: t=51 a t=72, 8 filas.
+Regresión inicial: t=0 a t=72, 25 filas. Validación: desde t=75 hasta el final de enero. Predicción solicitada: 17/01/2024 00:00 UTC-5, t=384.
+El extracto buenaventura-enero-2024.tsv contiene los 248 datos buenos de enero, con el mismo origen temporal.
 SHA256 del archivo original descargado: 60877341a630a7b57735d88487ccdb87b7feb50e9467169b640912b6396883fc
 Este archivo no contiene resultados del ajuste. Las series de DIMAR pueden actualizarse.
+
+CARTAGENA: cartagena-enero-2024.tsv
+Fuente: DIMAR / CECOLDO / CIOH, estación CP05CIOH10.
+DOI: https://doi.org/10.26640/cecoldo.dataset_00558
+Metadatos: https://cecoldo.dimar.mil.co/geonetwork/srv/spa/catalog.search#/metadata/34f1c2d7-0fb4-4d7d-b695-9b8afc2ec168
+Original: https://cecoldo.dimar.mil.co/geonetwork/srv/api/records/34f1c2d7-0fb4-4d7d-b695-9b8afc2ec168/attachments/EMAR_NM_2024_CP05CIOH10_QC.txt
+247 datos buenos de enero; se excluye una observación con QF=4. Origen: 01/01/2024 00:00 UTC-5, incluso si esa primera medición se excluye. Licencia de datos y extracto: CC BY-NC-SA 4.0.
+Capturas del catálogo de DIMAR: ilustran la identificación de la ficha y la elección del TXT anual (25/10/2026).
