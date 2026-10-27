@@ -1,0 +1,754 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#07151c">
+  <meta name="color-scheme" content="dark">
+  <meta name="description" content="Productos notables, binomio de Newton y triángulo de Pascal, factorización, raíces de polinomios y números complejos. Demostraciones y ejemplos desplegables.">
+  <title>Productos notables y números complejos</title>
+  <script>
+    window.MathJax={tex:{inlineMath:[["\\(","\\)"]],displayMath:[["\\[","\\]"]]},options:{skipHtmlTags:["script","noscript","style","textarea","pre","code"]}};
+  </script>
+  <script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+  <style>
+    :root{--bg:#07151c;--deep:#030b10;--surface:#0c2028;--surface2:#112b34;--ink:#edf7f1;--muted:#a9bcb8;--soft:#27434a;--accent:#65e6b4;--accent-ink:#062117;--blue:#8ebcf2;--amber:#e6b968;--ui:"Aptos","Segoe UI","Helvetica Neue",Arial,system-ui,sans-serif;--display:"Aptos Display","Helvetica Neue",Arial,system-ui,sans-serif;--math:"STIX Two Text","Cambria Math",Cambria,Georgia,serif;--page:min(1320px,calc(100% - 64px));--radius:24px}
+    *{box-sizing:border-box}html{scroll-behavior:smooth;scroll-padding-top:100px;background:var(--bg)}body{margin:0;color:var(--ink);font:400 17px/1.7 var(--ui);background:radial-gradient(circle at 80% 3%,#65e6b412,transparent 35rem),linear-gradient(135deg,var(--deep),var(--bg) 50%,#0b2028);-webkit-font-smoothing:antialiased}::selection{background:var(--accent);color:var(--accent-ink)}
+    a{color:inherit;text-underline-offset:5px}button,input,select{font:inherit}button,select{color:inherit}button{cursor:pointer}button,a,input,select,summary{-webkit-tap-highlight-color:transparent}button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,summary:focus-visible{outline:2px solid var(--accent);outline-offset:5px}
+    .skip{position:fixed;top:-80px;left:20px;z-index:100;padding:12px;background:var(--accent);color:var(--accent-ink)}.skip:focus{top:12px}.nav{position:fixed;z-index:40;top:14px;left:50%;transform:translateX(-50%);width:min(1400px,calc(100% - 36px));display:flex;align-items:center;justify-content:space-between;gap:16px;pointer-events:none}.nav>*{pointer-events:auto}.brand{width:48px;height:48px;display:grid;place-items:center;border:1px solid var(--soft);border-radius:50%;background:#07151ced;text-decoration:none;font:italic 600 25px var(--math)}
+    .nav-links{display:flex;padding:5px;border:1px solid var(--soft);border-radius:40px;background:#07151ce8;backdrop-filter:blur(16px)}.nav-links a{padding:8px 15px;color:var(--muted);font-size:14px;text-decoration:none}.nav-links a:hover{color:var(--accent)}.mobile-nav{display:none;position:relative}.mobile-nav summary{border:1px solid var(--soft);padding:8px 18px;border-radius:30px;background:var(--bg);cursor:pointer}.mobile-nav div{position:absolute;right:0;top:52px;width:240px;padding:12px;background:var(--surface);border:1px solid var(--soft);border-radius:16px;box-shadow:0 16px 40px #0007}.mobile-nav a{display:block;padding:9px;text-decoration:none}.progress{width:72px;height:2px;background:var(--soft)}.progress span{display:block;height:100%;background:var(--accent);transform:scaleX(0);transform-origin:left}
+    .hero{position:relative;min-height:94svh;display:grid;place-items:center;text-align:center;overflow:hidden;isolation:isolate;padding:120px 20px 85px}.hero:before{content:"";position:absolute;z-index:-1;left:50%;top:48%;width:min(75vw,820px);aspect-ratio:1;border:1px solid #65e6b41e;border-radius:50%;transform:translate(-50%,-50%);box-shadow:0 0 0 9vw #65e6b406,0 0 0 18vw #65e6b404}.hero:after{content:"";position:absolute;z-index:-2;inset:0;background:linear-gradient(#edf7f10a 1px,transparent 1px),linear-gradient(90deg,#edf7f10a 1px,transparent 1px);background-size:80px 80px;mask-image:radial-gradient(ellipse,#000,transparent 65%)}.hero-symbol{color:var(--accent);font:italic 400 clamp(3.2rem,10vw,9rem)/1 var(--math);letter-spacing:-.065em}.hero-symbol .soft{color:#a9bcb870;font-style:normal;margin:0 .08em}.hero h1{font:650 clamp(1.8rem,4.1vw,3.7rem)/1.12 var(--display);letter-spacing:-.035em;margin:2.5rem auto 0;max-width:23ch}.hero .start{display:inline-block;margin-top:2rem;color:var(--accent);font-size:14px;text-decoration:none;border-bottom:1px solid var(--soft);padding-bottom:5px}
+    main{width:var(--page);margin:auto}.section{padding:clamp(5rem,9vw,8rem) 0}.section+.section{border-top:1px solid #edf7f116}.head{margin-bottom:3rem}.kicker{color:var(--accent);font-size:13px;font-weight:750;text-transform:uppercase;letter-spacing:.14em}.head h2{max-width:19ch;margin:1.2rem 0 1.6rem;font:760 clamp(2.8rem,6.8vw,5.9rem)/1.02 var(--display);letter-spacing:-.05em}.lead{max-width:67ch;color:var(--muted);font-size:clamp(1.06rem,1.5vw,1.2rem)}h3{font:700 clamp(1.45rem,2.1vw,2rem)/1.2 var(--display);letter-spacing:-.025em;margin:0 0 1.2rem}h4{font-size:1.05rem;margin:0 0 .75rem}p{margin:0 0 1.2rem}p:last-child{margin-bottom:0}strong{font-weight:700}small,.small{font-size:14px;color:var(--muted)}.note{color:var(--muted);font-size:15px}.eyebrow{display:block;margin-bottom:1rem;color:var(--accent);font-size:13px;font-weight:700;letter-spacing:.05em}
+    .route{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:1px;background:var(--soft);border:1px solid var(--soft);border-radius:var(--radius);overflow:hidden}.route a{display:block;padding:1.5rem;background:var(--bg);text-decoration:none}.route span{display:block;font-size:13px;color:var(--accent);margin-bottom:.6rem}.route a:hover{background:var(--surface2)}.route-section{padding-block:3rem 6rem}
+    .grid2{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:20px}.grid3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:20px}.grid2>*,.grid3>*{min-width:0}.frame{border:1px solid #edf7f11d;border-radius:var(--radius);background:#030b1099;overflow:hidden}.pad{padding:clamp(1.4rem,3.5vw,3rem)}.card{padding:clamp(1.4rem,3vw,2.4rem);border-radius:var(--radius);background:#112b3499;min-width:0}.card p{color:#cfddda}.theorem{min-width:0;padding:clamp(1.5rem,3.6vw,3rem);border:1px solid #65e6b445;border-radius:var(--radius);background:#65e6b409}.theorem+.theorem{margin-top:1.4rem}.math{max-width:100%;overflow-x:auto;overflow-y:hidden;padding:.6rem 0;font-family:var(--math);color:var(--accent)}.bigmath{font-size:clamp(1.05rem,2vw,1.45rem)}.spaced{margin-top:2rem}.spaced-lg{margin-top:3rem}.band{margin:1.5rem 0;padding:1.2rem 1.4rem;border-left:2px solid var(--accent);background:#65e6b409}.band.warn{border-color:var(--amber)}.band p{color:#cfddda}
+    .solution{margin-top:1.5rem;border-top:1px solid var(--soft)}.solution>summary{padding:1rem 0 .3rem;color:var(--accent);font-size:15px;cursor:pointer;list-style:none;min-height:44px}.solution>summary:before{content:"+ ";font-size:1.2rem}.solution[open]>summary:before{content:"− "}.solution>div{padding-top:1rem}.solution ol{padding-left:1.3rem}.solution li+li{margin-top:.7rem}summary::-webkit-details-marker{display:none}.rule-list{padding-left:1.3rem}.rule-list li+li{margin-top:.6rem}.step-list{display:grid;gap:1.2rem;padding-left:1.4rem}.step-list li::marker{color:var(--accent);font-weight:700}.table-wrap{overflow-x:auto}table{border-collapse:collapse;width:100%;font-size:15px}th{text-align:left;color:var(--muted);font-weight:600}th,td{padding:12px 10px;border-bottom:1px solid var(--soft)}
+    .lab{border:1px solid var(--soft);border-radius:var(--radius);overflow:hidden;background:var(--deep)}.lab-toolbar{display:flex;flex-wrap:wrap;align-items:center;gap:10px;padding:20px 24px;border-bottom:1px solid var(--soft);background:#0c202866}.lab-toolbar h3{font-size:1.3rem;margin:0 auto 0 0}.pill,.button{min-height:44px;padding:9px 17px;border:1px solid var(--soft);border-radius:30px;background:transparent;font-size:15px}.pill:hover,.button:hover{border-color:var(--accent)}.pill[aria-pressed=true],.button.primary{background:var(--accent);color:var(--accent-ink);border-color:var(--accent)}.lab-grid{display:grid;grid-template-columns:minmax(0,1.35fr) minmax(280px,.75fr)}.plot-side{padding:clamp(1rem,2.6vw,2rem);min-width:0}.controls-side{padding:clamp(1.3rem,3vw,2.4rem);border-left:1px solid var(--soft);background:#0c202844;min-width:0}.control{margin:1.4rem 0}.control label{display:block;color:var(--muted);font-size:15px;margin-bottom:8px}.control output{float:right;color:var(--ink);font-variant-numeric:tabular-nums}.control input[type=range]{width:100%;accent-color:var(--accent);height:30px;cursor:pointer}.readout{padding:16px;border:1px solid var(--soft);border-radius:14px;margin:1.1rem 0}.readout .value{font:500 clamp(1.6rem,3vw,2.3rem)/1.3 var(--math);color:var(--accent);overflow-wrap:anywhere}.readout .small{margin-top:8px}.lab-actions{display:flex;flex-wrap:wrap;gap:8px;margin-top:1.3rem}.sr-only{position:absolute;width:1px;height:1px;margin:-1px;padding:0;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
+    .pascal-scroll{overflow:auto;max-height:530px;padding:18px 4px 22px;scrollbar-color:var(--soft) transparent}.pascal-triangle{display:flex;flex-direction:column;gap:7px;width:max-content;min-width:100%;margin:auto}.pascal-row{display:flex;justify-content:center;gap:6px;align-items:center;position:relative;padding-left:54px;padding-right:10px}.pascal-row-label{position:absolute;left:0;width:46px;padding:0;min-height:38px;border:0;background:none;color:var(--muted);font-size:12px}.pascal-cell{min-width:39px;height:39px;padding:0 5px;border:1px solid var(--soft);border-radius:10px;background:#0c2028;color:var(--muted);font-size:14px;font-variant-numeric:tabular-nums}.pascal-row.is-selected .pascal-cell{color:var(--accent);border-color:#65e6b460;background:#65e6b40a}.pascal-cell.is-parent{background:#8ebcf21b!important;border-color:var(--blue)!important;color:var(--blue)!important}.pascal-cell.is-focus{background:var(--accent)!important;color:var(--accent-ink)!important;border-color:var(--accent)!important}.pascal-caption{font-size:14px;color:var(--muted);margin-top:12px;min-height:3.5em}.pascal-expansion{padding:clamp(1.2rem,2.6vw,2rem);border-top:1px solid var(--soft);background:#65e6b407}.pascal-expansion .math{font-size:1.15rem}.complex-plot{position:relative;border:1px solid #edf7f10b;border-radius:16px;overflow:hidden;background:var(--deep)}.complex-plot canvas{display:block;width:100%;height:clamp(310px,44vw,530px);touch-action:none;cursor:crosshair}.legend{display:flex;flex-wrap:wrap;gap:9px 20px;padding-top:14px;font-size:14px;color:var(--muted)}.legend span{display:inline-flex;align-items:center;gap:8px}.line{width:22px;height:2px;background:var(--accent)}.line.blue{background:var(--blue)}.complex-values{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:1.2rem 0}.complex-values div{padding:12px;border-radius:12px;background:var(--surface)}.complex-values dt{font-size:13px;color:var(--muted)}.complex-values dd{margin:4px 0 0;color:var(--ink);font-variant-numeric:tabular-nums}.lab-note{padding:0 24px 22px;color:var(--muted);font-size:14px}
+    mjx-container[display=true]{margin:.65em 0!important}mjx-container{max-width:100%}mjx-container:not([display=true]){display:inline-block;max-width:100%;overflow-x:auto;overflow-y:hidden;vertical-align:middle;padding-block:.12em}footer{width:var(--page);margin:auto;padding:2rem 0 3rem;border-top:1px solid var(--soft);color:var(--muted);font-size:14px;display:flex;justify-content:space-between;gap:2rem;flex-wrap:wrap}footer p{max-width:65ch}.noscript{padding:1rem;background:#e6b96819;color:var(--amber)}
+    @media(max-width:1050px){.lab-grid{grid-template-columns:1fr}.controls-side{border-left:0;border-top:1px solid var(--soft)}.grid3{grid-template-columns:1fr}.nav-links a{padding-inline:11px}.hero-symbol{font-size:clamp(3rem,10vw,7rem)}}
+    @media(max-width:740px){:root{--page:calc(100% - 32px);--radius:19px}body{font-size:16px}.nav-links,.progress{display:none}.mobile-nav{display:block}.grid2{grid-template-columns:1fr}.route{grid-template-columns:1fr 1fr}.route a{padding:1.1rem}.hero{min-height:83svh}.hero-symbol{font-size:clamp(2.5rem,9.5vw,4.5rem)}.hero h1{font-size:clamp(1.8rem,7vw,2.7rem)}.head h2{font-size:clamp(2.5rem,10.5vw,4rem)}.section{padding-block:4.5rem}.route-section{padding-block:1.5rem 4rem}.lab-toolbar{padding:16px;gap:8px}.lab-toolbar h3{width:100%;margin-bottom:5px}.pascal-row{gap:5px;padding-left:45px}.pascal-cell{min-width:34px;height:36px;font-size:12px}.pascal-row-label{width:37px}.lab-note{padding:0 16px 20px}}
+    @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}*,*:before,*:after{animation:none!important;transition:none!important}}
+    .legend [hidden]{display:none}
+    @media print{body{background:#fff;color:#111}.nav,.hero,.route-section,.control,.lab-actions,.lab-toolbar,.skip{display:none}main,footer{width:100%}.section{padding:1.5rem 0}.head h2{font-size:30px}.frame,.card,.theorem,.lab{background:#fff;border-color:#999;break-inside:avoid}.math,.kicker,.eyebrow,.lead,.note,.small,small,.card p{color:#222}.grid2,.grid3,.lab-grid{display:block}.controls-side{border:0}.solution>summary{color:#222}.complex-plot{background:#07151c}}
+
+    .nav-links a{padding-inline:11px;font-size:13px}.mobile-nav div{max-height:75svh;overflow-y:auto}
+    .chapter-part{margin-top:4rem;padding-top:3rem;border-top:1px solid var(--soft)}.part-title{font-size:clamp(2rem,4vw,3.6rem)}
+    .stepper{display:flex;align-items:center;gap:12px}.stepper button{width:48px;height:48px;flex-shrink:0;border:1px solid var(--soft);border-radius:50%;background:var(--surface);color:var(--accent);font-size:24px}.stepper button:disabled{opacity:.35;cursor:default}.stepper input{width:100%;min-width:0;min-height:48px;text-align:center;background:var(--deep);border:1px solid var(--soft);border-radius:12px;color:var(--ink);font-variant-numeric:tabular-nums;appearance:textfield}.stepper input::-webkit-inner-spin-button,.stepper input::-webkit-outer-spin-button{-webkit-appearance:none;margin:0}
+    .pascal-scroll{overflow:visible;max-height:none;padding-inline:0}.pascal-triangle{width:100%;min-width:0;--cell:39px;--cell-font:14px}.pascal-row{padding-left:30px;padding-right:0;gap:2px}.pascal-row-label{width:28px;font-size:10px;min-height:44px}.pascal-cell{flex:0 0 var(--cell);width:var(--cell);min-width:0;height:44px;padding:0;border-radius:7px;font-size:var(--cell-font)}.pascal-cell:focus-visible{outline-offset:1px}.pascal-coefficients{display:flex;flex-wrap:wrap;gap:4px 12px}.pascal-coefficients span{white-space:nowrap}
+    .math,mjx-container:not([display=true]){overflow:visible}.math{min-width:0}.math mjx-container{max-width:100%}.complex-plot canvas{touch-action:pan-y;cursor:pointer}
+    @media(max-width:1200px){.nav-links,.progress{display:none}.mobile-nav{display:block}}
+    @media(max-width:740px){.pascal-row{gap:2px;padding-left:30px}.pascal-cell{height:44px;padding:0;min-width:0;font-size:var(--cell-font)}.pascal-row-label{width:28px}.math{font-size:15px}.pascal-expansion .math{font-size:15px}.complex-values{grid-template-columns:1fr 1fr}.hero{min-height:80svh}.hero-symbol{letter-spacing:-.065em}.hero-symbol .soft{margin-inline:.025em}}
+  </style>
+</head>
+<body>
+  <a class="skip" href="#productos">Saltar al contenido</a>
+  <nav class="nav" aria-label="Navegación principal">
+    <a class="brand" href="#inicio" aria-label="Volver al inicio">i</a>
+    <div class="nav-links"><a href="#productos">Productos</a><a href="#newton">Pascal</a><a href="#factorizacion">Factorizar</a><a href="#polinomios">Polinomios</a><a href="#complejos">Complejos</a><a href="#algebra">Teorema</a><a href="#raices-cuadraticas">Grado 2</a><a href="#raiz-racional">Raíz racional</a><a href="#raices">Cardano y Ferrari</a></div>
+    <details class="mobile-nav"><summary>Contenido</summary><div><a href="#productos">Productos</a><a href="#newton">Pascal</a><a href="#potencias">Factorizar potencias</a><a href="#factorizacion">Factorizar</a><a href="#polinomios">Polinomios</a><a href="#complejos">Complejos</a><a href="#algebra">Teorema</a><a href="#raices-cuadraticas">Grado 2</a><a href="#raiz-racional">Raíz racional</a><a href="#raices">Cardano y Ferrari</a></div></details>
+    <div class="progress" aria-hidden="true"><span id="progress"></span></div>
+  </nav>
+  <header class="hero" id="inicio"><div><div class="hero-symbol" aria-hidden="true">ax²<span class="soft">+</span>bx<span class="soft">+</span>c</div><h1>Productos notables<br>y números complejos</h1><a class="start" href="#productos">Explorar el capítulo ↓</a></div></header>
+  <main>
+    <noscript><p class="noscript">Las definiciones y los ejemplos se pueden leer sin JavaScript. Actívalo para usar el triángulo de Pascal y el plano complejo. Las fórmulas requieren conexión para cargar MathJax.</p></noscript>
+    <section class="section" id="productos">
+      <div class="head"><div class="kicker">01 · Identidades algebraicas</div><h2>Productos notables</h2><p class="lead">Una identidad se cumple para todos los valores permitidos de sus variables. Leída de izquierda a derecha desarrolla un producto; leída al revés permite factorizar.</p></div>
+      <div class="grid2">
+
+        <article class="theorem"><h3>Trinomio de cuadrado perfecto</h3><div class="math">\[A^2+2AB+B^2=(A+B)^2,\]\[A^2-2AB+B^2=(A-B)^2.\]</div><p>Los extremos son cuadrados y el término central es más o menos el doble del producto de sus raíces elegidas.</p><details class="solution"><summary>Ver dos factorizaciones</summary><div><div class="math">\[x^2+10x+25=(x+5)^2,\]</div><div class="math">\[4x^2-12x+9=(2x-3)^2.\]</div><p>En el segundo caso, \(A=2x\), \(B=3\) y \(-2AB=-12x\). Tener dos cuadrados en los extremos no basta: también se comprueba el término central.</p></div></details></article>
+
+        <article class="card"><span class="eyebrow">BINOMIOS CONJUGADOS</span><h3>Diferencia de cuadrados</h3><div class="math">\[(a+b)(a-b)=a^2-b^2.\]</div><p>Los términos \(ab\) y \(-ab\) se cancelan. Para factorizar, toma la suma y la diferencia de las bases de los cuadrados.</p><details class="solution"><summary>Ver un ejemplo</summary><div><div class="math">\[25x^2-49=(5x-7)(5x+7).\]</div><p>Esta identidad no convierte \(a^2+b^2\) en \((a+b)(a-b)\): ese producto tiene signo menos.</p></div></details></article>
+
+      </div>
+      <div class="band warn"><p><strong>Un error frecuente.</strong> \((a+b)^2\ne a^2+b^2\) en general. Por ejemplo, \((1+1)^2=4\), mientras que \(1^2+1^2=2\).</p></div>
+    </section>
+    <section class="section" id="newton">
+      <div class="head"><div class="kicker">02 · Binomio de Newton</div><h2>Newton y el triángulo de Pascal</h2><p class="lead">En la potencia \((a+b)^n\), los exponentes de cada término suman \(n\). La fila \(n\) del triángulo de Pascal proporciona los coeficientes.</p></div>
+      <div class="theorem"><h3>Los coeficientes se construyen sumando</h3><p>Empieza con la fila \(0\), que contiene un solo \(1\). Cada fila nueva empieza y termina en \(1\); cada número interior se obtiene sumando los dos que tiene justo encima.</p><p>La fila \(n\) contiene los \(n+1\) coeficientes de \((a+b)^n\). Para \((a-b)^n\), se conservan estos números y los signos alternan.</p><div class="math">\[1,\ 3,\ 3,\ 1\quad\longrightarrow\quad1,\ 4,\ 6,\ 4,\ 1.\]</div><p class="note">Por ejemplo, el \(6\) de la fila \(4\) se obtiene como \(3+3\).</p></div>
+      <div class="lab spaced" id="pascalLab">
+        <div class="lab-toolbar"><h3>Construye los coeficientes</h3><button type="button" class="pill" data-binomial-sign="plus" aria-pressed="true">\(a+b\)</button><button type="button" class="pill" data-binomial-sign="minus" aria-pressed="false">\(a-b\)</button></div>
+        <div class="lab-grid">
+          <div class="plot-side"><div class="pascal-scroll" role="region" aria-label="Triángulo de Pascal"><div id="pascalTriangle" class="pascal-triangle"></div></div><p id="pascalDetail" class="pascal-caption" role="status" aria-live="polite"></p></div>
+          <div class="controls-side"><h3>Elige una potencia</h3><div class="control"><label for="pascalN">Exponente \(n\)<output id="pascalNValue" for="pascalN">5</output></label><div class="stepper"><button type="button" data-step-target="pascalN" data-step-delta="-1" aria-label="Disminuir exponente">−</button><input type="number" inputmode="decimal" id="pascalN" min="0" max="12" step="1" value="5"><button type="button" data-step-target="pascalN" data-step-delta="1" aria-label="Aumentar exponente">+</button></div></div><div class="readout"><div class="small">Coeficientes de la fila elegida</div><p class="value pascal-coefficients" id="pascalCoefficients"></p></div><p class="note">Toca un coeficiente para resaltar los dos números que lo generan. Toca la etiqueta de una fila para elegir ese exponente. La fila \(0\) cuenta.</p><p class="note">El laboratorio muestra hasta \(n=12\); la identidad vale para cualquier entero \(n\ge0\).</p></div>
+        </div>
+        <div class="pascal-expansion"><span class="eyebrow">EXPANSIÓN CON LOS COEFICIENTES DE PASCAL</span><div class="math" id="pascalExpansion" aria-live="polite"></div></div>
+      </div>
+      <details class="solution"><summary>Ejemplo: sustituir en \((2x-3)^4\)</summary><div><p>La fila \(4\) es \(1,4,6,4,1\). Usa \(a=2x\) y \(b=-3\):</p><div class="math">\[\begin{aligned}(2x-3)^4={}&(2x)^4+4(2x)^3(-3)\\&+6(2x)^2(-3)^2\\&+4(2x)(-3)^3+(-3)^4.\end{aligned}\]</div><div class="math">\[\begin{aligned}(2x-3)^4={}&16x^4-96x^3\\&+216x^2-216x+81.\end{aligned}\]</div></div></details>
+    </section>
+    <section class="section" id="potencias">
+      <div class="head"><div class="kicker">03 · Sumas y diferencias</div><h2>Factorizar potencias</h2></div>
+      <div class="grid2">
+        <article class="theorem"><span class="eyebrow">ENTERO \(n\ge2\)</span><h3>Diferencia \(a^n-b^n\)</h3><div class="math">\[\begin{aligned}a^n-b^n=(a-b)\bigl(&a^{n-1}+a^{n-2}b\\&+\cdots+ab^{n-2}+b^{n-1}\bigr).\end{aligned}\]</div><p>En el segundo factor, las potencias de \(a\) bajan y las de \(b\) suben. Todos sus términos llevan signo más. Hay exactamente \(n\) términos: cada potencia de \(b\), desde \(0\) hasta \(n-1\), aparece una sola vez. Para \(n=2\), el segundo factor es simplemente \(a+b\).</p><div class="math">\[a^3-b^3=(a-b)(a^2+ab+b^2).\]</div><details class="solution"><summary>Ejemplo: \(x^5-32\)</summary><div><p>Reconoce \(32=2^5\). Entonces:</p><div class="math">\[\begin{aligned}x^5-32=(x-2)\bigl(&x^4+2x^3\\&+4x^2+8x+16\bigr).\end{aligned}\]</div><p>Al multiplicar, los términos intermedios se cancelan y quedan \(x^5\) y \(-32\).</p></div></details></article>
+        <article class="theorem"><span class="eyebrow">ENTERO IMPAR \(n\ge3\)</span><h3>Suma \(a^n+b^n\)</h3><div class="math">\[\begin{aligned}a^n+b^n=(a+b)\bigl(&a^{n-1}-a^{n-2}b\\&+\cdots-ab^{n-2}+b^{n-1}\bigr).\end{aligned}\]</div><p>Los \(n\) términos del segundo factor alternan de signo. Las potencias de \(a\) bajan de \(n-1\) a \(0\) y las de \(b\) suben de \(0\) a \(n-1\); cada término aparece una sola vez. El primero y el último llevan signo más.</p><div class="math">\[a^3+b^3=(a+b)(a^2-ab+b^2).\]</div><details class="solution"><summary>Ejemplo: \(8x^3+27\)</summary><div><div class="math">\[8x^3+27=(2x)^3+3^3\]</div><div class="math">\[=(2x+3)(4x^2-6x+9).\]</div><p>La base del primer cubo es \(2x\), no \(8x\).</p></div></details></article>
+      </div>
+      <div class="band warn"><p><strong>Si \(n\) es par, no uses la fórmula alternada anterior para la suma.</strong> \(a+b\) no es un factor de la identidad \(a^n+b^n\): al sustituir \(a=-b\) se obtiene \(2b^n\), no el polinomio cero.</p></div>
+      <details class="solution"><summary>Ejemplos: factorización sucesiva y elección de coeficientes</summary><div><div class="math">\[\begin{aligned}x^4-81&=(x^2-9)(x^2+9)\\&=(x-3)(x+3)(x^2+9).\end{aligned}\]</div><p>En \(\mathbb R\), \(x^2+9\) no tiene factores lineales. En <a href="#complejos">\(\mathbb C\)</a>, sí: \((x-3i)(x+3i)\). El conjunto de coeficientes importa.</p><p>Que la suma tenga exponente par tampoco significa que nunca se pueda factorizar. Por ejemplo, con coeficientes reales:</p><div class="math">\[\begin{aligned}a^4+b^4={}&(a^2+\sqrt2\,ab+b^2)\\&\cdot(a^2-\sqrt2\,ab+b^2).\end{aligned}\]</div><p>Es una diferencia de cuadrados: \((a^2+b^2)^2-(\sqrt2\,ab)^2\).</p></div></details>
+    </section>
+    <section class="section" id="factorizacion">
+      <div class="head"><div class="kicker">04 · Trinomios de segundo grado</div><h2>Factorización cuadrática</h2><p class="lead">Empieza por extraer cualquier factor común. Después distingue el trinomio mónico, el caso con coeficiente principal distinto de uno y la fórmula general.</p></div>
+      <div class="grid2">
+        <article class="card"><span class="eyebrow">CASO \(x^2+bx+c\)</span><h3>Sumar \(b\), multiplicar \(c\)</h3><p>Busca \(r,s\) tales que \(r+s=b\) y \(rs=c\). Entonces</p><div class="math">\[x^2+bx+c=(x+r)(x+s).\]</div><p class="note">Aquí \(r,s\) son los términos que se suman a \(x\); las raíces son \(-r,-s\).</p><details class="solution"><summary>Ejemplo: \(x^2+x-6\)</summary><div><p>\(3+(-2)=1\) y \(3(-2)=-6\). Por tanto,</p><div class="math">\[x^2+x-6=(x+3)(x-2).\]</div><p>Si buscas una factorización con enteros y ningún par sirve, eso no prueba que no haya factores reales o complejos.</p></div></details></article>
+        <article class="card"><span class="eyebrow">CASO \(ax^2+bx+c\), \(a\ne0\)</span><h3>Descomponer el término central</h3><p>Busca \(m,n\) con \(m+n=b\) y \(mn=ac\). Reescribe \(bx=mx+nx\) y agrupa para obtener un factor común.</p><details class="solution"><summary>Ejemplo: \(6x^2+11x+3\)</summary><div><p>\(ac=18\). Los números \(9\) y \(2\) suman \(11\) y multiplican \(18\).</p><div class="math">\[\begin{aligned}6x^2+11x+3&=6x^2+9x+2x+3\\&=3x(2x+3)+(2x+3)\\&=(3x+1)(2x+3).\end{aligned}\]</div></div></details><p class="note spaced">Este método es especialmente útil cuando los factores tienen coeficientes enteros. La fórmula cuadrática resuelve el caso general.</p></article>
+      </div>
+      <div class="theorem spaced" id="formula-cuadratica"><span class="eyebrow">CASO GENERAL · COEFICIENTES REALES, \(a\ne0\)</span><h3>De las raíces a los factores</h3><div class="math bigmath">\[\Delta=b^2-4ac,\qquad r_\pm=\frac{-b\pm\sqrt{\Delta}}{2a}.\]</div><div class="math bigmath">\[\boxed{ax^2+bx+c=a(x-r_+)(x-r_-).}\]</div><div class="grid3 spaced"><div><h4>\(\Delta&gt;0\)</h4><p>Dos raíces reales distintas; dos factores lineales reales distintos.</p></div><div><h4>\(\Delta=0\)</h4><p>Una raíz doble \(r=-b/(2a)\); la factorización es \(a(x-r)^2\).</p></div><div><h4>\(\Delta&lt;0\)</h4><p>No hay raíces reales. En \(\mathbb C\) hay dos raíces conjugadas; usa \(\sqrt{\Delta}=i\sqrt{-\Delta}\).</p></div></div>
+        <details class="solution" id="prueba-cuadratica"><summary>Demostración: completar el cuadrado</summary><div><p>Partimos de \(ax^2+bx+c=0\), con \(a\ne0\). Dividimos entre \(a\) y pasamos el término independiente al otro lado:</p><div class="math">\[x^2+\frac ba x=-\frac ca.\]</div><p>Sumamos a ambos lados el cuadrado de la mitad del coeficiente de \(x\):</p><div class="math">\[x^2+\frac ba x+\left(\frac b{2a}\right)^2=-\frac ca+\frac{b^2}{4a^2}.\]</div><p>El lado izquierdo es un trinomio cuadrado perfecto:</p><div class="math">\[\left(x+\frac b{2a}\right)^2=\frac{b^2-4ac}{4a^2}.\]</div><p>Multiplicando por \(4a^2\), evitamos cualquier ambigüedad con el signo de \(a\):</p><div class="math">\[(2ax+b)^2=\Delta.\]</div><p>Si \(\Delta\ge0\), las soluciones reales satisfacen \(2ax+b=\pm\sqrt{\Delta}\). En \(\mathbb C\) el mismo paso se interpreta con las dos raíces cuadradas de \(\Delta\) (una sola, doble, cuando \(\Delta=0\)). Despejando:</p><div class="math">\[\boxed{x=\frac{-b\pm\sqrt{b^2-4ac}}{2a}.}\]</div><p>Además, completar el cuadrado en el polinomio, sin igualarlo a cero, da</p><div class="math">\[ax^2+bx+c=a\left[\left(x+\frac b{2a}\right)^2-\frac{\Delta}{4a^2}\right].\]</div><p>La diferencia de cuadrados produce \(a(x-r_+)(x-r_-)\). Esto prueba también la factorización, no solo la fórmula para resolver la ecuación.</p></div></details>
+        <details class="solution"><summary>Ejemplo: \(2x^2-3x-2\)</summary><div><div class="math">\[\Delta=(-3)^2-4(2)(-2)=25,\qquad r_\pm=\frac{3\pm5}{4}.\]</div><p>Las raíces son \(2\) y \(-1/2\). Así,</p><div class="math">\[2x^2-3x-2=2(x-2)\left(x+\frac12\right)=(x-2)(2x+1).\]</div></div></details>
+      </div>
+    </section>
+    <section class="section" id="polinomios">
+      <div class="head"><div class="kicker">05 · Definiciones</div><h2>Polinomios y raíces</h2></div>
+      <div class="head spaced">
+        <h3>Definición de polinomio</h3>
+      </div>
+      <article class="theorem">
+        <p>Un <strong>polinomio en \(x\)</strong>, con coeficientes en \(\mathbb K=\mathbb R\) o \(\mathbb K=\mathbb C\), es una suma finita de potencias enteras no negativas de \(x\), multiplicadas por coeficientes de \(\mathbb K\). Si no es el polinomio cero, puede escribirse como</p>
+        <div class="math">\[P(x)=a_0+a_1x+\cdots+a_nx^n,\qquad a_j\in\mathbb K,\quad a_n\ne0.\]</div>
+        <p>Su <strong>grado</strong> es \(n\), el mayor exponente con coeficiente no nulo. El coeficiente principal es \(a_n\) y el término independiente es \(a_0\). Se permiten coeficientes intermedios iguales a cero.</p>
+        <p>Una constante no nula tiene grado \(0\). El <strong>polinomio cero</strong> tiene todos sus coeficientes nulos y no tiene grado en la definición usual; algunas convenciones le asignan \(-\infty\), pero aquí no utilizaremos esa convención.</p>
+      </article>
+      <div class="grid2 spaced">
+        <article class="card">
+          <h3>Sí son polinomios</h3>
+          <div class="math">\[\begin{array}{c|c}
+            \text{Expresión}&amp;\text{Grado}\\ \hline
+            7&amp;0\\
+            x^3-2x+1&amp;3\\
+            \sqrt2\,x^2-\pi&amp;2\\
+            (1+i)x^2-ix+2&amp;2
+          \end{array}\]</div>
+          <p class="note">Los coeficientes no tienen que ser enteros: pueden ser reales o complejos. La hipótesis de coeficientes enteros se exige específicamente en el teorema de la raíz racional.</p>
+        </article>
+        <article class="card">
+          <h3>No son polinomios en \(x\)</h3>
+          <p>\(x^{-1}+1\) contiene un exponente negativo y no está definida en \(0\). \(\sqrt{x}=x^{1/2}\) tiene un exponente no entero.</p>
+          <p>En \(2^x\), la variable aparece en el exponente. En \(1/(x-1)\), aparece en un denominador que se anula en \(1\). Ninguna es una suma finita de potencias enteras no negativas de \(x\).</p>
+        </article>
+      </div>
+
+      <div class="head spaced">
+        <h3>Raíz, factor y multiplicidad</h3>
+      </div>
+      <article class="theorem">
+        <h3>Una raíz es un valor que anula el polinomio</h3>
+        <p>Un número \(r\) es una <strong>raíz</strong> o <strong>cero</strong> de \(P\) si \(P(r)=0\). Para un polinomio con coeficientes reales se pueden buscar raíces reales o ampliar la búsqueda a \(\mathbb C\).</p>
+        <p><strong>Teorema del factor.</strong> En el cuerpo elegido \(\mathbb K\), para \(r\in\mathbb K\),</p>
+        <div class="math">\[P(r)=0\quad\Longleftrightarrow\quad P(x)=(x-r)Q(x).\]<p>El factor \(Q\) es otro polinomio con coeficientes en \(\mathbb K\).</p></div>
+        <details class="solution">
+          <summary>Demostración del teorema del factor</summary>
+          <div>
+            <p>Para \(j=1\), el factor restante es \(1\). Para \(j\ge2\), la identidad de diferencia de potencias da</p>
+            <div class="math">\[\begin{aligned}x^j-r^j=(x-r)\bigl(&x^{j-1}+x^{j-2}r\\&+\cdots+xr^{j-2}+r^{j-1}\bigr).\end{aligned}\]</div>
+            <p>Por ello, al restar \(P(r)\) de \(P(x)\), todos los términos son divisibles por \(x-r\):</p>
+            <div class="math">\[\begin{aligned}P(x)-P(r)={}&a_n(x^n-r^n)+\cdots\\&+a_1(x-r)\\={}&(x-r)Q(x).\end{aligned}\]</div>
+            <p>Si \(P(r)=0\), se obtiene la factorización requerida. Recíprocamente, si \(P(x)=(x-r)Q(x)\), al evaluar en \(x=r\) resulta \(P(r)=0\). La equivalencia también es inmediata para polinomios constantes.</p>
+          </div>
+        </details>
+      </article>
+
+      <article class="theorem spaced">
+        <h3>Cuántas veces aparece una raíz</h3>
+        <p>Sea \(P\) un polinomio <strong>no nulo</strong> y \(r\) una de sus raíces. Su <strong>multiplicidad</strong> es el entero \(m\ge1\) para el que</p>
+        <div class="math">\[\boxed{P(x)=(x-r)^mQ(x),\qquad Q(r)\ne0.}\]</div>
+        <p>La condición \(Q(r)\ne0\) garantiza que ya se extrajeron todos los factores \(x-r\). Si \(m=1\), la raíz es simple; si \(m=2\), es doble. Cada extracción disminuye el grado en uno, de modo que \(m\le\deg P\).</p>
+        <p class="note">El polinomio cero se anula en todo número, pero sus raíces no tienen una multiplicidad finita definida por esta regla.</p>
+      </article>
+      <div class="grid2 spaced">
+        <article class="card">
+          <h3>Ejemplo: una raíz doble y una simple</h3>
+          <div class="math">\[P(x)=(x-2)^2(x+1)=x^3-3x^2+4.\]</div>
+          <p>\(r=2\) tiene multiplicidad \(2\), porque al extraer \((x-2)^2\) queda \(Q(x)=x+1\), con \(Q(2)=3\ne0\).</p>
+          <p>\(r=-1\) tiene multiplicidad \(1\), porque al extraer \(x+1\) queda \(Q(x)=(x-2)^2\), con \(Q(-1)=9\ne0\).</p>
+          <p>Hay <strong>dos raíces distintas</strong> y <strong>tres raíces contadas con multiplicidad</strong>. Son formas diferentes de contar.</p>
+        </article>
+        <article class="card">
+          <h3>El conjunto numérico importa</h3>
+          <p>El polinomio \(x^2+1\) no tiene raíces reales, pues \(x^2+1&gt;0\) para todo \(x\in\mathbb R\). En los complejos, en cambio,</p>
+          <div class="math">\[x^2+1=(x-i)(x+i).\]</div>
+          <p>Sus raíces son \(i\) y \(-i\), ambas simples. Antes de describir las raíces de un polinomio, conviene indicar si se buscan en \(\mathbb R\) o en \(\mathbb C\).</p>
+        </article>
+      </div>
+    </section>
+    <section class="section" id="complejos">
+      <div class="head">
+        <div class="kicker">06 · Números complejos</div>
+        <h2>Números complejos</h2>
+        <p>En los números reales, ningún cuadrado es negativo. Para resolver ecuaciones como \(x^2+1=0\), ampliamos el sistema numérico con una unidad que satisface \(i^2=-1\).</p>
+      </div>
+
+      <div class="theorem">
+        <h3>La unidad imaginaria y la forma \(a+bi\)</h3>
+        <div class="math">\[i^2=-1,\qquad \mathbb C=\{a+bi:a,b\in\mathbb R\}.\]</div>
+        <p>Un <strong>número complejo</strong> se escribe de manera única como \(z=a+bi\). Sus partes real e imaginaria son los coeficientes reales:</p>
+        <div class="math">\[\operatorname{Re}(z)=a,\qquad \operatorname{Im}(z)=b.\]</div>
+        <p class="note">La parte imaginaria es \(b\), no \(bi\). Por ejemplo, si \(z=2+3i\), entonces \(\operatorname{Re}(z)=2\) y \(\operatorname{Im}(z)=3\).</p>
+      </div>
+
+      <div class="grid2 spaced">
+        <article class="card">
+          <h3>Reales e imaginarios puros</h3>
+          <p>Todo número real es también complejo: basta escribirlo como \(a+0i\). Por eso \(\mathbb R\subseteq\mathbb C\).</p>
+          <p>Un complejo es <strong>imaginario puro</strong> cuando \(a=0\) y \(b\ne0\), como \(4i\) o \(-\tfrac12 i\). El cero es real; aquí no lo clasificamos como imaginario puro.</p>
+          <div class="math">\[z\in\mathbb R\iff b=0,\qquad z=0\iff a=0\ \text{y}\ b=0.\]</div>
+        </article>
+        <article class="card">
+          <h3>¿Cuándo son iguales?</h3>
+          <p>Dos números complejos son iguales exactamente cuando coinciden sus partes reales y sus partes imaginarias.</p>
+          <div class="math">\[a+bi=c+di\iff a=c\ \text{y}\ b=d.\]</div>
+          <p>Así, \(u+(v-1)i=2+3i\), con \(u,v\in\mathbb R\), equivale al sistema \(u=2\), \(v-1=3\). Su solución es \(u=2\), \(v=4\).</p>
+        </article>
+        <article class="card">
+          <h3>Las potencias de \(i\) se repiten</h3>
+          <div class="math">\[i^0=1,\quad i^1=i,\quad i^2=-1,\quad i^3=-i,\quad i^4=1.\]</div>
+          <p>El ciclo tiene cuatro pasos. Si \(n=4q+r\), con \(q\) entero no negativo y \(r\in\{0,1,2,3\}\), entonces \(i^n=i^r\).</p>
+          <details class="solution">
+            <summary>Ejemplo · Simplificar \(i^{2026}\)</summary>
+            <div>
+              <p>Dividimos el exponente entre cuatro: \(2026=4\cdot506+2\). Como \(i^4=1\),</p>
+              <div class="math">\[i^{2026}=(i^4)^{506}i^2=1^{506}(-1)=\boxed{-1}.\]</div>
+            </div>
+          </details>
+        </article>
+        <article class="card">
+          <h3>Raíz principal y soluciones de una ecuación</h3>
+          <p>Para \(r&gt;0\), la <strong>raíz cuadrada principal</strong> de \(-r\) es el número con parte imaginaria positiva:</p>
+          <div class="math">\[\sqrt{-r}=i\sqrt r.\]</div>
+          <p>En cambio, la ecuación \(x^2=-r\), resuelta en \(\mathbb C\), tiene dos soluciones:</p>
+          <div class="math">\[x=\pm i\sqrt r.\]</div>
+          <p class="note">Por ejemplo, \(\sqrt{-9}=3i\), mientras que \(x^2=-9\) tiene las soluciones \(x=3i\) y \(x=-3i\). La notación de raíz principal designa un solo valor.</p>
+        </article>
+      </div>
+
+      <div class="band spaced">
+        <h3>Una precaución con las raíces</h3>
+        <p>La identidad \(\sqrt{uv}=\sqrt u\,\sqrt v\), válida para \(u,v\) reales no negativos, no se puede extender sin condiciones a los números complejos. Con raíces principales:</p>
+        <div class="math">\[\sqrt{-1}\sqrt{-1}=i^2=-1\ne1=\sqrt{(-1)(-1)}.\]</div>
+        <p>La igualdad \(\sqrt{-r}=i\sqrt r\) se comprueba elevando \(i\sqrt r\) al cuadrado y eligiendo la raíz principal; no requiere aplicar esa identidad fuera de sus condiciones.</p>
+      </div>
+
+      <div class="head spaced">
+        <h3>Del número al punto</h3>
+        <p>En el plano complejo, \(z=a+bi\) corresponde al punto \((a,b)\). El eje horizontal es el eje real; el vertical es el eje imaginario.</p>
+      </div>
+      <div class="theorem">
+        <h3>El módulo mide la distancia al origen</h3>
+        <div class="math">\[z=a+bi\longleftrightarrow(a,b),\qquad |z|=\sqrt{a^2+b^2}.\]</div>
+        <p>El módulo es un número real no negativo. Se obtiene con el teorema de Pitágoras y vale cero únicamente cuando \(z=0\).</p>
+        <p>Por ejemplo, \(2+3i\) se representa en \((2,3)\) y su módulo es \(\sqrt{2^2+3^2}=\sqrt{13}\). Si \(z\) es real, esta definición coincide con su valor absoluto habitual.</p>
+      </div>
+      <div class="lab spaced" id="complexLab">
+        <div class="lab-toolbar"><h3>Representa \(z=a+bi\)</h3><button type="button" class="pill" id="toggleConjugate" aria-pressed="false">Mostrar conjugado</button><button type="button" class="button" id="rotateComplex">Multiplicar por \(i\)</button><button type="button" class="button" id="resetComplex">Restablecer</button></div>
+        <div class="lab-grid">
+          <div class="plot-side">
+            <div class="complex-plot"><canvas id="complexCanvas" role="img" aria-label="Plano complejo con z igual a 2 más 3i, en el punto 2, 3">Representación de z en el plano. Las coordenadas también se muestran en los controles y en el resumen contiguo.</canvas></div>
+            <div class="legend"><span><i class="line"></i>\(z=a+bi\)</span><span id="conjugateLegend" hidden><i class="line blue"></i>\(\overline z=a-bi\)</span></div>
+            <p class="note spaced">Toca el plano o usa los botones y campos numéricos. Con el ratón también puedes arrastrar. La escala es la misma en ambos ejes; el punto se ajusta a pasos de \(0.25\).</p>
+          </div>
+          <div class="controls-side">
+            <div class="readout"><div class="small">Número representado</div><p class="value" id="zValue">2 + 3i</p></div>
+            <div class="control"><label for="realPart">Parte real \(a\)<output id="realPartValue" for="realPart">2</output></label><div class="stepper"><button type="button" data-step-target="realPart" data-step-delta="-0.25" aria-label="Disminuir parte real">−</button><input type="number" inputmode="decimal" id="realPart" min="-6" max="6" step="0.25" value="2"><button type="button" data-step-target="realPart" data-step-delta="0.25" aria-label="Aumentar parte real">+</button></div></div>
+            <div class="control"><label for="imagPart">Parte imaginaria \(b\)<output id="imagPartValue" for="imagPart">3</output></label><div class="stepper"><button type="button" data-step-target="imagPart" data-step-delta="-0.25" aria-label="Disminuir parte imaginaria">−</button><input type="number" inputmode="decimal" id="imagPart" min="-6" max="6" step="0.25" value="3"><button type="button" data-step-target="imagPart" data-step-delta="0.25" aria-label="Aumentar parte imaginaria">+</button></div></div>
+            <dl class="complex-values"><div><dt>Coordenadas \((a,b)\)</dt><dd id="zCoordinates">(2; 3)</dd></div><div><dt>Módulo \(|z|\)</dt><dd id="zModulus">√13 ≈ 3,606</dd></div></dl>
+            <div class="readout" id="conjugateReadout" hidden><div class="small">Conjugado · reflexión en el eje real</div><p class="value" id="zConjugate">2 − 3i</p></div>
+            <p class="note">Multiplicar por \(i\) transforma \((a,b)\) en \((-b,a)\): un giro de \(90^\circ\) en sentido antihorario, sin cambiar el módulo.</p>
+            <p class="sr-only" id="complexStatus" role="status" aria-live="polite"></p>
+          </div>
+        </div>
+        <p class="lab-note">La ventana interactiva permite partes reales e imaginarias entre \(-6\) y \(6\). Los números complejos no están restringidos a ese intervalo.</p>
+      </div>
+
+    <div class="chapter-part" id="conjugado">
+      <div class="head">
+        <div class="kicker">Conjugado</div>
+        <h3 class="part-title">El conjugado</h3>
+        <p>Conjugar conserva la parte real y cambia el signo de la parte imaginaria. Esta simetría conecta la geometría del plano con los productos notables.</p>
+      </div>
+
+      <div class="theorem">
+        <h3>Definición y representación</h3>
+        <div class="math">\[z=a+bi\qquad\Longrightarrow\qquad \overline z=a-bi.\]</div>
+        <p>Los puntos \((a,b)\) y \((a,-b)\) son simétricos respecto del <strong>eje real</strong>. Tienen la misma distancia al origen, de modo que \(|\overline z|=|z|\).</p>
+      </div>
+
+      <div class="grid2 spaced">
+        <article class="card">
+          <h3>Un producto que siempre es real</h3>
+          <p>Aplicamos la diferencia de cuadrados y usamos \(i^2=-1\):</p>
+          <div class="math">\[z\overline z=(a+bi)(a-bi)=a^2-(bi)^2=a^2+b^2=|z|^2.\]</div>
+          <p>Si \(z\ne0\), este producto es estrictamente positivo. Esa propiedad permite eliminar la parte imaginaria del denominador de un cociente.</p>
+        </article>
+        <article class="card">
+          <h3>Recuperar las dos partes</h3>
+          <div class="math">\[z+\overline z=2a,\qquad z-\overline z=2bi.\]</div>
+          <p>Por tanto,</p>
+          <div class="math">\[\operatorname{Re}(z)=\frac{z+\overline z}{2},\qquad \operatorname{Im}(z)=\frac{z-\overline z}{2i}.\]</div>
+          <p class="note">Conjugar dos veces devuelve el número original: \(\overline{\overline z}=z\). Además, \(z=\overline z\) exactamente cuando \(z\) es real.</p>
+        </article>
+      </div>
+
+      <details class="solution spaced">
+        <summary>Ejemplo · El conjugado de \(2+3i\)</summary>
+        <div>
+          <p>Si \(z=2+3i\), su conjugado es \(\overline z=2-3i\). En el plano, el punto \((2,3)\) se refleja en \((2,-3)\).</p>
+          <div class="math">\[z\overline z=(2+3i)(2-3i)=2^2-(3i)^2=4+9=\boxed{13}.\]</div>
+          <p>Ambos números tienen módulo \(\sqrt{13}\), y su producto coincide con el cuadrado de ese módulo.</p>
+        </div>
+      </details>
+    </div>
+
+    <div class="chapter-part" id="operaciones">
+      <div class="head">
+        <div class="kicker">Operaciones</div>
+        <h3 class="part-title">Operaciones con complejos</h3>
+        <p>Sean \(z=a+bi\) y \(w=c+di\), con \(a,b,c,d\in\mathbb R\). Las operaciones conservan la distributividad y las reglas del álgebra, junto con la relación \(i^2=-1\).</p>
+      </div>
+
+      <div class="grid2">
+        <article class="card">
+          <h3>Suma y resta</h3>
+          <p>Sumamos o restamos por separado las partes reales y los coeficientes de \(i\).</p>
+          <div class="math">\[z+w=(a+c)+(b+d)i,\]\[z-w=(a-c)+(b-d)i.\]</div>
+          <details class="solution">
+            <summary>Ejemplo · \((2+3i)+(1-2i)\)</summary>
+            <div>
+              <div class="math">\[(2+3i)+(1-2i)=(2+1)+(3-2)i=\boxed{3+i}.\]</div>
+              <p>Como comprobación geométrica, la suma corresponde a sumar las coordenadas de los puntos: \((2,3)+(1,-2)=(3,1)\).</p>
+            </div>
+          </details>
+        </article>
+        <article class="card">
+          <h3>Producto</h3>
+          <p>Distribuimos cada término, sustituimos \(i^2\) por \(-1\) y agrupamos.</p>
+          <div class="math">\[\begin{aligned}zw&=(a+bi)(c+di)\\&=ac+adi+bci+bd\,i^2\\&=(ac-bd)+(ad+bc)i.\end{aligned}\]</div>
+          <details class="solution">
+            <summary>Ejemplo · \((2+3i)(1-2i)\)</summary>
+            <div>
+              <div class="math">\[\begin{aligned}(2+3i)(1-2i)&=2-4i+3i-6i^2\\&=2-i+6\\&=\boxed{8-i}.\end{aligned}\]</div>
+              <p>El término \(-6i^2\) se convierte en \(+6\), porque \(i^2=-1\).</p>
+            </div>
+          </details>
+        </article>
+      </div>
+
+      <div class="theorem spaced">
+        <h3>Cociente: usar el conjugado del denominador</h3>
+        <p>Para dividir entre \(w=c+di\), debemos exigir <strong>\(w\ne0\)</strong>; es decir, \(c\) y \(d\) no pueden ser ambos cero. Multiplicamos numerador y denominador por \(\overline w=c-di\):</p>
+        <div class="math">\[\frac zw=\frac{a+bi}{c+di}\,\frac{c-di}{c-di}=\frac{(ac+bd)+(bc-ad)i}{c^2+d^2}.\]</div>
+        <p>Como \(c^2+d^2=|w|^2&gt;0\), el denominador resultante es real y no nulo. La forma binómica queda explícita al separar:</p>
+        <div class="math">\[\boxed{\frac zw=\frac{ac+bd}{c^2+d^2}+\frac{bc-ad}{c^2+d^2}\,i,\qquad w\ne0.}\]</div>
+        <p class="note">Este procedimiento se conoce como racionalizar el denominador mediante su conjugado. Multiplicamos por \(1\), pues \(\overline w\ne0\); el valor del cociente no cambia.</p>
+      </div>
+
+      <details class="solution spaced">
+        <summary>Ejemplo · \(\dfrac{2+3i}{1-2i}\)</summary>
+        <div>
+          <p>El denominador \(1-2i\) es distinto de cero y su conjugado es \(1+2i\).</p>
+          <div class="math">\[\begin{aligned}\frac{2+3i}{1-2i}
+            &=\frac{(2+3i)(1+2i)}{(1-2i)(1+2i)}\\
+            &=\frac{2+4i+3i+6i^2}{1-(2i)^2}\\
+            &=\frac{-4+7i}{5}\\
+            &=\boxed{-\frac45+\frac75i}.
+          \end{aligned}\]</div>
+          <p>Para comprobarlo, multiplicamos el resultado por el denominador original:</p>
+          <div class="math">\[\left(-\frac45+\frac75i\right)(1-2i)=\frac{-4+14}{5}+\frac{8+7}{5}i=2+3i.\]</div>
+        </div>
+      </details>
+
+      <div class="band spaced">
+        <h3>La conexión con los productos notables</h3>
+        <p>Las identidades algebraicas siguen siendo válidas en \(\mathbb C\). En particular, \((a+bi)(a-bi)=a^2-(bi)^2\). El cambio aparece al simplificar \((bi)^2=-b^2\): por eso el producto de conjugados es la suma \(a^2+b^2\).</p>
+      </div>
+    </div>
+    </section>
+    <section class="section" id="algebra">
+      <div class="head">
+        <div class="kicker">07 · Factorización en reales y complejos</div>
+        <h2>Teorema fundamental del álgebra</h2>
+        <p class="lead">Al admitir números complejos, todo polinomio no constante se descompone por completo en factores lineales. Si sus coeficientes son reales, las raíces no reales se pueden agrupar en pares para obtener factores cuadráticos reales.</p>
+      </div>
+
+      <div class="grid2">
+        <article class="card">
+          <h3>Versión 1 · Contar las raíces en \(\mathbb C\)</h3>
+          <p>Todo polinomio no nulo con coeficientes complejos, de grado \(n\ge1\), tiene <strong>exactamente \(n\) raíces complejas contando su multiplicidad</strong>.</p>
+          <p>Si \(p(x)=a_nx^n+\cdots+a_1x+a_0\), con \(a_n\ne0\), existen \(z_1,\ldots,z_n\in\mathbb C\) tales que</p>
+          <div class="math">\[\boxed{p(x)=a_n(x-z_1)\cdots(x-z_n).}\]</div>
+          <p>Los valores \(z_j\) pueden repetirse. Una raíz de multiplicidad \(m\) aparece \(m\) veces en esta lista: \((x-z_j)^m\) divide al polinomio, pero \((x-z_j)^{m+1}\) no lo divide.</p>
+        </article>
+        <article class="card">
+          <h3>Versión 2 · Factorizar sobre \(\mathbb R\)</h3>
+          <p>Todo polinomio no nulo con coeficientes reales, de grado \(n\ge1\), se puede escribir como su coeficiente principal multiplicado por <strong>factores lineales reales y factores cuadráticos irreducibles sobre \(\mathbb R\)</strong>.</p>
+          <p>Los factores lineales corresponden a raíces reales. Cada factor cuadrático irreducible tiene discriminante negativo y reúne dos raíces no reales conjugadas.</p>
+          <p class="note">Los factores pueden repetirse. Puede haber únicamente factores lineales, únicamente factores cuadráticos o una combinación de ambos. La suma de sus grados, incluyendo las repeticiones, es \(n\).</p>
+        </article>
+      </div>
+
+      <div class="band spaced">
+        <h3>Complejas no significa necesariamente no reales</h3>
+        <p>Como \(\mathbb R\subseteq\mathbb C\), las raíces reales también cuentan como raíces complejas. El teorema no afirma que todas sean no reales ni que haya \(n\) raíces distintas.</p>
+        <p class="note">La condición \(n\ge1\) excluye los polinomios constantes: una constante no nula no tiene raíces; el polinomio cero se anula en todos los números y no tiene un grado finito definido.</p>
+      </div>
+
+      <div class="theorem spaced">
+        <h3>¿Por qué aparecen pares conjugados?</h3>
+        <p>Si los coeficientes de \(p\) son reales, entonces \(p(\overline z)=\overline{p(z)}\). Por tanto, si \(z\) es raíz, su conjugado \(\overline z\) también lo es, con la misma multiplicidad.</p>
+        <p>Cuando \(z=u+vi\), con \(u,v\in\mathbb R\) y \(v\ne0\), las dos raíces son distintas. Al multiplicar sus factores lineales, desaparece la parte imaginaria:</p>
+        <div class="math">\[\begin{aligned}
+          (x-z)(x-\overline z)
+          &=(x-u-vi)(x-u+vi)\\
+          &=(x-u)^2+v^2\\
+          &=x^2-2ux+(u^2+v^2).
+        \end{aligned}\]</div>
+        <p>Este cuadrático tiene coeficientes reales y discriminante \(-4v^2&lt;0\). No puede descomponerse en factores lineales reales: es <strong>irreducible sobre \(\mathbb R\)</strong>, aunque sí se descompone sobre \(\mathbb C\).</p>
+        <p class="note">La condición de coeficientes reales es esencial. Por ejemplo, \(p(x)=x-i\) tiene raíz \(i\), pero no tiene raíz \(-i\).</p>
+      </div>
+
+      <div class="head spaced">
+        <h3>Un polinomio, dos factorizaciones</h3>
+        <p>Considera el polinomio de grado cuatro</p>
+        <div class="math">\[p(x)=x^4-4x^3+5x^2-4x+4.\]</div>
+      </div>
+      <div class="grid2">
+        <article class="card">
+          <h3>Sobre los números reales</h3>
+          <details class="solution">
+            <summary>Ver la factorización real y comprobarla</summary>
+            <div>
+              <p>El polinomio se escribe como</p>
+              <div class="math">\[\boxed{p(x)=(x-2)^2(x^2+1).}\]</div>
+              <p>El factor lineal \(x-2\) aparece dos veces. El cuadrático \(x^2+1\) es irreducible sobre \(\mathbb R\), pues su discriminante es \(-4\).</p>
+              <p>Comprobamos el producto:</p>
+              <div class="math">\[\begin{aligned}
+                (x^2-4x+4)(x^2+1)
+                &=x^4-4x^3+4x^2+x^2-4x+4\\
+                &=x^4-4x^3+5x^2-4x+4.
+              \end{aligned}\]</div>
+              <p>Los grados de los factores suman \(1+1+2=4\). La única raíz real es \(2\), de multiplicidad dos.</p>
+            </div>
+          </details>
+        </article>
+        <article class="card">
+          <h3>Sobre los números complejos</h3>
+          <details class="solution">
+            <summary>Ver todos los factores lineales y contar las raíces</summary>
+            <div>
+              <p>En \(\mathbb C\), usamos \(i^2=-1\) para factorizar \(x^2+1=(x-i)(x+i)\). Así,</p>
+              <div class="math">\[\boxed{p(x)=(x-2)(x-2)(x-i)(x+i).}\]</div>
+              <p>Las raíces, contadas con multiplicidad, son</p>
+              <div class="math">\[\underbrace{2,\ 2}_{\text{raíz doble}},\quad i,\quad -i.\]</div>
+              <p>Hay cuatro raíces contando multiplicidad y tres raíces distintas. Las dos raíces no reales, \(i\) y \(-i\), son conjugadas y simples.</p>
+              <p class="note">Agrupar \((x-i)(x+i)\) devuelve el factor cuadrático real \(x^2+1\). Las dos versiones describen el mismo polinomio.</p>
+            </div>
+          </details>
+        </article>
+      </div>
+    </section>
+    <section class="section" id="raices-cuadraticas">
+      <div class="head"><div class="kicker">08 · Ecuaciones cuadráticas</div><h2>Raíces de grado 2</h2><p class="note">La fórmula permite obtener las dos raíces en \(\mathbb C\), contadas con multiplicidad. El coeficiente principal debe ser distinto de cero.</p></div>
+      <div class="grid2">
+        <article class="theorem"><h3>Fórmula general</h3><div class="math">\[ax^2+bx+c=0.\]</div><p>Con \(a\ne0\), calcula primero el discriminante:</p><div class="math">\[D_2=b^2-4ac.\]</div><p>Después sustituye:</p><div class="math">\[\boxed{x_{1,2}=\frac{-b\pm\sqrt{D_2}}{2a}.}\]</div><p>El signo \(\pm\) produce las dos raíces; si coinciden, se cuenta la raíz dos veces.</p></article>
+        <article class="card"><h3>Leer el discriminante</h3><p>Cuando \(a,b,c\) son <strong>reales</strong>:</p><p><strong>\(D_2&gt;0\).</strong> Dos raíces reales distintas.</p><p><strong>\(D_2=0\).</strong> Una raíz real doble:</p><div class="math">\[x=-\frac b{2a}.\]</div><p><strong>\(D_2&lt;0\).</strong> Dos raíces complejas conjugadas. Se utiliza</p><div class="math">\[\sqrt{D_2}=i\sqrt{-D_2}.\]</div><p class="note">La fórmula también vale para coeficientes complejos, pero en ese caso no se clasifica el discriminante como positivo o negativo.</p></article>
+      </div>
+      <details class="solution"><summary>Ejemplo · \(2x^2-4x+5=0\)</summary><div><p>Los coeficientes son \(a=2\), \(b=-4\) y \(c=5\). Entonces</p><div class="math">\[\begin{aligned}D_2&=(-4)^2-4(2)(5)\\&=-24.\end{aligned}\]</div><p>La sustitución en la fórmula da</p><div class="math">\[\begin{aligned}x_{1,2}&=\frac{4\pm i\sqrt{24}}4\\&=\boxed{1\pm\frac{\sqrt6}{2}i}.\end{aligned}\]</div><p>La parte real de ambas raíces es 1; sus partes imaginarias son opuestas.</p></div></details>
+      <p class="note spaced">Referencia: <a href="https://dlmf.nist.gov/1.11#iii" target="_blank" rel="noopener noreferrer">NIST DLMF · Ecuaciones cuadráticas</a>.</p>
+    </section>
+    <section class="section" id="raiz-racional">
+      <div class="head"><div class="kicker">09 · Candidatos racionales</div><h2>Teorema de la raíz racional</h2><p class="lead">Con coeficientes enteros, este criterio permite reducir la búsqueda de raíces racionales a una lista finita de candidatos.</p></div>
+      <article class="theorem">
+        <h3>Teorema de la raíz racional</h3>
+        <p>Sea \(P(x)=a_nx^n+\cdots+a_1x+a_0\), con coeficientes enteros, \(n\ge1\), \(a_n\ne0\) y \(a_0\ne0\). Si una fracción irreducible \(r=p/q\), con \(p\in\mathbb Z\), \(q\in\mathbb Z\), \(q&gt;0\) y \(\gcd(|p|,q)=1\), satisface \(P(r)=0\), entonces</p>
+        <div class="math">\[\boxed{p\mid a_0\qquad\text{y}\qquad q\mid a_n.}\]</div>
+        <p>La notación \(p\mid a_0\) significa que \(p\) divide a \(a_0\). Por tanto, las posibles raíces racionales se forman dividiendo un divisor entero del término independiente entre un divisor positivo del coeficiente principal, y reduciendo la fracción.</p>
+        <div class="band"><p><strong>Es una condición necesaria, no suficiente.</strong> Estar en la lista solo convierte a un número en candidato. Para afirmar que es raíz hay que comprobar \(P(r)=0\).</p></div>
+        <details class="solution">
+          <summary>Demostración</summary>
+          <div>
+            <p>Al sustituir \(p/q\) y multiplicar por \(q^n\), resulta</p>
+            <div class="math">\[a_np^n+a_{n-1}p^{n-1}q+\cdots+a_1pq^{n-1}+a_0q^n=0.\]</div>
+            <p>Todos los términos salvo \(a_0q^n\) son múltiplos de \(p\); por eso \(p\mid a_0q^n\). Como \(a_0\ne0\), la raíz no puede ser cero y \(p\ne0\). Además, \(\gcd(|p|,q^n)=1\), de modo que el lema de Euclides da \(p\mid a_0\).</p>
+            <p>De manera análoga, todos los términos salvo \(a_np^n\) son múltiplos de \(q\). Así, \(q\mid a_np^n\); como \(\gcd(q,|p|^n)=1\), se concluye \(q\mid a_n\).</p>
+            <p class="note">Se ha usado el lema de Euclides en su forma: si \(\gcd(u,v)=1\) y \(u\mid vw\), entonces \(u\mid w\).</p>
+          </div>
+        </details>
+      </article>
+
+      <div class="grid2 spaced">
+        <article class="card">
+          <h3>Si el término independiente es cero</h3>
+          <p>Si \(a_0=0\), entonces \(P(0)=0\). Extrae primero todas las potencias de \(x\) que sean factor común:</p>
+          <div class="math">\[P(x)=x^kR(x),\qquad k\ge1,\qquad R(0)\ne0.\]</div>
+          <p>La raíz cero ya está identificada. Aplica el teorema a \(R\), si este tiene grado positivo, para buscar las raíces racionales no nulas. Si \(R\) es una constante no nula, no quedan otras raíces.</p>
+        </article>
+        <article class="card">
+          <h3>Qué permite concluir</h3>
+          <p>Si \(a_n=1\), toda raíz racional es un entero que divide a \(a_0\). Si ningún candidato satisface la ecuación, no hay raíces racionales.</p>
+          <p>Esto no descarta raíces irracionales o complejas. Por ejemplo, \(x^2-2\) no se anula en sus candidatos racionales \(\pm1,\pm2\), pero tiene raíces reales \(\pm\sqrt2\).</p>
+        </article>
+      </div>
+
+      <article class="card spaced">
+        <span class="kicker">Ejemplo · Candidatos y comprobación</span>
+        <h3 class="spaced">Factorizar \(2x^3-3x^2-8x+12\)</h3>
+        <p>Los divisores del término independiente son \(\pm1,\pm2,\pm3,\pm4,\pm6,\pm12\); los divisores positivos del coeficiente principal son \(1,2\). Después de reducir y eliminar repeticiones, la lista es</p>
+        <div class="math">\[\left\{\pm\frac12,\ \pm1,\ \pm\frac32,\ \pm2,\ \pm3,\ \pm4,\ \pm6,\ \pm12\right\}.\]</div>
+        <p>Algunos candidatos se descartan inmediatamente:</p>
+        <div class="math">\[P(1)=3,\qquad P(-1)=15,\qquad P(1/2)=15/2.\]</div>
+        <p>En cambio, \(P(3/2)=P(2)=P(-2)=0\). La factorización se verifica directamente agrupando términos:</p>
+        <div class="math">\[\begin{aligned}
+          P(x)&amp;=x^2(2x-3)-4(2x-3)\\
+               &amp;=(2x-3)(x^2-4)\\
+               &amp;=\boxed{(2x-3)(x-2)(x+2)}.
+        \end{aligned}\]</div>
+        <p class="note">Esta identidad también descarta todos los candidatos restantes: el producto se anula únicamente si \(2x-3=0\), \(x-2=0\) o \(x+2=0\). La lista de candidatos no era una lista de soluciones.</p>
+      </article>
+
+    </section>
+    <section class="section" id="raices">
+      <div class="head"><div class="kicker">10 · Fórmulas generales por radicales</div><h2>Raíces de grado 3 y 4</h2><p class="lead">Sustituye los coeficientes en los valores auxiliares y después en las fórmulas de las raíces. Los radicales se calculan en \(\mathbb C\); las raíces repetidas se cuentan con su multiplicidad.</p></div>
+
+      <article class="theorem" id="formula-cardano">
+        <span class="eyebrow">GRADO 3 · TARTAGLIA–CARDANO</span>
+        <h3>La fórmula general de la cúbica</h3>
+        <div class="math bigmath">\[ax^3+bx^2+cx+d=0,\qquad a\ne0.\]</div>
+        <p>Calcula directamente con los coeficientes:</p>
+        <div class="grid2 spaced">
+          <div><div class="math">\[D_0=b^2-3ac,\]</div><div class="math">\[D_1=2b^3-9abc+27a^2d.\]</div></div>
+          <div><div class="math">\[U=\sqrt[3]{\frac{D_1+\sqrt{D_1^2-4D_0^3}}{2}},\]</div><div class="math">\[V=\frac{D_0}{U}.\]</div></div>
+        </div>
+        <p class="note">Elige una raíz cúbica \(U\ne0\) y conserva esa elección. Si el radicando de la raíz cúbica da \(0\), cambia el signo delante de la raíz cuadrada. Si \(D_0=D_1=0\), usa el caso de raíz triple indicado debajo.</p>
+        <h3 class="spaced">Las tres soluciones</h3>
+        <div class="math bigmath">\[\boxed{x_1=-\frac{b+U+V}{3a}.}\]</div>
+        <div class="grid2 spaced">
+          <div class="card"><div class="math">\[\begin{aligned}x_2={}&-\frac b{3a}+\frac{U+V}{6a}\\&{}-\frac{i\sqrt3\,(U-V)}{6a}.\end{aligned}\]</div></div>
+          <div class="card"><div class="math">\[\begin{aligned}x_3={}&-\frac b{3a}+\frac{U+V}{6a}\\&{}+\frac{i\sqrt3\,(U-V)}{6a}.\end{aligned}\]</div></div>
+        </div>
+        <p class="note spaced">\(D_0,D_1,U,V\) son abreviaturas calculadas a partir de \(a,b,c,d\). No se eligen \(U\) y \(V\) por separado: siempre se usa \(V=D_0/U\). Otra elección válida de \(U\) puede cambiar el orden de las raíces.</p>
+        <div class="band"><p><strong>Raíz triple.</strong> Si \(D_0=D_1=0\), las tres raíces coinciden:</p><div class="math">\[\boxed{x_1=x_2=x_3=-\frac b{3a}.}\]</div></div>
+      </article>
+
+      <details class="solution" id="ejemplo-cardano"><summary>Ejemplo numérico · Sustituir en \(2x^3+6x^2-6x-22=0\)</summary><div>
+        <p>Los coeficientes son \(a=2\), \(b=6\), \(c=-6\) y \(d=-22\). Sustituimos sin cambiar de variable:</p>
+        <div class="grid2">
+          <div class="card"><h4>1. Los valores auxiliares</h4><div class="math">\[\begin{aligned}D_0&=6^2-3(2)(-6)\\&=72,\\D_1&=2(6)^3-9(2)(6)(-6)\\&\quad+27(2)^2(-22)\\&=-1296.\end{aligned}\]</div><div class="math">\[D_1^2-4D_0^3=432^2.\]</div></div>
+          <div class="card"><h4>2. Sustituir en los radicales</h4><div class="math">\[\begin{aligned}U&=\sqrt[3]{\frac{-1296+432}{2}}\\&=\sqrt[3]{-432}=-6\sqrt[3]2,\\V&=\frac{72}{-6\sqrt[3]2}\\&=-6\sqrt[3]4.\end{aligned}\]</div><p>En este ejemplo elegimos la raíz cúbica real negativa para \(U\).</p></div>
+        </div>
+        <div class="card spaced"><h4>3. Reemplazar en las tres soluciones</h4>
+          <div class="math">\[\begin{aligned}x_1&=-\frac{6-6\sqrt[3]2-6\sqrt[3]4}{6}\\&=\boxed{-1+\sqrt[3]2+\sqrt[3]4}.\end{aligned}\]</div>
+          <div class="math">\[\begin{aligned}x_2={}&-1-\frac{\sqrt[3]2+\sqrt[3]4}{2}\\&{}-\frac{\sqrt3}{2}\bigl(\sqrt[3]4-\sqrt[3]2\bigr)i,\end{aligned}\]</div>
+          <div class="math">\[\begin{aligned}x_3={}&-1-\frac{\sqrt[3]2+\sqrt[3]4}{2}\\&{}+\frac{\sqrt3}{2}\bigl(\sqrt[3]4-\sqrt[3]2\bigr)i.\end{aligned}\]</div>
+          <p>Como referencia numérica:</p><div class="math">\[\begin{aligned}x_1&\approx1.8473221019,\\x_2&\approx-2.4236610509-0.2836060010i,\\x_3&\approx-2.4236610509+0.2836060010i.\end{aligned}\]</div>
+        </div>
+      </div></details>
+
+      <details class="solution" id="deduccion-cardano"><summary>Deducción · De dónde sale la fórmula de Cardano</summary><div>
+        <p>Dividir entre \(a\) y sustituir \(x=t-b/(3a)\) elimina el término cuadrático. La ecuación queda</p><div class="math">\[t^3+pt+q=0,\]</div><div class="math">\[p=-\frac{D_0}{3a^2},\qquad q=\frac{D_1}{27a^3}.\]</div>
+        <p>Buscamos \(t=u+v\). Al desarrollar el cubo obtenemos</p><div class="math">\[t^3+pt+q=u^3+v^3+(3uv+p)(u+v)+q.\]</div><p>Basta imponer \(uv=-p/3\) y \(u^3+v^3=-q\).</p>
+        <p>La definición de \(U\) hace que \(U^3\) sea solución de</p><div class="math">\[Y^2-D_1Y+D_0^3=0.\]</div><p>Como \(V=D_0/U\), se tiene</p><div class="math">\[UV=D_0,\qquad U^3+V^3=D_1.\]</div><p>Por tanto, los valores</p><div class="math">\[u=-\frac{U}{3a},\qquad v=-\frac{V}{3a}\]</div><p>cumplen las dos condiciones requeridas.</p>
+        <p>Para obtener todas las soluciones, usamos las tres raíces cúbicas de la unidad:</p><div class="math">\[1,\quad\omega=\frac{-1+i\sqrt3}{2},\quad\omega^2=\frac{-1-i\sqrt3}{2}.\]</div><p>Los tres pares compatibles son \((u,v)\), \((\omega u,\omega^2v)\) y \((\omega^2u,\omega v)\). Sus productos son iguales y sus cubos no cambian. Así se obtienen</p><div class="math">\[\begin{aligned}x_1&=-\frac{b+U+V}{3a},\\x_2&=-\frac{b+\omega U+\omega^2V}{3a},\\x_3&=-\frac{b+\omega^2U+\omega V}{3a}.\end{aligned}\]</div><p>Reemplazar \(\omega\) y \(\omega^2\) por sus expresiones con \(i\sqrt3\) da las fórmulas visibles arriba. Si \(D_0=D_1=0\), entonces \(p=q=0\), la ecuación reducida es \(t^3=0\) y se obtiene la raíz triple.</p>
+      </div></details>
+
+      <article class="theorem spaced-lg" id="formula-ferrari">
+        <span class="eyebrow">GRADO 4 · FERRARI</span>
+        <h3>La fórmula general de la cuártica</h3>
+        <div class="math bigmath">\[ax^4+bx^3+cx^2+dx+e=0,\qquad a\ne0.\]</div>
+        <p>Calcula estos valores directamente con \(a,b,c,d,e\):</p>
+        <div class="grid2 spaced">
+          <div class="card"><h4>Parámetros de la fórmula</h4><div class="math">\[p=\frac{8ac-3b^2}{8a^2},\]</div><div class="math">\[q=\frac{b^3-4abc+8a^2d}{8a^3}.\]</div></div>
+          <div class="card"><h4>Valores auxiliares</h4><div class="math">\[F_0=c^2-3bd+12ae,\]</div><div class="math">\[\begin{aligned}F_1={}&2c^3-9bcd+27b^2e\\&{}+27ad^2-72ace.\end{aligned}\]</div></div>
+        </div>
+        <p class="spaced"><strong>Si \(q\ne0\)</strong>, calcula los radicales siguientes. Si \(q=0\), usa la fórmula bicuadrática del desplegable que aparece debajo.</p>
+        <div class="math">\[Q=\sqrt[3]{\frac{F_1+\sqrt{F_1^2-4F_0^3}}{2}},\]</div>
+        <div class="math">\[\boxed{S=\frac12\sqrt{-\frac{2p}{3}+\frac{Q+F_0/Q}{3a}}.}\]</div>
+        <p class="note">Elige \(Q\ne0\) y conserva esa raíz cúbica; si el radicando cúbico da cero, cambia el signo delante de la raíz cuadrada. Si \(F_0=F_1=0\), sustituye el bloque \(Q+F_0/Q\) por \(0\), de modo que \(S=\tfrac12\sqrt{-2p/3}\). Con \(q\ne0\), el valor de \(S\) es distinto de cero.</p>
+        <h3 class="spaced">Las cuatro soluciones</h3>
+        <div class="grid2">
+          <div class="card"><div class="math">\[\begin{aligned}x_1={}&-\frac b{4a}-S\\&{}+\frac12\sqrt{-4S^2-2p+\frac qS},\end{aligned}\]</div></div>
+          <div class="card"><div class="math">\[\begin{aligned}x_2={}&-\frac b{4a}-S\\&{}-\frac12\sqrt{-4S^2-2p+\frac qS},\end{aligned}\]</div></div>
+          <div class="card"><div class="math">\[\begin{aligned}x_3={}&-\frac b{4a}+S\\&{}+\frac12\sqrt{-4S^2-2p-\frac qS},\end{aligned}\]</div></div>
+          <div class="card"><div class="math">\[\begin{aligned}x_4={}&-\frac b{4a}+S\\&{}-\frac12\sqrt{-4S^2-2p-\frac qS}.\end{aligned}\]</div></div>
+        </div>
+        <p class="note spaced">Usa el mismo \(S\) en las cuatro expresiones, también en \(q/S\). Cada pareja usa una misma raíz cuadrada con signos opuestos. El resultado contiene las cuatro raíces, incluidas las repeticiones.</p>
+      </article>
+
+      <details class="solution" id="ferrari-bicuadratica"><summary>Caso \(q=0\) · Fórmula directa bicuadrática</summary><div>
+        <p>Calcula, además de \(p\),</p><div class="math">\[\begin{aligned}r={}&\frac ea-\frac{bd}{4a^2}\\&{}+\frac{b^2c}{16a^3}-\frac{3b^4}{256a^4}.\end{aligned}\]</div>
+        <p>Las cuatro raíces originales están dadas directamente por</p><div class="math">\[\boxed{x_{1,2}=-\frac b{4a}\pm\sqrt{\frac{-p+\sqrt{p^2-4r}}{2}},}\]</div><div class="math">\[\boxed{x_{3,4}=-\frac b{4a}\pm\sqrt{\frac{-p-\sqrt{p^2-4r}}{2}}.}\]</div>
+        <p>Cada \(\pm\) aporta dos raíces. Se mantienen las multiplicidades si algunas coinciden. Esta expresión también incluye el caso de una raíz cuádruple.</p>
+      </div></details>
+
+      <details class="solution" id="ejemplo-ferrari"><summary>Ejemplo numérico · Sustituir en \(2x^4+8x^3+8x^2+8x+6=0\)</summary><div>
+        <p>Aquí \(a=2\), \(b=8\), \(c=8\), \(d=8\) y \(e=6\). Todos los coeficientes intervienen en la sustitución.</p>
+        <div class="grid2">
+          <div class="card"><h4>1. Calcular \(p,q\)</h4><div class="math">\[\begin{aligned}p&=\frac{8(2)(8)-3(8)^2}{8(2)^2}\\&=-2,\\q&=\frac{8^3-4(2)(8)(8)+8(2)^2(8)}{8(2)^3}\\&=4.\end{aligned}\]</div><p>Como \(q\ne0\), usamos la fórmula general con \(Q\) y \(S\).</p></div>
+          <div class="card"><h4>2. Calcular \(F_0,F_1\)</h4><div class="math">\[\begin{aligned}F_0&=8^2-3(8)(8)+12(2)(6)\\&=16,\\F_1&=2(8)^3-9(8)(8)(8)\\&\quad+27(8)^2(6)+27(2)(8)^2\\&\quad-72(2)(8)(6)\\&=3328.\end{aligned}\]</div></div>
+        </div>
+        <div class="card spaced"><h4>3. Reemplazar en los radicales</h4><div class="math">\[\begin{aligned}F_1^2-4F_0^3&=3328^2-4(16)^3\\&=(1920\sqrt3)^2.\end{aligned}\]</div><div class="math">\[\begin{aligned}Q&=\sqrt[3]{\frac{3328+1920\sqrt3}{2}}\\&=\sqrt[3]{1664+960\sqrt3}\\&=8+4\sqrt3.\end{aligned}\]</div><p>La última igualdad se comprueba elevando \(8+4\sqrt3\) al cubo. Además,</p><div class="math">\[\frac{F_0}{Q}=\frac{16}{8+4\sqrt3}=8-4\sqrt3,\]</div><div class="math">\[\begin{aligned}S&=\frac12\sqrt{\frac43+\frac{(8+4\sqrt3)+(8-4\sqrt3)}6}\\&=\frac12\sqrt{\frac43+\frac{16}6}\\&=1.\end{aligned}\]</div></div>
+        <div class="card spaced"><h4>4. Sustituir en las cuatro soluciones</h4><p>El desplazamiento común es \(-b/(4a)=-8/8=-1\). Los dos radicandos finales son</p><div class="math">\[\begin{aligned}-4(1)^2-2(-2)+\frac41&=4,\\-4(1)^2-2(-2)-\frac41&=-4.\end{aligned}\]</div>
+          <div class="grid2"><div><div class="math">\[\begin{aligned}x_1&=-1-1+\tfrac12\sqrt4=-1,\\x_2&=-1-1-\tfrac12\sqrt4=-3.\end{aligned}\]</div></div><div><div class="math">\[\begin{aligned}x_3&=-1+1+\tfrac12\sqrt{-4}=i,\\x_4&=-1+1-\tfrac12\sqrt{-4}=-i.\end{aligned}\]</div></div></div>
+          <p>Por tanto, las cuatro raíces son</p><div class="math">\[\boxed{-1,\quad-3,\quad i,\quad-i.}\]</div><p>Se comprueban mediante la identidad</p><div class="math">\[\begin{gathered}2x^4+8x^3+8x^2+8x+6\\=2(x+1)(x+3)(x^2+1).\end{gathered}\]</div>
+        </div>
+      </div></details>
+
+      <details class="solution" id="deduccion-ferrari"><summary>Deducción · De dónde sale la fórmula de Ferrari</summary><div>
+        <p>Divide entre \(a\) y sustituye \(x=y-b/(4a)\). La ecuación se transforma en</p><div class="math">\[y^4+py^2+qy+r=0,\]</div><p>con los \(p,q,r\) definidos arriba. Si \(q=0\), la sustitución \(z=y^2\) da una cuadrática y produce la fórmula bicuadrática.</p>
+        <p>Si \(q\ne0\), buscamos una factorización en dos cuadráticas:</p><div class="math">\[y^4+py^2+qy+r=(y^2+sy+\alpha)(y^2-sy+\beta).\]</div><p>Al multiplicar e igualar coeficientes, se requiere</p><div class="math">\[\begin{aligned}\alpha+\beta-s^2&=p,\\s(\beta-\alpha)&=q,\\\alpha\beta&=r.\end{aligned}\]</div><p>Con \(m=s^2\), las dos primeras igualdades dan</p><div class="math">\[\alpha=\frac{p+m-q/s}{2},\qquad\beta=\frac{p+m+q/s}{2}.\]</div><p>La condición \(\alpha\beta=r\) equivale a la resolvente</p><div class="math">\[m^3+2pm^2+(p^2-4r)m-q^2=0.\]</div>
+        <p>Para resolverla por radicales, usa \(m=t-2p/3\). Los invariantes de la ecuación original satisfacen</p><div class="math">\[F_0=a^2(p^2+12r),\]</div><div class="math">\[F_1=a^3(2p^3+27q^2-72pr).\]</div><p>La ecuación reducida de la resolvente queda</p><div class="math">\[t^3-\frac{F_0}{3a^2}t-\frac{F_1}{27a^3}=0.\]</div><p>La fórmula de Cardano entrega</p><div class="math">\[t=\frac{Q+F_0/Q}{3a}.\]</div><p>Si \(F_0=F_1=0\), se toma \(t=0\). De aquí,</p><div class="math">\[\begin{aligned}m&=-\frac{2p}{3}+t,\\s&=\sqrt m=2S.\end{aligned}\]</div><p>La resolvente no tiene la raíz \(m=0\) cuando \(q\ne0\); por eso \(s\) y \(S\) son distintos de cero.</p>
+        <p>Aplicar la fórmula cuadrática a los dos factores da</p><div class="math">\[y_{1,2}=-S\pm\frac12\sqrt{-4S^2-2p+\frac qS},\]</div><div class="math">\[y_{3,4}=S\pm\frac12\sqrt{-4S^2-2p-\frac qS}.\]</div><p>Finalmente, \(x_j=y_j-b/(4a)\) produce las cuatro fórmulas principales. La sustitución de Cardano ya está incorporada en \(Q\), por lo que basta calcular los radicales indicados.</p>
+      </div></details>
+      <p class="note spaced">Referencia matemática: <a href="https://dlmf.nist.gov/1.11#iii" target="_blank" rel="noopener noreferrer">NIST DLMF · Ecuaciones cúbicas y cuárticas</a>. Aquí las expresiones se presentan en función de los coeficientes originales, con abreviaturas para facilitar la sustitución.</p>
+    </section>
+  </main>
+  <footer><p>Álgebra · Productos notables y números complejos</p><a href="#inicio">Volver al inicio ↑</a></footer>
+  <script>
+  (function(){
+    "use strict";
+    const $=id=>document.getElementById(id);
+    let mathQueue=Promise.resolve(),pascalRevision=0;
+    function renderPascalFormula(tex,n){
+      const revision=++pascalRevision,node=$("pascalExpansion");
+      node.dataset.revision=revision;
+      if(!window.MathJax?.typesetPromise){node.textContent=tex;return;}
+      mathQueue=mathQueue.catch(()=>{}).then(async()=>{
+        if(revision!==pascalRevision)return;
+        if(window.MathJax.startup?.promise)await window.MathJax.startup.promise;
+        if(revision!==pascalRevision)return;
+        window.MathJax.typesetClear([node]);node.textContent=tex;
+        await window.MathJax.typesetPromise([node]);
+        node.dataset.renderedRevision=revision;node.dataset.renderedExponent=n;fitMath();
+      }).catch(()=>{if(revision===pascalRevision)node.textContent=tex;});
+    }
+    const rows=[[1]];
+    for(let n=1;n<=12;n++)rows.push(Array.from({length:n+1},(_,k)=>(rows[n-1][k-1]||0)+(rows[n-1][k]||0)));
+    let sign="plus",chosen={n:5,k:2};
+    function power(s,n){return n===0?"":n===1?s:s+"^{"+n+"}";}
+    function expansion(n){
+      if(n===0)return "1";
+      return rows[n].map((c,k)=>{
+        const symbols=power("a",n-k)+power("b",k),coefficient=c===1&&symbols?"":String(c);
+        return (k===0?"":sign==="minus"&&k%2?"-":"+")+coefficient+symbols;
+      }).join("");
+    }
+    function describeCoefficient(n,k){
+      chosen={n,k};
+      document.querySelectorAll(".pascal-cell").forEach(button=>{
+        const r=+button.dataset.row,c=+button.dataset.column;
+        button.classList.toggle("is-focus",r===n&&c===k);
+        button.classList.toggle("is-parent",n>0&&k>0&&k<n&&r===n-1&&(c===k-1||c===k));
+      });
+      const detail=n===0?"La fila 0 empieza con 1.":k===0||k===n?"Los coeficientes de los bordes son 1.":rows[n-1][k-1]+" + "+rows[n-1][k]+" = "+rows[n][k]+": cada coeficiente interior suma los dos de arriba.";
+      $("pascalDetail").textContent="Fila "+n+", posición k = "+k+". "+detail;
+    }
+    function renderPascal(){
+      const n=Math.max(0,Math.min(12,Math.round(Number($("pascalN").value)||0)));
+      $("pascalNValue").value=n;$("pascalCoefficients").replaceChildren(...rows[n].map(c=>{const span=document.createElement("span");span.textContent=c;return span;}));
+      const triangle=$("pascalTriangle");triangle.replaceChildren();
+      for(let r=0;r<=n;r++){
+        const row=document.createElement("div");row.className="pascal-row"+(r===n?" is-selected":"");
+        const label=document.createElement("button");label.type="button";label.className="pascal-row-label";label.textContent="n = "+r;label.setAttribute("aria-label","Elegir la potencia "+r);
+        label.addEventListener("click",()=>{$("pascalN").value=r;renderPascal();$("pascalN").focus();});row.append(label);
+        rows[r].forEach((coefficient,k)=>{const button=document.createElement("button");button.type="button";button.className="pascal-cell";button.dataset.row=r;button.dataset.column=k;button.textContent=coefficient;button.setAttribute("aria-label","Fila "+r+", posición "+k+", coeficiente "+coefficient);button.addEventListener("click",()=>describeCoefficient(r,k));button.addEventListener("focus",()=>describeCoefficient(r,k));row.append(button);});
+        triangle.append(row);
+      }
+      const node=$("pascalExpansion");
+      node.dataset.exponent=n;node.dataset.sign=sign;node.dataset.coefficients=rows[n].join(",");
+      const terms=expansion(n).match(/[+-]?[^+-]+/g)||["1"],chunks=[];
+      for(let k=0;k<terms.length;k+=2)chunks.push((k?"{}":"")+terms.slice(k,k+2).join(""));
+      const formula=n<4?"(a"+(sign==="plus"?"+":"-")+"b)^{"+n+"}="+expansion(n):"\\begin{gathered}(a"+(sign==="plus"?"+":"-")+"b)^{"+n+"}=\\\\\\begin{aligned}&"+chunks.join("\\\\&")+"\\end{aligned}\\end{gathered}";
+      renderPascalFormula("\\["+formula+".\\]",n);
+      fitPascal();describeCoefficient(n,Math.floor(n/2));syncSteppers();
+    }
+    function fitPascal(){const el=$("pascalTriangle"),n=Math.max(0,Math.min(12,Math.round(+$("pascalN").value)||0)),cell=Math.min(39,(el.clientWidth-30-2*n)/(n+1));el.style.setProperty("--cell",cell+"px");el.style.setProperty("--cell-font",Math.min(14,Math.max(9,cell*.52))+"px");}
+    function syncSteppers(){document.querySelectorAll("[data-step-target]").forEach(b=>{const input=$(b.dataset.stepTarget),v=Number(input.value);b.disabled=+b.dataset.stepDelta<0?v<=+input.min:v>=+input.max;});}
+    function normalizeInput(input){const step=Number(input.step)||1,v=Number(input.value);input.value=Math.max(+input.min,Math.min(+input.max,Math.round((Number.isFinite(v)?v:0)/step)*step));}
+    document.querySelectorAll("[data-step-target]").forEach(b=>b.addEventListener("click",()=>{const input=$(b.dataset.stepTarget);input.value=Number(input.value)+Number(b.dataset.stepDelta);normalizeInput(input);input.dispatchEvent(new Event("input",{bubbles:true}));syncSteppers();}));
+    document.querySelectorAll(".stepper input").forEach(input=>input.addEventListener("change",()=>{normalizeInput(input);input.dispatchEvent(new Event("input",{bubbles:true}));syncSteppers();}));
+    $("pascalN").addEventListener("input",renderPascal);
+    let mathFitFrame=0;
+    function fitMath(){cancelAnimationFrame(mathFitFrame);mathFitFrame=requestAnimationFrame(()=>{document.querySelectorAll("mjx-container").forEach(el=>{if(!el.getClientRects().length)return;el.style.fontSize="";const parent=el.closest(".math")||el.parentElement,style=getComputedStyle(parent),available=parent.clientWidth-parseFloat(style.paddingLeft)-parseFloat(style.paddingRight),math=el.querySelector("mjx-math"),natural=math?.getBoundingClientRect().width||0;if(natural>available&&available>0)el.style.fontSize=(parseFloat(getComputedStyle(el).fontSize)*available/natural*.99)+"px";});});}
+    document.querySelectorAll("details.solution").forEach(d=>d.addEventListener("toggle",fitMath));
+    window.addEventListener("resize",()=>{fitPascal();fitMath();});
+    document.querySelectorAll("[data-binomial-sign]").forEach(button=>button.addEventListener("click",()=>{
+      sign=button.dataset.binomialSign;
+      document.querySelectorAll("[data-binomial-sign]").forEach(b=>b.setAttribute("aria-pressed",String(b===button)));renderPascal();
+    }));
+    const complexCanvas=$("complexCanvas");
+    let showConjugate=false,complexTransform=null,dragging=false;
+    const number=n=>new Intl.NumberFormat("es-CO",{maximumFractionDigits:3}).format(Math.abs(n)<1e-10?0:n);
+    function complexText(a,b){
+      if(b===0)return number(a);
+      const imaginary=(Math.abs(b)===1?"":number(Math.abs(b)))+"i";
+      return a===0?(b<0?"−":"")+imaginary:number(a)+(b<0?" − ":" + ")+imaginary;
+    }
+    function drawComplex(){
+      const clamp=v=>Math.max(-6,Math.min(6,Math.round((Number(v)||0)*4)/4));
+      const a=clamp($("realPart").value),b=clamp($("imagPart").value);
+      const width=complexCanvas.clientWidth,height=complexCanvas.clientHeight,dpr=Math.min(devicePixelRatio||1,2);
+      if(!width||!height)return;
+      complexCanvas.width=Math.round(width*dpr);complexCanvas.height=Math.round(height*dpr);
+      const ctx=complexCanvas.getContext("2d");ctx.setTransform(dpr,0,0,dpr,0,0);
+      const side=Math.max(200,Math.min(width-62,height-58)),scale=side/13.4,cx=width/2,cy=height/2;
+      const X=x=>cx+x*scale,Y=y=>cy-y*scale;
+      complexTransform={cx,cy,scale};
+      ctx.clearRect(0,0,width,height);
+      function line(x1,y1,x2,y2,color,dash=[],lw=1){
+        ctx.save();ctx.strokeStyle=color;ctx.lineWidth=lw;ctx.setLineDash(dash);ctx.beginPath();ctx.moveTo(X(x1),Y(y1));ctx.lineTo(X(x2),Y(y2));ctx.stroke();ctx.restore();
+      }
+      for(let v=-6;v<=6;v++){line(v,-6.5,v,6.5,"#17313a");line(-6.5,v,6.5,v,"#17313a");}
+      line(-6.5,0,6.5,0,"#66857f",[],1.3);line(0,-6.5,0,6.5,"#66857f",[],1.3);
+      ctx.font="12px Segoe UI,Arial,sans-serif";ctx.fillStyle="#a9bcb8";
+      for(let v=-6;v<=6;v+=2){if(v===0)continue;ctx.textAlign="center";ctx.fillText(v,X(v),Y(0)+18);ctx.textAlign="right";ctx.fillText(v,X(0)-9,Y(v)+4);}
+      ctx.textAlign="right";ctx.fillText("0",X(0)-7,Y(0)+18);
+      ctx.textAlign="center";ctx.fillStyle="#edf7f1";ctx.fillText("Re",X(6.4),Y(0)-10);ctx.fillText("Im",X(0)+19,Y(6.4));
+      function vector(x,y,color,label,dashed){
+        line(0,0,x,y,color,dashed?[6,5]:[],2);
+        if(x||y){
+          const angle=Math.atan2(-y,x),px=X(x),py=Y(y);
+          ctx.beginPath();ctx.moveTo(px,py);ctx.lineTo(px-10*Math.cos(angle-.35),py-10*Math.sin(angle-.35));ctx.lineTo(px-10*Math.cos(angle+.35),py-10*Math.sin(angle+.35));ctx.closePath();ctx.fillStyle=color;ctx.fill();
+        }
+        ctx.beginPath();ctx.arc(X(x),Y(y),5,0,2*Math.PI);ctx.fillStyle=color;ctx.fill();ctx.lineWidth=2;ctx.strokeStyle="#07151c";ctx.stroke();
+        ctx.font="italic 17px Cambria,Georgia,serif";ctx.fillStyle=color;ctx.textAlign=x>=5?"right":"left";
+        ctx.fillText(label,X(x)+(x>=5?-10:10),Y(y)+(y>=5?20:-10));
+      }
+      if(showConjugate&&b!==0)vector(a,-b,"#8ebcf2","z̄",true);
+      line(a,0,a,b,"#65e6b485",[4,5]);line(0,b,a,b,"#65e6b485",[4,5]);
+      vector(a,b,"#65e6b4",showConjugate&&b===0?"z = z̄":"z",false);
+      $("realPartValue").value=number(a);$("imagPartValue").value=number(b);
+      $("zValue").textContent=complexText(a,b);
+      $("zCoordinates").textContent="("+number(a)+"; "+number(b)+")";
+      const squared=a*a+b*b,modulus=Math.sqrt(squared),rounded=Math.round(modulus);
+      $("zModulus").textContent=Math.abs(modulus-rounded)<1e-10?number(rounded):"√"+new Intl.NumberFormat("es-CO",{maximumFractionDigits:4}).format(squared)+" ≈ "+number(modulus);
+      $("zConjugate").textContent=complexText(a,-b);
+      $("conjugateReadout").hidden=!showConjugate;$("conjugateLegend").hidden=!showConjugate;
+      const description="z = "+complexText(a,b)+". Parte real "+number(a)+", parte imaginaria "+number(b)+". Módulo "+number(modulus)+(showConjugate?". Conjugado "+complexText(a,-b):"")+".";
+      complexCanvas.setAttribute("aria-label","Plano complejo. "+description);
+      complexCanvas.dataset.real=a;complexCanvas.dataset.imaginary=b;complexCanvas.dataset.modulus=modulus;
+      $("complexStatus").textContent=description;syncSteppers();
+    }
+    function setComplex(a,b){$("realPart").value=Math.max(-6,Math.min(6,a));$("imagPart").value=Math.max(-6,Math.min(6,b));drawComplex();}
+    $("realPart").addEventListener("input",drawComplex);$("imagPart").addEventListener("input",drawComplex);
+    $("toggleConjugate").addEventListener("click",()=>{showConjugate=!showConjugate;$("toggleConjugate").setAttribute("aria-pressed",String(showConjugate));$("toggleConjugate").textContent=showConjugate?"Ocultar conjugado":"Mostrar conjugado";drawComplex();});
+    $("rotateComplex").addEventListener("click",()=>setComplex(-Number($("imagPart").value),Number($("realPart").value)));
+    $("resetComplex").addEventListener("click",()=>setComplex(2,3));
+    function pointerComplex(event){
+      if(!complexTransform)return;
+      const rect=complexCanvas.getBoundingClientRect(),{cx,cy,scale}=complexTransform;
+      const a=Math.round(((event.clientX-rect.left-cx)/scale)*4)/4,b=Math.round(((cy-event.clientY+rect.top)/scale)*4)/4;
+      setComplex(a,b);
+    }
+    complexCanvas.addEventListener("pointerdown",event=>{if(event.button!==0)return;if(event.pointerType!=="touch"){dragging=true;complexCanvas.setPointerCapture(event.pointerId);pointerComplex(event);}});
+    complexCanvas.addEventListener("click",event=>{if(event.pointerType==="touch")pointerComplex(event);});
+    complexCanvas.addEventListener("pointermove",event=>{if(dragging)pointerComplex(event);});
+    function stopDragging(event){dragging=false;if(complexCanvas.hasPointerCapture(event.pointerId))complexCanvas.releasePointerCapture(event.pointerId);}
+    complexCanvas.addEventListener("pointerup",stopDragging);complexCanvas.addEventListener("pointercancel",stopDragging);
+    window.addEventListener("resize",drawComplex);
+    window.addEventListener("load",drawComplex);
+    drawComplex();
+    document.querySelectorAll(".mobile-nav a").forEach(a=>a.addEventListener("click",()=>a.closest("details").removeAttribute("open")));
+    function progress(){const total=document.documentElement.scrollHeight-innerHeight;$("progress").style.transform="scaleX("+(total>0?Math.min(1,Math.max(0,scrollY/total)):0)+")";}
+    window.addEventListener("scroll",progress,{passive:true});
+    window.addEventListener("resize",progress);
+    renderPascal();progress();
+    window.addEventListener("load",()=>{renderPascal();progress();if(window.MathJax?.startup?.promise)window.MathJax.startup.promise.then(fitMath);});
+  })();
+  </script>
+</body>
+</html>
