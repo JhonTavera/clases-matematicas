@@ -11,6 +11,8 @@
     window.MathJax={tex:{inlineMath:[["\\(","\\)"]],displayMath:[["\\[","\\]"]]},options:{skipHtmlTags:["script","noscript","style","textarea","pre","code"]}};
   </script>
   <script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+  <script defer src="productos-ejercicios-data.js?v=prep-2"></script>
+  <script defer src="productos-ejercicios.js?v=prep-2"></script>
   <style>
     :root{--bg:#07151c;--deep:#030b10;--surface:#0c2028;--surface2:#112b34;--ink:#edf7f1;--muted:#a9bcb8;--soft:#27434a;--accent:#65e6b4;--accent-ink:#062117;--blue:#8ebcf2;--amber:#e6b968;--ui:"Aptos","Segoe UI","Helvetica Neue",Arial,system-ui,sans-serif;--display:"Aptos Display","Helvetica Neue",Arial,system-ui,sans-serif;--math:"STIX Two Text","Cambria Math",Cambria,Georgia,serif;--page:min(1320px,calc(100% - 64px));--radius:24px}
     *{box-sizing:border-box}html{scroll-behavior:smooth;scroll-padding-top:100px;background:var(--bg)}body{margin:0;color:var(--ink);font:400 17px/1.7 var(--ui);background:radial-gradient(circle at 80% 3%,#65e6b412,transparent 35rem),linear-gradient(135deg,var(--deep),var(--bg) 50%,#0b2028);-webkit-font-smoothing:antialiased}::selection{background:var(--accent);color:var(--accent-ink)}
@@ -37,17 +39,18 @@
     .pascal-scroll{overflow:visible;max-height:none;padding-inline:0}.pascal-triangle{width:100%;min-width:0;--cell:39px;--cell-font:14px}.pascal-row{padding-left:30px;padding-right:0;gap:2px}.pascal-row-label{width:28px;font-size:10px;min-height:44px}.pascal-cell{flex:0 0 var(--cell);width:var(--cell);min-width:0;height:44px;padding:0;border-radius:7px;font-size:var(--cell-font)}.pascal-cell:focus-visible{outline-offset:1px}.pascal-coefficients{display:flex;flex-wrap:wrap;gap:4px 12px}.pascal-coefficients span{white-space:nowrap}
     .math,mjx-container:not([display=true]){overflow:visible}.math{min-width:0}.math mjx-container{max-width:100%}.complex-plot canvas{touch-action:pan-y;cursor:pointer}
     .nav-links a.exercise-access,.mobile-nav a.exercise-access{color:var(--accent)}
-    .exercise-cta{padding:clamp(3rem,6vw,6rem) 0 clamp(5rem,9vw,8rem);border-top:1px solid var(--soft)}.exercise-cta-link{display:block;padding:clamp(1.5rem,5vw,4rem);border:1px solid #65e6b466;border-radius:var(--radius);background:linear-gradient(135deg,#14392e,var(--surface));text-decoration:none;transition:border-color .18s ease,background .18s ease}.exercise-cta-link:hover{border-color:var(--accent);background:linear-gradient(135deg,#194536,var(--surface))}.exercise-cta-link h2{margin:.8rem 0 1.2rem;font:760 clamp(2.6rem,6.5vw,5.8rem)/1.04 var(--display);letter-spacing:-.045em}.exercise-cta-link p{max-width:58ch;color:#d0e2d9}.exercise-cta-action{display:inline-flex;align-items:center;gap:1rem;max-width:100%;margin-top:1rem;padding:13px 22px;border-radius:999px;background:var(--accent);color:var(--accent-ink);font-weight:750}.exercise-cta-action span{flex-shrink:0;font-size:1.3rem}
+    .exercise-bank{margin:clamp(3rem,6vw,6rem) 0 clamp(5rem,9vw,8rem);border:1px solid #65e6b466;border-radius:var(--radius);background:linear-gradient(135deg,#14392e66,var(--surface))}.exercise-bank>summary{display:flex;align-items:center;justify-content:space-between;gap:1rem;min-height:120px;padding:clamp(1.5rem,5vw,4rem);list-style:none;cursor:pointer;font:760 clamp(2.6rem,6.5vw,5.8rem)/1.04 var(--display);letter-spacing:-.045em}.exercise-bank>summary::after{content:"+";flex-shrink:0;color:var(--accent);font-weight:400}.exercise-bank[open]>summary::after{content:"−"}.exercise-bank>summary:hover{color:var(--accent)}.exercise-bank>summary:focus-visible{outline-offset:7px;border-radius:var(--radius)}.exercise-bank>.practice-app{padding:0 clamp(1rem,3vw,2.5rem) clamp(1rem,3vw,2.5rem)}
     @media(max-width:1200px){.nav-links,.progress{display:none}.mobile-nav{display:block}}
     @media(max-width:740px){.pascal-row{gap:2px;padding-left:30px}.pascal-cell{height:44px;padding:0;min-width:0;font-size:var(--cell-font)}.pascal-row-label{width:28px}.math{font-size:15px}.pascal-expansion .math{font-size:15px}.complex-values{grid-template-columns:1fr 1fr}.hero{min-height:80svh}.hero-symbol{letter-spacing:-.065em}.hero-symbol .soft{margin-inline:.025em}}
   </style>
+  <link rel="stylesheet" href="productos-ejercicios.css?v=prep-2">
 </head>
 <body>
   <a class="skip" href="#productos">Saltar al contenido</a>
   <nav class="nav" aria-label="Navegación principal">
     <a class="brand" href="#inicio" aria-label="Volver al inicio">i</a>
-    <div class="nav-links"><a href="#productos">Productos</a><a href="#newton">Pascal</a><a href="#factorizacion">Factorizar</a><a href="#polinomios">Polinomios</a><a href="#complejos">Complejos</a><a href="#algebra">Teorema</a><a href="#raices-cuadraticas">Grado 2</a><a href="#raiz-racional">Raíz racional</a><a href="#raices">Cardano y Ferrari</a><a class="exercise-access" href="ejercicios-productos-notables-complejos.html#dias">Ejercicios</a></div>
-    <details class="mobile-nav"><summary>Contenido</summary><div><a href="#productos">Productos</a><a href="#newton">Pascal</a><a href="#potencias">Factorizar potencias</a><a href="#factorizacion">Factorizar</a><a href="#polinomios">Polinomios</a><a href="#complejos">Complejos</a><a href="#algebra">Teorema</a><a href="#raices-cuadraticas">Grado 2</a><a href="#raiz-racional">Raíz racional</a><a href="#raices">Cardano y Ferrari</a><a class="exercise-access" href="ejercicios-productos-notables-complejos.html#dias">Ejercicios</a></div></details>
+    <div class="nav-links"><a href="#productos">Productos</a><a href="#newton">Pascal</a><a href="#factorizacion">Factorizar</a><a href="#polinomios">Polinomios</a><a href="#complejos">Complejos</a><a href="#algebra">Teorema</a><a href="#raices-cuadraticas">Grado 2</a><a href="#raiz-racional">Raíz racional</a><a href="#raices">Cardano y Ferrari</a><a class="exercise-access" href="#ejercicios">Ejercicios</a></div>
+    <details class="mobile-nav"><summary>Contenido</summary><div><a href="#productos">Productos</a><a href="#newton">Pascal</a><a href="#potencias">Factorizar potencias</a><a href="#factorizacion">Factorizar</a><a href="#polinomios">Polinomios</a><a href="#complejos">Complejos</a><a href="#algebra">Teorema</a><a href="#raices-cuadraticas">Grado 2</a><a href="#raiz-racional">Raíz racional</a><a href="#raices">Cardano y Ferrari</a><a class="exercise-access" href="#ejercicios">Ejercicios</a></div></details>
     <div class="progress" aria-hidden="true"><span id="progress"></span></div>
   </nav>
   <header class="hero" id="inicio"><div><div class="hero-symbol" aria-hidden="true">ax²<span class="soft">+</span>bx<span class="soft">+</span>c</div><h1>Productos notables<br>y números complejos</h1><a class="start" href="#productos">Explorar el capítulo ↓</a></div></header>
@@ -598,14 +601,25 @@
       </div></details>
       <p class="note spaced">Referencia matemática: <a href="https://dlmf.nist.gov/1.11#iii" target="_blank" rel="noopener noreferrer">NIST DLMF · Ecuaciones cúbicas y cuárticas</a>. Aquí las expresiones se presentan en función de los coeficientes originales, con abreviaturas para facilitar la sustitución.</p>
     </section>
-    <div class="exercise-cta" id="ejercicios" role="region" aria-labelledby="ejercicios-title">
-      <a class="exercise-cta-link" href="ejercicios-productos-notables-complejos.html#dias">
-        <span class="kicker">Práctica y plan de estudio</span>
-        <h2 id="ejercicios-title">Ejercicios</h2>
-        <p>Productos notables, números complejos y raíces de polinomios. Organiza la práctica con el plan de seis días y comprueba tus resultados.</p>
-        <span class="exercise-cta-action">Abrir ejercicios <span aria-hidden="true">↗</span></span>
-      </a>
-    </div>
+    <details class="exercise-bank" id="ejercicios">
+      <summary>Ejercicios</summary>
+      <div id="practice" class="practice-app" data-view="topics">
+        <div class="panel" id="topicPanel">
+          <div class="topics" role="group" aria-label="Temas de ejercicios">
+            <button type="button" class="topic" data-topic="factorizacion" aria-pressed="true">Factorización</button>
+            <button type="button" class="topic" data-topic="raices" aria-pressed="false">Raíces de polinomios</button>
+            <button type="button" class="topic" data-topic="complejos" aria-pressed="false">Números complejos</button>
+          </div>
+          <div class="filter-row" id="levelFilter"><label for="levelSelect">Dificultad</label><select id="levelSelect"><option value="todos">Todos los niveles</option><option value="basico">Básico</option><option value="intermedio">Intermedio</option><option value="avanzado">Avanzado</option><option value="integrador">Integrador</option></select></div>
+        </div>
+        <noscript><p class="noscript">Activa JavaScript para consultar el banco de ejercicios.</p></noscript>
+        <div class="list-head"><h2 id="listTitle">Factorización</h2><span class="small muted" id="listCount"></span></div>
+        <div class="exercise-list" id="exerciseList" aria-busy="true"><p class="loading">Cargando los ejercicios…</p></div>
+        <nav class="pagination" id="pagination" aria-label="Páginas de ejercicios"><button type="button" class="action" id="previousPage">← Anteriores</button><span class="small muted" id="pageCount"></span><button type="button" class="action" id="nextPage">Siguientes →</button></nav>
+        <p class="storage-note" id="storageNote" hidden></p>
+        <p class="sr-only" id="announcement" role="status" aria-live="polite" aria-atomic="true"></p>
+      </div>
+    </details>
   </main>
   <footer><p>Álgebra · Productos notables y números complejos</p><a href="#inicio">Volver al inicio ↑</a></footer>
   <script>
@@ -673,7 +687,7 @@
     document.querySelectorAll(".stepper input").forEach(input=>input.addEventListener("change",()=>{normalizeInput(input);input.dispatchEvent(new Event("input",{bubbles:true}));syncSteppers();}));
     $("pascalN").addEventListener("input",renderPascal);
     let mathFitFrame=0;
-    function fitMath(){cancelAnimationFrame(mathFitFrame);mathFitFrame=requestAnimationFrame(()=>{document.querySelectorAll("mjx-container").forEach(el=>{if(!el.getClientRects().length)return;el.style.fontSize="";const parent=el.closest(".math")||el.parentElement,style=getComputedStyle(parent),available=parent.clientWidth-parseFloat(style.paddingLeft)-parseFloat(style.paddingRight),math=el.querySelector("mjx-math"),natural=math?.getBoundingClientRect().width||0;if(natural>available&&available>0)el.style.fontSize=(parseFloat(getComputedStyle(el).fontSize)*available/natural*.99)+"px";});});}
+    function fitMath(){cancelAnimationFrame(mathFitFrame);mathFitFrame=requestAnimationFrame(()=>{document.querySelectorAll("mjx-container:not(#practice mjx-container)").forEach(el=>{if(!el.getClientRects().length)return;el.style.fontSize="";const parent=el.closest(".math")||el.parentElement,style=getComputedStyle(parent),available=parent.clientWidth-parseFloat(style.paddingLeft)-parseFloat(style.paddingRight),math=el.querySelector("mjx-math"),natural=math?.getBoundingClientRect().width||0;if(natural>available&&available>0)el.style.fontSize=(parseFloat(getComputedStyle(el).fontSize)*available/natural*.99)+"px";});});}
     document.querySelectorAll("details.solution").forEach(d=>d.addEventListener("toggle",fitMath));
     window.addEventListener("resize",()=>{fitPascal();fitMath();});
     document.querySelectorAll("[data-binomial-sign]").forEach(button=>button.addEventListener("click",()=>{

@@ -1,6 +1,6 @@
 /* Banco original: 62 de factorización, 16 de raíces y seis operaciones con complejos. */
 window.PRODUCTOS_EXERCISES = {
-  "version": 1,
+  "version": 2,
   "exercises": [
     {
       "id": "factor-1",
@@ -917,6 +917,53 @@ window.PRODUCTOS_EXERCISES = {
       "factor-55",
       "raiz-rampa",
       "complejo-6"
+    ],
+    [
+      "factor-20",
+      "factor-56",
+      "factor-57",
+      "factor-58",
+      "raiz-varas-cruzadas"
+    ],
+    [
+      "factor-21",
+      "factor-59",
+      "factor-60",
+      "factor-61",
+      "raiz-silo"
+    ],
+    [
+      "factor-22",
+      "factor-62",
+      "raiz-ciudad-amurallada"
+    ],
+    [
+      "factor-23",
+      "raiz-equipos"
+    ],
+    [
+      "factor-24",
+      "raiz-inventario"
+    ],
+    [
+      "factor-25",
+      "raiz-credito"
+    ],
+    [
+      "factor-26",
+      "raiz-van"
+    ],
+    [
+      "factor-27",
+      "raiz-biomasa"
+    ],
+    [
+      "factor-28",
+      "raiz-carbonato"
+    ],
+    [
+      "factor-29",
+      "raiz-manning"
     ]
   ]
 };
