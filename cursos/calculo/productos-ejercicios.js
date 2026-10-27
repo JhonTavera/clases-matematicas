@@ -4,7 +4,15 @@
   if (!root) return;
   const $ = id => root.querySelector('#' + id);
   const isDays = root.dataset.view === 'days';
-  const bankDisclosure = root.closest('details');
+  const bankDialog = root.closest('dialog');
+  document.querySelectorAll('[data-back-link]').forEach(link => link.addEventListener('click', event => {
+    // Direct visits and links opened in a new tab always have a useful course fallback.
+    let previous = null;
+    try { previous = new URL(document.referrer); } catch { /* No referrer on direct visits. */ }
+    if (previous && previous.origin === location.origin && previous.pathname.startsWith('/clases-matematicas/') && history.length > 1) {
+      event.preventDefault(); history.back();
+    }
+  }));
   const data = window.PRODUCTOS_EXERCISES;
   if (!data?.exercises?.length || !data?.days?.length) {
     $('exerciseList').textContent = 'No se pudieron cargar los ejercicios. Recarga la página.';
@@ -115,8 +123,8 @@
     if (!isDays) $('listCount').textContent = `${start + 1}–${start + selected.length} de ${all.length}`;
     if (persist) save();
     const version = ++renderVersion;
-    // Defer the inline exercise bank until opened so the lesson stays lightweight.
-    if (bankDisclosure && !bankDisclosure.open) return;
+    // Defer the exercise panel until opened so the lesson stays lightweight.
+    if (bankDialog && !bankDialog.open) return;
     $('exerciseList').setAttribute('aria-busy', 'true');
     renderQueue = renderQueue.catch(() => {}).then(async () => {
       if (version !== renderVersion) return;
@@ -189,12 +197,44 @@
     $('levelSelect').addEventListener('change', event => { state.level = event.target.value; state.page = 0; render(); });
     $('previousPage').addEventListener('click', () => { if (state.page > 0) { state.page--; render(); $('listTitle').scrollIntoView({block:'start'}); } });
     $('nextPage').addEventListener('click', () => { state.page++; render(); $('listTitle').scrollIntoView({block:'start'}); });
-    if (bankDisclosure) {
-      bankDisclosure.addEventListener('toggle', () => { if (bankDisclosure.open) render(false); });
-      const openFromHash = () => { if (location.hash === '#ejercicios') bankDisclosure.open = true; };
-      window.addEventListener('hashchange', openFromHash);
-      document.querySelectorAll('a[href="#ejercicios"]').forEach(link => link.addEventListener('click', () => { bankDisclosure.open = true; }));
-      openFromHash();
+    if (bankDialog) {
+      const launch = document.getElementById('exerciseLaunch');
+      const close = document.getElementById('closeExercises');
+      let returnFocus = launch;
+      function openBank(trigger) {
+        if (!bankDialog.open) {
+          returnFocus = trigger || launch;
+          bankDialog.showModal();
+          document.body.classList.add('exercise-modal-open');
+          close.focus({preventScroll:true});
+        }
+        render(false);
+      }
+      function openFromControl(event) {
+        event.preventDefault();
+        history.replaceState(null, '', '#ejercicios');
+        openBank(event.currentTarget);
+      }
+      launch.addEventListener('click', openFromControl);
+      document.querySelectorAll('a[href="#ejercicios"]').forEach(link => link.addEventListener('click', openFromControl));
+      close.addEventListener('click', () => bankDialog.close());
+      bankDialog.addEventListener('close', () => {
+        document.body.classList.remove('exercise-modal-open');
+        if (location.hash === '#ejercicios') history.replaceState(null, '', '#practica');
+        const mobileMenu = returnFocus?.closest('.mobile-nav');
+        const target = mobileMenu && !mobileMenu.open ? mobileMenu.querySelector('summary') : returnFocus?.getClientRects().length ? returnFocus : launch;
+        target?.focus({preventScroll:true});
+      });
+      bankDialog.addEventListener('click', event => {
+        if (event.target !== bankDialog) return;
+        const box = bankDialog.getBoundingClientRect();
+        if (event.clientX < box.left || event.clientX > box.right || event.clientY < box.top || event.clientY > box.bottom) bankDialog.close();
+      });
+      window.addEventListener('hashchange', () => {
+        if (location.hash === '#ejercicios') openBank();
+        else if (bankDialog.open) bankDialog.close();
+      });
+      if (location.hash === '#ejercicios') openBank();
     }
   }
   $('exerciseList').addEventListener('change', event => {

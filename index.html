@@ -241,13 +241,6 @@
     .pdf:hover { transform: translateY(-1px); border-color: color-mix(in srgb, var(--accent) 58%, var(--line)); background: var(--accent-soft); }
     .pdf a { flex: 1; text-decoration: none; color: var(--ink); word-break: break-word; font-weight: 560; }
     .pdf a:hover { color: var(--accent-hover); }
-    .pdf a.resource-button { display: inline-flex; align-items: center; justify-content: space-between; gap: 1rem; min-height: 48px; padding: .85rem 1.1rem; border: 1px solid var(--accent); border-radius: 12px; background: var(--accent); color: #fff; font-weight: 700; }
-    .pdf a.resource-button::after { content: "↗"; flex-shrink: 0; font-size: 1.3rem; }
-    .pdf a.resource-button:hover { background: var(--accent-hover); border-color: var(--accent-hover); color: #fff; }
-    .pdf a.resource-button:focus-visible { outline: 3px solid var(--ink); outline-offset: 4px; }
-    .pdf.mint-resource { --accent: #65e6b4; --accent-hover: #8df0c9; --accent-soft: rgba(101, 230, 180, .12); }
-    .pdf.mint-resource a.resource-button, .pdf.mint-resource a.resource-button:hover { color: #062117; }
-    .pdf.mint-resource .badge { background: #bdf7df; color: #062117; }
     .badge { flex: 0 0 auto; font-size: .7rem; font-weight: 800; letter-spacing: .055em; padding: .25rem .52rem; border-radius: 999px; background: var(--accent-soft); color: var(--accent-hover); }
 
     footer { text-align: center; font-size: .84rem; color: var(--muted); padding: 2.3rem 1rem 2.8rem; }
@@ -458,13 +451,13 @@
       sections: {
         "Clases": [
           { titulo: "Conjuntos Numéricos y sus Propiedades Algebraicas", archivo: "cursos/calculo/fundamentos_reales.html" },
-          { titulo: "Productos notables y números complejos", archivo: "cursos/calculo/productos_notables_numeros_complejos.html", boton: true, tono: "menta" },
+          { titulo: "Productos notables y números complejos", archivo: "cursos/calculo/productos_notables_numeros_complejos.html" },
            { titulo: "Funciones reales de variable real", archivo: "cursos/calculo/funciones_reales_variable_real.html" },
           { titulo: "Límites de funciones reales", archivo: "cursos/calculo/limites.html" },
            { titulo: "Juego de límites", archivo: "cursos/calculo/juego-limites-leibniz/index.html" }
         ],
         "Preparación": [
-          { titulo: "Productos notables y números complejos", archivo: "cursos/calculo/ejercicios-productos-notables-complejos.html#dias", boton: true, tono: "menta" },
+          { titulo: "Productos notables y números complejos", archivo: "cursos/calculo/ejercicios-productos-notables-complejos.html#dias" },
           { titulo: "Ejercicios orden, funciones, operaciones, transformaciones", archivo: "cursos/calculo/Ejercicios_orden_funciones_operaciones_transformaciones.pdf" }
           //{ titulo: "simplificación y problemas", archivo: "cursos/calculo/simplificacionyproblemas.pdf" }
           // Si lo mueves: "cursos/precalculo/ejercicios/modulo0.html"
@@ -595,7 +588,6 @@
   function makeItemRow(item) {
     const row = document.createElement("div");
     row.className = "pdf";
-    if (item.tono === "menta") row.classList.add("mint-resource");
 
     const link = document.createElement("a");
     const url = new URL(item.archivo, location.href);
@@ -604,7 +596,6 @@
     link.target = "_blank";
     link.rel = "noopener";
     link.textContent = item.titulo;
-    if (item.boton) link.classList.add("resource-button");
 
     const badge = document.createElement("span");
     badge.className = "badge";

@@ -11,8 +11,8 @@
     window.MathJax={tex:{inlineMath:[["\\(","\\)"]],displayMath:[["\\[","\\]"]]},options:{skipHtmlTags:["script","noscript","style","textarea","pre","code"]}};
   </script>
   <script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
-  <script defer src="productos-ejercicios-data.js?v=prep-2"></script>
-  <script defer src="productos-ejercicios.js?v=prep-2"></script>
+  <script defer src="productos-ejercicios-data.js?v=prep-3"></script>
+  <script defer src="productos-ejercicios.js?v=prep-3"></script>
   <style>
     :root{--bg:#07151c;--deep:#030b10;--surface:#0c2028;--surface2:#112b34;--ink:#edf7f1;--muted:#a9bcb8;--soft:#27434a;--accent:#65e6b4;--accent-ink:#062117;--blue:#8ebcf2;--amber:#e6b968;--ui:"Aptos","Segoe UI","Helvetica Neue",Arial,system-ui,sans-serif;--display:"Aptos Display","Helvetica Neue",Arial,system-ui,sans-serif;--math:"STIX Two Text","Cambria Math",Cambria,Georgia,serif;--page:min(1320px,calc(100% - 64px));--radius:24px}
     *{box-sizing:border-box}html{scroll-behavior:smooth;scroll-padding-top:100px;background:var(--bg)}body{margin:0;color:var(--ink);font:400 17px/1.7 var(--ui);background:radial-gradient(circle at 80% 3%,#65e6b412,transparent 35rem),linear-gradient(135deg,var(--deep),var(--bg) 50%,#0b2028);-webkit-font-smoothing:antialiased}::selection{background:var(--accent);color:var(--accent-ink)}
@@ -38,12 +38,17 @@
     .stepper{display:flex;align-items:center;gap:12px}.stepper button{width:48px;height:48px;flex-shrink:0;border:1px solid var(--soft);border-radius:50%;background:var(--surface);color:var(--accent);font-size:24px}.stepper button:disabled{opacity:.35;cursor:default}.stepper input{width:100%;min-width:0;min-height:48px;text-align:center;background:var(--deep);border:1px solid var(--soft);border-radius:12px;color:var(--ink);font-variant-numeric:tabular-nums;appearance:textfield}.stepper input::-webkit-inner-spin-button,.stepper input::-webkit-outer-spin-button{-webkit-appearance:none;margin:0}
     .pascal-scroll{overflow:visible;max-height:none;padding-inline:0}.pascal-triangle{width:100%;min-width:0;--cell:39px;--cell-font:14px}.pascal-row{padding-left:30px;padding-right:0;gap:2px}.pascal-row-label{width:28px;font-size:10px;min-height:44px}.pascal-cell{flex:0 0 var(--cell);width:var(--cell);min-width:0;height:44px;padding:0;border-radius:7px;font-size:var(--cell-font)}.pascal-cell:focus-visible{outline-offset:1px}.pascal-coefficients{display:flex;flex-wrap:wrap;gap:4px 12px}.pascal-coefficients span{white-space:nowrap}
     .math,mjx-container:not([display=true]){overflow:visible}.math{min-width:0}.math mjx-container{max-width:100%}.complex-plot canvas{touch-action:pan-y;cursor:pointer}
-    .nav-links a.exercise-access,.mobile-nav a.exercise-access{color:var(--accent)}
-    .exercise-bank{margin:clamp(3rem,6vw,6rem) 0 clamp(5rem,9vw,8rem);border:1px solid #65e6b466;border-radius:var(--radius);background:linear-gradient(135deg,#14392e66,var(--surface))}.exercise-bank>summary{display:flex;align-items:center;justify-content:space-between;gap:1rem;min-height:120px;padding:clamp(1.5rem,5vw,4rem);list-style:none;cursor:pointer;font:760 clamp(2.6rem,6.5vw,5.8rem)/1.04 var(--display);letter-spacing:-.045em}.exercise-bank>summary::after{content:"+";flex-shrink:0;color:var(--accent);font-weight:400}.exercise-bank[open]>summary::after{content:"−"}.exercise-bank>summary:hover{color:var(--accent)}.exercise-bank>summary:focus-visible{outline-offset:7px;border-radius:var(--radius)}.exercise-bank>.practice-app{padding:0 clamp(1rem,3vw,2.5rem) clamp(1rem,3vw,2.5rem)}
+    .pill,.button,.button.primary,.pill[aria-pressed=true],.stepper button,.brand,.mobile-nav summary,.nav-links a,.mobile-nav a{background:#0c2028;color:#edf7f1;border-color:#29464d}.pill[aria-pressed=true]{border-color:var(--accent);box-shadow:0 0 0 1px var(--accent)}.pill:disabled,.button:disabled{opacity:.4;cursor:not-allowed}.nav-links{background:#0c2028;border-color:#29464d}.nav-links a{border-radius:24px}.nav-links a:hover,.mobile-nav a:hover{color:#edf7f1;outline:1px solid var(--accent);outline-offset:-1px}.mobile-nav a{border:1px solid #29464d;border-radius:10px;margin-block:5px}
+    .course-links{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;width:var(--page);margin:0 auto;padding:24px 0}.course-links-top{padding-top:88px;padding-bottom:0}.course-links a,.exercise-dialog-close{display:inline-flex;align-items:center;justify-content:center;min-height:46px;padding:10px 16px;border:1px solid #29464d;border-radius:14px;background:#0c2028;color:#edf7f1;text-decoration:none;font-size:14px;line-height:1.4}.course-links a:hover,.exercise-dialog-close:hover{border-color:var(--accent)}
+    .exercise-entry{margin:clamp(3rem,6vw,6rem) 0 clamp(3rem,6vw,5rem)}.exercise-launch{display:flex;align-items:center;justify-content:space-between;gap:1rem;width:100%;min-height:120px;padding:clamp(1.5rem,5vw,4rem);border:1px solid #29464d;border-radius:var(--radius);background:#0c2028;color:#edf7f1;text-align:left;font:760 clamp(2.6rem,6.5vw,5.8rem)/1.04 var(--display);letter-spacing:-.045em}.exercise-launch:hover{border-color:var(--accent)}.exercise-launch span:last-child{flex-shrink:0;font-size:.7em;font-weight:400}
+    .exercise-dialog{width:min(1180px,calc(100% - 32px));max-width:none;height:90svh;max-height:90svh;padding:0;border:1px solid #29464d;border-radius:24px;background:#07151c;color:#edf7f1;overflow:hidden;box-shadow:0 28px 110px #0009}.exercise-dialog[open]{display:grid;grid-template-rows:auto minmax(0,1fr)}.exercise-dialog::backdrop{background:#02080dd9;backdrop-filter:blur(8px)}.exercise-dialog-head{position:sticky;top:0;z-index:2;display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;padding:20px clamp(18px,3vw,32px);border-bottom:1px solid #29464d;background:#07151c}.exercise-dialog-head h2{margin:0;font:700 clamp(1.5rem,3vw,2rem)/1.2 var(--display);letter-spacing:-.035em}.exercise-dialog-body{min-height:0;overflow-y:auto;overscroll-behavior:contain;padding:clamp(16px,3vw,32px);scrollbar-color:#29464d #07151c}.exercise-dialog-close{flex-shrink:0}
+    @media(max-width:740px){.course-links{gap:10px}.course-links a{padding-inline:12px}.exercise-dialog{width:calc(100% - 16px);border-radius:18px}.exercise-dialog-head{gap:10px;padding:16px}.exercise-dialog-close{padding:10px 12px;font-size:13px}}
+    @media print{.course-links,.exercise-entry,.exercise-dialog{display:none}}
     @media(max-width:1200px){.nav-links,.progress{display:none}.mobile-nav{display:block}}
     @media(max-width:740px){.pascal-row{gap:2px;padding-left:30px}.pascal-cell{height:44px;padding:0;min-width:0;font-size:var(--cell-font)}.pascal-row-label{width:28px}.math{font-size:15px}.pascal-expansion .math{font-size:15px}.complex-values{grid-template-columns:1fr 1fr}.hero{min-height:80svh}.hero-symbol{letter-spacing:-.065em}.hero-symbol .soft{margin-inline:.025em}}
+    body.exercise-modal-open{overflow:hidden}.exercise-dialog{overflow:clip}
   </style>
-  <link rel="stylesheet" href="productos-ejercicios.css?v=prep-2">
+  <link rel="stylesheet" href="productos-ejercicios.css?v=prep-3">
 </head>
 <body>
   <a class="skip" href="#productos">Saltar al contenido</a>
@@ -53,6 +58,7 @@
     <details class="mobile-nav"><summary>Contenido</summary><div><a href="#productos">Productos</a><a href="#newton">Pascal</a><a href="#potencias">Factorizar potencias</a><a href="#factorizacion">Factorizar</a><a href="#polinomios">Polinomios</a><a href="#complejos">Complejos</a><a href="#algebra">Teorema</a><a href="#raices-cuadraticas">Grado 2</a><a href="#raiz-racional">Raíz racional</a><a href="#raices">Cardano y Ferrari</a><a class="exercise-access" href="#ejercicios">Ejercicios</a></div></details>
     <div class="progress" aria-hidden="true"><span id="progress"></span></div>
   </nav>
+  <nav class="course-links course-links-top" aria-label="Volver al curso"><a data-back-link href="../../index.html?clave=calculo">← Volver atrás</a><a href="../../index.html?clave=calculo">Página principal</a></nav>
   <header class="hero" id="inicio"><div><div class="hero-symbol" aria-hidden="true">ax²<span class="soft">+</span>bx<span class="soft">+</span>c</div><h1>Productos notables<br>y números complejos</h1><a class="start" href="#productos">Explorar el capítulo ↓</a></div></header>
   <main>
     <noscript><p class="noscript">Las definiciones y los ejemplos se pueden leer sin JavaScript. Actívalo para usar el triángulo de Pascal y el plano complejo. Las fórmulas requieren conexión para cargar MathJax.</p></noscript>
@@ -601,8 +607,12 @@
       </div></details>
       <p class="note spaced">Referencia matemática: <a href="https://dlmf.nist.gov/1.11#iii" target="_blank" rel="noopener noreferrer">NIST DLMF · Ecuaciones cúbicas y cuárticas</a>. Aquí las expresiones se presentan en función de los coeficientes originales, con abreviaturas para facilitar la sustitución.</p>
     </section>
-    <details class="exercise-bank" id="ejercicios">
-      <summary>Ejercicios</summary>
+    <div class="exercise-entry" id="practica"><button type="button" class="exercise-launch" id="exerciseLaunch" data-open-exercises aria-haspopup="dialog" aria-controls="ejercicios"><span>Ejercicios</span><span aria-hidden="true">↗</span></button></div>
+  </main>
+  <nav class="course-links" aria-label="Volver al curso al terminar"><a data-back-link href="../../index.html?clave=calculo">← Volver atrás</a><a href="../../index.html?clave=calculo">Página principal</a></nav>
+  <dialog class="exercise-dialog" id="ejercicios" aria-labelledby="exerciseDialogTitle">
+    <header class="exercise-dialog-head"><h2 id="exerciseDialogTitle">Ejercicios</h2><button type="button" class="exercise-dialog-close" id="closeExercises">Volver al contenido ×</button></header>
+    <div class="exercise-dialog-body">
       <div id="practice" class="practice-app" data-view="topics">
         <div class="panel" id="topicPanel">
           <div class="topics" role="group" aria-label="Temas de ejercicios">
@@ -619,8 +629,8 @@
         <p class="storage-note" id="storageNote" hidden></p>
         <p class="sr-only" id="announcement" role="status" aria-live="polite" aria-atomic="true"></p>
       </div>
-    </details>
-  </main>
+    </div>
+  </dialog>
   <footer><p>Álgebra · Productos notables y números complejos</p><a href="#inicio">Volver al inicio ↑</a></footer>
   <script>
   (function(){
