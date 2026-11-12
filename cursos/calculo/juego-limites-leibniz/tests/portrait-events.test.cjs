@@ -6,6 +6,8 @@ const vm = require('node:vm');
 
 const game = path.resolve(__dirname, '..');
 const checks = [];
+const RECOIL_SRC = 'assets/animacion/leibniz-nivel-3-acierto-secuencia.webp';
+const RECOIL_DURATIONS = [40,30,30,20,20,20,30,50,40,40,40,40,40,40,40,40,40,40,40,40,40,40,40,60];
 
 function createHarness(options = {}) {
   let now = 0;
@@ -19,7 +21,9 @@ function createHarness(options = {}) {
   function canvas() {
     const context = {
       save(){}, restore(){}, translate(){}, rotate(){}, scale(){}, clearRect(){}, fillRect(){},
-      drawImage(image, ...args) { if (image.src) draws.push({at:now,src:image.src,frame:args.length===8?args[0]/480:0}); }
+      drawImage(image, ...args) {
+        if (image.src) draws.push({at:now,src:image.src,frame:args.length===8?args[0]/480+(args[1]/360)*(image.src===RECOIL_SRC?8:13):0});
+      }
     };
     return {width:480,height:360,getContext:()=>context};
   }
@@ -27,7 +31,11 @@ function createHarness(options = {}) {
     addEventListener:(event,listener)=>{if(event==='visibilitychange')visibilityListeners.push(listener)}};
   class Image {
     constructor(){this.width=6240;this.height=360;this.naturalWidth=6240;this.naturalHeight=360;}
-    set src(value){this._src=value;queueMicrotask(()=>options.failImage?.(value)?this.onerror?.():this.onload?.());}
+    set src(value){
+      this._src=value;
+      if(value===RECOIL_SRC){this.width=this.naturalWidth=3840;this.height=this.naturalHeight=1080;}
+      queueMicrotask(()=>options.failImage?.(value)?this.onerror?.():this.onload?.());
+    }
     get src(){return this._src;}
   }
   const context = vm.createContext({
@@ -59,6 +67,11 @@ function frameRange(h,low,high,label) {
   return draw;
 }
 
+function correctFrame(h,level,label) {
+  if(level===3){const draw=frameRange(h,0,23,label);assert.equal(draw.src,RECOIL_SRC);return draw;}
+  const draw=frameRange(h,5,8,label);assert.match(draw.src,new RegExp(`leibniz-eventos-nivel-${level}\\.webp$`));return draw;
+}
+
 async function unitTests() {
   const h=createHarness();const p=h.portrait;await p.ready;
   assert.equal(p.images.size,3);
@@ -68,7 +81,7 @@ async function unitTests() {
     assert.match(idle.src,new RegExp(`leibniz-eventos-nivel-${level}\\.webp$`));
     p.speak();h.advance(200);frameRange(h,1,4,`level ${level} new limit`);
     h.advance(1000);frameRange(h,0,0,`level ${level} mouth returns to baseline`);
-    p.react('correct');h.advance(200);frameRange(h,5,8,`level ${level} correct response`);
+    p.react('correct');h.advance(200);correctFrame(h,level,`level ${level} correct response`);
     h.advance(1000);frameRange(h,0,0,`level ${level} correct response finishes`);
     p.react('incorrect');h.advance(200);frameRange(h,9,12,`level ${level} incorrect response`);
     h.advance(1000);frameRange(h,0,0,`level ${level} incorrect response finishes`);
@@ -86,7 +99,7 @@ async function unitTests() {
 
   for(const [from,to] of [[1,2],[2,3],[3,2]]) {
     p.reset(from);p.setActive(true);p.react('correct',from);p.setLevel(to);h.advance(200);
-    assert.match(frameRange(h,5,8,'Threshold response').src,new RegExp(`nivel-${from}\\.webp$`));
+    correctFrame(h,from,'Threshold response');
     h.advance(2000);
     assert.match(frameRange(h,0,0,'After threshold transition').src,new RegExp(`nivel-${to}\\.webp$`));
   }
@@ -116,6 +129,28 @@ async function unitTests() {
   missing.portrait.react('correct');missing.advance(1000);await missing.portrait.finish();
   assert.equal(missing.frames.size,0,'Missing images cannot hold the end-of-game promise forever');
   checks.push('Unavailable atlases fall back to static portraits; total image failure does not block game completion');
+
+  const sequence=createHarness();const sp=sequence.portrait;await sp.ready;
+  sp.reset(3);sp.setActive(true);sp.react('correct');
+  assert.equal(sequence.last().src,RECOIL_SRC);
+  for(let index=0;index<RECOIL_DURATIONS.length;index++) {
+    assert.equal(sequence.last().frame,index,`Recoil starts frame ${index} at its scheduled boundary`);
+    sequence.advance(RECOIL_DURATIONS[index]-1);
+    assert.equal(sequence.last().src,RECOIL_SRC);
+    assert.equal(sequence.last().frame,index,`Recoil holds frame ${index} for its full duration`);
+    sequence.advance(1);
+  }
+  assert.match(frameRange(sequence,0,0,'Recoil ends at baseline exactly after 900 ms').src,/leibniz-eventos-nivel-3\.webp$/);
+  assert.equal(sequence.frames.size,0);
+  sp.react('correct');sequence.advance(200);const sequenceFinished=sp.finish();sequence.advance(699);
+  assert.equal(sequence.last().src,RECOIL_SRC,'finish preserves the entire recoil sequence');
+  sequence.advance(1);await sequenceFinished;assert.equal(sequence.frames.size,0);
+  const sequenceMissing=createHarness({failImage:src=>src===RECOIL_SRC});
+  await sequenceMissing.portrait.ready;sequenceMissing.portrait.reset(3);sequenceMissing.portrait.setActive(true);
+  sequenceMissing.portrait.react('correct');sequenceMissing.advance(200);
+  assert.match(frameRange(sequenceMissing,5,8,'Missing recoil uses the original level 3 gesture').src,/leibniz-eventos-nivel-3\.webp$/);
+  sequenceMissing.advance(360);frameRange(sequenceMissing,0,0,'Original fallback keeps its 560 ms duration');
+  checks.push('Level 3 correct uses all 24 timed recoil frames for 900 ms; finish preserves it; missing optional atlas keeps the original 560 ms gesture');
 }
 
 

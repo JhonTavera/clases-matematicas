@@ -90,6 +90,16 @@
       "Boca muy abierta",
       "Sacudida de cabeza al acertar",
       "Pequeña sonrisa"
-    ]
+    ],
+    "correctSequence": {
+      "atlas": "leibniz-nivel-3-acierto-secuencia.webp",
+      "metadata": "acierto3-secuencia.json",
+      "fallback": [
+        5,
+        6,
+        7,
+        8
+      ]
+    }
   }
 ]

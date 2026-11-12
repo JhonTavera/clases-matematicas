@@ -13,7 +13,14 @@ class LeibnizPortrait {
     },
     3: {
       spawn: { offset: 0, enter: 140, hold: 220, exit: 220, gesture: 'boca-exagerada' },
-      correct: { offset: 4, enter: 80, hold: 60, exit: 420, gesture: 'sacudida-cabeza' },
+      correct: {
+        offset: 4, enter: 80, hold: 60, exit: 420, gesture: 'sacudida-cabeza',
+        sequence: {
+          src: 'assets/animacion/leibniz-nivel-3-acierto-secuencia.webp',
+          columns: 8, rows: 3, width: 480, height: 360,
+          durations: [40, 30, 30, 20, 20, 20, 30, 50, 40, 40, 40, 40, 40, 40, 40, 40, 40, 40, 40, 40, 40, 40, 40, 60]
+        }
+      },
       incorrect: { offset: 8, enter: 170, hold: 260, exit: 220, gesture: 'sonrisa' }
     }
   };
@@ -25,6 +32,7 @@ class LeibnizPortrait {
     this.displayLevel = 1;
     this.active = false;
     this.images = new Map();
+    this.sequences = new Map();
     this.fallbacks = new Map();
     this.failedLevels = new Set();
     this.frameId = null;
@@ -34,7 +42,10 @@ class LeibnizPortrait {
     this.finishResolvers = [];
     this.reduced = window.matchMedia('(prefers-reduced-motion: reduce)');
     this.tick = this.tick.bind(this);
-    this.ready = Promise.all([1, 2, 3].map(level => this.loadLevel(level)));
+    this.ready = Promise.all([
+      ...[1, 2, 3].map(level => this.loadLevel(level)),
+      this.loadSequence(LeibnizPortrait.EVENT_CONFIG[3].correct.sequence)
+    ]);
     this.reduced.addEventListener('change', () => {
       this.clearGestures();
       this.schedule();
@@ -80,6 +91,20 @@ class LeibnizPortrait {
 
   hasImage(level) {
     return this.images.has(level) || this.fallbacks.has(level);
+  }
+
+  loadSequence(sequence) {
+    return new Promise(resolve => {
+      const image = new Image();
+      image.onload = () => {
+        this.sequences.set(sequence.src, image);
+        this.schedule();
+        resolve(true);
+      };
+      // Si falla este recurso opcional, se mantiene el gesto del atlas del nivel.
+      image.onerror = () => resolve(false);
+      image.src = sequence.src;
+    });
   }
 
   clearGestures() {
@@ -176,7 +201,11 @@ class LeibnizPortrait {
       const event = this.queue.shift();
       if (event.level !== this.displayLevel) this.startTransition(event.level, now, 180);
       const config = LeibnizPortrait.EVENT_CONFIG[event.level][event.kind];
-      this.action = { ...event, ...config, start: now, duration: config.enter + config.hold + config.exit };
+      const sequence = config.sequence && this.sequences.has(config.sequence.src) ? config.sequence : null;
+      const duration = sequence
+        ? sequence.durations.reduce((total, milliseconds) => total + milliseconds, 0)
+        : config.enter + config.hold + config.exit;
+      this.action = { ...event, ...config, sequence, start: now, duration };
     }
     if (!this.action && !this.queue.length && this.displayLevel !== this.level && this.hasImage(this.level)) {
       this.startTransition(this.level, now);
@@ -211,6 +240,14 @@ class LeibnizPortrait {
     if (this.reduced.matches || !this.action) return 0;
     const action = this.action;
     const elapsed = Math.max(0, now - action.start);
+    if (action.sequence) {
+      let boundary = 0;
+      for (let frame = 0; frame < action.sequence.durations.length; frame += 1) {
+        boundary += action.sequence.durations[frame];
+        if (elapsed < boundary) return frame;
+      }
+      return action.sequence.durations.length - 1;
+    }
     let amount;
     if (elapsed < action.enter) amount = elapsed / action.enter;
     else if (elapsed < action.enter + action.hold) amount = 1;
@@ -236,7 +273,13 @@ class LeibnizPortrait {
       ctx.drawImage(this.transition.previous, 0, 0);
       ctx.globalAlpha = t * t * (3 - 2 * t);
     }
-    if (image) ctx.drawImage(image, this.frameAt(now) * 480, 0, 480, 360, 0, 0, width, height);
+    const sequence = this.action && this.action.sequence;
+    if (sequence) {
+      const frame = this.frameAt(now);
+      ctx.drawImage(this.sequences.get(sequence.src),
+        (frame % sequence.columns) * sequence.width, Math.floor(frame / sequence.columns) * sequence.height,
+        sequence.width, sequence.height, 0, 0, width, height);
+    } else if (image) ctx.drawImage(image, this.frameAt(now) * 480, 0, 480, 360, 0, 0, width, height);
     else ctx.drawImage(fallback, 0, 0, width, height);
     ctx.globalAlpha = 1;
   }
