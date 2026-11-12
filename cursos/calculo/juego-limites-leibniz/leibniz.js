@@ -14,12 +14,9 @@ class LeibnizPortrait {
     3: {
       spawn: { offset: 0, enter: 140, hold: 220, exit: 220, gesture: 'boca-exagerada' },
       correct: {
-        offset: 4, enter: 80, hold: 60, exit: 420, gesture: 'sacudida-cabeza',
-        sequence: {
-          src: 'assets/animacion/leibniz-nivel-3-acierto-secuencia.webp',
-          columns: 8, rows: 3, width: 480, height: 360,
-          durations: [40, 30, 30, 20, 20, 20, 30, 50, 40, 40, 40, 40, 40, 40, 40, 40, 40, 40, 40, 40, 40, 40, 40, 60]
-        }
+        offset: 4, enter: 0, hold: 1000, exit: 0, gesture: 'golpe-fijo',
+        still: { src: 'assets/animacion/leibniz-nivel-3-acierto.png' },
+        sound: 'assets/audio/golpe.mp3'
       },
       incorrect: { offset: 8, enter: 170, hold: 260, exit: 220, gesture: 'sonrisa' }
     }
@@ -32,7 +29,8 @@ class LeibnizPortrait {
     this.displayLevel = 1;
     this.active = false;
     this.images = new Map();
-    this.sequences = new Map();
+    this.stills = new Map();
+    this.pendingStills = new Set();
     this.fallbacks = new Map();
     this.failedLevels = new Set();
     this.frameId = null;
@@ -40,11 +38,18 @@ class LeibnizPortrait {
     this.queue = [];
     this.transition = null;
     this.finishResolvers = [];
+    this.soundEnabled = true;
+    this.audioUnlocked = false;
+    this.audioUnlockPending = false;
+    this.audioToken = 0;
+    this.slapAudio = new Audio(LeibnizPortrait.EVENT_CONFIG[3].correct.sound);
+    this.slapAudio.preload = 'auto';
+    this.slapAudio.volume = 0.8;
     this.reduced = window.matchMedia('(prefers-reduced-motion: reduce)');
     this.tick = this.tick.bind(this);
     this.ready = Promise.all([
       ...[1, 2, 3].map(level => this.loadLevel(level)),
-      this.loadSequence(LeibnizPortrait.EVENT_CONFIG[3].correct.sequence)
+      this.loadStill(LeibnizPortrait.EVENT_CONFIG[3].correct.still)
     ]);
     this.reduced.addEventListener('change', () => {
       this.clearGestures();
@@ -93,21 +98,75 @@ class LeibnizPortrait {
     return this.images.has(level) || this.fallbacks.has(level);
   }
 
-  loadSequence(sequence) {
+  loadStill(still) {
+    this.pendingStills.add(still.src);
     return new Promise(resolve => {
       const image = new Image();
       image.onload = () => {
-        this.sequences.set(sequence.src, image);
+        this.stills.set(still.src, image);
+        this.pendingStills.delete(still.src);
         this.schedule();
         resolve(true);
       };
-      // Si falla este recurso opcional, se mantiene el gesto del atlas del nivel.
-      image.onerror = () => resolve(false);
-      image.src = sequence.src;
+      // Si falta el PNG se sostiene una única celda; no se anima el atlas antiguo.
+      image.onerror = () => {
+        this.pendingStills.delete(still.src);
+        this.schedule();
+        resolve(false);
+      };
+      image.src = still.src;
     });
   }
 
+  setSoundEnabled(enabled) {
+    this.soundEnabled = Boolean(enabled);
+    if (!this.soundEnabled) this.stopSound();
+  }
+
+  unlockAudio() {
+    if (!this.soundEnabled || this.audioUnlocked || this.audioUnlockPending || this.action?.sound) return;
+    const audio = this.slapAudio;
+    const token = ++this.audioToken;
+    this.audioUnlockPending = true;
+    audio.muted = true;
+    // Se prepara dentro del clic de inicio, también para reacciones encoladas.
+    Promise.resolve(audio.play()).then(() => {
+      if (token !== this.audioToken) return;
+      audio.pause();
+      audio.currentTime = 0;
+      audio.muted = false;
+      this.audioUnlocked = true;
+      this.audioUnlockPending = false;
+    }).catch(() => {
+      if (token !== this.audioToken) return;
+      audio.muted = false;
+      this.audioUnlockPending = false;
+    });
+  }
+
+  playSound() {
+    if (!this.soundEnabled) return;
+    const audio = this.slapAudio;
+    const token = ++this.audioToken;
+    this.audioUnlockPending = false;
+    audio.pause();
+    audio.currentTime = 0;
+    audio.muted = false;
+    Promise.resolve(audio.play()).then(() => {
+      if (token === this.audioToken) this.audioUnlocked = true;
+    }).catch(() => {});
+  }
+
+  stopSound() {
+    this.audioToken += 1;
+    this.audioUnlockPending = false;
+    this.slapAudio.pause();
+    this.slapAudio.currentTime = 0;
+    this.slapAudio.muted = false;
+  }
+
   clearGestures() {
+    this.stopSound();
     this.action = null;
     this.queue = [];
     this.transition = null;
@@ -159,7 +218,10 @@ class LeibnizPortrait {
       if (pendingSpawn) this.queue.push(pendingSpawn);
       if (this.action && this.action.kind === 'spawn') {
         this.action = null;
-        this.startTransition(level, performance.now(), 100);
+        if (LeibnizPortrait.EVENT_CONFIG[level][kind].still) {
+          this.transition = null;
+          this.displayLevel = level;
+        } else this.startTransition(level, performance.now(), 100);
       }
     }
     this.schedule();
@@ -196,16 +258,25 @@ class LeibnizPortrait {
       this.clearGestures();
       return;
     }
-    if (this.action && now - this.action.start >= this.action.duration) this.action = null;
-    if (!this.action && this.queue.length && this.hasImage(this.queue[0].level)) {
+    if (this.action && now - this.action.start >= this.action.duration) {
+      const direct = Boolean(this.action.still);
+      if (this.action.sound) this.stopSound();
+      this.action = null;
+      if (direct) {
+        this.transition = null;
+        if (!this.queue.length && this.hasImage(this.level)) this.displayLevel = this.level;
+      }
+    }
+    if (!this.action && this.queue.length && this.canStartEvent(this.queue[0])) {
       const event = this.queue.shift();
-      if (event.level !== this.displayLevel) this.startTransition(event.level, now, 180);
       const config = LeibnizPortrait.EVENT_CONFIG[event.level][event.kind];
-      const sequence = config.sequence && this.sequences.has(config.sequence.src) ? config.sequence : null;
-      const duration = sequence
-        ? sequence.durations.reduce((total, milliseconds) => total + milliseconds, 0)
-        : config.enter + config.hold + config.exit;
-      this.action = { ...event, ...config, sequence, start: now, duration };
+      if (config.still) {
+        this.transition = null;
+        this.displayLevel = event.level;
+      } else if (event.level !== this.displayLevel) this.startTransition(event.level, now, 180);
+      const duration = config.enter + config.hold + config.exit;
+      this.action = { ...event, ...config, start: now, duration };
+      if (config.sound) this.playSound();
     }
     if (!this.action && !this.queue.length && this.displayLevel !== this.level && this.hasImage(this.level)) {
       this.startTransition(this.level, now);
@@ -215,7 +286,12 @@ class LeibnizPortrait {
   }
 
   needsFrame() {
-    return Boolean(this.action || this.transition || (this.queue.length && this.hasImage(this.queue[0].level)));
+    return Boolean(this.action || this.transition || (this.queue.length && this.canStartEvent(this.queue[0])));
+  }
+
+  canStartEvent(event) {
+    const still = LeibnizPortrait.EVENT_CONFIG[event.level][event.kind].still;
+    return this.hasImage(event.level) && (!still || !this.pendingStills.has(still.src));
   }
 
   schedule() {
@@ -240,14 +316,7 @@ class LeibnizPortrait {
     if (this.reduced.matches || !this.action) return 0;
     const action = this.action;
     const elapsed = Math.max(0, now - action.start);
-    if (action.sequence) {
-      let boundary = 0;
-      for (let frame = 0; frame < action.sequence.durations.length; frame += 1) {
-        boundary += action.sequence.durations[frame];
-        if (elapsed < boundary) return frame;
-      }
-      return action.sequence.durations.length - 1;
-    }
+    if (action.still) return action.offset + 4;
     let amount;
     if (elapsed < action.enter) amount = elapsed / action.enter;
     else if (elapsed < action.enter + action.hold) amount = 1;
@@ -273,12 +342,12 @@ class LeibnizPortrait {
       ctx.drawImage(this.transition.previous, 0, 0);
       ctx.globalAlpha = t * t * (3 - 2 * t);
     }
-    const sequence = this.action && this.action.sequence;
-    if (sequence) {
-      const frame = this.frameAt(now);
-      ctx.drawImage(this.sequences.get(sequence.src),
-        (frame % sequence.columns) * sequence.width, Math.floor(frame / sequence.columns) * sequence.height,
-        sequence.width, sequence.height, 0, 0, width, height);
+    const still = this.action && this.action.still && this.stills.get(this.action.still.src);
+    if (still) {
+      const scale = Math.min(width / still.naturalWidth, height / still.naturalHeight);
+      const drawnWidth = still.naturalWidth * scale;
+      const drawnHeight = still.naturalHeight * scale;
+      ctx.drawImage(still, (width - drawnWidth) / 2, (height - drawnHeight) / 2, drawnWidth, drawnHeight);
     } else if (image) ctx.drawImage(image, this.frameAt(now) * 480, 0, 480, 360, 0, 0, width, height);
     else ctx.drawImage(fallback, 0, 0, width, height);
     ctx.globalAlpha = 1;

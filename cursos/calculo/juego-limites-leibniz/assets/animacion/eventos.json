@@ -75,9 +75,6 @@
       4
     ],
     "correct": [
-      5,
-      6,
-      7,
       8
     ],
     "incorrect": [
@@ -88,18 +85,15 @@
     ],
     "descriptions": [
       "Boca muy abierta",
-      "Sacudida de cabeza al acertar",
+      "Imagen fija del golpe durante un segundo, con sonido",
       "Pequeña sonrisa"
     ],
-    "correctSequence": {
-      "atlas": "leibniz-nivel-3-acierto-secuencia.webp",
-      "metadata": "acierto3-secuencia.json",
-      "fallback": [
-        5,
-        6,
-        7,
-        8
-      ]
+    "correctStill": {
+      "image": "leibniz-nivel-3-acierto.png",
+      "holdMs": 1000,
+      "transition": "none",
+      "sound": "../audio/golpe.mp3",
+      "fallbackFrame": 8
     }
   }
 ]

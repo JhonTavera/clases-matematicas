@@ -441,6 +441,7 @@
     }
 
     .music-toggle.off { opacity: .55; }
+    .effects-toggle { right: 74px; font-size: 1.1rem; }
 
     .time-bubble {
       position: absolute;
@@ -530,6 +531,7 @@
     </header>
 
     <button class="music-toggle" id="musicToggle" type="button" aria-label="Pausar música" title="Música">♪</button>
+    <button class="music-toggle effects-toggle" id="effectsToggle" type="button" aria-label="Silenciar efectos" aria-pressed="false" title="Silenciar efectos">🔊</button>
     <button class="time-bubble empty" id="timeBubble" type="button" aria-label="Tiempo guardado">0.0 s</button>
 
     <main class="stage">
@@ -817,6 +819,7 @@
     const rachaHUD = document.getElementById("rachaHUD");
     const levelRibbon = document.getElementById("levelRibbon");
     const musicToggle = document.getElementById("musicToggle");
+    const effectsToggle = document.getElementById("effectsToggle");
     const timeBubble = document.getElementById("timeBubble");
 
     function waitForMathJax(deadline = performance.now() + 5000) {
@@ -888,6 +891,7 @@
 
     function startGame() {
       resetGame();
+      portrait.unlockAudio();
       gameState.estado = "jugando";
       portrait.setActive(true);
       startOverlay.classList.remove("show");
@@ -1186,6 +1190,16 @@
       startButton.addEventListener("click", startGame);
       restartButton.addEventListener("click", startGame);
       musicToggle.addEventListener("click", handleMusicToggleClick);
+      effectsToggle.addEventListener("click", () => {
+        portrait.setSoundEnabled(!portrait.soundEnabled);
+        if (portrait.soundEnabled) portrait.unlockAudio();
+        const label = portrait.soundEnabled ? "Silenciar efectos" : "Activar efectos";
+        effectsToggle.textContent = portrait.soundEnabled ? "🔊" : "🔇";
+        effectsToggle.classList.toggle("off", !portrait.soundEnabled);
+        effectsToggle.setAttribute("aria-label", label);
+        effectsToggle.setAttribute("aria-pressed", String(!portrait.soundEnabled));
+        effectsToggle.title = label;
+      });
       controls.addEventListener("click", event => {
         const button = event.target.closest("button[data-answer]");
         if (!button) return;

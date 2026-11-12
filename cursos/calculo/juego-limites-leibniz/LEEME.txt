@@ -20,7 +20,8 @@ Nivel 2: mantiene una ceja levantada.
 
 Nivel 3: mantiene el ceño fruncido.
   Nuevo límite: abre la boca de forma exagerada.
-  Acierto: ladea la cabeza como si recibiera una cachetada.
+  Acierto: muestra fija la imagen del golpe durante 1000 ms y reproduce el MP3
+  una sola vez al comenzar. El cambio de entrada y salida es instantáneo.
   Error: hace una pequeña sonrisa.
 
 La boca se activa cuando la burbuja empieza a ser visible en el borde superior,
@@ -36,35 +37,40 @@ leibniz.js usa tres atlas WebP en:
 Cada atlas tiene trece celdas de 480 × 360 píxeles:
   0: reposo; 1–4: nuevo límite; 5–8: acierto; 9–12: error.
 Las celdas de cada evento representan la progresión desde el reposo al gesto.
-El acierto del nivel 3 usa una secuencia adicional de 24 fotogramas (900 ms),
-en leibniz-nivel-3-acierto-secuencia.webp: preparación breve, giro rápido de cabeza
-y recuperación gradual. El torso permanece estable y el primer y último
-fotograma coinciden con el reposo. La grilla es de 8 columnas y 3 filas.
-La cabeza y la peluca se animan a partir del mismo retrato de reposo, con
-rotación y desplazamiento sobre una placa de cuerpo fija. El pañuelo queda
-delante de la unión inferior del cuello. El regreso empieza después del giro
-y desacelera hasta la postura original; las poses cercanas al reposo se asientan
-de forma progresiva. No se mezclan caras generadas diferentes durante la vuelta.
-Si ese recurso no carga, se conserva la reacción del atlas de trece celdas.
-acierto3-secuencia.json documenta la grilla, los tiempos, el método y la revisión.
-acierto3-cuerpo-fuente.png y prompt-acierto3-cuerpo.txt conservan la placa creada
-con ImageGen y su prompt; el rostro móvil procede de la celda de reposo original.
-Las hojas y el prompt de acierto3 anteriores se conservan como antecedentes.
-Los otros ocho eventos mantienen sus atlas e interpolación de flujo óptico.
-revision-fluidez.txt contiene las cinco notas del revisor, sus observaciones,
-las correcciones solicitadas y el resultado final del proceso.
-Ninguna de las cinco rondas superó 8/10. La secuencia incluida corresponde
-a la mejor candidata, ronda 4 con 7,8/10; NO está aprobada visualmente.
-Se detuvieron las iteraciones al alcanzar el máximo indicado por el usuario.
+Las celdas 5–8 del atlas del nivel 3 ya no se recorren al acertar. Si falta el
+PNG, se mantiene únicamente la celda 8 como respaldo estático durante 1000 ms.
+El acierto del nivel 3 es una excepción: ya no usa un GIF, una secuencia
+interpolada ni un fundido. Usa estos recursos:
+  Imagen fija: assets/animacion/leibniz-nivel-3-acierto.png
+  Sonido: assets/audio/golpe.mp3
+La imagen se crea con ImageGen en proporción 4:3, conservando la coherencia
+visual con el retrato de reposo. El PNG adjunto por el usuario se usa únicamente
+como referencia del gesto. El MP3 del golpe sí procede del archivo del usuario.
+La fuente generada se conserva en assets/animacion/acierto3-estatico-fuente.png
+y su prompt en assets/animacion/prompt-acierto3-estatico.txt.
+La imagen aparece instantáneamente, permanece fija 1000 ms y se retira
+instantáneamente para recuperar el reposo. El golpe suena una sola vez cuando
+comienza esta reacción.
+Los otros ocho eventos conservan sus atlas e interpolación de flujo óptico.
+
+Los GIF, las secuencias, los prompts y los informes anteriores de acierto del
+nivel 3 son antecedentes históricos; no describen la solución actual.
+revision-fluidez.txt conserva las cinco evaluaciones de ese proceso anterior.
+Ninguna de aquellas rondas superó 8/10; el máximo fue 7,8/10 en la ronda 4.
+Ese resultado no constituye una evaluación de la imagen fija y el MP3 actuales.
 
 Se respeta prefers-reduced-motion y se detiene el retrato al ocultar la pestaña,
 antes de comenzar y después de la reacción final de la partida. Las imágenes
-originales sirven de respaldo si un atlas no carga. Los nueve GIF de eventos se
-entregan aparte, en outputs/animaciones-leibniz-v2; el juego usa los atlas para
-sincronizar las reacciones con sus eventos.
+originales sirven de respaldo si un atlas no carga. Los GIF de eventos de
+outputs/animaciones-leibniz-v2 corresponden a la entrega anterior; el acierto
+del nivel 3 se sustituyó por la imagen fija y el sonido indicados arriba.
 
 Abrir animaciones.html permite probar los tres eventos de cada nivel mediante
 botones. La vista usa el mismo controlador y los mismos recursos que el juego.
+El botón Silenciar efectos / Activar efectos aplica a los tres retratos mediante
+portrait.setSoundEnabled(boolean). Los clics llaman a portrait.unlockAudio()
+antes de disparar el evento, para habilitar el audio desde una interacción.
+La preferencia de reducir movimiento continúa desactivando los gestos.
 
 PRUEBAS
 Para comprobar las nueve reacciones y su cola sin instalar dependencias:
