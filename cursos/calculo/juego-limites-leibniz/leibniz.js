@@ -1,18 +1,37 @@
-/* Fotogramas generados con ImageGen; atlas de 480 × 360 px por celda. */
+/* Cada nivel: reposo, cuatro pasos de habla, cuatro de acierto y cuatro de error. */
 class LeibnizPortrait {
+  static EVENT_CONFIG = {
+    1: {
+      spawn: { offset: 0, enter: 120, hold: 160, exit: 180, gesture: 'habla' },
+      correct: { offset: 4, enter: 170, hold: 260, exit: 220, gesture: 'ceja-levantada' },
+      incorrect: { offset: 8, enter: 140, hold: 230, exit: 220, gesture: 'ojos-cerrados' }
+    },
+    2: {
+      spawn: { offset: 0, enter: 120, hold: 160, exit: 180, gesture: 'habla' },
+      correct: { offset: 4, enter: 170, hold: 260, exit: 220, gesture: 'disgusto' },
+      incorrect: { offset: 8, enter: 140, hold: 230, exit: 220, gesture: 'ojos-cerrados' }
+    },
+    3: {
+      spawn: { offset: 0, enter: 140, hold: 220, exit: 220, gesture: 'boca-exagerada' },
+      correct: { offset: 4, enter: 80, hold: 60, exit: 420, gesture: 'sacudida-cabeza' },
+      incorrect: { offset: 8, enter: 170, hold: 260, exit: 220, gesture: 'sonrisa' }
+    }
+  };
+
   constructor(canvas) {
     this.canvas = canvas;
     this.ctx = canvas.getContext('2d');
     this.level = 1;
+    this.displayLevel = 1;
     this.active = false;
     this.images = new Map();
     this.fallbacks = new Map();
+    this.failedLevels = new Set();
     this.frameId = null;
-    this.talkStart = null;
-    this.blinkStart = null;
-    this.transitionStart = null;
-    this.reaction = null;
-    this.previous = null;
+    this.action = null;
+    this.queue = [];
+    this.transition = null;
+    this.finishResolvers = [];
     this.reduced = window.matchMedia('(prefers-reduced-motion: reduce)');
     this.tick = this.tick.bind(this);
     this.ready = Promise.all([1, 2, 3].map(level => this.loadLevel(level)));
@@ -36,25 +55,39 @@ class LeibnizPortrait {
       };
       image.onerror = () => {
         const fallback = new Image();
+        let triedOriginal = false;
         fallback.onload = () => {
           this.fallbacks.set(level, fallback);
           this.schedule();
           resolve(false);
         };
-        fallback.onerror = () => resolve(false);
-        fallback.src = `assets/${level}1.png`;
+        fallback.onerror = () => {
+          if (!triedOriginal) {
+            triedOriginal = true;
+            fallback.src = `assets/${level}1.png`;
+            return;
+          }
+          this.failedLevels.add(level);
+          this.queue = this.queue.filter(event => event.level !== level);
+          this.schedule();
+          resolve(false);
+        };
+        fallback.src = `assets/animacion/leibniz-eventos-nivel-${level}-reposo.webp`;
       };
-      image.src = `assets/animacion/leibniz-nivel-${level}.webp`;
+      image.src = `assets/animacion/leibniz-eventos-nivel-${level}.webp`;
     });
   }
 
+  hasImage(level) {
+    return this.images.has(level) || this.fallbacks.has(level);
+  }
+
   clearGestures() {
-    this.talkStart = null;
-    this.blinkStart = null;
-    this.transitionStart = null;
-    this.previous = null;
-    this.reaction = null;
-    this.nextBlink = performance.now() + 2800 + Math.random() * 2200;
+    this.action = null;
+    this.queue = [];
+    this.transition = null;
+    this.displayLevel = this.level;
+    this.resolveFinished();
   }
 
   reset(level = 1) {
@@ -71,100 +104,140 @@ class LeibnizPortrait {
   }
 
   setLevel(level) {
-    if (level === this.level || ![1, 2, 3].includes(level)) return;
-    this.previous = document.createElement('canvas');
-    this.previous.width = this.canvas.width;
-    this.previous.height = this.canvas.height;
-    this.previous.getContext('2d').drawImage(this.canvas, 0, 0);
+    if (![1, 2, 3].includes(level)) return;
+    // El nivel deseado cambia ahora; una respuesta en curso conserva su expresión.
     this.level = level;
-    this.transitionStart = performance.now();
-    this.talkStart = null;
-    this.blinkStart = null;
+    if (this.reduced.matches || document.hidden) this.clearGestures();
     this.schedule();
   }
 
-  speak() {
-    if (!this.active || this.reduced.matches || document.hidden) return;
-    this.talkStart = performance.now();
-    this.blinkStart = null;
-    this.nextBlink = this.talkStart + 3000;
+  speak(level = this.level) {
+    this.enqueue('spawn', level);
+  }
+
+  react(kind, level = this.level) {
+    if (kind === 'correct' || kind === 'incorrect') this.enqueue(kind, level);
+  }
+
+  enqueue(kind, level) {
+    if (!this.active || this.reduced.matches || document.hidden || !LeibnizPortrait.EVENT_CONFIG[level] || this.failedLevels.has(level)) return;
+    const event = { kind, level };
+    if (kind === 'spawn') {
+      // Un límite recién visible nunca interrumpe el gesto de una respuesta.
+      this.queue = this.queue.filter(item => item.kind !== 'spawn');
+      this.queue.push(event);
+    } else {
+      // Las respuestas van delante del habla pendiente y conservan su orden.
+      const pendingSpawn = this.queue.find(item => item.kind === 'spawn');
+      this.queue = this.queue.filter(item => item.kind !== 'spawn');
+      this.queue.push(event);
+      if (pendingSpawn) this.queue.push(pendingSpawn);
+      if (this.action && this.action.kind === 'spawn') {
+        this.action = null;
+        this.startTransition(level, performance.now(), 100);
+      }
+    }
     this.schedule();
   }
 
-  react(kind) {
-    if (!this.active || this.reduced.matches || document.hidden) return;
-    this.reaction = { kind, start: performance.now() };
+  finish() {
+    // Deja terminar la última respuesta antes de mostrar victoria o derrota.
+    this.active = false;
+    this.queue = this.queue.filter(event => event.kind !== 'spawn');
+    if (this.action && this.action.kind === 'spawn') this.action = null;
+    if (this.reduced.matches || document.hidden) this.clearGestures();
+    const finished = new Promise(resolve => this.finishResolvers.push(resolve));
     this.schedule();
+    return finished;
+  }
+
+  resolveFinished() {
+    if (this.action || this.queue.length || this.transition) return;
+    const resolvers = this.finishResolvers.splice(0);
+    for (const resolve of resolvers) resolve();
+  }
+
+  startTransition(level, now, duration = 420) {
+    const previous = document.createElement('canvas');
+    previous.width = this.canvas.width;
+    previous.height = this.canvas.height;
+    previous.getContext('2d').drawImage(this.canvas, 0, 0);
+    this.displayLevel = level;
+    this.transition = { previous, start: now, duration };
+  }
+
+  advance(now) {
+    if (this.reduced.matches) {
+      this.clearGestures();
+      return;
+    }
+    if (this.action && now - this.action.start >= this.action.duration) this.action = null;
+    if (!this.action && this.queue.length && this.hasImage(this.queue[0].level)) {
+      const event = this.queue.shift();
+      if (event.level !== this.displayLevel) this.startTransition(event.level, now, 180);
+      const config = LeibnizPortrait.EVENT_CONFIG[event.level][event.kind];
+      this.action = { ...event, ...config, start: now, duration: config.enter + config.hold + config.exit };
+    }
+    if (!this.action && !this.queue.length && this.displayLevel !== this.level && this.hasImage(this.level)) {
+      this.startTransition(this.level, now);
+    }
+    if (this.transition && now - this.transition.start >= this.transition.duration) this.transition = null;
+    this.resolveFinished();
+  }
+
+  needsFrame() {
+    return Boolean(this.action || this.transition || (this.queue.length && this.hasImage(this.queue[0].level)));
   }
 
   schedule() {
     if (this.frameId !== null) cancelAnimationFrame(this.frameId);
     this.frameId = null;
-    if (document.hidden) return;
-    this.paint(performance.now());
-    if (!this.reduced.matches && (this.active || this.transitionStart !== null)) {
-      this.frameId = requestAnimationFrame(this.tick);
+    if (document.hidden) {
+      this.resolveFinished();
+      return;
     }
+    this.paint(performance.now());
+    if (!this.reduced.matches && this.needsFrame()) this.frameId = requestAnimationFrame(this.tick);
   }
 
   tick(now) {
     this.frameId = null;
     if (document.hidden || this.reduced.matches) return;
     this.paint(now);
-    if (this.active || this.transitionStart !== null) this.frameId = requestAnimationFrame(this.tick);
+    if (this.needsFrame()) this.frameId = requestAnimationFrame(this.tick);
   }
 
   frameAt(now) {
-    if (this.reduced.matches || !this.active) return 0;
-    if (this.talkStart !== null) {
-      const t = (now - this.talkStart) / 640;
-      if (t < 1) {
-        const phase = Math.sin(Math.PI * ((t * 2) % 1));
-        const mouth = Math.round(4 * phase);
-        return mouth === 0 ? 0 : 4 + mouth;
-      }
-      this.talkStart = null;
-    }
-    if (now >= this.nextBlink && this.blinkStart === null) this.blinkStart = now;
-    if (this.blinkStart !== null) {
-      const t = (now - this.blinkStart) / 280;
-      if (t < 1) return Math.round(4 * Math.sin(Math.PI * t));
-      this.blinkStart = null;
-      this.nextBlink = now + 2800 + Math.random() * 2200;
-    }
-    return 0;
+    if (this.reduced.matches || !this.action) return 0;
+    const action = this.action;
+    const elapsed = Math.max(0, now - action.start);
+    let amount;
+    if (elapsed < action.enter) amount = elapsed / action.enter;
+    else if (elapsed < action.enter + action.hold) amount = 1;
+    else amount = Math.max(0, 1 - (elapsed - action.enter - action.hold) / action.exit);
+    const eased = amount * amount * (3 - 2 * amount);
+    const step = Math.round(eased * 4);
+    return step === 0 ? 0 : action.offset + step;
   }
 
   paint(now) {
+    this.advance(now);
+    const image = this.images.get(this.displayLevel);
+    const fallback = this.fallbacks.get(this.displayLevel);
+    if (!image && !fallback) return;
     const ctx = this.ctx;
     const width = this.canvas.width;
     const height = this.canvas.height;
-    const image = this.images.get(this.level);
-    const fallback = this.fallbacks.get(this.level);
-    if (!image && !fallback) return;
-    const frame = this.frameAt(now);
     ctx.globalAlpha = 1;
     ctx.fillStyle = '#fff';
     ctx.fillRect(0, 0, width, height);
-    if (this.previous && this.transitionStart !== null && !this.reduced.matches) {
-      const t = Math.min(1, (now - this.transitionStart) / 420);
-      ctx.drawImage(this.previous, 0, 0);
+    if (this.transition && !this.reduced.matches) {
+      const t = Math.min(1, (now - this.transition.start) / this.transition.duration);
+      ctx.drawImage(this.transition.previous, 0, 0);
       ctx.globalAlpha = t * t * (3 - 2 * t);
-      if (t >= 1) { this.previous = null; this.transitionStart = null; }
-    } else {
-      this.previous = null;
-      this.transitionStart = null;
     }
-    ctx.save();
-    if (this.reaction && !this.reduced.matches) {
-      const t = (now - this.reaction.start) / 520;
-      if (t >= 1) this.reaction = null;
-      else if (this.reaction.kind === 'correct') ctx.translate(0, Math.sin(t * Math.PI) * 5);
-      else ctx.translate(Math.sin(t * Math.PI * 4) * (1 - t) * 4, 0);
-    }
-    if (image) ctx.drawImage(image, frame * 480, 0, 480, 360, 0, 0, width, height);
+    if (image) ctx.drawImage(image, this.frameAt(now) * 480, 0, 480, 360, 0, 0, width, height);
     else ctx.drawImage(fallback, 0, 0, width, height);
-    ctx.restore();
     ctx.globalAlpha = 1;
   }
 }

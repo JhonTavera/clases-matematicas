@@ -6,26 +6,64 @@ A16: x → 1+; respuesta +infinito. A17: x → 0−; respuesta 0−.
 revision-limites.html contiene resultados, notas, originales y fuentes.
 
 ANIMACIÓN
-leibniz.js usa tres atlas WebP con nueve celdas de 480 × 360 cada uno.
-Celda 0: reposo. Celdas 1–4: cierre de ojos. Celdas 5–8: apertura de boca.
-Se generaron nueve imágenes clave con la herramienta integrada ImageGen, tomando
-como referencia assets/11.png, 21.png y 31.png. Los fotogramas intermedios de los
-GIF y los atlas se montaron mediante interpolación de flujo óptico bidireccional.
-El cambio de nivel en el juego usa un fundido de 420 ms; el habla dura 640 ms;
-el parpadeo dura 280 ms. Acierto: asentimiento. Error: movimiento lateral breve.
-Se respeta prefers-reduced-motion y se pausa el retrato al ocultar la pestaña,
-al terminar la partida y antes de comenzar. Las imágenes originales son respaldo
-si un atlas no carga. Los GIF se entregan aparte; el juego usa los atlas para
-controlar los eventos y evitar reproducir una animación cuando no corresponde.
+Cada nivel tiene una expresión de reposo y tres reacciones distintas:
+
+Nivel 1: rostro neutral.
+  Nuevo límite: abre la boca.
+  Acierto: levanta una ceja.
+  Error: cierra los ojos.
+
+Nivel 2: mantiene una ceja levantada.
+  Nuevo límite: abre la boca.
+  Acierto: hace un pequeño gesto de disgusto.
+  Error: cierra los ojos.
+
+Nivel 3: mantiene el ceño fruncido.
+  Nuevo límite: abre la boca de forma exagerada.
+  Acierto: ladea la cabeza como si recibiera una cachetada.
+  Error: hace una pequeña sonrisa.
+
+La boca se activa cuando la burbuja empieza a ser visible en el borde superior,
+no cuando se crea fuera de pantalla. No hay parpadeos automáticos en reposo.
+Las respuestas tienen prioridad sobre la llegada de nuevos límites. La reacción
+conserva el nivel en que se respondió y termina antes del cambio de expresión al
+nuevo nivel. Cada gesto se reproduce una vez y vuelve al reposo de su nivel.
+
+leibniz.js usa tres atlas WebP en:
+  assets/animacion/leibniz-eventos-nivel-1.webp
+  assets/animacion/leibniz-eventos-nivel-2.webp
+  assets/animacion/leibniz-eventos-nivel-3.webp
+Cada atlas tiene trece celdas de 480 × 360 píxeles:
+  0: reposo; 1–4: nuevo límite; 5–8: acierto; 9–12: error.
+Las celdas de cada evento representan la progresión desde el reposo al gesto.
+Las imágenes clave se crearon con la herramienta integrada ImageGen conservando
+el estilo del retrato original. Los fotogramas intermedios de los GIF y atlas se
+montaron mediante interpolación de flujo óptico bidireccional.
+
+Se respeta prefers-reduced-motion y se detiene el retrato al ocultar la pestaña,
+antes de comenzar y después de la reacción final de la partida. Las imágenes
+originales sirven de respaldo si un atlas no carga. Los nueve GIF de eventos se
+entregan aparte, en outputs/animaciones-leibniz-v2; el juego usa los atlas para
+sincronizar las reacciones con sus eventos.
+
+Abrir animaciones.html permite probar los tres eventos de cada nivel mediante
+botones. La vista usa el mismo controlador y los mismos recursos que el juego.
 
 PRUEBAS
+Para comprobar las nueve reacciones y su cola sin instalar dependencias:
+  node tests/portrait-events.test.cjs
+Se verificaron también en Edge los nueve botones de animaciones.html, la entrada
+visible de cada burbuja, los cambios de nivel, el movimiento reducido y el
+respaldo si fallan las imágenes. Sin errores JavaScript ni desbordamiento móvil.
+
 Instalar las dependencias en un entorno Python y ejecutar:
   python -m pip install -r tests/requirements.txt
   python tests/verify_limits.py
 La prueba lee el banco real del index.html, calcula los laterales por separado,
 interpreta las potencias racionales impares en los reales y contrasta categorías.
-También se probaron en Edge las 154 fórmulas con MathJax, la puntuación, tres niveles,
-parpadeo/habla, movimiento reducido, reinicio y la presentación a 390 × 844.
+La revisión matemática inicial comprobó en Edge las 154 fórmulas con MathJax,
+la puntuación y la presentación a 390 × 844. Los cambios de animación mantienen
+ese banco de límites.
 
 El archivo principal conserva MathJax desde CDN: requiere conexión para componer
 las fórmulas. Para probar esta carpeta: python -m http.server 8000 y abrir

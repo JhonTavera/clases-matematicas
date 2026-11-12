@@ -795,7 +795,8 @@
       boostHeld: false,
       stasisHeld: false,
       holdPointerId: null,
-      nextLimitId: 1
+      nextLimitId: 1,
+      endSequence: 0
     };
 
     const fallZone = document.getElementById("fallZone");
@@ -923,16 +924,16 @@
         element,
         y: -Math.max(element.offsetHeight, 92),
         height: Math.max(element.offsetHeight, 92),
-        removed: false
+        removed: false,
+        entranceAnnounced: false
       };
       element.style.transform = `translateY(${activeLimit.y}px)`;
       element.style.setProperty("--y", `${activeLimit.y}px`);
       gameState.limitesActivos.push(activeLimit);
       gameState.ultimoTiempoAparicion = performance.now();
       gameState.emptySince = null;
-      animateMouth();
-
       typesetElement(element).then(() => {
+        if (activeLimit.removed || gameState.estado !== "jugando" || !element.isConnected) return;
         fitFormulaToBubble(element);
         placeLimitBubble(activeLimit);
         activeLimit.height = Math.max(element.offsetHeight, 92);
@@ -976,6 +977,12 @@
         activeLimit.element.style.transform = `translateY(${activeLimit.y}px)`;
         activeLimit.element.style.setProperty("--y", `${activeLimit.y}px`);
 
+        if (!activeLimit.entranceAnnounced && activeLimit.element.classList.contains("rendered") &&
+            activeLimit.y + activeLimit.height > 0 && activeLimit.y < zoneHeight) {
+          activeLimit.entranceAnnounced = true;
+          animateMouth(gameState.nivel);
+        }
+
         if (activeLimit.y + activeLimit.height >= zoneHeight) {
           removeLimitElement(activeLimit);
           penalizePlayer("Un límite tocó el fondo.", 2);
@@ -1003,7 +1010,7 @@
         return;
       }
 
-      portrait.react("correct");
+      portrait.react("correct", gameState.nivel);
       gameState.puntos += removedCount;
       gameState.racha += removedCount;
       updateMaxScore();
@@ -1047,7 +1054,7 @@
 
     function loseLife(reason, pointLoss = 3) {
       if (gameState.estado !== "jugando") return;
-      portrait.react("incorrect");
+      portrait.react("incorrect", gameState.nivel);
       gameState.vidas -= 1;
       gameState.racha = 0;
       showToast(`${reason} -1 vida, -${pointLoss} puntos.`);
@@ -1084,7 +1091,7 @@
 
     function endGame(win) {
       gameState.estado = win ? "victoria" : "derrota";
-      portrait.setActive(false);
+      const endSequence = ++gameState.endSequence;
       if (gameState.animationFrameId) cancelAnimationFrame(gameState.animationFrameId);
       gameState.animationFrameId = null;
       stopTimeHolds();
@@ -1099,7 +1106,11 @@
         endMessage.textContent = defeatCopy.message;
       }
       renderMaxScore();
-      endOverlay.classList.add("show");
+      portrait.finish().then(() => {
+        if (gameState.endSequence === endSequence && gameState.estado !== "jugando" && gameState.estado !== "inicio") {
+          endOverlay.classList.add("show");
+        }
+      });
     }
 
     function renderMaxScore() {
@@ -1124,6 +1135,7 @@
     }
 
     function resetGame() {
+      gameState.endSequence += 1;
       if (gameState.animationFrameId) cancelAnimationFrame(gameState.animationFrameId);
       gameState.vidas = STARTING_LIVES;
       gameState.puntos = 0;
@@ -1298,8 +1310,8 @@
       if (gameState.limitesActivos.length === 0) gameState.emptySince = performance.now();
     }
 
-    function animateMouth() {
-      portrait.speak();
+    function animateMouth(level = gameState.nivel) {
+      portrait.speak(level);
     }
 
     function flashButton(answer) {
