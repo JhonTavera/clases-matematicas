@@ -1,0 +1,21 @@
+Use case: identity-preserve.
+Asset type: a new precise 4-column by 3-row character animation keyframe sheet, replacing the old 3x3 reference sheet.
+Reference input: the attached existing sheet shows the SAME Leibniz portrait and engraving style to preserve. DO NOT copy its grid; make EXACTLY FOUR columns and THREE rows, 12 cells total. Landscape overall aspect ratio 16:9; every cell is a 4:3 bust portrait. No gutters, no labels, no gridlines, no text. Each cell pure white paper background.
+Identity: same historical Leibniz, thick curled dark wig, white cravat, dark coat, fine black-and-white engraved crosshatching. Fixed frontal camera and same shoulder position, bust scale, wig size and face center across all cells. Leave generous white margin above the hair; wig and face must remain inside every cell. Keep hair details, clothing and background identical when expression alone changes.
+The FOUR columns always mean: BASE IDLE / A NEW FORMULA / CORRECT ANSWER / INCORRECT ANSWER.
+ROW 1 (LEVEL 1):
+1 neutral calm face, eyes open mouth closed, brows relaxed.
+2 same calm face with mouth gently open as saying ah.
+3 same face with ONE EYEBROW distinctly RAISED (skeptical eyebrow), mouth closed, eyes open. A clear eyebrow lift, no smile.
+4 same neutral face with BOTH EYES CLOSED fully, mouth closed.
+ROW 2 (LEVEL 2):
+1 ONE EYEBROW distinctly RAISED, skeptical expression. Keep that eyebrow raised in all four row-2 cells.
+2 same raised eyebrow expression, mouth gently open speaking.
+3 same raised eyebrow plus a SMALL DISGUSTED GRIMACE: one corner of the mouth pulled down, slight nose wrinkle, restrained annoyance. No smile. Eyes open.
+4 same raised eyebrow face but BOTH EYES CLOSED fully, mouth closed.
+ROW 3 (LEVEL 3):
+1 STERN deeply FURROWED BROW, eyes open mouth closed.
+2 same furrowed brow with mouth EXAGGERATEDLY WIDE OPEN, much wider than rows 1 and 2. Upper and lower teeth naturally visible; surprise/yell without aggression.
+3 head RECOILS sharply to the viewer's right as if reacting to an unseen slap: head tilted 12 degrees to the viewer's right and face turned slightly right, eyes squeezed, mouth closed. Shoulders and torso stay fixed. The entire wig remains inside the cell. NO HAND, NO OTHER PERSON, NO CONTACT, NO INJURY, NO BRUISING.
+4 same stern brow but a SMALL CLOSED-MOUTH SMILE, subtly amused. Eyes open. Make the smile recognizable without losing the brow's frown.
+This is for animation: continuity and exact alignment are crucial. Only the specified facial expression changes except the explicitly tilted/turned head in row3 col3. Refined historical engraving, no modern objects or decorations, no watermark.

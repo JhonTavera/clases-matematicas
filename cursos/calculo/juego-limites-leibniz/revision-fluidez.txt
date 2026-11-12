@@ -1,0 +1,194 @@
+REVISIÓN DEL ACIERTO DEL NIVEL 3
+
+Criterio: nota estrictamente mayor que 8; máximo 5 rondas.
+La revisión visual la realizó un agente independiente del implementador.
+Cada informe describe el método observado y sus límites.
+
+Versión seleccionada: ronda 4, 7.8/10. NO APROBADA; máximo de rondas alcanzado.
+
+REVISIÓN INDEPENDIENTE DE FLUIDEZ — RONDA 1 DE UN MÁXIMO DE 5
+Autor: Revisor independiente
+Archivo revisado: leibniz-nivel3-acierto-retorno-v4.gif
+Puntuación: 5,5 / 10
+Resultado: NO APROBADO. Se exige una nota estrictamente mayor que 8.
+
+Método:
+Examiné los 24 fotogramas lógicos del atlas en orden, ampliados en tres hojas de contacto, y los tiempos de los 22 fotogramas codificados del GIF. La acción dura 900 ms; el GIF añade pausas de reposo al principio y al final. Esta es una revisión visual secuencial y temporal de los fotogramas, no una afirmación de haber observado reproducción continua de vídeo. Los controles de igualdad de píxeles no se usan como prueba de naturalidad.
+
+Por qué no supera 8:
+1. La vuelta parece deformar una cara, no girar una cabeza. Entre los fotogramas 11 y 15 (360–520 ms), la frente, la mejilla y el mentón cambian de proporción. El mentón se comprime mientras la zona superior del cabello se estira. Esto rompe la sensación de volumen rígido.
+2. El pelo se comporta como goma. En los fotogramas 12–15 (400–520 ms) varios rizos de la coronilla se alargan horizontalmente y el borde derecho de la peluca parece ondular por interpolación. La silueta ya no es doble, pero la deformación sigue siendo visible.
+3. Hay una sustitución de expresión durante la recuperación. En 15–17 (520–600 ms) se pasa de una cara con ojos cerrados a otra de párpados caídos. Después, de 17 a 23, cambia otra vez hacia el rostro original. Se percibe una secuencia de transformaciones de retratos, no un único rostro que se mueve.
+4. La nitidez cambia durante el movimiento. El rostro y los rizos se ablandan y recuperan detalle al asentarse. En los fotogramas 4–5 (120–160 ms) además todavía hay ojos y nariz superpuestos, aunque la rapidez del impacto los disimula.
+5. El reposo final y el torso son estables y el bucle se cierra bien. Eso ayuda, pero no compensa los cambios de anatomía del tramo central.
+
+Desglose orientativo:
+- Trayectoria y ritmo: 1,3 / 2
+- Recuperación de postura: 0,8 / 2
+- Conservación de anatomía y textura: 0,7 / 2
+- Ausencia de superposición/deformaciones: 0,9 / 2
+- Estabilidad del torso y cierre: 1,8 / 2
+Total: 5,5 / 10
+
+Cambios prioritarios para la siguiente ronda:
+A. Sustituir el morph de varios rostros por el movimiento de una única capa de cabeza, con un pivote estable en el cuello. Una reacción de grabado animado en 2D —inclinación y desplazamiento lateral— es preferible a simular un giro 3D deformando ojos, nariz y pelo.
+B. Mantener las distancias internas entre ojos, nariz y boca y el tamaño de la cabeza. Aplicar una trayectoria continua de salida y retorno con desaceleración al final, sin atravesar una segunda postura frontal diferente.
+C. Si se cierran/abren los ojos, tratarlos como un cambio pequeño y local; no sustituir toda la cara al abrirlos.
+D. Mantener un detalle de grabado consistente. Evitar fundidos de caras desplazadas y evitar que el cabello se estire. Revisar también el impacto 4–5 si persiste la superposición: conservarlo a toda costa impediría llegar a una nota alta.
+E. Revisar la siguiente versión completa con el mismo criterio. No bastará con que el primer y último fotograma coincidan.
+
+No se aprueba esta ronda. Quedan hasta cuatro rondas de revisión.
+
+
+REVISIÓN INDEPENDIENTE DE FLUIDEZ — RONDA 2 DE UN MÁXIMO DE 5
+Autor: Revisor independiente
+Archivo revisado: leibniz-revision-ronda-2.gif
+Puntuación: 7,3 / 10
+Resultado: NO APROBADO. Se exige una nota estrictamente mayor que 8.
+
+Método observado:
+Inspeccioné los 24 fotogramas lógicos del atlas en orden, en la hoja completa y en ampliaciones de salida y retorno, y los tiempos de los 23 fotogramas codificados del GIF. La acción dura 900 ms y el GIF añade pausas de reposo. Esta revisión se basa en secuencia visual de fotogramas y temporización; no afirmo haber visto reproducción continua. Las métricas o descripciones del implementador no sustituyen la inspección visual.
+
+Mejoras comprobadas frente a la ronda 1:
+- La cara conserva su identidad, sus proporciones y la expresión. Ya no aparecen ojos/narices de dos retratos mezclados ni la sustitución de cara en el retorno.
+- La trayectoria de la cara regresa progresivamente al reposo. Los últimos fotogramas 19–23 son estables y no presentan un salto visible de postura.
+- El detalle del rostro y de la coronilla es bastante consistente.
+
+Defectos que impiden superar 8:
+1. El anclaje progresivo al cuerpo deforma mucho los rizos inferiores. En 5–13 (140–440 ms), especialmente 6–10, los rizos del lado izquierdo de la imagen se convierten en bucles largos y anchos. En 13–18 se encogen otra vez. La cara se mueve rígidamente, pero el cabello vuelve como goma. Es el defecto principal de la recuperación actual.
+2. El cuello y la parte superior de la corbata/pañuelo se inclinan y comprimen para conectarse al torso fijo. Es visible desde 5–15: parte del vestido acompaña a la cabeza mientras otra queda inmóvil. El movimiento se lee parcialmente como doblar una fotografía flexible. El anclaje debe ocurrir en una pequeña articulación de cuello, no estirando toda la banda inferior de la peluca y la ropa.
+3. Se mueve también una marca tenue del fondo: la línea gris casi horizontal sobre la coronilla del fotograma 0 pasa a diagonal en 4–16. Delata que se ha transformado parte del papel rectangular junto con el personaje; debe eliminarse del fondo o de la capa móvil.
+4. El extremo permanece casi inmóvil varios fotogramas (6–9, 160–280 ms). Aunque no hay discontinuidad geométrica, la combinación de detención prolongada e inclinación con expresión totalmente fija reduce la lectura de impacto. Esta observación de ritmo deriva de la secuencia y sus tiempos, no de reproducción continua. Conviene acortar el descanso en el extremo sin introducir un rebote brusco.
+
+Desglose orientativo:
+- Trayectoria y ritmo: 1,4 / 2
+- Recuperación de postura: 1,6 / 2
+- Conservación de anatomía y textura: 1,4 / 2
+- Ausencia de superposición/deformaciones: 1,1 / 2
+- Estabilidad del torso y cierre: 1,8 / 2
+Total: 7,3 / 10
+
+Prioridades accionables para la ronda 3:
+A. Conservar la cabeza y la peluca como una capa rígida real, incluidos los rizos largos; evitar la interpolación espacial que estira la zona de transición. Usar un torso/cuello fijo debajo, con una unión corta oculta por el mentón o el pañuelo, o reducir el desplazamiento lo suficiente para que el anclaje no deforme rizos. No volver al morph de rostros.
+B. Separar el fondo blanco de la capa móvil y eliminar la línea del borde del papel. Revisar también los contornos sobre hombros para que no aparezca duplicación de rizos al superponer capas.
+C. Mantener la continuidad de retorno que ya mejoró. Reducir el tiempo casi inmóvil en el extremo y hacer que la recuperación empiece con una variación pequeña pero perceptible; no es necesario añadir expresiones nuevas para solucionar este problema.
+D. Revisar otra vez toda la salida, la vuelta y el cierre, con atención especial a rizos/pañuelo. La igualdad del primer y último fotograma no basta.
+
+No se aprueba esta ronda. Se han usado 2 de 5 rondas; quedan hasta 3.
+
+
+REVISIÓN INDEPENDIENTE DE FLUIDEZ — RONDA 3 DE UN MÁXIMO DE 5
+Autor: Revisor independiente
+Archivo revisado: leibniz-revision-ronda-3.gif
+Puntuación: 7,6 / 10
+Resultado: NO APROBADO. Se exige una nota estrictamente mayor que 8.
+
+Método observado:
+Inspeccioné la secuencia completa de la hoja de contacto, el fotograma de máxima inclinación a tamaño original y ampliaciones de las uniones en 0, 5, 9, 15, 20 y 22. Contrasté los tiempos del GIF y el JSON. No afirmo haber observado reproducción continua: la evaluación visual es secuencial, con sus tiempos de exposición.
+
+Mejoras comprobadas:
+- Los rizos mantienen su forma y tamaño durante la vuelta. Desaparece la banda de cabello que se estiraba como goma en la ronda 2.
+- La cara sigue siendo un solo rostro, sin ojos/nariz duplicados ni cambio de identidad.
+- El pañuelo ya no se estira junto con el movimiento. El fondo permanece fijo.
+- La recuperación empieza después del extremo y se va asentando progresivamente; los últimos fotogramas no presentan un salto de postura visible.
+
+Por qué todavía no supera 8:
+1. Corte duro y hueco sobre el hombro izquierdo de la imagen. En 4–8 (120–240 ms), el cabello termina en un borde recto diagonal que no sigue ningún rizo. Bajo él aparece una cuña blanca entre pelo y abrigo, muy evidente en el fotograma 5. En 9–15 el hueco desaparece mientras ese borde se desliza sobre la ropa. Aunque el pelo ya no se deforma, este recorte delata la capa y se percibe como separación del cuerpo durante la vuelta.
+2. Unión artificial de mentón y pañuelo. En 4–10, el extremo superior derecho del pañuelo fijo sobresale como una punta sobre el cuello/mandíbula desplazados. Se distingue una línea diagonal y un pequeño triángulo claro en la unión. A medida que vuelve la cabeza, la punta se vuelve a esconder. Es una oclusión geométrica de recortes, no un cuello articulándose.
+3. Costura visible sobre el abrigo y junto a la peluca derecha. La franja del traje expuesta por el desplazamiento cambia de anchura en 4–12; la transición junto al pañuelo queda angular. Es menos llamativa que el hueco izquierdo, pero acompaña al mismo efecto de collage.
+4. La trayectoria facial es coherente y su regreso ya resulta considerablemente más estable. Lo que impide la aprobación ahora es principalmente la continuidad de las uniones, no la curva del rostro. No recomiendo sustituir otra vez la cara ni volver a deformar el pelo para tapar esas uniones.
+
+Desglose orientativo:
+- Trayectoria y ritmo: 1,6 / 2
+- Recuperación de postura: 1,7 / 2
+- Conservación de anatomía y textura: 1,8 / 2
+- Ausencia de superposición/deformaciones/costuras: 0,8 / 2
+- Estabilidad del torso y cierre: 1,7 / 2
+Total: 7,6 / 10
+
+Correcciones prioritarias para la ronda 4:
+A. Afinar la máscara inferior de la peluca siguiendo los rizos reales, sin línea diagonal que corte cabello y ropa juntos. Extender el cuerpo de debajo para cubrir por completo la zona barrida: no debe aparecer papel blanco entre pelo y hombro en ninguna pose.
+B. Resolver la unión de cuello y pañuelo con una oclusión corta y natural. La punta del pañuelo no debe atravesar la mandíbula móvil. Revisar el orden de capas y la forma de esa máscara, manteniendo el rostro íntegro y el pañuelo estable.
+C. Revisar 4, 5, 7, 9 y 12 ampliados y a tamaño final. La máscara debe ocultar las costuras durante toda la trayectoria, no solo en reposo y en la pose máxima. Mantener la recuperación progresiva que ya funciona mejor.
+D. Corregir la discrepancia de metadatos: el candidato revisado tiene 23 fotogramas usados y duraciones que suman 860 ms, aunque durationMs dice 900 y la descripción habla de 24. El GIF suma 2860 ms con sus pausas. No resta puntos de fluidez por sí sola, pero debe coincidir con lo que finalmente reproduce el juego.
+
+No se aprueba esta ronda. Se han usado 3 de 5 rondas; quedan hasta 2.
+
+
+REVISIÓN INDEPENDIENTE DE FLUIDEZ — RONDA 4 DE UN MÁXIMO DE 5
+Autor: Revisor independiente
+Archivo revisado: leibniz-revision-ronda-4.gif
+Puntuación: 7,8 / 10
+Resultado: NO APROBADO. Se exige una nota estrictamente mayor que 8.
+
+Método observado:
+Inspeccioné los 24 fotogramas lógicos ordenados en la hoja completa, el pico 5 a tamaño original y ampliaciones de las uniones y el cierre en 0, 1, 5, 18, 21 y 22. Contrasté la temporización del JSON y el GIF. No afirmo haber observado reproducción continua: el método es una inspección visual secuencial de los fotogramas y sus tiempos.
+
+Mejoras comprobadas:
+- Desapareció la cuña blanca entre cabello y hombro de la ronda 3.
+- La punta del pañuelo ya no atraviesa de forma llamativa la mandíbula.
+- Rostro y peluca mantienen identidad y proporciones; no hay morph de caras ni rizos de goma.
+- El retorno del rostro es continuo y se asienta sin salto de postura al final.
+- Los tiempos ya son coherentes: 24 fotogramas lógicos / 900 ms; el GIF codifica 22 fotogramas al unir duplicados y suma 2900 ms con sus pausas.
+
+Por qué no supera 8 todavía:
+1. Aparece de golpe una zona nueva de hombro y textura al comenzar. Entre 0 y 1 (0–40 ms), la cabeza apenas se mueve, pero la zona izquierda de la imagen, aproximadamente x100–165, y235–295, cambia apreciablemente de silueta: el abrigo/masa oscura se ensancha y tapa parte de los rizos originales. Este cambio de cobertura no corresponde al pequeño movimiento del fotograma 1. En un bucle puede leerse como un parpadeo al arrancar.
+2. La reparación del hombro aún deja parches que parecen recortes dentro del cabello. En 4–9, sobre todo en 5 (140 ms), hay zonas ovaladas de textura de abrigo rodeadas por bordes de rizos y algunos trazos sueltos cerca del contorno. Ya no hay un hueco blanco, pero la continuidad del dibujo sigue interrumpida: parece un rizo rellenado con ropa. Durante la recuperación esos parches desaparecen al recuperar los rizos su sitio.
+3. El cierre tardío es mejor que el arranque: en 18–22 la zona del hombro recupera gradualmente el original y no detecto un salto equivalente al de 0–1. Conviene reutilizar esa continuidad para la entrada. El rostro ya no es el problema principal y no debe reconstruirse de nuevo.
+
+Desglose orientativo:
+- Trayectoria y ritmo: 1,6 / 2
+- Recuperación de postura: 1,8 / 2
+- Conservación de anatomía y textura: 1,8 / 2
+- Ausencia de superposición/deformaciones/costuras: 1,0 / 2
+- Estabilidad del torso y cierre: 1,6 / 2
+Total: 7,8 / 10
+
+Prioridades para la última ronda:
+A. Eliminar el cambio brusco de cobertura en 0–1. Con una desviación de menos de un píxel, la composición de hombro y cabello debe coincidir prácticamente con el reposo; no se debe activar instantáneamente un cuerpo de relleno más ancho. Aplicar una transición de cobertura coherente con la magnitud del movimiento, equivalente a la continuidad del asentamiento final, sin fundir rostros desplazados.
+B. Afinar la máscara de los rizos sobre el hombro izquierdo: preservar completos sus bucles y usar la ropa de relleno solo donde el movimiento realmente deja ver cuerpo. Quitar los trazos aislados y evitar que el contorno móvil incluya un aro de rizo cuyo interior se haya sustituido por abrigo.
+C. Mantener la cara, la trayectoria de regreso y la unión actual de mandíbula/pañuelo. Verificar 0–3, 4–9 y 18–23 a tamaño real y ampliado. La corrección prioritaria es localizada; no añadir nuevas expresiones ni reintroducir deformación de pelo.
+
+No se aprueba esta ronda. Se han usado 4 de 5 rondas; queda una última revisión.
+
+
+REVISIÓN INDEPENDIENTE DE FLUIDEZ — RONDA 5 DE 5
+Autor: Revisor independiente
+Archivo revisado: leibniz-revision-ronda-5.gif
+Puntuación: 7,7 / 10
+Resultado: NO APROBADO. Se exige una nota estrictamente mayor que 8.
+
+Método observado:
+Inspeccioné los 24 fotogramas lógicos en orden en la hoja completa, el pico 5 a tamaño original, ampliaciones del rostro en 0, 1, 2, 3, 13, 14, 15 y 16, y ampliaciones de las uniones en 0, 1, 5, 12, 15 y 22. Contrasté los tiempos del JSON y el GIF. No afirmo haber observado reproducción continua: esta es una inspección visual secuencial de los fotogramas y sus tiempos. La acción suma 900 ms; el GIF codifica 20 fotogramas al unir duplicados y suma 2900 ms con sus pausas.
+
+Mejoras comprobadas frente a la ronda 4:
+- La silueta del hombro ya no se ensancha bruscamente entre 0 y 1. El cambio de cobertura inicial es mucho menor.
+- Se conservan más rizos sobre el hombro y la zona de relleno es menos extensa.
+- Se mantienen un solo rostro, una trayectoria reconocible de ida y vuelta, el pañuelo fijo y el reposo final estable.
+- No reaparece el hueco blanco de la ronda 3.
+
+Por qué no supera 8:
+1. La corrección de entrada/asentamiento introduce pérdida de nitidez y contornos superpuestos. Es visible en los fotogramas 1–2 y, sobre todo, 14–16 (480–560 ms). La cara y los rizos se ven más blandos, con varios trazos próximos en el cabello, que los fotogramas 3–13 y el reposo. El fotograma 15 es el caso más claro: el pelo lateral y la coronilla parecen vibrar o estar superpuestos mientras la cabeza casi ha llegado a su sitio.
+2. Ese cambio de nitidez sucede durante la desaceleración de la vuelta. Por tanto, aunque la posición del rostro sigue una trayectoria continua, la textura se ablanda y vuelve a enfocarse al asentarse. Reintroduce una discontinuidad perceptiva precisamente en el regreso que el usuario pidió mejorar. No equivale al morph de identidades de la ronda 1, pero sí es un artefacto visible de transición.
+3. En el pico y primera parte del regreso (4–9) aún queda una zona de abrigo expuesta con borde bastante angular bajo los rizos del hombro izquierdo, además de pequeños trazos aislados cerca del contorno. Es menor que en la ronda 4, pero todavía muestra la construcción por capas.
+
+Desglose orientativo:
+- Trayectoria y ritmo: 1,6 / 2
+- Recuperación de postura: 1,6 / 2
+- Conservación de anatomía y textura: 1,6 / 2
+- Ausencia de superposición/deformaciones/costuras: 1,1 / 2
+- Estabilidad del torso y cierre: 1,8 / 2
+Total: 7,7 / 10
+
+Conclusión de las cinco rondas:
+Ronda 1: 5,5 / 10
+Ronda 2: 7,3 / 10
+Ronda 3: 7,6 / 10
+Ronda 4: 7,8 / 10
+Ronda 5: 7,7 / 10
+Ninguna supera 8. La ronda 4 obtuvo la mayor puntuación, pero tampoco quedó aprobada. La ronda 5 corrige el arranque a costa de ablandar la cara y el pelo en la vuelta; por eso no aumento la nota para cerrar el proceso.
+
+Orientación técnica si en el futuro se autoriza otro ciclo:
+Limitar cualquier corrección de cobertura al hombro y a la máscara de fondo/cuerpo. Mantener la cabeza como una única imagen transformada por fotograma durante todo el movimiento, sin fundido entre la cabeza en reposo y la cabeza desplazada. Refinar la pequeña unión de cabello/abrigo con la cara fuera de esa mezcla. Esta anotación documenta lo pendiente, no solicita ni inicia una sexta ronda.
+
+Se alcanza el máximo de cinco revisiones solicitado. El proceso debe detenerse sin declarar aprobado este GIF.

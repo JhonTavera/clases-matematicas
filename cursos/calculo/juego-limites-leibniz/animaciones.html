@@ -1,0 +1,150 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Los gestos de Leibniz</title>
+  <style>
+    :root { color-scheme: light; --paper: #f6f1e7; --ink: #252018; --muted: #706555; --line: #d8cbb6; }
+    * { box-sizing: border-box; }
+    body { margin: 0; color: var(--ink); background: var(--paper); font: 16px/1.5 system-ui, sans-serif; }
+    main { max-width: 1580px; margin: auto; padding: clamp(20px, 4vw, 64px); }
+    a { color: #755223; text-underline-offset: 3px; }
+    header { max-width: 850px; margin-bottom: 32px; }
+    .eyebrow { margin: 28px 0 10px; color: var(--muted); text-transform: uppercase; letter-spacing: .12em; font-size: .75rem; }
+    h1 { margin: 0 0 18px; font: 700 clamp(34px, 4.5vw, 64px)/1.05 Georgia, serif; }
+    header p { max-width: 68ch; }
+    .levels { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 22px; align-items: stretch; }
+    .level { overflow: hidden; border: 1px solid var(--line); border-radius: 14px; background: #fffdf8; box-shadow: 0 12px 28px #30251509; }
+    .portrait { position: relative; background: #fff; border-bottom: 1px solid var(--line); }
+    canvas { display: block; width: 100%; height: auto; aspect-ratio: 4/3; }
+    .level-number { position: absolute; z-index: 1; left: 16px; top: 14px; padding: 4px 10px; border: 1px solid var(--line); border-radius: 4px; background: #fffdf5e6; font: italic 700 16px Georgia, serif; }
+    .content { padding: 22px; }
+    h2 { margin: 0 0 6px; font: 700 24px/1.2 Georgia, serif; }
+    .rest { color: var(--muted); margin: 0 0 18px; min-height: 48px; }
+    dl { margin: 0 0 22px; }
+    dl div { display: grid; grid-template-columns: 92px 1fr; gap: 10px; padding: 10px 0; border-top: 1px solid #e8dfd0; }
+    dt { font-weight: 650; font-size: .88rem; }
+    dd { margin: 0; font-size: .9rem; }
+    .buttons { display: flex; flex-wrap: wrap; gap: 8px; }
+    button { flex: 1 1 auto; padding: 11px 10px; border: 1px solid #a8977e; border-radius: 7px; background: #fffaf0; color: var(--ink); font: 600 .86rem system-ui, sans-serif; cursor: pointer; touch-action: manipulation; }
+    button:first-child { background: #2e271e; color: #fffaf0; border-color: #2e271e; }
+    button:hover { filter: brightness(.94); }
+    button:focus-visible { outline: 3px solid #b48639; outline-offset: 3px; }
+    button:disabled { opacity: .45; cursor: wait; }
+    .status { min-height: 42px; margin: 14px 0 0; color: var(--muted); font-size: .78rem; }
+    .note { margin: 26px 0 0; max-width: 920px; color: var(--muted); font-size: .9rem; }
+    .motion-note { padding: 12px 16px; border: 1px solid var(--line); border-radius: 8px; background: #ece2cd; }
+    .sound-controls { display: flex; align-items: center; flex-wrap: wrap; gap: 12px; margin-top: 20px; }
+    .sound-controls button { flex: 0 0 auto; }
+    .sound-controls span { color: var(--muted); font-size: .85rem; }
+    [hidden] { display: none !important; }
+    @media (max-width: 1120px) { .levels { grid-template-columns: 1fr; max-width: 620px; } .rest { min-height: 0; } }
+  </style>
+</head>
+<body>
+  <main>
+    <header>
+      <a href="index.html">← Volver al juego</a>
+      <p class="eyebrow">Vista de prueba · Tres niveles</p>
+      <h1>Los gestos de Leibniz</h1>
+      <p>Prueba cada reacción con sus botones. Al terminar, Leibniz recupera la expresión de reposo de ese nivel.</p>
+      <p class="motion-note" id="motionNote" hidden>Tu sistema tiene activada la opción de reducir movimiento. Los retratos permanecerán quietos, como en el juego.</p>
+      <div class="sound-controls"><button type="button" id="soundToggle">Silenciar efectos</button><span id="soundState" role="status" aria-live="polite">Efectos de sonido activados.</span></div>
+    </header>
+    <section class="levels" aria-label="Animaciones por nivel">
+      <article class="level" data-level="1">
+        <div class="portrait"><span class="level-number">Nivel 1</span><canvas width="480" height="360" role="img" aria-label="Leibniz en el nivel 1">Retrato de Leibniz</canvas></div>
+        <div class="content">
+          <h2>Expresión tranquila</h2>
+          <p class="rest">En reposo: rostro neutral y boca cerrada.</p>
+          <dl>
+            <div><dt>Nuevo límite</dt><dd>Abre la boca.</dd></div>
+            <div><dt>Acierto</dt><dd>Levanta una ceja.</dd></div>
+            <div><dt>Error</dt><dd>Cierra los ojos.</dd></div>
+          </dl>
+          <div class="buttons" aria-label="Probar nivel 1"><button type="button" data-action="spawn" disabled>Nuevo límite</button><button type="button" data-action="correct" disabled>Acierto</button><button type="button" data-action="incorrect" disabled>Error</button></div>
+          <p class="status" role="status" aria-live="polite">Cargando retrato…</p>
+        </div>
+      </article>
+      <article class="level" data-level="2">
+        <div class="portrait"><span class="level-number">Nivel 2</span><canvas width="480" height="360" role="img" aria-label="Leibniz en el nivel 2">Retrato de Leibniz</canvas></div>
+        <div class="content">
+          <h2>Una ceja levantada</h2>
+          <p class="rest">En reposo: conserva la ceja levantada.</p>
+          <dl>
+            <div><dt>Nuevo límite</dt><dd>Abre la boca.</dd></div>
+            <div><dt>Acierto</dt><dd>Hace un pequeño gesto de disgusto.</dd></div>
+            <div><dt>Error</dt><dd>Cierra los ojos.</dd></div>
+          </dl>
+          <div class="buttons" aria-label="Probar nivel 2"><button type="button" data-action="spawn" disabled>Nuevo límite</button><button type="button" data-action="correct" disabled>Acierto</button><button type="button" data-action="incorrect" disabled>Error</button></div>
+          <p class="status" role="status" aria-live="polite">Cargando retrato…</p>
+        </div>
+      </article>
+      <article class="level" data-level="3" id="nivel3">
+        <div class="portrait"><span class="level-number">Nivel 3</span><canvas width="480" height="360" role="img" aria-label="Leibniz en el nivel 3">Retrato de Leibniz</canvas></div>
+        <div class="content">
+          <h2>El ceño fruncido</h2>
+          <p class="rest">En reposo: mantiene el gesto serio.</p>
+          <dl>
+            <div><dt>Nuevo límite</dt><dd>Abre la boca de forma exagerada.</dd></div>
+            <div><dt>Acierto</dt><dd>Muestra la imagen del golpe durante un segundo y reproduce el sonido una vez.</dd></div>
+            <div><dt>Error</dt><dd>Hace una pequeña sonrisa.</dd></div>
+          </dl>
+          <div class="buttons" aria-label="Probar nivel 3"><button type="button" data-action="spawn" disabled>Nuevo límite</button><button type="button" data-action="correct" disabled>Acierto</button><button type="button" data-action="incorrect" disabled>Error</button></div>
+          <p class="status" role="status" aria-live="polite">Cargando retrato…</p>
+        </div>
+      </article>
+    </section>
+    <p class="note">En el juego, la boca se abre cuando el nuevo límite comienza a verse en el borde superior. Las respuestas tienen prioridad: si coinciden dos eventos, el gesto de acierto o error se muestra primero. No hay parpadeos automáticos en reposo.</p>
+    <p class="note">En el nivel 3, la imagen del golpe aparece fija durante un segundo y vuelve directamente al reposo. El sonido se reproduce una vez al mostrarla.</p>
+  </main>
+  <script src="leibniz.js"></script>
+  <script>
+    const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
+    const motionNote = document.getElementById('motionNote');
+    const updateMotionNote = () => { motionNote.hidden = !reducedMotion.matches; };
+    updateMotionNote();
+    reducedMotion.addEventListener('change', updateMotionNote);
+    const labels = { spawn: 'Nuevo límite', correct: 'Acierto', incorrect: 'Error' };
+    const portraits = [];
+    let soundEnabled = true;
+    const soundToggle = document.getElementById('soundToggle');
+    const soundState = document.getElementById('soundState');
+    soundToggle.addEventListener('click', () => {
+      soundEnabled = !soundEnabled;
+      for (const portrait of portraits) {
+        portrait.setSoundEnabled(soundEnabled);
+        if (soundEnabled) portrait.unlockAudio();
+      }
+      soundToggle.textContent = soundEnabled ? 'Silenciar efectos' : 'Activar efectos';
+      soundState.textContent = soundEnabled ? 'Efectos de sonido activados.' : 'Efectos de sonido silenciados.';
+    });
+    for (const card of document.querySelectorAll('[data-level]')) {
+      const level = Number(card.dataset.level);
+      const portrait = new LeibnizPortrait(card.querySelector('canvas'));
+      portraits.push(portrait);
+      portrait.setSoundEnabled(soundEnabled);
+      const status = card.querySelector('.status');
+      const buttons = [...card.querySelectorAll('button')];
+      portrait.ready.then(() => {
+        portrait.reset(level);
+        portrait.setActive(true);
+        buttons.forEach(button => { button.disabled = false; });
+        status.textContent = 'Listo. Elige una reacción.';
+      }).catch(() => { status.textContent = 'No se pudo cargar el retrato. Recarga la página para intentarlo de nuevo.'; });
+      for (const button of buttons) {
+        button.addEventListener('click', () => {
+          const action = button.dataset.action;
+          portrait.unlockAudio();
+          if (action === 'spawn') portrait.speak();
+          else portrait.react(action);
+          status.textContent = reducedMotion.matches
+            ? `Prueba: ${labels[action]}. Movimiento reducido activado.`
+            : `Última prueba: ${labels[action]}.`;
+        });
+      }
+    }
+  </script>
+</body>
+</html>

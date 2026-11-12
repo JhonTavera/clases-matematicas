@@ -1,0 +1,99 @@
+[
+  {
+    "level": 1,
+    "atlas": "leibniz-eventos-nivel-1.webp",
+    "cellWidth": 480,
+    "cellHeight": 360,
+    "cells": 13,
+    "idle": 0,
+    "spawn": [
+      1,
+      2,
+      3,
+      4
+    ],
+    "correct": [
+      5,
+      6,
+      7,
+      8
+    ],
+    "incorrect": [
+      9,
+      10,
+      11,
+      12
+    ],
+    "descriptions": [
+      "Boca abierta",
+      "Levanta una ceja",
+      "Cierra los ojos"
+    ]
+  },
+  {
+    "level": 2,
+    "atlas": "leibniz-eventos-nivel-2.webp",
+    "cellWidth": 480,
+    "cellHeight": 360,
+    "cells": 13,
+    "idle": 0,
+    "spawn": [
+      1,
+      2,
+      3,
+      4
+    ],
+    "correct": [
+      5,
+      6,
+      7,
+      8
+    ],
+    "incorrect": [
+      9,
+      10,
+      11,
+      12
+    ],
+    "descriptions": [
+      "Boca abierta con ceja levantada",
+      "Gesto breve de disgusto",
+      "Cierra los ojos"
+    ]
+  },
+  {
+    "level": 3,
+    "atlas": "leibniz-eventos-nivel-3.webp",
+    "cellWidth": 480,
+    "cellHeight": 360,
+    "cells": 13,
+    "idle": 0,
+    "spawn": [
+      1,
+      2,
+      3,
+      4
+    ],
+    "correct": [
+      8
+    ],
+    "incorrect": [
+      9,
+      10,
+      11,
+      12
+    ],
+    "descriptions": [
+      "Boca muy abierta",
+      "Imagen fija del golpe durante un segundo, con sonido",
+      "Pequeña sonrisa"
+    ],
+    "correctStill": {
+      "image": "leibniz-nivel-3-acierto.png",
+      "holdMs": 1000,
+      "transition": "none",
+      "sound": "../audio/golpe.mp3",
+      "fallbackFrame": 8
+    }
+  }
+]

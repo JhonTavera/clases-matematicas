@@ -1,0 +1,636 @@
+<!doctype html><html lang="es"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Revisión de los 154 límites · Leibniz</title>
+<script>window.MathJax={tex:{inlineMath:[['\\(','\\)']]}};</script>
+<script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"></script>
+<style>*{box-sizing:border-box}body{margin:0;background:#f7f3ea;color:#252218;font:16px/1.6 system-ui,sans-serif}main{max-width:1500px;margin:auto;padding:clamp(20px,4vw,64px)}h1{font:700 clamp(32px,4vw,52px)/1.15 Georgia,serif;max-width:850px}h2{font-family:Georgia,serif}a{color:#72521c}p{max-width:1000px}.stats{display:flex;gap:16px;flex-wrap:wrap}.stats span,.note{background:#fffdf7;border:1px solid #d8c9a9;padding:16px;border-radius:12px}.stats b{font-size:24px;display:block}.note{max-width:1100px;margin:24px 0}.table-wrap{overflow:auto;background:#fffdf7;border:1px solid #d8c9a9;border-radius:12px}table{border-collapse:collapse;width:100%;min-width:920px}th,td{text-align:left;padding:16px;vertical-align:top;border-bottom:1px solid #e5dccb}thead{background:#eae0cb}.changed{background:#fff0d0}.formula{min-width:340px}small{display:block;margin-top:10px;color:#665b47;max-width:450px;overflow-wrap:anywhere;font-size:12px}input{width:min(500px,100%);padding:14px;font:inherit;border:1px solid #b6a78c;border-radius:8px;margin-bottom:18px}.muted{color:#726550}.source{font-size:14px} @media print{input,.back{display:none}body{background:white}main{padding:0}.table-wrap{overflow:visible}table{min-width:0;font-size:10px}.formula{min-width:0}th,td{padding:8px}thead{display:table-header-group}tr{break-inside:avoid}}</style></head><body><main>
+<p class="back"><a href="index.html">← Volver al juego</a></p><p class="muted">Revisión del 12 de noviembre de 2026 · repositorio JhonTavera/clases-matematicas</p>
+<h1>Los 154 límites, comprobados uno por uno</h1>
+<div class="stats"><span><b>154</b>ejercicios revisados</span><span><b>152</b>clasificaciones originales coincidentes</span><span><b>2</b>enunciados aclarados por dominio</span></div>
+<p>Se revisaron las expresiones escritas en el juego, sus límites laterales, valores exactos y signos de aproximación. Se contrastaron con SymPy 1.14 usando raíces reales de índice impar. La tabla muestra el banco actualizado; A16 y A17 conservan también su enunciado y respuesta originales.</p>
+<div class="note"><h2>Dos aclaraciones de dominio</h2>
+<p><strong>A16.</strong> Para \(\ln(x/(x-1))\), cerca de 1 solo se puede aproximar desde la derecha dentro del dominio real. Se escribe explícitamente \(x\to1^+\) y se clasifica como <strong>+∞</strong>.</p>
+<p><strong>A17.</strong> La composición \(\operatorname{arccsc}(\sqrt{x^2-3x}/x)\) solo es real para \(x&lt;0\). Se escribe \(x\to0^-\): su límite es <strong>0</strong> y se aproxima por valores negativos, categoría <strong>0⁻</strong>.</p>
+<p>En ambos originales, «NE» se puede defender si se exige que existan las dos aproximaciones laterales reales. Con la definición de límite relativo al dominio, los límites sí existen (como límite infinito en A16). La notación lateral elimina esa ambigüedad pedagógica; no se trata de dos errores algebraicos ordinarios.</p></div>
+<h2>Convenciones del juego</h2><p><strong>L</strong> significa finito positivo y <strong>−L</strong> finito negativo. <strong>0⁺</strong> y <strong>0⁻</strong> tienen el mismo valor numérico, cero: describen el signo de la función al acercarse. La categoría <strong>0</strong> se reserva aquí para aproximaciones sin signo único. <strong>±∞</strong> representa divergencia con signo; <strong>NE</strong>, ausencia del límite indicado en los reales. Los ángulos están en radianes.</p>
+<p><strong>B16 se mantiene en NE:</strong> ln(x) no está definido en los reales por la izquierda de cero. <strong>El ejercicio 18 también se mantiene:</strong> su denominador es raíz cuarta de x menos 8, y en x=64 no vale cero.</p>
+<p>Diferentes identificadores repiten exactamente la misma fórmula: 94 / B01. Se conservaron para no alterar la frecuencia de selección del juego.</p>
+<h2>Comprobación completa</h2><label for="filter">Filtrar por identificador, categoría o dificultad</label><br><input id="filter" type="search" placeholder="Por ejemplo: A17, 0-, alto"><p id="count" aria-live="polite">154 ejercicios</p>
+<div class="table-wrap"><table><thead><tr><th>ID</th><th>Límite</th><th>Valor o laterales</th><th>Categoría</th><th>Observación</th></tr></thead><tbody><tr class="" data-search="Ej-a 0 bajo">
+      <th scope="row">Ej-a</th><td class="formula">\(\lim_{x\to 2}\frac{(x-2)^2}{x^2-4}\)</td>
+      <td>0</td><td><strong>0</strong></td>
+      <td>El valor es 0 y no hay un único signo en toda la aproximación indicada.</td></tr>
+<tr class="" data-search="Ej-b L bajo">
+      <th scope="row">Ej-b</th><td class="formula">\(\lim_{x\to 2}\frac{x-2}{x^2-4}\)</td>
+      <td>1/4</td><td><strong>L</strong></td>
+      <td>Coincide con el cálculo simbólico y la revisión de signo, dominio y dirección.</td></tr>
+<tr class="" data-search="Ej-c -infinito bajo">
+      <th scope="row">Ej-c</th><td class="formula">\(\lim_{x\to 2^+}\frac{x-3}{x^2-4}\)</td>
+      <td>−∞</td><td><strong>-infinito</strong></td>
+      <td>Coincide con el cálculo simbólico y la revisión de signo, dominio y dirección.</td></tr>
+<tr class="" data-search="Ej-d +infinito bajo">
+      <th scope="row">Ej-d</th><td class="formula">\(\lim_{x\to 2^-}\frac{x-3}{x^2-4}\)</td>
+      <td>+∞</td><td><strong>+infinito</strong></td>
+      <td>Coincide con el cálculo simbólico y la revisión de signo, dominio y dirección.</td></tr>
+<tr class="" data-search="Ej-e NE bajo">
+      <th scope="row">Ej-e</th><td class="formula">\(\lim_{x\to 2}\frac{x-3}{x^2-4}\)</td>
+      <td>izq: +∞; der: −∞</td><td><strong>NE</strong></td>
+      <td>Los laterales difieren o la función oscila; véase el resultado de la comprobación.</td></tr>
+<tr class="" data-search="Ej-f -infinito bajo">
+      <th scope="row">Ej-f</th><td class="formula">\(\lim_{x\to 2}\frac{2-x}{(x-2)^3}\)</td>
+      <td>−∞</td><td><strong>-infinito</strong></td>
+      <td>Coincide con el cálculo simbólico y la revisión de signo, dominio y dirección.</td></tr>
+<tr class="" data-search="13a L bajo">
+      <th scope="row">13a</th><td class="formula">\(\lim_{x\to\infty}\frac{2x+3}{5x+7}\)</td>
+      <td>2/5</td><td><strong>L</strong></td>
+      <td>Coincide con el cálculo simbólico y la revisión de signo, dominio y dirección.</td></tr>
+<tr class="" data-search="13b L bajo">
+      <th scope="row">13b</th><td class="formula">\(\lim_{x\to-\infty}\frac{2x+3}{5x+7}\)</td>
+      <td>2/5</td><td><strong>L</strong></td>
+      <td>Coincide con el cálculo simbólico y la revisión de signo, dominio y dirección.</td></tr>
+<tr class="" data-search="14a L bajo">
+      <th scope="row">14a</th><td class="formula">\(\lim_{x\to\infty}\frac{2x^3+7}{x^3-x^2+x+7}\)</td>
+      <td>2</td><td><strong>L</strong></td>
+      <td>Coincide con el cálculo simbólico y la revisión de signo, dominio y dirección.</td></tr>
+<tr class="" data-search="14b L bajo">
+      <th scope="row">14b</th><td class="formula">\(\lim_{x\to-\infty}\frac{2x^3+7}{x^3-x^2+x+7}\)</td>
+      <td>2</td><td><strong>L</strong></td>
+      <td>Coincide con el cálculo simbólico y la revisión de signo, dominio y dirección.</td></tr>
+<tr class="" data-search="15a 0+ bajo">
+      <th scope="row">15a</th><td class="formula">\(\lim_{x\to\infty}\frac{x+1}{x^2+3}\)</td>
+      <td>0</td><td><strong>0+</strong></td>
+      <td>El valor del límite es 0; el signo de la función cerca de la aproximación es positivo.</td></tr>
+<tr class="" data-search="15b 0- bajo">
+      <th scope="row">15b</th><td class="formula">\(\lim_{x\to-\infty}\frac{x+1}{x^2+3}\)</td>
+      <td>0</td><td><strong>0-</strong></td>
+      <td>El valor del límite es 0; el signo de la función cerca de la aproximación es negativo.</td></tr>
+<tr class="" data-search="16a 0+ bajo">
+      <th scope="row">16a</th><td class="formula">\(\lim_{x\to\infty}\frac{3x+7}{x^2-2}\)</td>
+      <td>0</td><td><strong>0+</strong></td>
+      <td>El valor del límite es 0; el signo de la función cerca de la aproximación es positivo.</td></tr>
+<tr class="" data-search="16b 0- bajo">
+      <th scope="row">16b</th><td class="formula">\(\lim_{x\to-\infty}\frac{3x+7}{x^2-2}\)</td>
+      <td>0</td><td><strong>0-</strong></td>
+      <td>El valor del límite es 0; el signo de la función cerca de la aproximación es negativo.</td></tr>
+<tr class="" data-search="17a L bajo">
+      <th scope="row">17a</th><td class="formula">\(\lim_{x\to\infty}\frac{7x^3}{x^3-3x^2+6x}\)</td>
+      <td>7</td><td><strong>L</strong></td>
+      <td>Coincide con el cálculo simbólico y la revisión de signo, dominio y dirección.</td></tr>
+<tr class="" data-search="17b L bajo">
+      <th scope="row">17b</th><td class="formula">\(\lim_{x\to-\infty}\frac{7x^3}{x^3-3x^2+6x}\)</td>
+      <td>7</td><td><strong>L</strong></td>
+      <td>Coincide con el cálculo simbólico y la revisión de signo, dominio y dirección.</td></tr>
+<tr class="" data-search="18a 0+ bajo">
+      <th scope="row">18a</th><td class="formula">\(\lim_{x\to\infty}\frac{1}{x^3-4x+1}\)</td>
+      <td>0</td><td><strong>0+</strong></td>
+      <td>El valor del límite es 0; el signo de la función cerca de la aproximación es positivo.</td></tr>
+<tr class="" data-search="18b 0- bajo">
+      <th scope="row">18b</th><td class="formula">\(\lim_{x\to-\infty}\frac{1}{x^3-4x+1}\)</td>
+      <td>0</td><td><strong>0-</strong></td>
+      <td>El valor del límite es 0; el signo de la función cerca de la aproximación es negativo.</td></tr>
+<tr class="" data-search="19a 0+ bajo">
+      <th scope="row">19a</th><td class="formula">\(\lim_{x\to\infty}\frac{10x^5+x^4+31}{x^6}\)</td>
+      <td>0</td><td><strong>0+</strong></td>
+      <td>El valor del límite es 0; el signo de la función cerca de la aproximación es positivo.</td></tr>
+<tr class="" data-search="19b 0- bajo">
+      <th scope="row">19b</th><td class="formula">\(\lim_{x\to-\infty}\frac{10x^5+x^4+31}{x^6}\)</td>
+      <td>0</td><td><strong>0-</strong></td>
+      <td>El valor del límite es 0; el signo de la función cerca de la aproximación es negativo.</td></tr>
+<tr class="" data-search="20a L bajo">
+      <th scope="row">20a</th><td class="formula">\(\lim_{x\to\infty}\frac{9x^4+x}{2x^4+5x^2-x+6}\)</td>
+      <td>9/2</td><td><strong>L</strong></td>
+      <td>Coincide con el cálculo simbólico y la revisión de signo, dominio y dirección.</td></tr>
+<tr class="" data-search="20b L bajo">
+      <th scope="row">20b</th><td class="formula">\(\lim_{x\to-\infty}\frac{9x^4+x}{2x^4+5x^2-x+6}\)</td>
+      <td>9/2</td><td><strong>L</strong></td>
+      <td>Coincide con el cálculo simbólico y la revisión de signo, dominio y dirección.</td></tr>
+<tr class="" data-search="21a -L bajo">
+      <th scope="row">21a</th><td class="formula">\(\lim_{x\to\infty}\frac{-2x^3-2x+3}{3x^3+3x^2-5x}\)</td>
+      <td>-2/3</td><td><strong>-L</strong></td>
+      <td>Coincide con el cálculo simbólico y la revisión de signo, dominio y dirección.</td></tr>
+<tr class="" data-search="21b -L bajo">
+      <th scope="row">21b</th><td class="formula">\(\lim_{x\to-\infty}\frac{-2x^3-2x+3}{3x^3+3x^2-5x}\)</td>
+      <td>-2/3</td><td><strong>-L</strong></td>
+      <td>Coincide con el cálculo simbólico y la revisión de signo, dominio y dirección.</td></tr>
+<tr class="" data-search="22a -L bajo">
+      <th scope="row">22a</th><td class="formula">\(\lim_{x\to\infty}\frac{-x^4}{x^4-7x^3+7x^2+9}\)</td>
+      <td>-1</td><td><strong>-L</strong></td>
+      <td>Coincide con el cálculo simbólico y la revisión de signo, dominio y dirección.</td></tr>
+<tr class="" data-search="22b -L bajo">
+      <th scope="row">22b</th><td class="formula">\(\lim_{x\to-\infty}\frac{-x^4}{x^4-7x^3+7x^2+9}\)</td>
+      <td>-1</td><td><strong>-L</strong></td>
+      <td>Coincide con el cálculo simbólico y la revisión de signo, dominio y dirección.</td></tr>
+<tr class="" data-search="23 L medio">
+      <th scope="row">23</th><td class="formula">\(\lim_{x\to\infty}\sqrt{\frac{8x^2-3}{2x^2+x}}\)</td>
+      <td>2</td><td><strong>L</strong></td>
+      <td>Coincide con el cálculo simbólico y la revisión de signo, dominio y dirección.</td></tr>
+<tr class="" data-search="24 L medio">
+      <th scope="row">24</th><td class="formula">\(\lim_{x\to-\infty}\left(\frac{x^2+x-1}{8x^2-3}\right)^{1/3}\)</td>
+      <td>1/2</td><td><strong>L</strong></td>
+      <td>Coincide con el cálculo simbólico y la revisión de signo, dominio y dirección.</td></tr>
+<tr class="" data-search="25 +infinito medio">
+      <th scope="row">25</th><td class="formula">\(\lim_{x\to-\infty}\left(\frac{1-x^3}{x^2+7x}\right)^5\)</td>
+      <td>+∞</td><td><strong>+infinito</strong></td>
+      <td>Coincide con el cálculo simbólico y la revisión de signo, dominio y dirección.</td></tr>
+<tr class="" data-search="26 0+ medio">
+      <th scope="row">26</th><td class="formula">\(\lim_{x\to\infty}\sqrt{\frac{x^2-5x}{x^3+x-2}}\)</td>
+      <td>0</td><td><strong>0+</strong></td>
+      <td>El valor del límite es 0; el signo de la función cerca de la aproximación es positivo.</td></tr>
+<tr class="" data-search="27 0+ medio">
+      <th scope="row">27</th><td class="formula">\(\lim_{x\to\infty}\frac{2\sqrt{x}+x^{-1}}{3x-7}\)</td>
+      <td>0</td><td><strong>0+</strong></td>
+      <td>El valor del límite es 0; el signo de la función cerca de la aproximación es positivo.</td></tr>
+<tr class="" data-search="28 -L medio">
+      <th scope="row">28</th><td class="formula">\(\lim_{x\to\infty}\frac{2+\sqrt{x}}{2-\sqrt{x}}\)</td>
+      <td>-1</td><td><strong>-L</strong></td>
+      <td>Coincide con el cálculo simbólico y la revisión de signo, dominio y dirección.</td></tr>
+<tr class="" data-search="29 L alto">
+      <th scope="row">29</th><td class="formula">\(\lim_{x\to-\infty}\frac{\sqrt[3]{x}-\sqrt[5]{x}}{\sqrt[3]{x}+\sqrt[5]{x}}\)</td>
+      <td>1</td><td><strong>L</strong></td>
+      <td>Coincide con el cálculo simbólico y la revisión de signo, dominio y dirección.</td></tr>
+<tr class="" data-search="30 +infinito medio">
+      <th scope="row">30</th><td class="formula">\(\lim_{x\to\infty}\frac{x^{-1}+x^{-4}}{x^{-2}-x^{-3}}\)</td>
+      <td>+∞</td><td><strong>+infinito</strong></td>
+      <td>Coincide con el cálculo simbólico y la revisión de signo, dominio y dirección.</td></tr>
+<tr class="" data-search="31 +infinito alto">
+      <th scope="row">31</th><td class="formula">\(\lim_{x\to\infty}\frac{2x^{5/3}-x^{1/3}+7}{x^{8/5}+3x+\sqrt{x}}\)</td>
+      <td>+∞</td><td><strong>+infinito</strong></td>
+      <td>Coincide con el cálculo simbólico y la revisión de signo, dominio y dirección.</td></tr>
+<tr class="" data-search="32 -L alto">
+      <th scope="row">32</th><td class="formula">\(\lim_{x\to-\infty}\frac{\sqrt[3]{x}-5x+3}{2x+x^{2/3}-4}\)</td>
+      <td>-5/2</td><td><strong>-L</strong></td>
+      <td>Coincide con el cálculo simbólico y la revisión de signo, dominio y dirección.</td></tr>
+<tr class="" data-search="33 L medio">
+      <th scope="row">33</th><td class="formula">\(\lim_{x\to\infty}\frac{\sqrt{x^2+1}}{x+1}\)</td>
+      <td>1</td><td><strong>L</strong></td>
+      <td>Coincide con el cálculo simbólico y la revisión de signo, dominio y dirección.</td></tr>
+<tr class="" data-search="34 -L medio">
+      <th scope="row">34</th><td class="formula">\(\lim_{x\to-\infty}\frac{\sqrt{x^2+1}}{x+1}\)</td>
+      <td>-1</td><td><strong>-L</strong></td>
+      <td>Coincide con el cálculo simbólico y la revisión de signo, dominio y dirección.</td></tr>
+<tr class="" data-search="35 L medio">
+      <th scope="row">35</th><td class="formula">\(\lim_{x\to\infty}\frac{x-3}{\sqrt{4x^2+25}}\)</td>
+      <td>1/2</td><td><strong>L</strong></td>
+      <td>Coincide con el cálculo simbólico y la revisión de signo, dominio y dirección.</td></tr>
+<tr class="" data-search="36 L alto">
+      <th scope="row">36</th><td class="formula">\(\lim_{x\to-\infty}\frac{4-3x^3}{\sqrt{x^6+9}}\)</td>
+      <td>3</td><td><strong>L</strong></td>
+      <td>Coincide con el cálculo simbólico y la revisión de signo, dominio y dirección.</td></tr>
+<tr class="" data-search="37 +infinito bajo">
+      <th scope="row">37</th><td class="formula">\(\lim_{x\to0^+}\frac{1}{3x}\)</td>
+      <td>+∞</td><td><strong>+infinito</strong></td>
+      <td>Coincide con el cálculo simbólico y la revisión de signo, dominio y dirección.</td></tr>
+<tr class="" data-search="38 -infinito bajo">
+      <th scope="row">38</th><td class="formula">\(\lim_{x\to0^-}\frac{5}{2x}\)</td>
+      <td>−∞</td><td><strong>-infinito</strong></td>
+      <td>Coincide con el cálculo simbólico y la revisión de signo, dominio y dirección.</td></tr>
+<tr class="" data-search="39 -infinito bajo">
+      <th scope="row">39</th><td class="formula">\(\lim_{x\to2^-}\frac{3}{x-2}\)</td>
+      <td>−∞</td><td><strong>-infinito</strong></td>
+      <td>Coincide con el cálculo simbólico y la revisión de signo, dominio y dirección.</td></tr>
+<tr class="" data-search="40 +infinito bajo">
+      <th scope="row">40</th><td class="formula">\(\lim_{x\to3^+}\frac{1}{x-3}\)</td>
+      <td>+∞</td><td><strong>+infinito</strong></td>
+      <td>Coincide con el cálculo simbólico y la revisión de signo, dominio y dirección.</td></tr>
+<tr class="" data-search="41 -infinito bajo">
+      <th scope="row">41</th><td class="formula">\(\lim_{x\to-8^+}\frac{2x}{x+8}\)</td>
+      <td>−∞</td><td><strong>-infinito</strong></td>
+      <td>Coincide con el cálculo simbólico y la revisión de signo, dominio y dirección.</td></tr>
+<tr class="" data-search="42 +infinito bajo">
+      <th scope="row">42</th><td class="formula">\(\lim_{x\to-5^-}\frac{3x}{2x+10}\)</td>
+      <td>+∞</td><td><strong>+infinito</strong></td>
+      <td>Coincide con el cálculo simbólico y la revisión de signo, dominio y dirección.</td></tr>
+<tr class="" data-search="43 +infinito bajo">
+      <th scope="row">43</th><td class="formula">\(\lim_{x\to7}\frac{4}{(x-7)^2}\)</td>
+      <td>+∞</td><td><strong>+infinito</strong></td>
+      <td>Coincide con el cálculo simbólico y la revisión de signo, dominio y dirección.</td></tr>
+<tr class="" data-search="44 -infinito medio">
+      <th scope="row">44</th><td class="formula">\(\lim_{x\to0}\frac{-1}{x^2(x+1)}\)</td>
+      <td>−∞</td><td><strong>-infinito</strong></td>
+      <td>Coincide con el cálculo simbólico y la revisión de signo, dominio y dirección.</td></tr>
+<tr class="" data-search="45a +infinito medio">
+      <th scope="row">45a</th><td class="formula">\(\lim_{x\to0^+}\frac{2}{3x^{1/3}}\)</td>
+      <td>+∞</td><td><strong>+infinito</strong></td>
+      <td>Coincide con el cálculo simbólico y la revisión de signo, dominio y dirección.</td></tr>
+<tr class="" data-search="45b -infinito medio">
+      <th scope="row">45b</th><td class="formula">\(\lim_{x\to0^-}\frac{2}{3x^{1/3}}\)</td>
+      <td>−∞</td><td><strong>-infinito</strong></td>
+      <td>Coincide con el cálculo simbólico y la revisión de signo, dominio y dirección.</td></tr>
+<tr class="" data-search="46a +infinito medio">
+      <th scope="row">46a</th><td class="formula">\(\lim_{x\to0^+}\frac{2}{x^{1/5}}\)</td>
+      <td>+∞</td><td><strong>+infinito</strong></td>
+      <td>Coincide con el cálculo simbólico y la revisión de signo, dominio y dirección.</td></tr>
+<tr class="" data-search="46b -infinito medio">
+      <th scope="row">46b</th><td class="formula">\(\lim_{x\to0^-}\frac{2}{x^{1/5}}\)</td>
+      <td>−∞</td><td><strong>-infinito</strong></td>
+      <td>Coincide con el cálculo simbólico y la revisión de signo, dominio y dirección.</td></tr>
+<tr class="" data-search="47 +infinito medio">
+      <th scope="row">47</th><td class="formula">\(\lim_{x\to0}\frac{4}{x^{2/5}}\)</td>
+      <td>+∞</td><td><strong>+infinito</strong></td>
+      <td>Coincide con el cálculo simbólico y la revisión de signo, dominio y dirección.</td></tr>
+<tr class="" data-search="48 +infinito medio">
+      <th scope="row">48</th><td class="formula">\(\lim_{x\to0}\frac{1}{x^{2/3}}\)</td>
+      <td>+∞</td><td><strong>+infinito</strong></td>
+      <td>Coincide con el cálculo simbólico y la revisión de signo, dominio y dirección.</td></tr>
+<tr class="" data-search="49 +infinito medio">
+      <th scope="row">49</th><td class="formula">\(\lim_{x\to(\pi/2)^-}\tan x\)</td>
+      <td>+∞</td><td><strong>+infinito</strong></td>
+      <td>Coincide con el cálculo simbólico y la revisión de signo, dominio y dirección.</td></tr>
+<tr class="" data-search="50 +infinito medio">
+      <th scope="row">50</th><td class="formula">\(\lim_{x\to(-\pi/2)^+}\sec x\)</td>
+      <td>+∞</td><td><strong>+infinito</strong></td>
+      <td>Coincide con el cálculo simbólico y la revisión de signo, dominio y dirección.</td></tr>
+<tr class="" data-search="51 NE medio">
+      <th scope="row">51</th><td class="formula">\(\lim_{\theta\to0}(1+\csc\theta)\)</td>
+      <td>izq: −∞; der: +∞</td><td><strong>NE</strong></td>
+      <td>Los laterales difieren o la función oscila; véase el resultado de la comprobación.</td></tr>
+<tr class="" data-search="52 NE medio">
+      <th scope="row">52</th><td class="formula">\(\lim_{\theta\to0}(2-\cot\theta)\)</td>
+      <td>izq: +∞; der: −∞</td><td><strong>NE</strong></td>
+      <td>Los laterales difieren o la función oscila; véase el resultado de la comprobación.</td></tr>
+<tr class="" data-search="53a +infinito bajo">
+      <th scope="row">53a</th><td class="formula">\(\lim_{x\to2^+}\frac{1}{x^2-4}\)</td>
+      <td>+∞</td><td><strong>+infinito</strong></td>
+      <td>Coincide con el cálculo simbólico y la revisión de signo, dominio y dirección.</td></tr>
+<tr class="" data-search="53b -infinito bajo">
+      <th scope="row">53b</th><td class="formula">\(\lim_{x\to2^-}\frac{1}{x^2-4}\)</td>
+      <td>−∞</td><td><strong>-infinito</strong></td>
+      <td>Coincide con el cálculo simbólico y la revisión de signo, dominio y dirección.</td></tr>
+<tr class="" data-search="53c -infinito bajo">
+      <th scope="row">53c</th><td class="formula">\(\lim_{x\to-2^+}\frac{1}{x^2-4}\)</td>
+      <td>−∞</td><td><strong>-infinito</strong></td>
+      <td>Coincide con el cálculo simbólico y la revisión de signo, dominio y dirección.</td></tr>
+<tr class="" data-search="53d +infinito bajo">
+      <th scope="row">53d</th><td class="formula">\(\lim_{x\to-2^-}\frac{1}{x^2-4}\)</td>
+      <td>+∞</td><td><strong>+infinito</strong></td>
+      <td>Coincide con el cálculo simbólico y la revisión de signo, dominio y dirección.</td></tr>
+<tr class="" data-search="54a +infinito bajo">
+      <th scope="row">54a</th><td class="formula">\(\lim_{x\to1^+}\frac{x}{x^2-1}\)</td>
+      <td>+∞</td><td><strong>+infinito</strong></td>
+      <td>Coincide con el cálculo simbólico y la revisión de signo, dominio y dirección.</td></tr>
+<tr class="" data-search="54b -infinito bajo">
+      <th scope="row">54b</th><td class="formula">\(\lim_{x\to1^-}\frac{x}{x^2-1}\)</td>
+      <td>−∞</td><td><strong>-infinito</strong></td>
+      <td>Coincide con el cálculo simbólico y la revisión de signo, dominio y dirección.</td></tr>
+<tr class="" data-search="54c +infinito medio">
+      <th scope="row">54c</th><td class="formula">\(\lim_{x\to-1^+}\frac{x}{x^2-1}\)</td>
+      <td>+∞</td><td><strong>+infinito</strong></td>
+      <td>Coincide con el cálculo simbólico y la revisión de signo, dominio y dirección.</td></tr>
+<tr class="" data-search="54d -infinito medio">
+      <th scope="row">54d</th><td class="formula">\(\lim_{x\to-1^-}\frac{x}{x^2-1}\)</td>
+      <td>−∞</td><td><strong>-infinito</strong></td>
+      <td>Coincide con el cálculo simbólico y la revisión de signo, dominio y dirección.</td></tr>
+<tr class="" data-search="55a -infinito bajo">
+      <th scope="row">55a</th><td class="formula">\(\lim_{x\to0^+}\left(\frac{x^2}{2}-\frac{1}{x}\right)\)</td>
+      <td>−∞</td><td><strong>-infinito</strong></td>
+      <td>Coincide con el cálculo simbólico y la revisión de signo, dominio y dirección.</td></tr>
+<tr class="" data-search="55b +infinito bajo">
+      <th scope="row">55b</th><td class="formula">\(\lim_{x\to0^-}\left(\frac{x^2}{2}-\frac{1}{x}\right)\)</td>
+      <td>+∞</td><td><strong>+infinito</strong></td>
+      <td>Coincide con el cálculo simbólico y la revisión de signo, dominio y dirección.</td></tr>
+<tr class="" data-search="55c 0 medio">
+      <th scope="row">55c</th><td class="formula">\(\lim_{x\to\sqrt[3]{2}}\left(\frac{x^2}{2}-\frac{1}{x}\right)\)</td>
+      <td>0</td><td><strong>0</strong></td>
+      <td>El valor es 0 y no hay un único signo en toda la aproximación indicada.</td></tr>
+<tr class="" data-search="55d L bajo">
+      <th scope="row">55d</th><td class="formula">\(\lim_{x\to-1}\left(\frac{x^2}{2}-\frac{1}{x}\right)\)</td>
+      <td>3/2</td><td><strong>L</strong></td>
+      <td>Coincide con el cálculo simbólico y la revisión de signo, dominio y dirección.</td></tr>
+<tr class="" data-search="56a +infinito bajo">
+      <th scope="row">56a</th><td class="formula">\(\lim_{x\to-2^+}\frac{x^2-1}{2x+4}\)</td>
+      <td>+∞</td><td><strong>+infinito</strong></td>
+      <td>Coincide con el cálculo simbólico y la revisión de signo, dominio y dirección.</td></tr>
+<tr class="" data-search="56b -infinito bajo">
+      <th scope="row">56b</th><td class="formula">\(\lim_{x\to-2^-}\frac{x^2-1}{2x+4}\)</td>
+      <td>−∞</td><td><strong>-infinito</strong></td>
+      <td>Coincide con el cálculo simbólico y la revisión de signo, dominio y dirección.</td></tr>
+<tr class="" data-search="56c 0+ bajo">
+      <th scope="row">56c</th><td class="formula">\(\lim_{x\to1^+}\frac{x^2-1}{2x+4}\)</td>
+      <td>0</td><td><strong>0+</strong></td>
+      <td>El valor del límite es 0; el signo de la función cerca de la aproximación es positivo.</td></tr>
+<tr class="" data-search="56d -L bajo">
+      <th scope="row">56d</th><td class="formula">\(\lim_{x\to0^-}\frac{x^2-1}{2x+4}\)</td>
+      <td>-1/4</td><td><strong>-L</strong></td>
+      <td>Coincide con el cálculo simbólico y la revisión de signo, dominio y dirección.</td></tr>
+<tr class="" data-search="57a -infinito medio">
+      <th scope="row">57a</th><td class="formula">\(\lim_{x\to0^+}\frac{x^2-3x+2}{x^3-2x^2}\)</td>
+      <td>−∞</td><td><strong>-infinito</strong></td>
+      <td>Coincide con el cálculo simbólico y la revisión de signo, dominio y dirección.</td></tr>
+<tr class="" data-search="57b L medio">
+      <th scope="row">57b</th><td class="formula">\(\lim_{x\to2^+}\frac{x^2-3x+2}{x^3-2x^2}\)</td>
+      <td>1/4</td><td><strong>L</strong></td>
+      <td>Coincide con el cálculo simbólico y la revisión de signo, dominio y dirección.</td></tr>
+<tr class="" data-search="57c L medio">
+      <th scope="row">57c</th><td class="formula">\(\lim_{x\to2^-}\frac{x^2-3x+2}{x^3-2x^2}\)</td>
+      <td>1/4</td><td><strong>L</strong></td>
+      <td>Coincide con el cálculo simbólico y la revisión de signo, dominio y dirección.</td></tr>
+<tr class="" data-search="57d L medio">
+      <th scope="row">57d</th><td class="formula">\(\lim_{x\to2}\frac{x^2-3x+2}{x^3-2x^2}\)</td>
+      <td>1/4</td><td><strong>L</strong></td>
+      <td>Coincide con el cálculo simbólico y la revisión de signo, dominio y dirección.</td></tr>
+<tr class="" data-search="57e -infinito alto">
+      <th scope="row">57e</th><td class="formula">\(\lim_{x\to0}\frac{x^2-3x+2}{x^3-2x^2}\)</td>
+      <td>−∞</td><td><strong>-infinito</strong></td>
+      <td>Coincide con el cálculo simbólico y la revisión de signo, dominio y dirección.</td></tr>
+<tr class="" data-search="58a L medio">
+      <th scope="row">58a</th><td class="formula">\(\lim_{x\to2^+}\frac{x^2-3x+2}{x^3-4x}\)</td>
+      <td>1/8</td><td><strong>L</strong></td>
+      <td>Coincide con el cálculo simbólico y la revisión de signo, dominio y dirección.</td></tr>
+<tr class="" data-search="58b +infinito medio">
+      <th scope="row">58b</th><td class="formula">\(\lim_{x\to-2^+}\frac{x^2-3x+2}{x^3-4x}\)</td>
+      <td>+∞</td><td><strong>+infinito</strong></td>
+      <td>Coincide con el cálculo simbólico y la revisión de signo, dominio y dirección.</td></tr>
+<tr class="" data-search="58c +infinito medio">
+      <th scope="row">58c</th><td class="formula">\(\lim_{x\to0^-}\frac{x^2-3x+2}{x^3-4x}\)</td>
+      <td>+∞</td><td><strong>+infinito</strong></td>
+      <td>Coincide con el cálculo simbólico y la revisión de signo, dominio y dirección.</td></tr>
+<tr class="" data-search="58d 0+ medio">
+      <th scope="row">58d</th><td class="formula">\(\lim_{x\to1^+}\frac{x^2-3x+2}{x^3-4x}\)</td>
+      <td>0</td><td><strong>0+</strong></td>
+      <td>El valor del límite es 0; el signo de la función cerca de la aproximación es positivo.</td></tr>
+<tr class="" data-search="58e NE alto">
+      <th scope="row">58e</th><td class="formula">\(\lim_{x\to0}\frac{x^2-3x+2}{x^3-4x}\)</td>
+      <td>izq: +∞; der: −∞</td><td><strong>NE</strong></td>
+      <td>Los laterales difieren o la función oscila; véase el resultado de la comprobación.</td></tr>
+<tr class="" data-search="59a -infinito medio">
+      <th scope="row">59a</th><td class="formula">\(\lim_{t\to0^+}\left(2-\frac{3}{t^{1/3}}\right)\)</td>
+      <td>−∞</td><td><strong>-infinito</strong></td>
+      <td>Coincide con el cálculo simbólico y la revisión de signo, dominio y dirección.</td></tr>
+<tr class="" data-search="59b +infinito medio">
+      <th scope="row">59b</th><td class="formula">\(\lim_{t\to0^-}\left(2-\frac{3}{t^{1/3}}\right)\)</td>
+      <td>+∞</td><td><strong>+infinito</strong></td>
+      <td>Coincide con el cálculo simbólico y la revisión de signo, dominio y dirección.</td></tr>
+<tr class="" data-search="60a +infinito medio">
+      <th scope="row">60a</th><td class="formula">\(\lim_{t\to0^+}\left(\frac{1}{t^{3/5}}+7\right)\)</td>
+      <td>+∞</td><td><strong>+infinito</strong></td>
+      <td>Coincide con el cálculo simbólico y la revisión de signo, dominio y dirección.</td></tr>
+<tr class="" data-search="60b NE alto">
+      <th scope="row">60b</th><td class="formula">\(\lim_{t\to0}\left(\frac{1}{t^{3/5}}+7\right)\)</td>
+      <td>izq: −∞; der: +∞</td><td><strong>NE</strong></td>
+      <td>Los laterales difieren o la función oscila; véase el resultado de la comprobación.</td></tr>
+<tr class="" data-search="61a +infinito medio">
+      <th scope="row">61a</th><td class="formula">\(\lim_{x\to0^+}\left(\frac{1}{x^{2/3}}+\frac{2}{(x-1)^{2/3}}\right)\)</td>
+      <td>+∞</td><td><strong>+infinito</strong></td>
+      <td>Coincide con el cálculo simbólico y la revisión de signo, dominio y dirección.</td></tr>
+<tr class="" data-search="61b +infinito medio">
+      <th scope="row">61b</th><td class="formula">\(\lim_{x\to0^-}\left(\frac{1}{x^{2/3}}+\frac{2}{(x-1)^{2/3}}\right)\)</td>
+      <td>+∞</td><td><strong>+infinito</strong></td>
+      <td>Coincide con el cálculo simbólico y la revisión de signo, dominio y dirección.</td></tr>
+<tr class="" data-search="61c +infinito medio">
+      <th scope="row">61c</th><td class="formula">\(\lim_{x\to1^+}\left(\frac{1}{x^{2/3}}+\frac{2}{(x-1)^{2/3}}\right)\)</td>
+      <td>+∞</td><td><strong>+infinito</strong></td>
+      <td>Coincide con el cálculo simbólico y la revisión de signo, dominio y dirección.</td></tr>
+<tr class="" data-search="61d +infinito medio">
+      <th scope="row">61d</th><td class="formula">\(\lim_{x\to1^-}\left(\frac{1}{x^{2/3}}+\frac{2}{(x-1)^{2/3}}\right)\)</td>
+      <td>+∞</td><td><strong>+infinito</strong></td>
+      <td>Coincide con el cálculo simbólico y la revisión de signo, dominio y dirección.</td></tr>
+<tr class="" data-search="62a +infinito medio">
+      <th scope="row">62a</th><td class="formula">\(\lim_{x\to0^+}\left(\frac{1}{x^{1/3}}-\frac{1}{(x-1)^{4/3}}\right)\)</td>
+      <td>+∞</td><td><strong>+infinito</strong></td>
+      <td>Coincide con el cálculo simbólico y la revisión de signo, dominio y dirección.</td></tr>
+<tr class="" data-search="62b -infinito medio">
+      <th scope="row">62b</th><td class="formula">\(\lim_{x\to0^-}\left(\frac{1}{x^{1/3}}-\frac{1}{(x-1)^{4/3}}\right)\)</td>
+      <td>−∞</td><td><strong>-infinito</strong></td>
+      <td>Coincide con el cálculo simbólico y la revisión de signo, dominio y dirección.</td></tr>
+<tr class="" data-search="62c -infinito medio">
+      <th scope="row">62c</th><td class="formula">\(\lim_{x\to1^+}\left(\frac{1}{x^{1/3}}-\frac{1}{(x-1)^{4/3}}\right)\)</td>
+      <td>−∞</td><td><strong>-infinito</strong></td>
+      <td>Coincide con el cálculo simbólico y la revisión de signo, dominio y dirección.</td></tr>
+<tr class="" data-search="62d -infinito medio">
+      <th scope="row">62d</th><td class="formula">\(\lim_{x\to1^-}\left(\frac{1}{x^{1/3}}-\frac{1}{(x-1)^{4/3}}\right)\)</td>
+      <td>−∞</td><td><strong>-infinito</strong></td>
+      <td>Coincide con el cálculo simbólico y la revisión de signo, dominio y dirección.</td></tr>
+<tr class="" data-search="80 0+ medio">
+      <th scope="row">80</th><td class="formula">\(\lim_{x\to\infty}(\sqrt{x+9}-\sqrt{x+4})\)</td>
+      <td>0</td><td><strong>0+</strong></td>
+      <td>El valor del límite es 0; el signo de la función cerca de la aproximación es positivo.</td></tr>
+<tr class="" data-search="81 0+ medio">
+      <th scope="row">81</th><td class="formula">\(\lim_{x\to\infty}(\sqrt{x^2+25}-\sqrt{x^2-1})\)</td>
+      <td>0</td><td><strong>0+</strong></td>
+      <td>El valor del límite es 0; el signo de la función cerca de la aproximación es positivo.</td></tr>
+<tr class="" data-search="82 0+ alto">
+      <th scope="row">82</th><td class="formula">\(\lim_{x\to-\infty}(\sqrt{x^2+3}+x)\)</td>
+      <td>0</td><td><strong>0+</strong></td>
+      <td>El valor del límite es 0; el signo de la función cerca de la aproximación es positivo.</td></tr>
+<tr class="" data-search="83 -L alto">
+      <th scope="row">83</th><td class="formula">\(\lim_{x\to-\infty}(2x+\sqrt{4x^2+3x-2})\)</td>
+      <td>-3/4</td><td><strong>-L</strong></td>
+      <td>Racionalizar: (3x−2)/(√(4x²+3x−2)−2x) → −3/4 cuando x → −∞.</td></tr>
+<tr class="" data-search="84 -L alto">
+      <th scope="row">84</th><td class="formula">\(\lim_{x\to\infty}(\sqrt{9x^2-x}-3x)\)</td>
+      <td>-1/6</td><td><strong>-L</strong></td>
+      <td>Racionalizar: −x/(√(9x²−x)+3x) → −1/6.</td></tr>
+<tr class="" data-search="9 0 medio">
+      <th scope="row">9</th><td class="formula">\(\lim_{x\to\infty}\frac{\sin(2x)}{x}\)</td>
+      <td>0</td><td><strong>0</strong></td>
+      <td>El valor es 0 y no hay un único signo en toda la aproximación indicada.</td></tr>
+<tr class="" data-search="10 0 medio">
+      <th scope="row">10</th><td class="formula">\(\lim_{\theta\to-\infty}\frac{\cos\theta}{3\theta}\)</td>
+      <td>0</td><td><strong>0</strong></td>
+      <td>El valor es 0 y no hay un único signo en toda la aproximación indicada.</td></tr>
+<tr class="" data-search="11 -L medio">
+      <th scope="row">11</th><td class="formula">\(\lim_{t\to-\infty}\frac{2-t+\sin t}{t+\cos t}\)</td>
+      <td>-1</td><td><strong>-L</strong></td>
+      <td>Coincide con el cálculo simbólico y la revisión de signo, dominio y dirección.</td></tr>
+<tr class="" data-search="12 L medio">
+      <th scope="row">12</th><td class="formula">\(\lim_{r\to\infty}\frac{r+\sin r}{2r+7-5\sin r}\)</td>
+      <td>1/2</td><td><strong>L</strong></td>
+      <td>Coincide con el cálculo simbólico y la revisión de signo, dominio y dirección.</td></tr>
+<tr class="" data-search="17 L medio">
+      <th scope="row">17</th><td class="formula">\(\lim_{x\to1}\frac{x^{1/3}-1}{\sqrt{x}-1}\)</td>
+      <td>2/3</td><td><strong>L</strong></td>
+      <td>Coincide con el cálculo simbólico y la revisión de signo, dominio y dirección.</td></tr>
+<tr class="" data-search="18 0 medio">
+      <th scope="row">18</th><td class="formula">\(\lim_{x\to64}\frac{x^{2/3}-16}{\sqrt[4]{x}-8}\)</td>
+      <td>0</td><td><strong>0</strong></td>
+      <td>Correcto tal como está escrito: en x=64, la raíz cuarta del denominador vale 2√2, no 8. El numerador tiende a cero y el denominador no.</td></tr>
+<tr class="" data-search="19 L medio">
+      <th scope="row">19</th><td class="formula">\(\lim_{x\to0}\frac{\tan(2x)}{\tan(\pi x)}\)</td>
+      <td>2/π</td><td><strong>L</strong></td>
+      <td>Coincide con el cálculo simbólico y la revisión de signo, dominio y dirección.</td></tr>
+<tr class="" data-search="20 +infinito medio">
+      <th scope="row">20</th><td class="formula">\(\lim_{x\to\pi^-}\csc x\)</td>
+      <td>+∞</td><td><strong>+infinito</strong></td>
+      <td>Coincide con el cálculo simbólico y la revisión de signo, dominio y dirección.</td></tr>
+<tr class="" data-search="21 L medio">
+      <th scope="row">21</th><td class="formula">\(\lim_{x\to\pi}\sin\left(\frac{x}{2}+\sin x\right)\)</td>
+      <td>1</td><td><strong>L</strong></td>
+      <td>Coincide con el cálculo simbólico y la revisión de signo, dominio y dirección.</td></tr>
+<tr class="" data-search="22 L medio">
+      <th scope="row">22</th><td class="formula">\(\lim_{x\to\pi}\cos^2(x-\tan x)\)</td>
+      <td>1</td><td><strong>L</strong></td>
+      <td>Coincide con el cálculo simbólico y la revisión de signo, dominio y dirección.</td></tr>
+<tr class="" data-search="23t L medio">
+      <th scope="row">23t</th><td class="formula">\(\lim_{x\to0}\frac{8x}{3\sin x-x}\)</td>
+      <td>4</td><td><strong>L</strong></td>
+      <td>Coincide con el cálculo simbólico y la revisión de signo, dominio y dirección.</td></tr>
+<tr class="" data-search="24t 0 alto">
+      <th scope="row">24t</th><td class="formula">\(\lim_{x\to0}\frac{\cos(2x)-1}{\sin x}\)</td>
+      <td>0</td><td><strong>0</strong></td>
+      <td>El valor es 0 y no hay un único signo en toda la aproximación indicada.</td></tr>
+<tr class="" data-search="94 +infinito bajo">
+      <th scope="row">94</th><td class="formula">\(\lim_{x\to0^+}\frac{1}{x}\)</td>
+      <td>+∞</td><td><strong>+infinito</strong></td>
+      <td>Coincide con el cálculo simbólico y la revisión de signo, dominio y dirección.</td></tr>
+<tr class="" data-search="95 -infinito bajo">
+      <th scope="row">95</th><td class="formula">\(\lim_{x\to0^-}\frac{1}{x}\)</td>
+      <td>−∞</td><td><strong>-infinito</strong></td>
+      <td>Coincide con el cálculo simbólico y la revisión de signo, dominio y dirección.</td></tr>
+<tr class="" data-search="96 -infinito bajo">
+      <th scope="row">96</th><td class="formula">\(\lim_{x\to2^-}\frac{1}{x-2}\)</td>
+      <td>−∞</td><td><strong>-infinito</strong></td>
+      <td>Coincide con el cálculo simbólico y la revisión de signo, dominio y dirección.</td></tr>
+<tr class="" data-search="97 +infinito bajo">
+      <th scope="row">97</th><td class="formula">\(\lim_{x\to2^+}\frac{1}{x-2}\)</td>
+      <td>+∞</td><td><strong>+infinito</strong></td>
+      <td>Coincide con el cálculo simbólico y la revisión de signo, dominio y dirección.</td></tr>
+<tr class="" data-search="98 +infinito bajo">
+      <th scope="row">98</th><td class="formula">\(\lim_{x\to1^-}\frac{1}{1-x^2}\)</td>
+      <td>+∞</td><td><strong>+infinito</strong></td>
+      <td>Coincide con el cálculo simbólico y la revisión de signo, dominio y dirección.</td></tr>
+<tr class="" data-search="B01 +infinito bajo">
+      <th scope="row">B01</th><td class="formula">\(\lim_{x\to0^+}\frac{1}{x}\)</td>
+      <td>+∞</td><td><strong>+infinito</strong></td>
+      <td>Coincide con el cálculo simbólico y la revisión de signo, dominio y dirección.</td></tr>
+<tr class="" data-search="B02 NE bajo">
+      <th scope="row">B02</th><td class="formula">\(\lim_{x\to0}\frac{1}{x}\)</td>
+      <td>izq: −∞; der: +∞</td><td><strong>NE</strong></td>
+      <td>Los laterales difieren o la función oscila; véase el resultado de la comprobación.</td></tr>
+<tr class="" data-search="B03 NE bajo">
+      <th scope="row">B03</th><td class="formula">\(\lim_{x\to2}\frac{1}{x-2}\)</td>
+      <td>izq: −∞; der: +∞</td><td><strong>NE</strong></td>
+      <td>Los laterales difieren o la función oscila; véase el resultado de la comprobación.</td></tr>
+<tr class="" data-search="B04 0+ bajo">
+      <th scope="row">B04</th><td class="formula">\(\lim_{x\to0^+}\sin x\)</td>
+      <td>0</td><td><strong>0+</strong></td>
+      <td>El valor del límite es 0; el signo de la función cerca de la aproximación es positivo.</td></tr>
+<tr class="" data-search="B05 L bajo">
+      <th scope="row">B05</th><td class="formula">\(\lim_{x\to0^+}\cos x\)</td>
+      <td>1</td><td><strong>L</strong></td>
+      <td>Coincide con el cálculo simbólico y la revisión de signo, dominio y dirección.</td></tr>
+<tr class="" data-search="B06 NE bajo">
+      <th scope="row">B06</th><td class="formula">\(\lim_{x\to\infty}\sin x\)</td>
+      <td>No existe: oscilación entre −1 y 1</td><td><strong>NE</strong></td>
+      <td>Los laterales difieren o la función oscila; véase el resultado de la comprobación.</td></tr>
+<tr class="" data-search="B07 NE bajo">
+      <th scope="row">B07</th><td class="formula">\(\lim_{x\to\infty}\tan x\)</td>
+      <td>No existe: oscilación y polos repetidos</td><td><strong>NE</strong></td>
+      <td>Los laterales difieren o la función oscila; véase el resultado de la comprobación.</td></tr>
+<tr class="" data-search="B08 -L bajo">
+      <th scope="row">B08</th><td class="formula">\(\lim_{x\to-\infty}\arctan x\)</td>
+      <td>-π/2</td><td><strong>-L</strong></td>
+      <td>Coincide con el cálculo simbólico y la revisión de signo, dominio y dirección.</td></tr>
+<tr class="" data-search="B09 0+ bajo">
+      <th scope="row">B09</th><td class="formula">\(\lim_{x\to3^+}(x^2-3x)\)</td>
+      <td>0</td><td><strong>0+</strong></td>
+      <td>El valor del límite es 0; el signo de la función cerca de la aproximación es positivo.</td></tr>
+<tr class="" data-search="B10 0- bajo">
+      <th scope="row">B10</th><td class="formula">\(\lim_{x\to\infty}\frac{-4}{x^3}\)</td>
+      <td>0</td><td><strong>0-</strong></td>
+      <td>El valor del límite es 0; el signo de la función cerca de la aproximación es negativo.</td></tr>
+<tr class="" data-search="B11 0+ bajo">
+      <th scope="row">B11</th><td class="formula">\(\lim_{x\to-\infty}\frac{-4}{x^3}\)</td>
+      <td>0</td><td><strong>0+</strong></td>
+      <td>El valor del límite es 0; el signo de la función cerca de la aproximación es positivo.</td></tr>
+<tr class="" data-search="B12 0+ bajo">
+      <th scope="row">B12</th><td class="formula">\(\lim_{x\to\infty}\frac{1}{x}\)</td>
+      <td>0</td><td><strong>0+</strong></td>
+      <td>El valor del límite es 0; el signo de la función cerca de la aproximación es positivo.</td></tr>
+<tr class="" data-search="B13 +infinito bajo">
+      <th scope="row">B13</th><td class="formula">\(\lim_{x\to\infty}e^x\)</td>
+      <td>+∞</td><td><strong>+infinito</strong></td>
+      <td>Coincide con el cálculo simbólico y la revisión de signo, dominio y dirección.</td></tr>
+<tr class="" data-search="B14 +infinito bajo">
+      <th scope="row">B14</th><td class="formula">\(\lim_{x\to\infty}\ln x\)</td>
+      <td>+∞</td><td><strong>+infinito</strong></td>
+      <td>Coincide con el cálculo simbólico y la revisión de signo, dominio y dirección.</td></tr>
+<tr class="" data-search="B15 0+ bajo">
+      <th scope="row">B15</th><td class="formula">\(\lim_{x\to-\infty}e^x\)</td>
+      <td>0</td><td><strong>0+</strong></td>
+      <td>El valor del límite es 0; el signo de la función cerca de la aproximación es positivo.</td></tr>
+<tr class="" data-search="B16 NE bajo">
+      <th scope="row">B16</th><td class="formula">\(\lim_{x\to0^-}\ln x\)</td>
+      <td>No definido en R por la izquierda</td><td><strong>NE</strong></td>
+      <td>La función ln(x) no tiene valores reales para x &lt; 0. No hay aproximación por la izquierda dentro del dominio; NE es apropiado. No confundir con x → 0⁺, que da −∞.</td></tr>
+<tr class="" data-search="B17 0- bajo">
+      <th scope="row">B17</th><td class="formula">\(\lim_{x\to1^-}\ln x\)</td>
+      <td>0</td><td><strong>0-</strong></td>
+      <td>El valor del límite es 0; el signo de la función cerca de la aproximación es negativo.</td></tr>
+<tr class="" data-search="B18 0+ bajo">
+      <th scope="row">B18</th><td class="formula">\(\lim_{x\to1^+}\ln x\)</td>
+      <td>0</td><td><strong>0+</strong></td>
+      <td>El valor del límite es 0; el signo de la función cerca de la aproximación es positivo.</td></tr>
+<tr class="" data-search="A01 L alto">
+      <th scope="row">A01</th><td class="formula">\(\lim_{x\to\infty}\arctan\left(\left(\frac{1+x}{x^2}\right)^{-x}\right)\)</td>
+      <td>π/2</td><td><strong>L</strong></td>
+      <td>Coincide con el cálculo simbólico y la revisión de signo, dominio y dirección.</td></tr>
+<tr class="" data-search="A02 L alto">
+      <th scope="row">A02</th><td class="formula">\(\lim_{x\to\infty}\cos\left(\left(\frac{x}{2x+7}\right)^x\right)\)</td>
+      <td>1</td><td><strong>L</strong></td>
+      <td>Coincide con el cálculo simbólico y la revisión de signo, dominio y dirección.</td></tr>
+<tr class="" data-search="A03 L alto">
+      <th scope="row">A03</th><td class="formula">\(\lim_{x\to-\infty}\cos(4^x-5^x)\)</td>
+      <td>1</td><td><strong>L</strong></td>
+      <td>Coincide con el cálculo simbólico y la revisión de signo, dominio y dirección.</td></tr>
+<tr class="" data-search="A04 +infinito alto">
+      <th scope="row">A04</th><td class="formula">\(\lim_{x\to\infty}\ln\left(\frac{1+\ln(x^x)}{\ln x}\right)\)</td>
+      <td>+∞</td><td><strong>+infinito</strong></td>
+      <td>Coincide con el cálculo simbólico y la revisión de signo, dominio y dirección.</td></tr>
+<tr class="" data-search="A05 -infinito alto">
+      <th scope="row">A05</th><td class="formula">\(\lim_{x\to2^-}\cot(\pi x)\)</td>
+      <td>−∞</td><td><strong>-infinito</strong></td>
+      <td>Coincide con el cálculo simbólico y la revisión de signo, dominio y dirección.</td></tr>
+<tr class="" data-search="A06 0- alto">
+      <th scope="row">A06</th><td class="formula">\(\lim_{x\to-\infty}\sin\left(\frac{3x+2}{2x^2+1}\right)\)</td>
+      <td>0</td><td><strong>0-</strong></td>
+      <td>El valor del límite es 0; el signo de la función cerca de la aproximación es negativo.</td></tr>
+<tr class="" data-search="A07 L alto">
+      <th scope="row">A07</th><td class="formula">\(\lim_{x\to\infty}\left|\sqrt{x-\sqrt{x}}-\sqrt{x+\sqrt{x}}\right|\)</td>
+      <td>1</td><td><strong>L</strong></td>
+      <td>Racionalizar el valor absoluto: 2√x/(√(x−√x)+√(x+√x)) → 1.</td></tr>
+<tr class="" data-search="A08 -infinito alto">
+      <th scope="row">A08</th><td class="formula">\(\lim_{x\to\infty}\ln\left(\frac{1+e^{-x}}{x}\right)\)</td>
+      <td>−∞</td><td><strong>-infinito</strong></td>
+      <td>Coincide con el cálculo simbólico y la revisión de signo, dominio y dirección.</td></tr>
+<tr class="" data-search="A09 NE alto">
+      <th scope="row">A09</th><td class="formula">\(\lim_{x\to\pi/2}\cot(2x)\)</td>
+      <td>izq: −∞; der: +∞</td><td><strong>NE</strong></td>
+      <td>Los laterales difieren o la función oscila; véase el resultado de la comprobación.</td></tr>
+<tr class="" data-search="A10 -L alto">
+      <th scope="row">A10</th><td class="formula">\(\lim_{x\to0}\sin\left(\frac{x^2-\pi x}{2x}\right)\)</td>
+      <td>-1</td><td><strong>-L</strong></td>
+      <td>Coincide con el cálculo simbólico y la revisión de signo, dominio y dirección.</td></tr>
+<tr class="" data-search="A11 L alto">
+      <th scope="row">A11</th><td class="formula">\(\lim_{x\to\infty}\arccos\left((\ln x)^{1-x}\right)\)</td>
+      <td>π/2</td><td><strong>L</strong></td>
+      <td>Coincide con el cálculo simbólico y la revisión de signo, dominio y dirección.</td></tr>
+<tr class="" data-search="A12 -infinito alto">
+      <th scope="row">A12</th><td class="formula">\(\lim_{x\to\infty}\ln\left(\left(1-\frac{1}{x}\right)^{x^3}\right)\)</td>
+      <td>−∞</td><td><strong>-infinito</strong></td>
+      <td>Para x&gt;1, ln((1−1/x)^(x³)) = x³ ln(1−1/x), equivalente a −x²; tiende a −∞.</td></tr>
+<tr class="" data-search="A13 -infinito alto">
+      <th scope="row">A13</th><td class="formula">\(\lim_{x\to0^-}\tan\left(\frac{\pi-x}{x+2}\right)\)</td>
+      <td>−∞</td><td><strong>-infinito</strong></td>
+      <td>El argumento menos π/2 es −(2+π)x/[2(x+2)]. Para x → 0⁻ es positivo: la tangente se acerca al polo por la derecha y tiende a −∞.</td></tr>
+<tr class="" data-search="A14 +infinito alto">
+      <th scope="row">A14</th><td class="formula">\(\lim_{x\to\infty}\ln\left(x-\sqrt[3]{x^2-5}\right)\)</td>
+      <td>+∞</td><td><strong>+infinito</strong></td>
+      <td>Coincide con el cálculo simbólico y la revisión de signo, dominio y dirección.</td></tr>
+<tr class="" data-search="A15 NE alto">
+      <th scope="row">A15</th><td class="formula">\(\lim_{x\to0}\arctan\left(\frac{1}{x}\right)\)</td>
+      <td>izq: -π/2; der: π/2</td><td><strong>NE</strong></td>
+      <td>Los laterales difieren o la función oscila; véase el resultado de la comprobación.</td></tr>
+<tr class="changed" data-search="A16 +infinito alto">
+      <th scope="row">A16</th><td class="formula">\(\lim_{x\to1^+}\ln\left(\frac{x}{x-1}\right)\)<small>Original: \lim_{x\to1}\ln\left(\frac{x}{x-1}\right)</small></td>
+      <td>+∞</td><td><strong>+infinito</strong><small>Antes: NE</small></td>
+      <td>Se explicita x → 1⁺. El dominio es (−∞,0) ∪ (1,+∞); por la derecha x/(x−1) → +∞, por tanto su logaritmo → +∞. El original era bilateral y decía NE: depende de la convención sobre límites relativos al dominio.</td></tr>
+<tr class="changed" data-search="A17 0- alto">
+      <th scope="row">A17</th><td class="formula">\(\lim_{x\to0^-}\operatorname{arccsc}\left(\frac{\sqrt{x^2-3x}}{x}\right)\)<small>Original: \lim_{x\to0}\operatorname{arccsc}\left(\frac{\sqrt{x^2-3x}}{x}\right)</small></td>
+      <td>0</td><td><strong>0-</strong><small>Antes: NE</small></td>
+      <td>Se explicita x → 0⁻. El dominio real de la composición completa es x &lt; 0. arccsc(u)=arcsin(1/u); x/√(x²−3x) → 0 por valores negativos. El original bilateral decía NE; el límite relativo al dominio vale 0.</td></tr>
+<tr class="" data-search="A18 NE alto">
+      <th scope="row">A18</th><td class="formula">\(\lim_{x\to2}\tan\left(\frac{\pi}{x}\right)\)</td>
+      <td>izq: −∞; der: +∞</td><td><strong>NE</strong></td>
+      <td>Los laterales difieren o la función oscila; véase el resultado de la comprobación.</td></tr></tbody></table></div>
+<p class="source">Fuente del banco: <a href="https://github.com/JhonTavera/clases-matematicas/blob/9b69cc14d29e55b0ee139caf9583b157f616f0ac/cursos/calculo/juego-limites-leibniz/index.html">versión original revisada</a>. Referencias de las convenciones: <a href="https://openstax.org/books/calculus-volume-1/pages/2-2-the-limit-of-a-function">OpenStax, límites laterales</a>; <a href="https://connect.gonzaga.edu/asset/file/1536/ch03_2_limit_at_point_v00.html">Gonzaga, límites relativos al dominio</a>; <a href="https://docs.sympy.org/latest/modules/functions/elementary.html">SymPy, raíces reales y funciones elementales</a>.</p>
+<p class="muted">La visualización de fórmulas usa MathJax desde CDN. Sin conexión se conserva el texto de las fórmulas y todos los resultados.</p>
+</main><script>document.getElementById('filter').addEventListener('input',event=>{const q=event.target.value.trim().toLowerCase();let n=0;for(const row of document.querySelectorAll('tbody tr')){row.hidden=!row.dataset.search.toLowerCase().includes(q);if(!row.hidden)n++}document.getElementById('count').textContent=n+' ejercicios'});</script></body></html>

@@ -1,0 +1,56 @@
+{
+  "level": 3,
+  "event": "correct",
+  "atlas": "leibniz-nivel-3-acierto-secuencia.webp",
+  "cellWidth": 480,
+  "cellHeight": 360,
+  "columns": 8,
+  "rows": 3,
+  "frames": 24,
+  "durations": [
+    40,
+    30,
+    30,
+    20,
+    20,
+    20,
+    30,
+    50,
+    40,
+    40,
+    40,
+    40,
+    40,
+    40,
+    40,
+    40,
+    40,
+    40,
+    40,
+    40,
+    40,
+    40,
+    40,
+    60
+  ],
+  "duration": 900,
+  "method": "rigid original head and wig over fixed body plate; shortened collar occluder; subpixel settling",
+  "pivot": [
+    263,
+    246
+  ],
+  "sourcePortrait": {
+    "atlas": "leibniz-eventos-nivel-3.webp",
+    "cell": 0
+  },
+  "bodyPlate": "acierto3-cuerpo-fuente.png",
+  "review": {
+    "round": 4,
+    "score": 7.8,
+    "requiredScoreGreaterThan": 8,
+    "approved": false,
+    "maximumRounds": 5,
+    "report": "../../revision-fluidez.txt",
+    "method": "Sequential visual inspection of all frames and timing; continuous playback was not observed by the reviewer."
+  }
+}
