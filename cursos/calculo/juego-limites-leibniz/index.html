@@ -891,6 +891,7 @@
 
     function startGame() {
       resetGame();
+      const startSequence = gameState.endSequence;
       portrait.unlockAudio();
       gameState.estado = "jugando";
       portrait.setActive(true);
@@ -901,7 +902,7 @@
       showToast("Clasifica con teclado, mouse o toque.");
       startBackgroundMusic();
       setTimeout(() => {
-        if (gameState.estado === "jugando" && gameState.limitesActivos.length === 0) spawnLimit();
+        if (gameState.endSequence === startSequence && gameState.estado === "jugando" && gameState.limitesActivos.length === 0) spawnLimit();
       }, 450);
       gameState.animationFrameId = requestAnimationFrame(updateGameLoop);
     }
@@ -990,6 +991,7 @@
         if (activeLimit.y + activeLimit.height >= zoneHeight) {
           removeLimitElement(activeLimit);
           penalizePlayer("Un límite tocó el fondo.", 2);
+          if (gameState.estado !== "jugando") return;
         }
       }
 
@@ -1048,6 +1050,7 @@
     }
 
     function penalizePlayer(reason, pointLoss = 3) {
+      if (gameState.estado !== "jugando") return;
       gameState.puntos = Math.max(0, gameState.puntos - pointLoss);
       loseLife(reason, pointLoss);
     }

@@ -73,6 +73,13 @@ antes de disparar el evento, para habilitar el audio desde una interacción.
 La preferencia de reducir movimiento continúa desactivando los gestos.
 
 PRUEBAS
+Para comprobar las reglas originales y los casos de derrota y reinicio:
+  node tests/game-mechanics.test.cjs
+Las 14 comprobaciones cubren vidas, puntos, racha, selección de un límite por
+respuesta, dificultades, aparición, caída, niveles, victoria, derrota, teclado,
+clics, música, aceleración y estasis. Al perder la última vida se detiene el
+fotograma del juego sin penalizar otros límites ni programar otra actualización.
+Los temporizadores iniciales de partidas anteriores no sobreviven al reinicio.
 Para comprobar las nueve reacciones y su cola sin instalar dependencias:
   node tests/portrait-events.test.cjs
 Se verificaron también en Edge los nueve botones de animaciones.html, la entrada
