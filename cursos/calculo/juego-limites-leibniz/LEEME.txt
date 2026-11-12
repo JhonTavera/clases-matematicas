@@ -40,6 +40,11 @@ El acierto del nivel 3 usa una secuencia adicional de 24 fotogramas (900 ms),
 en leibniz-nivel-3-acierto-secuencia.webp: preparación breve, giro rápido de cabeza
 y recuperación gradual. El torso permanece estable y el primer y último
 fotograma coinciden con el reposo. La grilla es de 8 columnas y 3 filas.
+La recuperación mantiene los nueve primeros fotogramas y vuelve por las mismas
+poses de salida. Durante el regreso se registra la posición de ojos, nariz,
+boca y contorno del pelo para evitar imágenes dobles; los ojos se abren al
+acercarse a la postura frontal. No se utiliza la cuarta pose independiente
+de la hoja fuente para la recuperación.
 Si ese recurso no carga, se conserva la reacción del atlas de trece celdas.
 acierto3-secuencia.json documenta la grilla y los tiempos; prompt-acierto3.txt
 y acierto3-fotogramas-fuente.png conservan el prompt de ImageGen y las imágenes clave.
