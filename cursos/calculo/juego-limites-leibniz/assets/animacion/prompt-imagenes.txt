@@ -1,0 +1,8 @@
+Use case: identity-preserve.
+Asset type: a precisely aligned 3-column by 3-row sprite sheet for an educational calculus browser game.
+Input images: first is reference for row 1, second for row 2, third for row 3. Preserve the same historical Leibniz identity, beautiful black-and-white engraved crosshatching, curled dark wig, white cravat and dark coat.
+Create ONE landscape 3x3 sheet, exactly 9 equally sized tiles with no gutters, borders, labels or writing. White background in every tile. Every tile shows exactly the same complete bust composition, wig top at 3% tile height, shoulders at bottom, face landmarks and overall silhouette locked in position, same camera scale and angle throughout all nine tiles. No body motion, no head rotation. Do not crop the wig.
+Row 1: calm expression from reference 1. Col 1 eyes open mouth closed; col 2 a natural blink with eyelids fully closed and mouth closed; col 3 eyes open and mouth gently open as if saying 'ah'.
+Row 2: slightly raised eyebrow / questioning expression from reference 2, SAME framing and size as row 1. Col 1 eyes open mouth closed; col 2 eyes closed blinking mouth closed; col 3 eyes open and mouth gently open speaking.
+Row 3: focused stern brow from reference 3, SAME framing and size as row 1. Col 1 eyes open mouth closed; col 2 eyes closed blinking mouth closed; col 3 eyes open mouth gently open speaking.
+Only local eyelids, eyebrows and mouth change. All hair curls, clothing, background and facial proportions should be as identical as possible across cells. Refined engraving, dignified and recognizable, no modern elements, no text, no watermark.

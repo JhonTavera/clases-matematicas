@@ -1,0 +1,32 @@
+REVISIÓN Y ANIMACIONES DE LEIBNIZ — 12 NOV 2026
+
+Banco: 154 ejercicios. 152 clasificaciones originales coinciden con la revisión.
+A16 y A17 tenían ambigüedad sobre el dominio: ahora se explicita el lateral válido.
+A16: x → 1+; respuesta +infinito. A17: x → 0−; respuesta 0−.
+revision-limites.html contiene resultados, notas, originales y fuentes.
+
+ANIMACIÓN
+leibniz.js usa tres atlas WebP con nueve celdas de 480 × 360 cada uno.
+Celda 0: reposo. Celdas 1–4: cierre de ojos. Celdas 5–8: apertura de boca.
+Se generaron nueve imágenes clave con la herramienta integrada ImageGen, tomando
+como referencia assets/11.png, 21.png y 31.png. Los fotogramas intermedios de los
+GIF y los atlas se montaron mediante interpolación de flujo óptico bidireccional.
+El cambio de nivel en el juego usa un fundido de 420 ms; el habla dura 640 ms;
+el parpadeo dura 280 ms. Acierto: asentimiento. Error: movimiento lateral breve.
+Se respeta prefers-reduced-motion y se pausa el retrato al ocultar la pestaña,
+al terminar la partida y antes de comenzar. Las imágenes originales son respaldo
+si un atlas no carga. Los GIF se entregan aparte; el juego usa los atlas para
+controlar los eventos y evitar reproducir una animación cuando no corresponde.
+
+PRUEBAS
+Instalar las dependencias en un entorno Python y ejecutar:
+  python -m pip install -r tests/requirements.txt
+  python tests/verify_limits.py
+La prueba lee el banco real del index.html, calcula los laterales por separado,
+interpreta las potencias racionales impares en los reales y contrasta categorías.
+También se probaron en Edge las 154 fórmulas con MathJax, la puntuación, tres niveles,
+parpadeo/habla, movimiento reducido, reinicio y la presentación a 390 × 844.
+
+El archivo principal conserva MathJax desde CDN: requiere conexión para componer
+las fórmulas. Para probar esta carpeta: python -m http.server 8000 y abrir
+http://localhost:8000/. Las imágenes y música originales se conservan.

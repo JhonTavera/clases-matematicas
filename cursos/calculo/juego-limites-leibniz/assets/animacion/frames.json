@@ -1,0 +1,89 @@
+[
+  {
+    "level": 1,
+    "atlas": "leibniz-nivel-1.webp",
+    "width": 480,
+    "height": 360,
+    "frames": 9,
+    "blink": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      3,
+      2,
+      1,
+      0
+    ],
+    "speak": [
+      0,
+      5,
+      6,
+      7,
+      8,
+      7,
+      6,
+      5,
+      0
+    ]
+  },
+  {
+    "level": 2,
+    "atlas": "leibniz-nivel-2.webp",
+    "width": 480,
+    "height": 360,
+    "frames": 9,
+    "blink": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      3,
+      2,
+      1,
+      0
+    ],
+    "speak": [
+      0,
+      5,
+      6,
+      7,
+      8,
+      7,
+      6,
+      5,
+      0
+    ]
+  },
+  {
+    "level": 3,
+    "atlas": "leibniz-nivel-3.webp",
+    "width": 480,
+    "height": 360,
+    "frames": 9,
+    "blink": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      3,
+      2,
+      1,
+      0
+    ],
+    "speak": [
+      0,
+      5,
+      6,
+      7,
+      8,
+      7,
+      6,
+      5,
+      0
+    ]
+  }
+]
