@@ -40,17 +40,22 @@ El acierto del nivel 3 usa una secuencia adicional de 24 fotogramas (900 ms),
 en leibniz-nivel-3-acierto-secuencia.webp: preparación breve, giro rápido de cabeza
 y recuperación gradual. El torso permanece estable y el primer y último
 fotograma coinciden con el reposo. La grilla es de 8 columnas y 3 filas.
-La recuperación mantiene los nueve primeros fotogramas y vuelve por las mismas
-poses de salida. Durante el regreso se registra la posición de ojos, nariz,
-boca y contorno del pelo para evitar imágenes dobles; los ojos se abren al
-acercarse a la postura frontal. No se utiliza la cuarta pose independiente
-de la hoja fuente para la recuperación.
+La cabeza y la peluca se animan a partir del mismo retrato de reposo, con
+rotación y desplazamiento sobre una placa de cuerpo fija. El pañuelo queda
+delante de la unión inferior del cuello. El regreso empieza después del giro
+y desacelera hasta la postura original; las poses cercanas al reposo se asientan
+de forma progresiva. No se mezclan caras generadas diferentes durante la vuelta.
 Si ese recurso no carga, se conserva la reacción del atlas de trece celdas.
-acierto3-secuencia.json documenta la grilla y los tiempos; prompt-acierto3.txt
-y acierto3-fotogramas-fuente.png conservan el prompt de ImageGen y las imágenes clave.
-Las imágenes clave se crearon con la herramienta integrada ImageGen conservando
-el estilo del retrato original. Los fotogramas intermedios de los GIF y atlas se
-montaron mediante interpolación de flujo óptico bidireccional.
+acierto3-secuencia.json documenta la grilla, los tiempos, el método y la revisión.
+acierto3-cuerpo-fuente.png y prompt-acierto3-cuerpo.txt conservan la placa creada
+con ImageGen y su prompt; el rostro móvil procede de la celda de reposo original.
+Las hojas y el prompt de acierto3 anteriores se conservan como antecedentes.
+Los otros ocho eventos mantienen sus atlas e interpolación de flujo óptico.
+revision-fluidez.txt contiene las cinco notas del revisor, sus observaciones,
+las correcciones solicitadas y el resultado final del proceso.
+Ninguna de las cinco rondas superó 8/10. La secuencia incluida corresponde
+a la mejor candidata, ronda 4 con 7,8/10; NO está aprobada visualmente.
+Se detuvieron las iteraciones al alcanzar el máximo indicado por el usuario.
 
 Se respeta prefers-reduced-motion y se detiene el retrato al ocultar la pestaña,
 antes de comenzar y después de la reacción final de la partida. Las imágenes

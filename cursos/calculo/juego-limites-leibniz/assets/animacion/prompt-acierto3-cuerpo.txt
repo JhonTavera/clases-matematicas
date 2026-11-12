@@ -1,0 +1,6 @@
+Herramienta: ImageGen integrada (edición de la imagen de reposo del nivel 3).
+Uso: placa de cuerpo para cubrir zonas ocultas al mover la cabeza y la peluca.
+El rostro animado procede del retrato original; esta imagen solo rellena ropa.
+
+Prompt:
+Use case: precise-object-edit. This is a technical clean background plate for animating this exact engraved historical portrait. Edit target: the supplied portrait of Leibniz. Remove only his entire head and entire long curled wig, replacing the head area above the collar with pure white and reconstructing the small hidden parts of his white neck scarf and dark engraved coat behind the long hair. Keep the torso, its exact silhouette, shoulders, white scarf, button, fine black-and-white engraving style, framing, size and location unchanged. Show a blank neck opening at the collar, not a face, head or hair. Coat and scarf remain at the bottom in exactly the original positions, top of image blank pure white. Flat pure white background, remove faint paper edge. No text, no shadows on background, no added elements. Preserve existing visible clothes as exactly as possible. Landscape 4:3 image matching original composition. This body plate will be placed under the untouched original head and wig, so do not redesign or reposition the clothing.

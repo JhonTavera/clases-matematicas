@@ -34,44 +34,23 @@
     60
   ],
   "duration": 900,
-  "registration": [
-    [
-      0.9488765597343445,
-      0.01729409769177437,
-      -0.22321394085884094
-    ],
-    [
-      -0.001359164365567267,
-      0.9489259123802185,
-      -11.580856323242188
-    ]
+  "method": "rigid original head and wig over fixed body plate; shortened collar occluder; subpixel settling",
+  "pivot": [
+    263,
+    246
   ],
-  "registrationScore": 0.9934272468367615,
-  "recoveryVersion": 4,
-  "preservedFrames": [
-    0,
-    8
-  ],
-  "recoveryMethod": "Return along outgoing poses with registered face and hair silhouette; one head texture until near-frontal; no independent recovery portrait.",
-  "recoveryPath": {
-    "BtoCReverse": [
-      0.96,
-      0.89,
-      0.78,
-      0.65,
-      0.51,
-      0.36,
-      0.2,
-      0.08,
-      0
-    ],
-    "AtoBReverse": [
-      0.86,
-      0.64,
-      0.42,
-      0.23,
-      0.09,
-      0
-    ]
+  "sourcePortrait": {
+    "atlas": "leibniz-eventos-nivel-3.webp",
+    "cell": 0
+  },
+  "bodyPlate": "acierto3-cuerpo-fuente.png",
+  "review": {
+    "round": 4,
+    "score": 7.8,
+    "requiredScoreGreaterThan": 8,
+    "approved": false,
+    "maximumRounds": 5,
+    "report": "../../revision-fluidez.txt",
+    "method": "Sequential visual inspection of all frames and timing; continuous playback was not observed by the reviewer."
   }
 }
