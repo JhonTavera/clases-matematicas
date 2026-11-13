@@ -72,14 +72,34 @@ portrait.setSoundEnabled(boolean). Los clics llaman a portrait.unlockAudio()
 antes de disparar el evento, para habilitar el audio desde una interacción.
 La preferencia de reducir movimiento continúa desactivando los gestos.
 
+SOLUCIONES AL PERDER
+soluciones.js contiene las 154 soluciones breves del banco, con el formato
+aprobado: factorización antes de cancelar, productos de signos (como 0⁺ · 1)
+y multiplicación por el conjugado en las racionalizaciones de nivel medio.
+L representa un número positivo. Las fracciones con 0⁺ y 0⁻ son la notación de
+límites empleada en el curso, no divisiones por el número cero.
+
+Tras perder la última vida, «Revisar solución del último límite» muestra el
+enunciado, el desarrollo y la clasificación. Se puede ocultar o reiniciar sin
+abrirla. El botón aparece después de terminar la reacción final de Leibniz.
+Si un límite toca el fondo, se conserva ese ejercicio exacto. Si se falla una
+clasificación con varios límites activos, se revisa el más cercano al fondo.
+Si se falla con la pantalla vacía, se explica que se está revisando el último
+ejercicio de la partida; antes de aparecer el primero no se ofrece solución.
+La revisión no cambia puntos, vidas ni reglas; reiniciar borra su contenido.
+Las fórmulas largas se pueden desplazar horizontalmente con toque o teclado.
+
 PRUEBAS
 Para comprobar las reglas originales y los casos de derrota y reinicio:
   node tests/game-mechanics.test.cjs
-Las 14 comprobaciones cubren vidas, puntos, racha, selección de un límite por
+Las 20 comprobaciones cubren vidas, puntos, racha, selección de un límite por
 respuesta, dificultades, aparición, caída, niveles, victoria, derrota, teclado,
 clics, música, aceleración y estasis. Al perder la última vida se detiene el
 fotograma del juego sin penalizar otros límites ni programar otra actualización.
 Los temporizadores iniciales de partidas anteriores no sobreviven al reinicio.
+También cubren las 154 soluciones, el ejercicio exacto que provoca la derrota,
+el error entre varios límites, la pantalla vacía, abrir/ocultar/reiniciar,
+la ausencia de soluciones durante el juego y la victoria, y MathJax tardío.
 Para comprobar las nueve reacciones y su cola sin instalar dependencias:
   node tests/portrait-events.test.cjs
 Se verificaron también en Edge los nueve botones de animaciones.html, la entrada
@@ -91,6 +111,10 @@ Instalar las dependencias en un entorno Python y ejecutar:
   python tests/verify_limits.py
 La prueba lee el banco real del index.html, calcula los laterales por separado,
 interpreta las potencias racionales impares en los reales y contrasta categorías.
+Además contrasta el valor exacto, los laterales y el signo de aproximación de
+cada una de las 154 soluciones con los resultados calculados. Se compusieron
+las 346 fórmulas del nuevo material con MathJax 3.2.2 sin errores; 106 igualdades
+intermedias se comprobaron numéricamente cerca de los puntos correspondientes.
 La revisión matemática inicial comprobó en Edge las 154 fórmulas con MathJax,
 la puntuación y la presentación a 390 × 844. Los cambios de animación mantienen
 ese banco de límites.
