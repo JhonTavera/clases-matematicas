@@ -355,6 +355,8 @@
     }
 
     #endOverlay .modal { width: min(860px, 100%); }
+    #endOverlay.reviewing h1 { font-size: clamp(2rem, 5vw, 3rem); }
+    #endOverlay.reviewing .max-score-display { display: none; }
     .review-action {
       display: block;
       margin: 0 auto 16px;
@@ -1179,6 +1181,7 @@
     }
 
     function clearSolutionReview() {
+      endOverlay.classList.remove("reviewing");
       if (window.MathJax?.typesetClear) MathJax.typesetClear([solutionContent]);
       solutionContent.replaceChildren();
       solutionPanel.hidden = true;
@@ -1193,6 +1196,7 @@
       const solution = SOLUCIONES[review?.data?.id];
       if (!solution) return;
       const opening = solutionPanel.hidden;
+      endOverlay.classList.toggle("reviewing", opening);
       solutionPanel.hidden = !opening;
       reviewSolutionButton.setAttribute("aria-expanded", String(opening));
       reviewSolutionButton.textContent = opening ? "Ocultar solución" : "Revisar solución del último límite";
