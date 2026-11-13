@@ -354,6 +354,40 @@
       font-style: italic;
     }
 
+    #endOverlay .modal { width: min(860px, 100%); }
+    .review-action {
+      display: block;
+      margin: 0 auto 16px;
+      padding: 12px 20px;
+      border: 1px solid var(--ink-soft);
+      border-radius: 8px;
+      background: var(--paper-strong);
+      color: var(--ink);
+      font-weight: bold;
+    }
+    [hidden] { display: none !important; }
+    .solution-panel {
+      margin: 0 0 22px;
+      padding: 18px clamp(10px, 2vw, 20px);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--paper-strong);
+      text-align: left;
+      overflow: hidden;
+    }
+    .solution-panel h2 { margin: 0 0 12px; font-size: 1.25rem; }
+    .solution-panel p { max-width: none; margin: 10px 0; font-size: 1rem; font-style: normal; }
+    .solution-panel .solution-math {
+      overflow-x: auto;
+      padding: 8px 2px;
+      font-size: clamp(.83rem, 1.9vw, 1rem);
+      overscroll-behavior-x: contain;
+    }
+    .solution-math mjx-container[display="true"] { margin: 0 !important; text-align: left !important; }
+    .solution-answer { font-weight: bold; }
+    .solution-panel .solution-convention { font-size: .88rem; }
+    .review-action:focus-visible, .solution-math:focus-visible { outline: 3px solid #805823; outline-offset: 3px; }
+
     .max-score-display {
       display: none;
       margin: 4px auto 24px;
@@ -566,17 +600,24 @@
     </div>
   </section>
 
-  <section class="overlay" id="endOverlay" aria-modal="true" role="dialog">
+  <section class="overlay" id="endOverlay" aria-modal="true" role="dialog" aria-labelledby="endTitle">
     <div class="modal">
       <h1 id="endTitle">Fin del juego</h1>
       <p id="endMessage">Tu partida terminó.</p>
       <div class="max-score-display" id="maxScoreDisplay" aria-live="polite"></div>
+      <button class="review-action" id="reviewSolutionButton" type="button" aria-expanded="false" aria-controls="solutionPanel" hidden>Revisar solución del último límite</button>
+      <section class="solution-panel" id="solutionPanel" aria-labelledby="solutionHeading" hidden>
+        <h2 id="solutionHeading" tabindex="-1">Solución del último límite</h2>
+        <div id="solutionContent"></div>
+      </section>
       <button class="primary-action" id="restartButton">Reiniciar</button>
     </div>
   </section>
 
   <script src="leibniz.js"></script>
+  <script src="soluciones.js"></script>
   <script>
+    const SOLUCIONES = window.SOLUCIONES || {};
     const BUTTON_IMAGES = {
       "+infinito": "assets/infinito.png",
       "-infinito": "assets/menos-infinito.png",
@@ -798,7 +839,9 @@
       stasisHeld: false,
       holdPointerId: null,
       nextLimitId: 1,
-      endSequence: 0
+      endSequence: 0,
+      lastLimit: null,
+      defeatReview: null
     };
 
     const fallZone = document.getElementById("fallZone");
@@ -809,6 +852,10 @@
     const endOverlay = document.getElementById("endOverlay");
     const startButton = document.getElementById("startButton");
     const restartButton = document.getElementById("restartButton");
+    const reviewSolutionButton = document.getElementById("reviewSolutionButton");
+    const solutionPanel = document.getElementById("solutionPanel");
+    const solutionHeading = document.getElementById("solutionHeading");
+    const solutionContent = document.getElementById("solutionContent");
     const endTitle = document.getElementById("endTitle");
     const endMessage = document.getElementById("endMessage");
     const maxScoreDisplay = document.getElementById("maxScoreDisplay");
@@ -935,6 +982,7 @@
       element.style.transform = `translateY(${activeLimit.y}px)`;
       element.style.setProperty("--y", `${activeLimit.y}px`);
       gameState.limitesActivos.push(activeLimit);
+      gameState.lastLimit = selected;
       gameState.ultimoTiempoAparicion = performance.now();
       gameState.emptySince = null;
       typesetElement(element).then(() => {
@@ -990,7 +1038,7 @@
 
         if (activeLimit.y + activeLimit.height >= zoneHeight) {
           removeLimitElement(activeLimit);
-          penalizePlayer("Un límite tocó el fondo.", 2);
+          penalizePlayer("Un límite tocó el fondo.", 2, { data: activeLimit.data, kind: "fall" });
           if (gameState.estado !== "jugando") return;
         }
       }
@@ -1012,7 +1060,13 @@
       const removedCount = removeMatchingLimits(answer);
 
       if (removedCount === 0) {
-        penalizePlayer("No había límites visibles con esa clasificación.");
+        const closest = gameState.limitesActivos.reduce((lowest, limit) =>
+          !lowest || limit.y > lowest.y ? limit : lowest, null);
+        penalizePlayer("No había límites visibles con esa clasificación.", 3, {
+          data: closest ? closest.data : gameState.lastLimit,
+          kind: closest ? "answer" : "empty",
+          answer
+        });
         return;
       }
 
@@ -1049,17 +1103,17 @@
       return 1;
     }
 
-    function penalizePlayer(reason, pointLoss = 3) {
+    function penalizePlayer(reason, pointLoss = 3, review = null) {
       if (gameState.estado !== "jugando") return;
       gameState.puntos = Math.max(0, gameState.puntos - pointLoss);
-      loseLife(reason, pointLoss);
+      loseLife(reason, pointLoss, review);
     }
 
     function updateMaxScore() {
       gameState.maxScore = Math.max(gameState.maxScore, Math.min(gameState.puntos, WIN_SCORE));
     }
 
-    function loseLife(reason, pointLoss = 3) {
+    function loseLife(reason, pointLoss = 3, review = null) {
       if (gameState.estado !== "jugando") return;
       portrait.react("incorrect", gameState.nivel);
       gameState.vidas -= 1;
@@ -1070,6 +1124,7 @@
 
       if (gameState.vidas <= 0) {
         gameState.vidas = 0;
+        gameState.defeatReview = review;
         updateHUD();
         endGame(false);
       }
@@ -1113,11 +1168,69 @@
         endMessage.textContent = defeatCopy.message;
       }
       renderMaxScore();
+      clearSolutionReview();
+      reviewSolutionButton.hidden = win || !SOLUCIONES[gameState.defeatReview?.data?.id];
       portrait.finish().then(() => {
         if (gameState.endSequence === endSequence && gameState.estado !== "jugando" && gameState.estado !== "inicio") {
           endOverlay.classList.add("show");
+          (reviewSolutionButton.hidden ? restartButton : reviewSolutionButton).focus({ preventScroll: true });
         }
       });
+    }
+
+    function clearSolutionReview() {
+      if (window.MathJax?.typesetClear) MathJax.typesetClear([solutionContent]);
+      solutionContent.replaceChildren();
+      solutionPanel.hidden = true;
+      reviewSolutionButton.hidden = true;
+      reviewSolutionButton.textContent = "Revisar solución del último límite";
+      reviewSolutionButton.setAttribute("aria-expanded", "false");
+    }
+
+    function toggleSolutionReview() {
+      if (gameState.estado !== "derrota" || !endOverlay.classList.contains("show")) return;
+      const review = gameState.defeatReview;
+      const solution = SOLUCIONES[review?.data?.id];
+      if (!solution) return;
+      const opening = solutionPanel.hidden;
+      solutionPanel.hidden = !opening;
+      reviewSolutionButton.setAttribute("aria-expanded", String(opening));
+      reviewSolutionButton.textContent = opening ? "Ocultar solución" : "Revisar solución del último límite";
+      if (!opening) return;
+      // Reopening preserves the rendered nodes. Restarting clears them.
+      if (!solutionContent.childElementCount) {
+        solutionHeading.textContent = `Solución · ${review.data.id}`;
+        const appendText = (text, className = "") => {
+          const p = document.createElement("p");
+          p.className = className;
+          p.textContent = text;
+          solutionContent.appendChild(p);
+          return p;
+        };
+        const appendMath = latex => {
+          const p = appendText(`\\[${latex}\\]`, "solution-math");
+          p.tabIndex = 0;
+          p.setAttribute("role", "region");
+          p.setAttribute("aria-label", "Fórmula, desplazable horizontalmente");
+        };
+        appendText(review.kind === "fall" ? "Este límite tocó el fondo y agotó tu última vida."
+          : review.kind === "answer" ? "Se revisa el límite que estaba más cerca del fondo."
+          : "El error ocurrió con la pantalla vacía. Este fue el último límite de la partida.");
+        appendMath(review.data.latex);
+        const labels = { "+infinito": "+∞", "-infinito": "−∞", "0-": "0⁻", "0+": "0⁺", NE: "NE", "-L": "−L", "0": "0", L: "L" };
+        if (review.answer) appendText(`Elegiste: ${labels[review.answer]}.`);
+        solution.pasos.forEach(appendMath);
+        if (solution.nota) appendText(solution.nota);
+        appendText(`Clasificación correcta: ${labels[solution.respuesta]}.`, "solution-answer");
+        appendText("L representa un número positivo. 0⁺ y 0⁻ indican el signo de aproximación; las fracciones con 0⁺ o 0⁻ usan la notación del curso.", "solution-convention");
+        const sequence = gameState.endSequence;
+        waitForMathJax().then(() => {
+          if (gameState.endSequence === sequence && gameState.estado === "derrota") {
+            return MathJax.typesetPromise([solutionContent]);
+          }
+        }).catch(() => {});
+      }
+      solutionHeading.focus({ preventScroll: true });
     }
 
     function renderMaxScore() {
@@ -1162,6 +1275,9 @@
       gameState.stasisHeld = false;
       gameState.holdPointerId = null;
       gameState.nextLimitId = 1;
+      gameState.lastLimit = null;
+      gameState.defeatReview = null;
+      clearSolutionReview();
       portrait.reset(1);
       updateHUD();
       updateMusicToggle();
@@ -1192,6 +1308,7 @@
     function attachEvents() {
       startButton.addEventListener("click", startGame);
       restartButton.addEventListener("click", startGame);
+      reviewSolutionButton.addEventListener("click", toggleSolutionReview);
       musicToggle.addEventListener("click", handleMusicToggleClick);
       effectsToggle.addEventListener("click", () => {
         portrait.setSoundEnabled(!portrait.soundEnabled);
@@ -1213,6 +1330,7 @@
       document.addEventListener("pointercancel", stopTimeHolds);
       window.addEventListener("blur", () => stopTimeHolds());
       document.addEventListener("keydown", event => {
+        if (gameState.estado !== "jugando") return;
         if (event.repeat) return;
         const match = ANSWERS.find(item => item.code === event.code);
         if (!match) return;
@@ -1316,6 +1434,7 @@
 
     function removeLimitElement(activeLimit, animate = false) {
       if (activeLimit.removed) return;
+      gameState.lastLimit = activeLimit.data;
       activeLimit.removed = true;
       gameState.limitesActivos = gameState.limitesActivos.filter(item => item !== activeLimit);
       if (animate) {

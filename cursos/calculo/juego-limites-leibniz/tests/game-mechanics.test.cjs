@@ -15,7 +15,7 @@ const source = [...html.matchAll(/<script(?:\s[^>]*)?>([\s\S]*?)<\/script>/g)]
   .map(match => match[1]).find(script => script.includes('const gameState ='));
 assert.ok(source, 'The game script exists in index.html');
 
-function createHarness({deferFinish = false} = {}) {
+function createHarness({deferFinish = false, deferMath = false} = {}) {
   let now = 0;
   let nextId = 1;
   const frames = new Map();
@@ -24,6 +24,8 @@ function createHarness({deferFinish = false} = {}) {
   const randomValues = [];
   const portraitCalls = [];
   const finishResolvers = [];
+  const mathCalls = [];
+  let resolveMath;
 
   class EventTarget {
     constructor() { this.listeners = new Map(); }
@@ -68,6 +70,9 @@ function createHarness({deferFinish = false} = {}) {
       }
     }
     get innerHTML() { return this._html || ''; }
+    get childElementCount() { return this.children.length; }
+    replaceChildren(...children) { this.children.forEach(child=>{child.isConnected=false;});this.children=[];children.forEach(child=>this.appendChild(child)); }
+    focus() { document.activeElement=this; }
     appendChild(child) { this.children.push(child);child.parent=this;child.isConnected=true;return child; }
     remove() { this.isConnected=false;if(this.parent)this.parent.children=this.parent.children.filter(child=>child!==this); }
     querySelector(selector) {
@@ -106,7 +111,11 @@ function createHarness({deferFinish = false} = {}) {
   };
   document.createElement = () => new Element();
   const window = new EventTarget();
-  const MathJax = {typesetPromise:()=>Promise.resolve(),startup:{promise:Promise.resolve()}};
+  const MathJax = {
+    typesetPromise:targets=>{mathCalls.push(targets);return Promise.resolve();},
+    typesetClear:()=>{},
+    startup:{promise:deferMath?new Promise(resolve=>{resolveMath=resolve;}):Promise.resolve()}
+  };
   window.MathJax = MathJax;
   window.matchMedia = () => ({matches:false});
   const math = Object.create(Math);
@@ -120,6 +129,7 @@ function createHarness({deferFinish = false} = {}) {
     requestAnimationFrame:fn=>{const id=nextId++;frames.set(id,fn);return id;},
     cancelAnimationFrame:id=>frames.delete(id)
   });
+  if (!reference) vm.runInContext(fs.readFileSync(path.join(game,'soluciones.js'),'utf8'),context);
   vm.runInContext(source + '\n;globalThis.api = {gameState,ANSWERS,LEVELS,LIMITES,initGame,startGame,resetGame,spawnLimit,handleAnswer,updateLevel,updateGameLoop,pickLimitForCurrentLevel,registerMusicSecretClick,enableTimeFeature,startBoostHold,startStasisHold,stopTimeHolds,handleSecretPointerDown,endGame,portrait:typeof portrait!=="undefined"?portrait:null};', context);
   const api = context.api;
   window.emit('load');
@@ -137,10 +147,11 @@ function createHarness({deferFinish = false} = {}) {
     return limit;
   }
   function play() { api.resetGame();api.gameState.estado='jugando'; }
-  return {api,state:api.gameState,document,window,elements,frames,timers,portraitCalls,addLimit,play,step,
+  return {api,state:api.gameState,document,window,elements,frames,timers,portraitCalls,addLimit,play,step,mathCalls,
     setNow:value=>{now=value;},setRandom:(...values)=>randomValues.push(...values),
     frame:ms=>{now+=ms;frames.clear();api.updateGameLoop(now);},
-    finishPortrait:()=>finishResolvers.splice(0).forEach(resolve=>resolve())
+    finishPortrait:()=>finishResolvers.splice(0).forEach(resolve=>resolve()),
+    finishMath:()=>resolveMath?.()
   };
 }
 
@@ -324,6 +335,100 @@ const near = (actual,expected,label) => assert.ok(Math.abs(actual-expected)<1e-8
     h.step(399);assert.equal(h.state.limitesActivos.length,0);
     h.step(1);assert.equal(h.state.limitesActivos.length,1);
   });
+
+  if (!reference) {
+    await check('All 154 exercises have a complete solution with the bank classification and render in the defeat panel',async()=>{
+      const h=createHarness();const solutions=h.window.SOLUCIONES;
+      assert.equal(h.api.LIMITES.length,154);
+      assert.deepEqual(Object.keys(solutions).sort(),Array.from(h.api.LIMITES,item=>item.id).sort());
+      for(const item of h.api.LIMITES){
+        const solution=solutions[item.id];
+        assert.equal(solution.respuesta,item.respuesta,item.id);
+        assert.ok(solution.valor && solution.pasos.length && solution.pasos.every(step=>step.trim()),item.id);
+        assert.ok(!/TODO|pendiente|por resolver/i.test(solution.pasos.join(' ')),item.id);
+        h.play();h.state.vidas=1;
+        h.addLimit(item.respuesta,508,{data:item});h.frame(50);await flush();
+        const button=h.elements.get('reviewSolutionButton');
+        assert.equal(button.hidden,false,item.id);
+        button.emit('click');await flush();
+        assert.equal(h.elements.get('solutionPanel').hidden,false,item.id);
+        const text=h.elements.get('solutionContent').children.map(p=>p.textContent).join('\n');
+        assert.ok(text.includes(item.latex),item.id);
+        for(const step of solution.pasos) assert.ok(text.includes(step),item.id);
+        assert.equal(h.elements.get('solutionHeading').textContent,`Solución · ${item.id}`);
+      }
+    });
+
+    await check('Lethal expiry preserves the exact exercise even when another limit would expire in the same frame',async()=>{
+      const h=createHarness();h.play();h.state.vidas=1;
+      const item=h.api.LIMITES.find(item=>item.id==='44');
+      const first=h.addLimit(item.respuesta,508,{data:item});
+      const second=h.addLimit('L',510,{data:h.api.LIMITES.find(item=>item.id==='Ej-b')});
+      h.frame(50);await flush();
+      assert.equal(first.removed,true);assert.equal(second.removed,false);
+      assert.equal(h.state.defeatReview.data.id,'44');assert.equal(h.state.defeatReview.kind,'fall');
+      h.elements.get('reviewSolutionButton').emit('click');
+      assert.ok(h.elements.get('solutionContent').children.some(p=>p.textContent.includes('0^+\\cdot1')));
+    });
+
+    await check('Wrong-answer defeat reviews the closest limit, reports the chosen answer and remains optional',async()=>{
+      const h=createHarness({deferFinish:true});h.play();h.state.vidas=1;
+      h.addLimit('L',20,{data:h.api.LIMITES.find(item=>item.id==='Ej-b')});
+      h.addLimit('0+',400,{data:h.api.LIMITES.find(item=>item.id==='80')});
+      h.api.handleAnswer('NE');
+      assert.equal(h.state.defeatReview.data.id,'80');assert.equal(h.state.defeatReview.kind,'answer');
+      h.elements.get('reviewSolutionButton').emit('click');
+      assert.equal(h.elements.get('solutionPanel').hidden,true,'The last reaction still completes before the overlay');
+      h.finishPortrait();await flush();
+      assert.equal(h.document.activeElement,h.elements.get('reviewSolutionButton'));
+      const button=h.elements.get('reviewSolutionButton');button.emit('click');
+      assert.equal(button['aria-expanded'],'true');
+      assert.ok(h.elements.get('solutionContent').children.some(p=>p.textContent==='Elegiste: NE.'));
+      const count=h.elements.get('solutionContent').childElementCount;
+      button.emit('click');assert.equal(h.elements.get('solutionPanel').hidden,true);
+      button.emit('click');assert.equal(h.elements.get('solutionContent').childElementCount,count,'Reopening does not duplicate the solution');
+      const arrow=h.document.emit('keydown',{code:'ArrowRight',repeat:false});
+      assert.equal(arrow.prevented,false,'Arrow keys remain available for reading the formula');
+      assert.equal(h.state.vidas,0);assert.equal(h.state.estado,'derrota');
+      h.elements.get('restartButton').emit('click');
+      assert.equal(h.state.estado,'jugando');assert.equal(h.state.defeatReview,null);
+      assert.equal(h.elements.get('solutionPanel').hidden,true);assert.equal(h.elements.get('solutionContent').childElementCount,0);
+    });
+
+    await check('No solution leaks during play or victory; a player may restart without opening the review',async()=>{
+      const h=createHarness();h.play();
+      const item=h.api.LIMITES.find(item=>item.id==='Ej-b');h.addLimit('L',100,{data:item});
+      h.api.handleAnswer('NE');await flush();
+      assert.equal(h.state.estado,'jugando');assert.equal(h.elements.get('reviewSolutionButton').hidden,true);
+      h.elements.get('reviewSolutionButton').emit('click');assert.equal(h.elements.get('solutionContent').childElementCount,0);
+      h.state.vidas=1;h.api.handleAnswer('NE');await flush();
+      h.elements.get('restartButton').emit('click');
+      assert.equal(h.state.vidas,5);assert.equal(h.state.puntos,0);assert.equal(h.state.defeatReview,null);
+      h.state.puntos=34;h.addLimit('L',100,{data:item});h.api.handleAnswer('L');await flush();
+      assert.equal(h.state.estado,'victoria');assert.equal(h.elements.get('reviewSolutionButton').hidden,true);
+      assert.equal(h.elements.get('solutionPanel').hidden,true);
+    });
+
+    await check('Empty-screen defeat uses the last encountered exercise; before any exercise there is no fabricated solution',async()=>{
+      const h=createHarness();h.play();h.state.vidas=1;h.api.handleAnswer('NE');await flush();
+      assert.equal(h.state.defeatReview.data,null);assert.equal(h.elements.get('reviewSolutionButton').hidden,true);
+      h.play();const item=h.api.LIMITES.find(item=>item.id==='Ej-b');
+      h.addLimit('L',100,{data:item});h.api.handleAnswer('L');h.state.vidas=1;h.api.handleAnswer('NE');await flush();
+      assert.equal(h.state.defeatReview.data.id,'Ej-b');assert.equal(h.state.defeatReview.kind,'empty');
+      h.elements.get('reviewSolutionButton').emit('click');
+      assert.ok(h.elements.get('solutionContent').children.some(p=>p.textContent.includes('pantalla vacía')));
+    });
+
+    await check('Delayed MathJax cannot populate a solution after restarting',async()=>{
+      const h=createHarness({deferMath:true});h.play();h.state.vidas=1;
+      h.addLimit('L',100,{data:h.api.LIMITES.find(item=>item.id==='Ej-b')});
+      h.api.handleAnswer('NE');await flush();h.elements.get('reviewSolutionButton').emit('click');
+      h.api.startGame();h.finishMath();await flush();
+      assert.equal(h.elements.get('solutionContent').childElementCount,0);
+      assert.equal(h.elements.get('solutionPanel').hidden,true);
+      assert.ok(!h.mathCalls.some(targets=>targets?.includes(h.elements.get('solutionContent'))));
+    });
+  }
 
   console.log(JSON.stringify({status:failures.length?'failed':'passed',source:reference||'working tree',checks,failures},null,2));
   if(failures.length)process.exitCode=1;

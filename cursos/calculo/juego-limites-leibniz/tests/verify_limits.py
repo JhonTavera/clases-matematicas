@@ -6,6 +6,9 @@ from sympy.parsing.latex import parse_latex
 ROOT = Path(__file__).resolve().parent.parent
 text = (ROOT / 'index.html').read_text(encoding='utf-8')
 items = json.loads(re.search(r'const LIMITES = (\[.*?\]);', text, re.S).group(1))
+solution_text = (ROOT / 'soluciones.js').read_text(encoding='utf-8')
+solutions = json.loads(re.search(r'window.SOLUCIONES = (\{.*\});', solution_text, re.S).group(1))
+assert set(solutions) == {item['id'] for item in items}, 'Every exercise needs exactly one solution'
 
 def split_limit(latex):
     start = latex.index('{')
@@ -66,11 +69,35 @@ def evaluate(item):
         else: ans='REVISAR'
     return dict(item,expression=str(f),value=value,computed=ans,signs=[str(v) for v in signs],details='')
 
+def verify_solution(row):
+    """Compare the authored exact value/lateral values with the independent calculation."""
+    solution = solutions[row['id']]
+    assert solution['respuesta'] == row['computed'], 'Solution classification differs'
+    assert solution['pasos'] and all(step.strip() for step in solution['pasos']), 'Empty solution'
+    def same_value(latex, calculated):
+        if latex in (r'0^+', r'0^-'): latex = '0'
+        value = parse_latex(latex)
+        value = value.subs({v:s.pi for v in value.free_symbols if v.name == 'pi'})
+        actual = s.sympify(calculated)
+        return value == actual or s.simplify(value-actual) == 0
+    if row['computed'] == 'NE':
+        assert solution['valor'] == r'\mathrm{NE}'
+        if 'laterales' in solution:
+            calculated = re.fullmatch(r'izq: (.*); der: (.*)', row['value'])
+            assert calculated and all(same_value(v,c) for v,c in zip(solution['laterales'],calculated.groups())), 'Lateral values differ'
+    else:
+        assert same_value(solution['valor'],row['value']), 'Exact solution value differs'
+        if row['computed'] in ('0+','0-'):
+            assert solution['valor'] == ('0^+' if row['computed']=='0+' else '0^-'), 'Approach sign differs'
+    return True
+
 if __name__=='__main__':
     selected = [it for it in items if len(sys.argv)<2 or it['id']==sys.argv[1]]
     results=[]
     for it in selected:
-        try: row=evaluate(it)
+        try:
+            row=evaluate(it)
+            row['solution_verified'] = verify_solution(row)
         except Exception as e: row=dict(it,computed='ERROR',value=str(e))
         results.append(row)
         print(json.dumps(row,ensure_ascii=False),flush=True)
